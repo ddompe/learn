@@ -1,0 +1,79 @@
+---
+title: <Lesson title>
+description: <One sentence, used for SEO and link previews>
+sidebar:
+  order: <LL>
+lessonId: "<P.L>"
+estimatedMinutes: 15
+prerequisites: []
+# lastVerified: YYYY-MM-DD   # only for fast-changing pages
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Example from '@components/Example.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+- <Verb-led objective 1>
+- <Verb-led objective 2>
+</LessonGoals>
+
+## Why this matters
+
+<The business problem this lesson solves, in plain language.>
+
+<CaseStudy>
+<How this shows up at Café Central.>
+</CaseStudy>
+
+## <Concept section(s)>
+
+<Explanation. Mental model first. Diagram where helpful.>
+
+## Hands-on
+
+### Worked example
+
+<Example file="partPP/LL_slug.py" />
+
+<Explanation of the example.>
+
+### Your turn
+
+<Faded exercise: same problem with parts removed, or a small variation.>
+
+## Common mistakes
+
+- **<Mistake>.** <Why it happens and how to fix it.>
+
+## Ask your AI assistant
+
+<PromptExample>
+  <Fragment slot="lousy">
+<Realistic lousy prompt>
+  </Fragment>
+  <Fragment slot="whatGoesWrong">
+<The typical bad or misleading answer>
+  </Fragment>
+  <Fragment slot="good">
+<Good prompt using context, task, input, constraints, output format, verification>
+  </Fragment>
+  <Fragment slot="whyItWorks">
+<Which prompt-anatomy elements made the difference>
+  </Fragment>
+  <Fragment slot="check">
+<Specific things to verify in the answer>
+  </Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="<Question>">
+<Answer and short explanation>
+</Checkpoint>
+
+## Going deeper
+
+- <Optional link or alternative tool, one line each>
