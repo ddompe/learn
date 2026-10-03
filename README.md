@@ -16,9 +16,9 @@ The site is under active construction — see [Status](#status-and-planning) bel
 
 ### Required now
 
-| Tool                                                 | Why                           | Install (macOS, Homebrew) |
-| ---------------------------------------------------- | ----------------------------- | ------------------------- |
-| [Node.js](https://nodejs.org) 20+ (we develop on 26) | Runs Astro and the site build | `brew install node`       |
+| Tool                                                    | Why                                                   | Install (macOS, Homebrew) |
+| ------------------------------------------------------- | ----------------------------------------------------- | ------------------------- |
+| [Node.js](https://nodejs.org) 22.18+ (we develop on 26) | Runs Astro and the site build; cspell requires 22.18+ | `brew install node`       |
 
 Then, from the repo root:
 
