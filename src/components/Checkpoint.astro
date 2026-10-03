@@ -1,0 +1,35 @@
+---
+interface Props {
+	prompt?: string;
+	title?: string;
+}
+
+const { prompt = 'Try this', title = 'Checkpoint' } = Astro.props;
+---
+
+<div class="checkpoint">
+	<h4>{title}</h4>
+	{prompt && <p class="prompt-text">{prompt}</p>}
+	<slot />
+</div>
+
+<style>
+	.checkpoint {
+		background: var(--sl-color-yellow-low);
+		border: 2px solid var(--sl-color-yellow);
+		border-radius: var(--sl-border-radius);
+		padding: 1rem;
+		margin: 1.5rem 0;
+	}
+
+	.checkpoint h4 {
+		margin-top: 0;
+		margin-bottom: 0.5rem;
+		color: var(--sl-color-yellow);
+	}
+
+	.prompt-text {
+		margin: 0 0 1rem 0;
+		font-style: italic;
+	}
+</style>

@@ -1,0 +1,30 @@
+// Café Central customer database
+// Last updated: 2024-01-07
+{
+	"customers": [
+		{
+			"id": "C001",
+			"name": "Ana López",
+			"city": "San José",
+			"email": "ana@example.com"
+		},
+		{
+			"id": "C002",
+			"name": "Carlos Rodríguez",
+			"city": "Alajuela",
+			"email": ""
+		},
+		{
+			"id": "C003",
+			"name": "María García",
+			"city": "Heredia",
+			"email": "maria@example.com"
+		},
+		{
+			"id": "C004",
+			"name": "",
+			"city": "Cartago",
+			"email": "unknown@example.com"
+		}
+	]
+}

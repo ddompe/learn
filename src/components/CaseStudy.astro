@@ -1,0 +1,28 @@
+---
+interface Props {
+	title?: string;
+}
+
+const { title = 'Case study: Café Central' } = Astro.props;
+---
+
+<aside class="case-study">
+	<h4>📋 {title}</h4>
+	<slot />
+</aside>
+
+<style>
+	.case-study {
+		background: var(--sl-color-blue-low);
+		border-left: 4px solid var(--sl-color-blue);
+		padding: 1rem;
+		margin: 1.5rem 0;
+		border-radius: var(--sl-border-radius);
+	}
+
+	.case-study h4 {
+		margin-top: 0;
+		margin-bottom: 0.75rem;
+		color: var(--sl-color-blue);
+	}
+</style>

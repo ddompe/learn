@@ -78,10 +78,20 @@ alongside the PR-check workflow, analytics, and funding — closing out M0.
 Exit criteria (`https://learn.dompe.space/en/` live, CI green on a PR) depend on the
 unchecked items above, which need the user's GitHub/DNS access.
 
-## Stage 4 — Content infrastructure (M1) — not started
+## Stage 4 — Content infrastructure (M1) — done, 2026-10-03
 
-uv examples project, `@examples` alias, custom MDX components, `run_examples.py`,
-`generate_dataset.py`, `check_translations.py`, Mermaid, one sample lesson EN+ES.
+- [x] `courses/automation-ai/examples/`: uv project with Python 3.12+, pytest configured, `uv.lock`.
+- [x] `@examples/automation-ai` Vite alias for `?raw` imports.
+- [x] Components: `LessonGoals`, `PromptExample`, `Checkpoint`, `CaseStudy`, `Example`,
+      `LastVerified`, `TranslationNotice`, `Mermaid`. UI strings in `src/content/i18n/{en,es}.json`.
+- [x] `scripts/run_examples.py`, `scripts/generate_dataset.py`, `scripts/check_translations.py`.
+- [x] Café Central case-study dataset (messy CSV, JSON, generated reproducibly).
+- [x] Sample lesson (Part 0 / "Reading data from files") using every component, EN + ES.
+- [x] Verified: all `npm run check` tasks pass; pytest passes; 32 pages build; all internal
+      links valid.
+
+Exit ✓: Sample lesson validates the entire content pipeline; components/scripts proven
+end to end; ready for piloting Parts 0–2 in Stage 5.
 
 ## Stage 5 — Pilot content: Parts 0–2, English (M2) — not started
 

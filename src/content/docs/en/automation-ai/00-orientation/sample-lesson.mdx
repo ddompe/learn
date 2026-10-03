@@ -1,0 +1,81 @@
+---
+title: 'Reading data from files'
+description: 'Learn how to read data from CSV files using Python'
+---
+
+import {
+	LessonGoals,
+	PromptExample,
+	Checkpoint,
+	CaseStudy,
+	Example,
+	LastVerified,
+	TranslationNotice,
+} from '~/components';
+import { Code } from 'astro:components';
+import readCsvCode from '@examples/automation-ai/part00_example.py?raw';
+
+<LessonGoals title="Learning goals">
+	<li>Understand CSV file format and structure</li>
+	<li>Read CSV files with Python using the csv module</li>
+	<li>Handle data with different formatting quirks</li>
+	<li>Parse headers and iterate through rows</li>
+</LessonGoals>
+
+## What is a CSV file?
+
+A CSV (Comma-Separated Values) file is a simple text format for storing tabular data. Each row is a line, and columns are separated by commas — or in some regions, semicolons.
+
+This is the simplest and most portable way to exchange data between Excel, databases, and code.
+
+## Reading CSV files with Python
+
+Python's `csv` module makes reading CSV files straightforward. Here's the basic pattern:
+
+<Code code={readCsvCode} lang="python" title="part00_example.py" />
+
+The code above:
+
+1. Opens the CSV file
+2. Creates a CSV reader with the correct delimiter (`;` for European format)
+3. Returns each row as a dictionary, with headers as keys
+
+## A real example: Café Central sales data
+
+<CaseStudy title="Case study: Café Central">
+  Café Central has been recording sales in a CSV file with semicolon delimiters. The file
+  has intentionally messy data:
+  - Mixed date formats
+  - Currency symbols and formatting
+  - Missing values
+
+Your job is to read this data and clean it for analysis.
+
+</CaseStudy>
+
+<Checkpoint prompt="Run the example code above on the Café Central data and print the first row.">
+	Hint: Check the `data/cafe_central_sales.csv` file in the examples directory.
+</Checkpoint>
+
+## Prompting an AI assistant for help
+
+Let me show you how to ask an AI assistant for help reading CSV files:
+
+<PromptExample
+	good="I have a CSV file with semicolon delimiters and mixed date formats (some dates are 2024-01-05, others are 01/06/2024). How do I read it with Python and handle the date inconsistency?"
+	bad="How do I read a CSV?"
+	explanation="The good prompt includes specific details: semicolon delimiters, the exact date format variations you're dealing with. This gives the assistant enough context to suggest the right solution (custom date parsing). A vague prompt gets a generic answer that won't solve your problem."
+/>
+
+## What's next
+
+Once you can read CSV files, you'll want to:
+
+- Parse and validate the data
+- Handle missing values
+- Convert dates to a consistent format
+- Aggregate the data for reporting
+
+These are all covered in Part 1.
+
+<LastVerified date="2024-10-03" />

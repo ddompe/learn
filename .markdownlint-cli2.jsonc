@@ -5,7 +5,7 @@
 		"MD033": false,
 		"MD041": false,
 		"MD025": false,
-		"MD010": { "code_blocks": false },
+		"MD010": false,
 	},
 	"globs": ["**/*.md", "**/*.mdx"],
 	"ignores": ["node_modules", "dist", ".astro", "courses/*/examples/**"],

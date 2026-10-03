@@ -1,0 +1,37 @@
+---
+interface Props {
+	label?: string;
+}
+
+const { label = 'Output:' } = Astro.props;
+---
+
+<div class="example">
+	{label && <strong>{label}</strong>}
+	<slot />
+</div>
+
+<style>
+	.example {
+		background: var(--sl-color-gray-1);
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: var(--sl-border-radius);
+		padding: 1rem;
+		margin: 1rem 0;
+		font-family: var(--sl-font-mono);
+		font-size: 0.875rem;
+	}
+
+	.example strong {
+		display: block;
+		margin-bottom: 0.5rem;
+		color: var(--sl-color-gray-7);
+		font-weight: 600;
+	}
+
+	.example :global(pre) {
+		margin: 0;
+		background: transparent;
+		padding: 0;
+	}
+</style>

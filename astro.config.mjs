@@ -6,6 +6,17 @@ import starlightLinksValidator from 'starlight-links-validator';
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://learn.dompe.space',
+	vite: {
+		resolve: {
+			alias: {
+				'~': new URL('./src', import.meta.url).pathname,
+				'@examples/automation-ai': new URL(
+					'./courses/automation-ai/examples',
+					import.meta.url,
+				).pathname,
+			},
+		},
+	},
 	integrations: [
 		starlight({
 			title: { en: "Let's learn together", es: 'Aprendamos juntos' },

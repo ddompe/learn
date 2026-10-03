@@ -1,0 +1,31 @@
+---
+interface Props {
+	date: string;
+}
+
+const { date } = Astro.props;
+---
+
+<p class="last-verified">
+	<small>
+		Last verified:{' '}
+		{new Date(date).toLocaleDateString('en-US', {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric',
+		})}
+	</small>
+</p>
+
+<style>
+	.last-verified {
+		margin: 1.5rem 0 0 0;
+		padding-top: 1rem;
+		border-top: 1px solid var(--sl-color-gray-5);
+		color: var(--sl-color-gray-6);
+	}
+
+	.last-verified small {
+		font-size: 0.875rem;
+	}
+</style>

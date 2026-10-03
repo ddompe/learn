@@ -1,0 +1,26 @@
+{
+	"LessonGoals": {
+		"title": "Learning goals"
+	},
+	"PromptExample": {
+		"good": "✓ Good prompt",
+		"bad": "✗ Avoid this",
+		"why": "Why the difference matters"
+	},
+	"Checkpoint": {
+		"title": "Checkpoint",
+		"prompt": "Try this"
+	},
+	"CaseStudy": {
+		"title": "Case study: Café Central"
+	},
+	"Example": {
+		"label": "Output:"
+	},
+	"LastVerified": {
+		"text": "Last verified:"
+	},
+	"TranslationNotice": {
+		"text": "This page is currently in English. A translation is in progress."
+	}
+}

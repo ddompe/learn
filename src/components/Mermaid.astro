@@ -1,0 +1,22 @@
+---
+interface Props {
+	diagram: string;
+}
+
+const { diagram } = Astro.props;
+---
+
+<div class="mermaid">{diagram}</div>
+
+<style>
+	.mermaid {
+		display: flex;
+		justify-content: center;
+		margin: 2rem 0;
+		background: var(--sl-color-gray-1);
+		padding: 1.5rem;
+		border-radius: var(--sl-border-radius);
+		border: 1px solid var(--sl-color-gray-5);
+		font-size: 0.875rem;
+	}
+</style>

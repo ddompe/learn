@@ -1,0 +1,126 @@
+---
+interface Props {
+	good: string;
+	bad: string;
+	explanation: string;
+}
+
+const { good, bad, explanation } = Astro.props;
+
+function escapeHtml(text: string): string {
+	const map: Record<string, string> = {
+		'&': '&amp;',
+		'<': '&lt;',
+		'>': '&gt;',
+		'"': '&quot;',
+		"'": '&#039;',
+	};
+	return text.replace(/[&<>"']/g, (char) => map[char]);
+}
+---
+
+<div class="prompt-example">
+	<div class="prompt-pair">
+		<div class="prompt-good">
+			<span class="badge good">✓ Good prompt</span>
+			<pre><code set:html={escapeHtml(good)} /></pre>
+		</div>
+		<div class="prompt-bad">
+			<span class="badge bad">✗ Avoid this</span>
+			<pre><code set:html={escapeHtml(bad)} /></pre>
+		</div>
+	</div>
+	<div class="explanation">
+		<strong>Why the difference matters:</strong>
+		<p set:html={explanation} />
+	</div>
+</div>
+
+<style>
+	.prompt-example {
+		margin: 2rem 0;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: var(--sl-border-radius);
+		overflow: hidden;
+	}
+
+	.prompt-pair {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0;
+	}
+
+	.prompt-good,
+	.prompt-bad {
+		padding: 1rem;
+		border-right: 1px solid var(--sl-color-gray-5);
+	}
+
+	.prompt-bad {
+		border-right: none;
+		background: var(--sl-color-red-low);
+	}
+
+	.prompt-good {
+		background: var(--sl-color-green-low);
+	}
+
+	.badge {
+		display: inline-block;
+		font-size: 0.875rem;
+		font-weight: 600;
+		margin-bottom: 0.5rem;
+		padding: 0.25rem 0.5rem;
+		border-radius: 0.25rem;
+	}
+
+	.badge.good {
+		background: var(--sl-color-green);
+		color: white;
+	}
+
+	.badge.bad {
+		background: var(--sl-color-red);
+		color: white;
+	}
+
+	pre {
+		margin: 0;
+		background: var(--sl-color-gray-1);
+		padding: 0.75rem;
+		border-radius: 0.25rem;
+		overflow-x: auto;
+		font-size: 0.875rem;
+	}
+
+	code {
+		font-family: var(--sl-font-mono);
+		color: var(--sl-color-gray-7);
+	}
+
+	.explanation {
+		padding: 1rem;
+		background: var(--sl-color-gray-1);
+		border-top: 1px solid var(--sl-color-gray-5);
+	}
+
+	.explanation p {
+		margin: 0;
+	}
+
+	@media (max-width: 768px) {
+		.prompt-pair {
+			grid-template-columns: 1fr;
+		}
+
+		.prompt-good,
+		.prompt-bad {
+			border-right: none;
+			border-bottom: 1px solid var(--sl-color-gray-5);
+		}
+
+		.prompt-bad {
+			border-bottom: none;
+		}
+	}
+</style>
