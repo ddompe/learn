@@ -62,11 +62,11 @@ Assumptions about the learner:
 
 Decided (ADR-0012):
 
-| | English | Spanish |
-|---|---|---|
-| Full title | **Automation & AI for Business Users: What They Never Taught You** | **Automatización e IA para profesionales: lo que nunca te enseñaron** |
-| Short title (site header, browser tab, social cards) | Automation & AI for Business Users | Automatización e IA para profesionales |
-| Subtitle (home page hero) | What they never taught you | Lo que nunca te enseñaron |
+|                                                      | English                                                            | Spanish                                                               |
+| ---------------------------------------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------- |
+| Full title                                           | **Automation & AI for Business Users: What They Never Taught You** | **Automatización e IA para profesionales: lo que nunca te enseñaron** |
+| Short title (site header, browser tab, social cards) | Automation & AI for Business Users                                 | Automatización e IA para profesionales                                |
+| Subtitle (home page hero)                            | What they never taught you                                         | Lo que nunca te enseñaron                                             |
 
 Notes:
 

@@ -29,18 +29,18 @@ title: Files, folders, and paths
 description: Understand where files live and how programs find them.
 sidebar:
   order: 4
-lessonId: "1.4"
+lessonId: '1.4'
 estimatedMinutes: 15
-prerequisites: ["1.1", "1.2"]
-lastVerified: 2026-10-03   # required only for fast-changing pages (⏱)
+prerequisites: ['1.1', '1.2']
+lastVerified: 2026-10-03 # required only for fast-changing pages (⏱)
 ---
 ```
 
 Spanish pages add (see 05-i18n.md):
 
 ```yaml
-sourceHash: 3f2a9c...   # hash of the English source this translation was made from
-translationStatus: reviewed   # machine | reviewed
+sourceHash: 3f2a9c... # hash of the English source this translation was made from
+translationStatus: reviewed # machine | reviewed
 ```
 
 ## Code in lessons

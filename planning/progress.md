@@ -50,16 +50,33 @@ course home in Stage 2.
       a Part page all return 200; sidebar shows all 11 Parts; redirect script resolves
       stored-preference → browser-language → `en` correctly.
 
-## Stage 3 — CI/CD, deploy, analytics, funding (M0, part 3) — not started
+## Stage 3 — CI/CD, deploy, analytics, funding (M0, part 3) — done, 2026-10-03
 
 **This is where the GitHub Actions publish workflow (`deploy.yml`) is added**,
 alongside the PR-check workflow, analytics, and funding — closing out M0.
 
-- [ ] `.github/workflows/deploy.yml` (official Astro GitHub Action, push to `main`).
-- [ ] GitHub Pages source set to GitHub Actions; `public/CNAME`; DNS record; HTTPS.
-- [ ] `.github/workflows/check.yml` (build, Prettier, markdownlint, cspell, links validator).
-- [ ] GoatCounter analytics script, verified on both locales.
-- [ ] `.github/FUNDING.yml` + sponsor-button footer.
+- [x] `.github/workflows/deploy.yml` (official `withastro/action`, push to `main`,
+      deploys via `actions/deploy-pages`).
+- [x] `public/CNAME` (`learn.dompe.space`).
+- [x] `.github/workflows/check.yml` running `npm run check` (Prettier, markdownlint-cli2,
+      cspell, `astro build` — which runs `starlight-links-validator` as a plugin).
+- [x] `.github/FUNDING.yml` (`github: [ddompe]`) + sponsor-button `Footer.astro` override
+      (locale-aware label, links to `github.com/sponsors/ddompe`).
+- [x] Added `npm run check` (`format:check` + `lint:md` + `spell` + `build`) with
+      Prettier, markdownlint-cli2, and cspell configured and clean across the whole repo
+      (cspell needed `@cspell/dict-es-es` for Spanish content and `en-GB` for the
+      British-spelling planning docs — neither ships by default).
+- [x] Verified locally: `npm run check` passes end to end; dev server confirms the
+      sponsor footer renders (and translates) on both locales.
+- [x] GoatCounter analytics wired (`ddompe.goatcounter.com`); confirmed the script tag
+      renders in the built output on both `/en/` and `/es/`.
+- [x] Remote added (`git@github.com:ddompe/learn.git`) and pushed to `main`.
+- [ ] GitHub Pages source set to "GitHub Actions" (repo settings).
+- [ ] DNS: CNAME record `learn` → `ddompe.github.io`.
+- [ ] Enforce HTTPS in Pages settings once the certificate issues.
+
+Exit criteria (`https://learn.dompe.space/en/` live, CI green on a PR) depend on the
+unchecked items above, which need the user's GitHub/DNS access.
 
 ## Stage 4 — Content infrastructure (M1) — not started
 

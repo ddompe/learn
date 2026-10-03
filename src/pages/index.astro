@@ -16,8 +16,12 @@
 	</head>
 	<body>
 		<noscript>
-			<p><a href="/en/">Continue in English</a></p>
-			<p><a href="/es/">Continuar en Español</a></p>
+			<p>
+				<a href="/en/">Continue in English</a>
+			</p>
+			<p>
+				<a href="/es/">Continuar en Español</a>
+			</p>
 		</noscript>
 		<script>
 			const supportedLocales = ['en', 'es'];
@@ -26,7 +30,9 @@
 				const stored = localStorage.getItem('preferredLocale');
 				if (stored && supportedLocales.includes(stored)) return stored;
 
-				const browserLocales = navigator.languages ?? [navigator.language ?? 'en'];
+				const browserLocales = navigator.languages ?? [
+					navigator.language ?? 'en',
+				];
 				for (const browserLocale of browserLocales) {
 					if (browserLocale.toLowerCase().startsWith('es')) return 'es';
 				}

@@ -1,21 +1,21 @@
 slug: automation-ai
 status: draft
 title:
-  en: "Automation & AI for Business Users"
-  es: "Automatización e IA para profesionales"
+  en: 'Automation & AI for Business Users'
+  es: 'Automatización e IA para profesionales'
 subtitle:
-  en: "What they never taught you"
-  es: "Lo que nunca te enseñaron"
+  en: 'What they never taught you'
+  es: 'Lo que nunca te enseñaron'
 paths:
   - id: ai-literate
     label:
-      en: "AI-literate professional"
-      es: "Profesional alfabetizado en IA"
+      en: 'AI-literate professional'
+      es: 'Profesional alfabetizado en IA'
   - id: business-automator
     label:
-      en: "Business automator (core)"
-      es: "Automatizador de negocio (núcleo)"
+      en: 'Business automator (core)'
+      es: 'Automatizador de negocio (núcleo)'
   - id: advanced
     label:
-      en: "Advanced"
-      es: "Avanzado"
+      en: 'Advanced'
+      es: 'Avanzado'

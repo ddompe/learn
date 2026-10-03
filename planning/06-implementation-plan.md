@@ -60,12 +60,19 @@ Goal: the foundation content, validated with real learners before scaling.
 Exit: pilot feedback incorporated; templates frozen for scaling.
 
 ### M3 - Part 3: Software engineering fundamentals
+
 ### M4 - Part 4: Python foundations
+
 Includes testing installs on a locked-down corporate Windows laptop and on macOS.
+
 ### M5 - Part 5: Data formats
+
 ### M6 - Part 6: Business data with Python
+
 ### M7 - Part 7: Visualization
+
 ### M8 - Part 8: Documentation and reports
+
 ### M9 - Part 9: Automation and capstone
 
 Exit for M3–M9: each part passes the definition of done and is published.

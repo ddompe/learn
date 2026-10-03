@@ -8,12 +8,10 @@ const goToCourse = locale === 'es' ? 'Ir al curso' : 'Go to course';
 ---
 
 <CardGrid>
-	{
-		courses.map((course) => (
-			<Card title={localize(course.title, locale)}>
-				<p>{localize(course.subtitle, locale)}</p>
-				<a href={`/${locale}/${course.slug}/`}>{goToCourse}</a>
-			</Card>
-		))
-	}
+	{courses.map((course) => (
+		<Card title={localize(course.title, locale)}>
+			<p>{localize(course.subtitle, locale)}</p>
+			<a href={`/${locale}/${course.slug}/`}>{goToCourse}</a>
+		</Card>
+	))}
 </CardGrid>

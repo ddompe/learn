@@ -32,7 +32,10 @@ export function getCourses(): Course[] {
 		});
 }
 
-export function localize(text: LocalizedText, locale: string | undefined): string {
+export function localize(
+	text: LocalizedText,
+	locale: string | undefined,
+): string {
 	if (locale === 'es' && text.es) return text.es;
 	return text.en;
 }

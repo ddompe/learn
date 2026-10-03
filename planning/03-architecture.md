@@ -2,31 +2,31 @@
 
 ## Stack
 
-| Concern | Choice | ADR |
-|---|---|---|
-| Site generator | Astro + Starlight | ADR-0001 |
-| Hosting | GitHub Pages at learn.dompe.space | ADR-0002 |
-| Multi-course structure | One Astro site, course catalog at the root, one sidebar per course | ADR-0013 |
-| Languages | English (source), Spanish | ADR-0003 |
-| Search | Pagefind (built into Starlight, per-locale) | ADR-0001 |
-| Python examples | One uv project per course in `courses/<course>/examples/`, tested with pytest | ADR-0004, ADR-0011 |
-| Diagrams | Mermaid for flows; SVG for conceptual illustrations | this doc |
-| Licensing | CC BY-SA 4.0 (content), MIT (code) | ADR-0007 |
-| Analytics | GoatCounter (cookie-free script tag) | Q11 |
-| Learner environment | VS Code for everything | ADR-0014 |
+| Concern                | Choice                                                                        | ADR                |
+| ---------------------- | ----------------------------------------------------------------------------- | ------------------ |
+| Site generator         | Astro + Starlight                                                             | ADR-0001           |
+| Hosting                | GitHub Pages at learn.dompe.space                                             | ADR-0002           |
+| Multi-course structure | One Astro site, course catalog at the root, one sidebar per course            | ADR-0013           |
+| Languages              | English (source), Spanish                                                     | ADR-0003           |
+| Search                 | Pagefind (built into Starlight, per-locale)                                   | ADR-0001           |
+| Python examples        | One uv project per course in `courses/<course>/examples/`, tested with pytest | ADR-0004, ADR-0011 |
+| Diagrams               | Mermaid for flows; SVG for conceptual illustrations                           | this doc           |
+| Licensing              | CC BY-SA 4.0 (content), MIT (code)                                            | ADR-0007           |
+| Analytics              | GoatCounter (cookie-free script tag)                                          | Q11                |
+| Learner environment    | VS Code for everything                                                        | ADR-0014           |
 
 ## Site structure and URLs
 
 `learn.dompe.space` hosts a catalog of courses. This is the first course; others may follow.
 Starlight puts the locale first in the URL, so courses live under each locale:
 
-| URL | Page |
-|---|---|
-| `/` | Language detection page, redirects to `/en/` or `/es/` |
-| `/en/` , `/es/` | Course catalog (splash page with a card per course) |
-| `/en/about/` , `/es/about/` | About the author (shared by all courses) |
-| `/en/automation-ai/` | Course home: full title, subtitle, learning paths, author blurb |
-| `/en/automation-ai/01-fundamentals/01-04-paths/` | A lesson |
+| URL                                              | Page                                                            |
+| ------------------------------------------------ | --------------------------------------------------------------- |
+| `/`                                              | Language detection page, redirects to `/en/` or `/es/`          |
+| `/en/` , `/es/`                                  | Course catalog (splash page with a card per course)             |
+| `/en/about/` , `/es/about/`                      | About the author (shared by all courses)                        |
+| `/en/automation-ai/`                             | Course home: full title, subtitle, learning paths, author blurb |
+| `/en/automation-ai/01-fundamentals/01-04-paths/` | A lesson                                                        |
 
 The course slug `automation-ai` is short and stable even if the title wording changes.
 
@@ -53,7 +53,7 @@ navigation. Implement with a Starlight sidebar-per-section plugin (candidate:
 The repository is the whole learning site, not a single course, so name it generically
 (for example `learn`).
 
-```
+```text
 .
 ├── AGENTS.md
 ├── LICENSE                     # MIT, applies to code
@@ -119,36 +119,46 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
 export default defineConfig({
-  site: 'https://learn.dompe.space',
-  integrations: [
-    starlight({
-      // Site-level title. Each course's full title appears on its own home page.
-      title: { en: "Let's learn together", es: 'Aprendamos juntos' },
-      defaultLocale: 'en',
-      locales: {
-        en: { label: 'English', lang: 'en' },
-        es: { label: 'Español', lang: 'es' },
-      },
-      social: [
-        { icon: 'github', label: 'GitHub', href: 'https://github.com/ddompe/learn' },
-      ],
-      plugins: [
-        // One sidebar per course (verify plugin and API at M0)
-        // starlightSidebarTopics([{ label: 'Automation & AI for Business Users',
-        //   link: '/automation-ai/', items: [ { label: 'Orientation',
-        //   translations: { es: 'Orientación' },
-        //   autogenerate: { directory: 'automation-ai/00-orientation' } }, ... ] }]),
-      ],
-      head: [
-        // Analytics: GoatCounter
-        { tag: 'script', attrs: { 'data-goatcounter': 'https://<code>.goatcounter.com/count',
-          async: true, src: '//gc.zgo.at/count.js' } },
-      ],
-      components: {
-        Footer: './src/components/Footer.astro', // sponsor button
-      },
-    }),
-  ],
+	site: 'https://learn.dompe.space',
+	integrations: [
+		starlight({
+			// Site-level title. Each course's full title appears on its own home page.
+			title: { en: "Let's learn together", es: 'Aprendamos juntos' },
+			defaultLocale: 'en',
+			locales: {
+				en: { label: 'English', lang: 'en' },
+				es: { label: 'Español', lang: 'es' },
+			},
+			social: [
+				{
+					icon: 'github',
+					label: 'GitHub',
+					href: 'https://github.com/ddompe/learn',
+				},
+			],
+			plugins: [
+				// One sidebar per course (verify plugin and API at M0)
+				// starlightSidebarTopics([{ label: 'Automation & AI for Business Users',
+				//   link: '/automation-ai/', items: [ { label: 'Orientation',
+				//   translations: { es: 'Orientación' },
+				//   autogenerate: { directory: 'automation-ai/00-orientation' } }, ... ] }]),
+			],
+			head: [
+				// Analytics: GoatCounter
+				{
+					tag: 'script',
+					attrs: {
+						'data-goatcounter': 'https://<code>.goatcounter.com/count',
+						async: true,
+						src: '//gc.zgo.at/count.js',
+					},
+				},
+			],
+			components: {
+				Footer: './src/components/Footer.astro', // sponsor button
+			},
+		}),
+	],
 });
 ```
 
@@ -163,16 +173,16 @@ Notes:
 
 ## Custom components
 
-| Component | Purpose |
-|---|---|
-| `<LessonGoals>` | Renders the learning objectives box at the top of the lesson. |
+| Component         | Purpose                                                                                               |
+| ----------------- | ----------------------------------------------------------------------------------------------------- |
+| `<LessonGoals>`   | Renders the learning objectives box at the top of the lesson.                                         |
 | `<PromptExample>` | Good vs lousy prompt comparison with "what goes wrong", "why it works", and "check the answer" slots. |
-| `<Checkpoint>` | Self-check question with collapsible answer (built on `<details>`). |
-| `<CaseStudy>` | Styled callout connecting the lesson to Café Central. |
-| `<OsTabs>` | Windows / macOS / Linux tabs with synced selection (built on Starlight `<Tabs syncKey>`). |
-| `<Example>` | Shows a file from `examples/` with its generated output. |
-| `<LastVerified>` | Shows the verification date for fast-changing pages. |
-| `<TryPython>` | (Optional, M-later) In-browser Python via Pyodide, loaded lazily. |
+| `<Checkpoint>`    | Self-check question with collapsible answer (built on `<details>`).                                   |
+| `<CaseStudy>`     | Styled callout connecting the lesson to Café Central.                                                 |
+| `<OsTabs>`        | Windows / macOS / Linux tabs with synced selection (built on Starlight `<Tabs syncKey>`).             |
+| `<Example>`       | Shows a file from `examples/` with its generated output.                                              |
+| `<LastVerified>`  | Shows the verification date for fast-changing pages.                                                  |
+| `<TryPython>`     | (Optional, M-later) In-browser Python via Pyodide, loaded lazily.                                     |
 
 All component UI strings ("Good prompt", "Show answer") come from `src/content/i18n/*.json`
 so components are translated once.
@@ -199,17 +209,17 @@ Result: documented code and output can never drift from what actually runs.
 
 ## Quality checks (CI on every PR)
 
-| Check | Tool |
-|---|---|
-| Build | `astro build` |
-| Internal links | `starlight-links-validator` |
-| Formatting | Prettier with `prettier-plugin-astro` |
-| Markdown lint | markdownlint-cli2 |
-| Spelling | cspell with English and Spanish dictionaries plus a project word list |
-| Python tests | `uv run pytest` |
-| Output freshness | `scripts/run_examples.py` then `git diff --exit-code` |
-| Translation staleness | `scripts/check_translations.py` (warning, not failure) |
-| External links | lychee, weekly scheduled job opening an issue on failure |
+| Check                 | Tool                                                                  |
+| --------------------- | --------------------------------------------------------------------- |
+| Build                 | `astro build`                                                         |
+| Internal links        | `starlight-links-validator`                                           |
+| Formatting            | Prettier with `prettier-plugin-astro`                                 |
+| Markdown lint         | markdownlint-cli2                                                     |
+| Spelling              | cspell with English and Spanish dictionaries plus a project word list |
+| Python tests          | `uv run pytest`                                                       |
+| Output freshness      | `scripts/run_examples.py` then `git diff --exit-code`                 |
+| Translation staleness | `scripts/check_translations.py` (warning, not failure)                |
+| External links        | lychee, weekly scheduled job opening an issue on failure              |
 
 Optional later: Vale for prose style rules.
 

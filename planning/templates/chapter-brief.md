@@ -4,9 +4,9 @@ Status: draft | agreed
 
 ## Lessons in scope
 
-| ID | Lesson | Objectives (from curriculum) |
-|---|---|---|
-| | | |
+| ID  | Lesson | Objectives (from curriculum) |
+| --- | ------ | ---------------------------- |
+|     |        |                              |
 
 ## Learner starting point
 
@@ -25,20 +25,20 @@ Concrete mistakes observed in real learners. These become "Common mistakes" sect
 ## Café Central tasks
 
 | Lesson | Task |
-|---|---|
-| | |
+| ------ | ---- |
+|        |      |
 
 ## Examples required
 
-| File | Purpose | Test strategy |
-|---|---|---|
-| `examples/partPP/LL_slug.py` | | |
+| File                         | Purpose | Test strategy |
+| ---------------------------- | ------- | ------------- |
+| `examples/partPP/LL_slug.py` |         |               |
 
 ## Prompt section ideas
 
 | Lesson | Lousy prompt | What goes wrong | Key element the good prompt adds |
-|---|---|---|---|
-| | | | |
+| ------ | ------------ | --------------- | -------------------------------- |
+|        |              |                 |                                  |
 
 ## Diagrams needed
 

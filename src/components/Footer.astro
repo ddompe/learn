@@ -1,0 +1,31 @@
+---
+import Default from '@astrojs/starlight/components/Footer.astro';
+
+const labels: Record<string, string> = {
+	en: 'Buy me a coffee',
+	es: 'Invítame un café',
+};
+const locale = Astro.currentLocale ?? 'en';
+const label = labels[locale] ?? labels.en;
+---
+
+<Default {...Astro.props}>
+	<slot />
+</Default>
+<p class="sponsor-link">
+	<a
+		href="https://github.com/sponsors/ddompe"
+		target="_blank"
+		rel="noopener noreferrer"
+	>
+		☕ {label}
+	</a>
+</p>
+
+<style>
+	.sponsor-link {
+		margin-top: 1rem;
+		font-size: var(--sl-text-sm);
+		text-align: center;
+	}
+</style>

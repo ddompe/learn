@@ -4,22 +4,22 @@
 
 ### Resolved
 
-| # | Question | Decision |
-|---|---|---|
-| Q1 | Title | Automation & AI for Business Users: What They Never Taught You / Automatización e IA para profesionales: lo que nunca te enseñaron (ADR-0012) |
-| Q2 | Subdomain | learn.dompe.space, multi-course catalog (ADR-0002, ADR-0013) |
-| Q3 | Repo | Personal account `ddompe`, repo `learn` → `github.com/ddompe/learn` |
-| Q4 | GitHub Sponsors | Already set up on `ddompe` |
-| Q5 | Employer policy | No concerns |
-| Q6 | Machine-translated Spanish pages | Publish with a visible notice (05-i18n.md) |
-| Q7 | Copilot plan | Recommend Copilot Free; upgrade to Pro only if the learner hits the limits |
-| Q8 | Notebooks | Jupyter notebooks inside VS Code as the main path; explain the classic Jupyter web UI and cloud notebooks (Google Colab) because learners will meet them; marimo as a bonus (ADR-0014) |
-| Q10 | In-browser Python | Later milestone (M12) |
-| Q12 | Root URL | Detect browser language, remember the learner's choice (03-architecture.md) |
-| Q13 | Site name | Let's learn together / Aprendamos juntos |
-| Q11 | Analytics | GoatCounter, script tag via Starlight `head`, no cookies |
-| Q9 | LLM SDK for Part 10 | GitHub Copilot SDK (ADR-0015); revisit if it causes trouble |
-| Q14 | Author bio | Short and generic, no employer named (about-author.md) |
+| #   | Question                         | Decision                                                                                                                                                                               |
+| --- | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Q1  | Title                            | Automation & AI for Business Users: What They Never Taught You / Automatización e IA para profesionales: lo que nunca te enseñaron (ADR-0012)                                          |
+| Q2  | Subdomain                        | learn.dompe.space, multi-course catalog (ADR-0002, ADR-0013)                                                                                                                           |
+| Q3  | Repo                             | Personal account `ddompe`, repo `learn` → `github.com/ddompe/learn`                                                                                                                    |
+| Q4  | GitHub Sponsors                  | Already set up on `ddompe`                                                                                                                                                             |
+| Q5  | Employer policy                  | No concerns                                                                                                                                                                            |
+| Q6  | Machine-translated Spanish pages | Publish with a visible notice (05-i18n.md)                                                                                                                                             |
+| Q7  | Copilot plan                     | Recommend Copilot Free; upgrade to Pro only if the learner hits the limits                                                                                                             |
+| Q8  | Notebooks                        | Jupyter notebooks inside VS Code as the main path; explain the classic Jupyter web UI and cloud notebooks (Google Colab) because learners will meet them; marimo as a bonus (ADR-0014) |
+| Q10 | In-browser Python                | Later milestone (M12)                                                                                                                                                                  |
+| Q12 | Root URL                         | Detect browser language, remember the learner's choice (03-architecture.md)                                                                                                            |
+| Q13 | Site name                        | Let's learn together / Aprendamos juntos                                                                                                                                               |
+| Q11 | Analytics                        | GoatCounter, script tag via Starlight `head`, no cookies                                                                                                                               |
+| Q9  | LLM SDK for Part 10              | GitHub Copilot SDK (ADR-0015); revisit if it causes trouble                                                                                                                            |
+| Q14 | Author bio                       | Short and generic, no employer named (about-author.md)                                                                                                                                 |
 
 ### Still open
 
@@ -58,23 +58,23 @@ be out of preview.
 Requirements: simple setup on a static site, page views per page and per locale, referrers,
 no cookies (so no consent banner for European visitors), free or cheap.
 
-| Tool | Cost | Notes |
-|---|---|---|
-| **GoatCounter** | Free for non-commercial use (donations welcome) | One script tag, no cookies, open source, simple dashboard, supports custom events. **Recommended.** |
-| Cloudflare Web Analytics | Free | One script tag, no cookies; very basic reports. Good fallback. |
-| Umami (cloud or self-hosted) | Free hobby tier / self-host | Nicer dashboards; self-hosting is more maintenance. |
-| Plausible | Paid (self-host possible) | Polished, but a monthly cost for a free course. |
+| Tool                         | Cost                                            | Notes                                                                                               |
+| ---------------------------- | ----------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| **GoatCounter**              | Free for non-commercial use (donations welcome) | One script tag, no cookies, open source, simple dashboard, supports custom events. **Recommended.** |
+| Cloudflare Web Analytics     | Free                                            | One script tag, no cookies; very basic reports. Good fallback.                                      |
+| Umami (cloud or self-hosted) | Free hobby tier / self-host                     | Nicer dashboards; self-hosting is more maintenance.                                                 |
+| Plausible                    | Paid (self-host possible)                       | Polished, but a monthly cost for a free course.                                                     |
 
 Verify current plans and terms at M0. Implementation: add the script via Starlight's
 `head` config so every page in every locale is tracked.
 
 ## Risks
 
-| Risk | Impact | Mitigation |
-|---|---|---|
-| Scope is large (~90 lessons) | Course never ships | Pilot Parts 0–2, publish part by part, learn from pilot learners |
-| Fast-changing AI content goes stale | Credibility loss | Isolate volatile facts, `lastVerified`, 6-month review cadence |
-| Corporate laptop restrictions block installs | Learners drop out at Part 3/4 | uv (no admin), dedicated troubleshooting page, test on a locked-down Windows machine |
-| AI-generated lesson drafts are generic | Course looks like every other tutorial | Chapter briefs specify real pitfalls and the case study; human review on every lesson |
-| Translation lags behind English | Spanish site always incomplete | Translate per part; staleness checker |
-| Tool versions change (uv, Starlight, pandas) | Broken instructions | Pinned versions, CI runs all examples, scheduled dependency updates |
+| Risk                                         | Impact                                 | Mitigation                                                                            |
+| -------------------------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------- |
+| Scope is large (~90 lessons)                 | Course never ships                     | Pilot Parts 0–2, publish part by part, learn from pilot learners                      |
+| Fast-changing AI content goes stale          | Credibility loss                       | Isolate volatile facts, `lastVerified`, 6-month review cadence                        |
+| Corporate laptop restrictions block installs | Learners drop out at Part 3/4          | uv (no admin), dedicated troubleshooting page, test on a locked-down Windows machine  |
+| AI-generated lesson drafts are generic       | Course looks like every other tutorial | Chapter briefs specify real pitfalls and the case study; human review on every lesson |
+| Translation lags behind English              | Spanish site always incomplete         | Translate per part; staleness checker                                                 |
+| Tool versions change (uv, Starlight, pandas) | Broken instructions                    | Pinned versions, CI runs all examples, scheduled dependency updates                   |
