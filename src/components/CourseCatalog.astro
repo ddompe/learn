@@ -1,0 +1,19 @@
+---
+import { Card, CardGrid } from '@astrojs/starlight/components';
+import { getCourses, localize } from '../lib/courses';
+
+const locale = Astro.currentLocale ?? 'en';
+const courses = getCourses();
+const goToCourse = locale === 'es' ? 'Ir al curso' : 'Go to course';
+---
+
+<CardGrid>
+	{
+		courses.map((course) => (
+			<Card title={localize(course.title, locale)}>
+				<p>{localize(course.subtitle, locale)}</p>
+				<a href={`/${locale}/${course.slug}/`}>{goToCourse}</a>
+			</Card>
+		))
+	}
+</CardGrid>

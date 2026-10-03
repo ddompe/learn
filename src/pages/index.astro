@@ -1,0 +1,39 @@
+---
+// Static language-detection redirect for the bare `/` route. GitHub Pages has
+// no server-side logic, so this runs client-side: a stored preference (set by
+// the inline script in astro.config.mjs's Starlight `head` config, which
+// records the locale of the last page visited) wins; otherwise we read
+// navigator.languages. The <noscript> block is the fallback with JS disabled.
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Let's learn together / Aprendamos juntos</title>
+		<meta name="robots" content="noindex" />
+	</head>
+	<body>
+		<noscript>
+			<p><a href="/en/">Continue in English</a></p>
+			<p><a href="/es/">Continuar en Español</a></p>
+		</noscript>
+		<script>
+			const supportedLocales = ['en', 'es'];
+
+			function pickLocale() {
+				const stored = localStorage.getItem('preferredLocale');
+				if (stored && supportedLocales.includes(stored)) return stored;
+
+				const browserLocales = navigator.languages ?? [navigator.language ?? 'en'];
+				for (const browserLocale of browserLocales) {
+					if (browserLocale.toLowerCase().startsWith('es')) return 'es';
+				}
+				return 'en';
+			}
+
+			location.replace(`/${pickLocale()}/`);
+		</script>
+	</body>
+</html>

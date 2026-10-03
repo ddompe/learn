@@ -27,14 +27,28 @@ Placeholder content (`src/content/docs/{en,es}/index.mdx` + example guide/refere
 pages) is still the Starlight default — it gets replaced with the real catalog and
 course home in Stage 2.
 
-## Stage 2 — Multi-course structure and routing (M0, part 2) — not started
+## Stage 2 — Multi-course structure and routing (M0, part 2) — done, 2026-10-03
 
-- [ ] `src/pages/index.astro` language-detection redirect + `<noscript>` fallback.
-- [ ] `courses/automation-ai/course.yml` catalog metadata.
-- [ ] Course catalog pages (`en/index.mdx`, `es/index.mdx`) driven by `course.yml`.
-- [ ] `about.mdx` (EN/ES) from `planning/about-author.md`.
-- [ ] `automation-ai/index.mdx` course home (title, subtitle, learning paths, blurb).
-- [ ] Sidebar-per-course wired (plugin or custom override), Parts 0–10 skeleton.
+- [x] `src/pages/index.astro` language-detection redirect (stored preference →
+      `navigator.languages` → default `en`) + `<noscript>` fallback.
+- [x] `courses/automation-ai/course.yml` catalog metadata, read by `src/lib/courses.ts`.
+- [x] Course catalog pages (`en/index.mdx`, `es/index.mdx`) via `CourseCatalog.astro`,
+      driven by `course.yml` so both locales share one source of truth.
+- [x] `about.mdx` from `planning/about-author.md` — **English only**, per `AGENTS.md`'s
+      rule that Spanish content is a separate, deliberate task. Starlight's fallback
+      serves the English page at `/es/about/` with a translation notice until Stage 7
+      translates it.
+- [x] `automation-ai/index.mdx` course home (title, subtitle, learning paths table from
+      `02-curriculum.md`, author blurb) — English only, same reasoning.
+- [x] Sidebar-per-course wired directly in `astro.config.mjs` (no plugin needed): one
+      top-level group per course, with Parts 0–10 as nested autogenerate groups (11 stub
+      `index.mdx` pages, English only). Starlight 0.42.5 requires the nested
+      `{ label, items: [{ autogenerate }] }` shape — the flat `{ label, autogenerate }`
+      form used in earlier Starlight versions was removed in v0.39.0.
+- [x] Verified with `npm run build` (30 pages, no errors) and a local `astro dev` pass:
+      `/`, `/en/`, `/es/`, `/en/automation-ai/`, `/es/automation-ai/`, `/en/about/`, and
+      a Part page all return 200; sidebar shows all 11 Parts; redirect script resolves
+      stored-preference → browser-language → `en` correctly.
 
 ## Stage 3 — CI/CD, deploy, analytics, funding (M0, part 3) — not started
 
