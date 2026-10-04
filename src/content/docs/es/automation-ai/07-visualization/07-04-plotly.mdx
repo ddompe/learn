@@ -1,0 +1,139 @@
+---
+title: Plotly
+description: Construye gráficos interactivos que los lectores pueden recorrer con el cursor, ampliar y filtrar.
+sidebar:
+  order: 4
+lessonId: '7.4'
+estimatedMinutes: 20
+prerequisites: ['7.2']
+translationStatus: machine
+sourceHash: 8123d897ecc1
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Construir un gráfico de líneas interactivo con Plotly. - Guardarlo como una
+	página web independiente. - Explicar cuándo ayuda un gráfico interactivo y
+	cuándo es mejor uno estático.
+</LessonGoals>
+
+## Por qué importa
+
+Una imagen estática responde una pregunta. Un gráfico **interactivo** permite al lector
+pasar el cursor para ver valores exactos, ampliar un período y hacer clic en las entradas
+de la leyenda para ocultar líneas. Eso ayuda cuando un gráfico tiene muchas líneas o
+muchos detalles y el lector quiere explorar.
+
+<CaseStudy>
+	El dueño quiere comparar categorías semana a semana y consultar el valor
+	exacto de un punto.
+</CaseStudy>
+
+## Un gráfico como página web
+
+**Plotly** dibuja gráficos en un navegador con JavaScript. Desde Python, describes el
+gráfico y Plotly escribe un archivo HTML que se abre en cualquier navegador.
+
+<Example file="part07/04_plotly.py" />
+
+`plotly.express` (importado como `px`) crea un gráfico a partir de una tabla ordenada en
+una sola llamada: `x`, `y` y `color` eligen las columnas, y `markers=True` marca cada
+semana.
+
+Pruébalo tú mismo a continuación. Pasa el cursor sobre un punto, haz doble clic para
+restablecer el zoom y haz clic en un nombre de la leyenda para ocultar esa línea.
+
+<iframe
+	src="/charts/automation-ai/part07/04_weekly_sales.html"
+	title="Gráfico de líneas interactivo de las ventas semanales por categoría"
+	width="100%"
+	height="480"
+	loading="lazy"
+></iframe>
+
+## Cosas que debes saber
+
+- La página carga la biblioteca de Plotly desde internet (`include_plotlyjs="cdn"`), lo que mantiene
+  el archivo pequeño. Necesita conexión. Para un archivo sin conexión, usa `include_plotlyjs=True` y espera un archivo de varios megabytes.
+- El archivo es un programa que se ejecuta en el navegador del lector. Comparte solo gráficos construidos con datos
+  que tengas permitido compartir (lección 2.8). Los datos están dentro del archivo.
+- Los gráficos interactivos son más difíciles de poner en un informe impreso o en un archivo de Word. Para esos casos, usa una imagen estática (lección 7.2).
+
+<Mermaid
+	diagram={`flowchart TD
+  A["¿Quién lo lee y dónde?"] --> B{"¿En pantalla, quiere explorar?"}
+  B -- Sí --> C["Interactivo: HTML de Plotly"]
+  B -- No --> D["Estático: PNG de matplotlib"]`}
+/>
+
+## Manos a la obra
+
+### Ahora tú
+
+Abre el gráfico de arriba. ¿Qué categoría tuvo su semana más alta en la primera semana de enero?
+
+<Checkpoint question="Muestra la respuesta">
+	Jugo (jugo), con unos 33,200 colones en la semana que termina el 7 de enero,
+	según la tabla dinámica de la lección 6.5. Pasa el cursor para confirmar el
+	número.
+</Checkpoint>
+
+## Errores comunes
+
+- **Compartir un archivo interactivo que contiene datos privados.**
+- **Olvidar que la versión con CDN necesita internet.**
+- **Usarlo para material impreso.**
+- **Demasiadas líneas.** La interacción ayuda, pero diez líneas siguen siendo difíciles de leer.
+- **Depender del cursor para el mensaje clave.** Ponlo en el título.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Hazlo interactivo.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente añade un framework de paneles pesado, o reescribe tu gráfico en
+		otra biblioteca.
+	</Fragment>
+	<Fragment slot="good">
+		Tengo una tabla ordenada de pandas "weekly" con las columnas fecha (fecha de
+		fin de semana), categoria y monto. Usando solo plotly.express, escribe el
+		código de un gráfico de líneas con una línea por categoria, marcadores, un
+		título y rótulos de ejes legibles. Guárdalo como un archivo HTML
+		independiente que cargue Plotly desde un CDN. Dime qué pasa si el lector no
+		tiene conexión.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Nombra la **biblioteca** y el **esquema**, las **restricciones** (un
+		archivo, CDN) y pregunta por la contrapartida.
+	</Fragment>
+	<Fragment slot="check">
+		Abre el archivo en un navegador y pasa el cursor sobre tres puntos para
+		compararlos con la tabla.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué ofrece un gráfico interactivo?">
+	Pasar el cursor para ver valores exactos, ampliar, y ocultar o mostrar líneas.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué un lector sin conexión no puede ver un gráfico basado en CDN?">
+	La página carga la biblioteca de Plotly desde internet al abrirse.
+</Checkpoint>
+
+<Checkpoint question="¿Cuándo es mejor una imagen estática?">
+	Para documentos impresos, archivos de Word y en cualquier lugar donde la
+	interacción sea imposible.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 7.5 pone gráficos y filtros en una pequeña aplicación.

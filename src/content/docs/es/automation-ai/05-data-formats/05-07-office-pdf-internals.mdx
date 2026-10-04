@@ -1,0 +1,155 @@
+---
+title: Archivos de Office y PDF por dentro
+description: Comprueba que xlsx y docx son XML comprimido en zip, y que un PDF guarda instrucciones de dibujo, no tablas.
+sidebar:
+  order: 7
+lessonId: '5.7'
+estimatedMinutes: 25
+prerequisites: ['1.5', '5.1']
+translationStatus: machine
+sourceHash: de0a612ea787
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar que `.xlsx` y `.docx` son archivos zip de XML. - Explicar la
+	diferencia entre los formatos modernos de Office y los heredados. - Explicar
+	por qué las tablas de los PDF son difíciles de extraer.
+</LessonGoals>
+
+## Por qué importa
+
+Los datos de negocio viven en libros de Excel, documentos de Word y PDF, mucho más que en
+archivos CSV ordenados. Para automatizar con ellos, ayuda saber qué hay dentro. Así
+entenderás por qué un archivo de Excel con celdas combinadas es incómodo, por qué una
+tabla de un PDF no se copia sin más a una hoja de cálculo y por qué un asistente de IA a
+veces confunde ambos.
+
+<CaseStudy>
+	El resumen mensual de Café Central es un libro de Excel con encabezados
+	combinados. La factura del proveedor es un PDF. Descarga los documentos de
+	Office de esta parte desde el siguiente enlace y descomprímelos junto a tus
+	otros datos.
+</CaseStudy>
+
+[Descarga los documentos de Office de Café Central (zip)](/downloads/automation-ai/cafe-central-documents.zip)
+
+## Excel y Word: XML comprimido en zip
+
+Los archivos modernos de Office (`.xlsx`, `.docx`, `.pptx`) son **archivos zip** que
+contienen varios archivos **XML**. XML es un formato de texto con etiquetas, como
+`<mergeCell ref="A1:E1"/>`. Puedes abrir el archivo comprimido y leer sus partes.
+
+<Example file="part05/07_office_pdf.py" />
+
+El primer bloque lista los archivos dentro del libro: un archivo XML por hoja, un archivo
+de estilos y uno que describe el libro. Las celdas combinadas están ahí mismo, en el XML
+de la hoja: `A1:E1` es el título, y `B2:C2` y `D2:E2` son los encabezados de los meses.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["cafe_central_monthly_summary.xlsx (un zip)"] --> B["xl/workbook.xml: lista de hojas"]
+  A --> C["xl/worksheets/sheet1.xml: celdas y rangos combinados"]
+  A --> D["xl/styles.xml: fuentes y colores"]
+  A --> E["docProps: autor y fechas"]`}
+/>
+
+Los formatos más antiguos `.xls` y `.doc` son **formatos binarios heredados**. Son más
+difíciles de leer y pocas bibliotecas los manejan. Si puedes, vuelve a guardarlos como
+`.xlsx` o `.docx` (desde un programa, no cambiando el nombre).
+
+## PDF: instrucciones de dibujo
+
+Un **PDF** está diseñado para verse igual en todas partes. No dice "aquí hay una tabla de
+3 columnas". Dice "dibuja esta palabra en esta posición, con esta fuente". El segundo
+bloque del ejemplo muestra las primeras instrucciones de dibujo de la factura: cada
+fragmento de texto tiene coordenadas `x` y `y`.
+
+Así que una "tabla" en un PDF son solo palabras que casualmente quedan alineadas. No hay
+filas, ni columnas, ni celdas. Para sacar una tabla, un programa tiene que adivinar
+agrupando las palabras por posición (lección 5.8).
+
+Dos problemas más:
+
+- El texto puede estar guardado fuera del orden de lectura.
+- Un **PDF escaneado** es solo una imagen. No hay texto en absoluto, así que necesitas
+  **OCR** (reconocimiento óptico de caracteres), un software que lee la imagen. El OCR
+  comete errores.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+Haz una copia del libro y cambia su extensión de `.xlsx` a `.zip`. Ábrelo con la
+herramienta de descompresión de tu sistema y busca `xl/worksheets/sheet1.xml`. Busca
+`mergeCell`. No guardes nada de vuelta.
+
+### Ahora tú
+
+¿Por qué puedes extraer fácilmente el texto de `cafe_central_invoice.pdf`, pero no su
+tabla?
+
+<Checkpoint question="Muestra la respuesta">
+	Las palabras se guardan como texto con posiciones, así que el texto está
+	disponible. La tabla no se guarda como estructura. Las filas y columnas
+	existen solo como alineación visual y hay que reconstruirlas.
+</Checkpoint>
+
+## Errores comunes
+
+- **Cambiar el nombre de `.xls` a `.xlsx` para convertirlo.** No lo convierte.
+- **Usar como conjunto de datos un libro con celdas combinadas.** Los encabezados combinados ocultan valores (lección 6.7).
+- **Copiar una tabla de un PDF y confiar en ella.** Las columnas se desplazan.
+- **Suponer que un PDF tiene texto.** Un escaneo no tiene.
+- **Abrir archivos de Office con un editor de texto y guardarlos.**
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Resume esta tabla de un PDF.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente fusiona dos columnas, omite una fila o inventa un total, y lo
+		presenta con seguridad.
+	</Fragment>
+	<Fragment slot="good">
+		A continuación está el texto extraído de un PDF de factura de proveedor. Las
+		columnas eran: descripción, cantidad, precio unitario, total. Reconstruye
+		las líneas como una tabla con esas cuatro columnas. No calcules nada por tu
+		cuenta. Enumera cualquier línea en la que no estés seguro de a qué columna
+		pertenece un número. Al final, indica cuántas líneas encontraste.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Nombra la **estructura esperada**, prohíbe calcular (una **restricción**) y
+		pide incertidumbre y un conteo, lo que permite la **verificación**.
+	</Fragment>
+	<Fragment slot="check">
+		Abre el PDF y cuenta las líneas tú mismo. Comprueba que cantidad por precio
+		unitario sea igual a cada total.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué hay dentro de un archivo .xlsx?">
+	Un archivo zip de archivos XML: hojas, estilos e información del libro.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué es difícil extraer una tabla de un PDF?">
+	El PDF guarda palabras en posiciones, no filas y columnas, así que la
+	estructura hay que adivinarla.
+</Checkpoint>
+
+<Checkpoint question="¿Para qué se necesita el OCR?">
+	Para los PDF escaneados, que contienen solo una imagen del texto.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 5.8 muestra cómo las herramientas convierten estos documentos a Markdown.

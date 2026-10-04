@@ -1,0 +1,140 @@
+---
+title: seaborn
+description: Construye gráficos estadísticos rápidamente a partir de DataFrames.
+sidebar:
+  order: 3
+lessonId: '7.3'
+estimatedMinutes: 20
+prerequisites: ['7.2']
+translationStatus: machine
+sourceHash: c2f5e7c0c4f0
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar qué añade seaborn a matplotlib. - Dibujar un diagrama de caja y un
+	mapa de calor a partir de un DataFrame. - Leer ambos gráficos correctamente.
+</LessonGoals>
+
+## Por qué importa
+
+Algunas preguntas tratan de la **forma** de los datos, no solo de los totales: ¿qué tan
+dispersos están los montos y dónde están los puntos de mucha y poca actividad?
+**seaborn** se construye sobre matplotlib para responderlas en una o dos líneas,
+directamente desde un DataFrame.
+
+<CaseStudy>
+	Daniela quiere saber si los sándwiches son consistentemente caros o solo
+	tienen unas pocas ventas grandes, y qué categoría tuvo más actividad en qué
+	semana.
+</CaseStudy>
+
+## Qué añade seaborn
+
+Sigues usando matplotlib para la figura, los títulos y el guardado. seaborn añade:
+
+- Gráficos construidos a partir de nombres de columnas: `sns.boxplot(data=sales, x="categoria", y="monto")`.
+- Estilos predeterminados atractivos (`set_theme`).
+- Resúmenes estadísticos, como un diagrama de caja, dibujados por ti.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["DataFrame en forma ordenada"] --> B["seaborn: elegir columnas"]
+  B --> C["matplotlib: figura, título, guardado"]`}
+/>
+
+seaborn funciona mejor con **datos ordenados** (tidy, lección 6.7): una fila por observación, una columna por variable.
+
+## Dos gráficos
+
+<Example file="part07/03_seaborn.py" />
+
+![Diagramas de caja de los montos de venta por categoría. Los montos de sandwich son los más altos y los más dispersos. Los de te y pastel son los más bajos.](/charts/automation-ai/part07/03_boxplot.png)
+
+Un **diagrama de caja** (_box plot_) muestra la dispersión. La caja cubre la mitad central de los valores, la línea interior es la
+**mediana** (el valor del medio) y los bigotes se extienden hasta el rango habitual. Los puntos más allá son valores
+inusuales. Los montos de sándwich son los más altos, con la mediana en 3,200 colones, y las ventas de té son las más bajas.
+
+![Mapa de calor de las ventas por categoría y semana ISO. Sandwich en las semanas 2 y 3 y jugo en la semana 1 son las celdas más oscuras. Pastel en la semana 5 es la más clara.](/charts/automation-ai/part07/03_heatmap.png)
+
+Un **mapa de calor** (_heatmap_) colorea una tabla según el valor. Más oscuro significa más. Proviene de la tabla dinámica de
+la lección 6.5, con los números escritos en cada celda, de modo que nada depende solo del color. La semana 5 es
+corta, porque el archivo termina el 31 de enero, lo que explica sus celdas claras.
+
+## Leer con cuidado
+
+- Un diagrama de caja oculta la cantidad de puntos. Revisa los conteos.
+- En un mapa de calor, una celda clara puede significar "poco" o "período incompleto". Sabe cuál de los dos es.
+- No uses una escala de colores en la que ambos extremos se parezcan. Usa un solo tono, de claro a oscuro.
+
+## Manos a la obra
+
+### Ahora tú
+
+En el diagrama de caja, ¿qué categoría tiene la caja más estrecha y qué te dice eso?
+
+<Checkpoint question="Muestra una respuesta de ejemplo">
+	Pastel tiene solo dos precios en el menú, así que sus montos casi no varían.
+	Una caja estrecha significa montos consistentes.
+</Checkpoint>
+
+## Errores comunes
+
+- **Usar datos anchos.** Reorganízalos primero en filas ordenadas.
+- **Paletas arcoíris.** No tienen orden. Usa un solo tono.
+- **Interpretar de más grupos pequeños.** Pocos puntos hacen cajas inestables.
+- **Olvidar los períodos incompletos,** como la última semana corta.
+- **Dejar que `set_theme` cambie todos los gráficos posteriores** sin darte cuenta.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Hazlo más bonito.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente añade degradados, una paleta arcoíris y una leyenda sin
+		propósito.
+	</Fragment>
+	<Fragment slot="good">
+		Tengo una tabla ordenada de pandas "sales" con las columnas categoria y
+		monto (float). Escribe código de seaborn para un diagrama de caja de monto
+		por categoria en un solo azul apagado, con el eje y rotulado "Colones" y sin
+		rótulo en el eje x. Guárdalo como boxplot.png. Luego dime cómo leer un
+		diagrama de caja en tres viñetas y qué oculta.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Nombra el **esquema**, las **restricciones de diseño** (un color, rótulos) y
+		pide una explicación y una limitación como **verificación**.
+	</Fragment>
+	<Fragment slot="check">
+		Agrupa la tabla por categoría, calcula la mediana de los montos y comprueba
+		que los valores coincidan con la línea dentro de cada caja.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué muestra un diagrama de caja?">
+	La dispersión de los valores: la mitad central en la caja, la mediana como una
+	línea y los valores inusuales como puntos.
+</Checkpoint>
+
+<Checkpoint question="¿Qué forma de datos funciona mejor con seaborn?">
+	Datos ordenados (tidy), con una fila por observación y una columna por
+	variable.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué escribir los números en las celdas de un mapa de calor?">
+	Para que el gráfico no dependa solo del color y los lectores puedan ver los
+	valores exactos.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 7.4 crea un gráfico que los lectores pueden explorar.

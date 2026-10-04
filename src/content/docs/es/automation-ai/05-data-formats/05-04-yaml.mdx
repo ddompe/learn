@@ -1,0 +1,144 @@
+---
+title: YAML
+description: Lee configuraciones en YAML y reconoce las trampas de la sangría y de los tipos.
+sidebar:
+  order: 4
+lessonId: '5.4'
+estimatedMinutes: 20
+prerequisites: ['5.3']
+translationStatus: machine
+sourceHash: fe364093b195
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Leer un archivo YAML. - Explicar por qué importa la sangría en YAML. -
+	Reconocer las trampas de tipos, como `no` convertido en `False`.
+</LessonGoals>
+
+## Por qué importa
+
+**YAML** es un formato de texto diseñado para que las personas lo escriban con
+facilidad. Muchas herramientas lo usan para configuraciones: herramientas de informes,
+sistemas de automatización y proyectos de software. Donde JSON necesita llaves y comillas
+por todas partes, YAML usa sangría y palabras simples. Eso lo hace agradable de leer y
+fácil de equivocar de forma sutil.
+
+<CaseStudy>
+	Daniela quiere que el informe mensual lea su configuración desde un archivo:
+	qué mes, qué tiendas y cuántas categorías principales. Un archivo YAML le
+	permite cambiarlas sin tocar el programa.
+</CaseStudy>
+
+## La forma de YAML
+
+<Example file="part05/04_report_settings.yaml" />
+
+- Pares `clave: valor`. Una clave seguida de líneas con sangría contiene valores anidados.
+- Una línea que empieza con un guion y un espacio es un elemento de una lista.
+- `#` inicia un comentario, algo que JSON no permite.
+- La sangría usa **espacios**, nunca tabuladores. Dos espacios por nivel es el hábito común.
+
+En la práctica, YAML es un superconjunto de JSON, pero casi siempre escribirás el estilo
+legible.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["report"] --> B["title"]
+  A --> C["month"]
+  A --> D["shops: una lista de 3"]
+  A --> E["include_charts"]`}
+/>
+
+## Leerlo en Python
+
+<Example file="part05/04_yaml.py" />
+
+La configuración se carga en diccionarios y listas. Fíjate en `Month: 2024-01 str`: el
+valor está entre comillas en el archivo, así que sigue siendo texto. Sin las comillas,
+algunos lectores de YAML adivinarían un tipo. Esa adivinanza es el origen de las trampas.
+
+## Las trampas
+
+1. **La sangría es estructura.** Una línea con un espacio de menos pertenece a otro padre
+   o rompe el archivo. Un **tabulador** es un error.
+2. **Las palabras se convierten en otros tipos.** En los lectores de YAML comunes, `yes`,
+   `no`, `on` y `off` sin comillas se vuelven booleanos. El código de país `no` (Noruega)
+   se convierte en `False`. Pon entre comillas las cadenas que podrían confundirse.
+3. **Los números pierden dígitos.** `1.10` se convierte en `1.1`. Una versión debe ir
+   entre comillas: `"1.10"`.
+4. **Dos puntos dentro de un valor** pueden confundir al lector. Ponlo entre comillas.
+
+La función `safe_load` es la forma segura de leer YAML en Python. Nunca uses `load`
+simple con archivos que no escribiste, porque puede ejecutar código.
+
+## Manos a la obra
+
+### Ahora tú
+
+¿Qué significa `shops: [Heredia, Alajuela]` en YAML y en qué se convierte `active: no`?
+
+<Checkpoint question="Muestra las respuestas">
+	La primera es una lista de dos elementos, escrita en el estilo compacto. La
+	segunda se convierte en el booleano `False` en muchos lectores, así que pon el
+	valor entre comillas, `"no"`, si querías el texto.
+</Checkpoint>
+
+## Errores comunes
+
+- **Usar tabuladores para la sangría.**
+- **Olvidar poner entre comillas valores que parecen otros tipos.** Fechas, versiones, `yes`, `no`.
+- **Mezclar anchos de sangría.**
+- **Usar `yaml.load` con entrada no confiable.** Usa `safe_load`.
+- **Editar en una herramienta que cambia la sangría.**
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Escribe un archivo de configuración.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente elige al azar un formato y las claves, y deja sin comillas
+		valores como `2024-01` o `no`, de modo que se leen con el tipo equivocado.
+	</Fragment>
+	<Fragment slot="good">
+		Escribe un archivo de configuración YAML para un informe mensual con: mes
+		(como texto "2024-01"), una lista de tiendas (San José, Heredia, Alajuela),
+		un código de moneda (CRC) y un verdadero/falso para los gráficos. Usa dos
+		espacios de sangría y nada de tabuladores. Pon entre comillas cualquier
+		valor que YAML pueda leer como un tipo que no sea texto. Luego muestra
+		Python que lo cargue con yaml.safe_load e imprima el tipo de cada valor.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Indica los campos (**entrada**), las **restricciones** de formato y pide una
+		**verificación** mediante los tipos.
+	</Fragment>
+	<Fragment slot="check">
+		Ejecuta el código y revisa los tipos impresos: confirma que el mes es texto
+		y que los gráficos son un booleano.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué debe usar la sangría de YAML?">
+	Espacios, nunca tabuladores.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué el código de país no causaría problemas?">
+	Sin comillas, se lee como el booleano `False`.
+</Checkpoint>
+
+<Checkpoint question="¿Qué función lee YAML de forma segura en Python?">
+	`yaml.safe_load`.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 5.5 cubre TOML, un formato parecido con menos trampas.

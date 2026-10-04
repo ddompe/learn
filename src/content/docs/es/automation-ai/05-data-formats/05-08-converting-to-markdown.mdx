@@ -1,0 +1,172 @@
+---
+title: Convertir documentos a Markdown
+description: Convierte documentos de Office y PDF a Markdown y juzga la calidad de la conversión.
+sidebar:
+  order: 8
+lessonId: '5.8'
+estimatedMinutes: 20
+prerequisites: ['5.6', '5.7']
+lastVerified: 2026-10-03
+translationStatus: machine
+sourceHash: 0949c43fb238
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar por qué conviertes documentos a Markdown para usarlos con IA. -
+	Nombrar herramientas que convierten archivos de Office y PDF. - Juzgar la
+	calidad de una conversión con una lista de comprobación.
+</LessonGoals>
+
+## Por qué importa
+
+No puedes entregarle a un asistente un PDF o un libro de Excel y estar seguro de que
+entiende el diseño. Convertir primero un documento a Markdown te da texto plano que
+puedes leer, corregir y enviar. La conversión nunca es perfecta, así que necesitas saber
+dónde falla y cómo comprobarlo.
+
+<CaseStudy>
+	Daniela quiere que un asistente responda preguntas sobre la factura del
+	proveedor y el resumen mensual. Convierte ambos a Markdown y revisa el
+	resultado antes de enviarlo.
+</CaseStudy>
+
+## Qué hace una conversión
+
+Un conversor lee la estructura que tiene un archivo y escribe el Markdown más cercano.
+En un archivo de Word, esa estructura es explícita (encabezados, listas, tablas), así que
+la conversión suele ser buena. En un PDF, la estructura no existe, así que la
+herramienta debe adivinar a partir de las posiciones.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["docx"] --> D["Conversor"]
+  B["xlsx"] --> D
+  C["PDF"] --> D
+  D --> E["Markdown"]
+  E --> F["Tú lo compruebas"]
+  F --> G["Enviar a un asistente, o guardar"]`}
+/>
+
+## Verlo a mano
+
+<Example file="part05/08_to_markdown.py" />
+
+Dos lecciones de este pequeño experimento.
+
+1. **Las celdas combinadas pierden significado.** Los encabezados de mes del libro
+   (`Diciembre 2023`, `Enero 2024`) están en celdas combinadas sobre `Ventas` y `Monto`.
+   La tabla convertida tiene dos columnas `Ventas` y dos `Monto` sin mes. Una persona ya
+   no puede saber cuál es cuál.
+2. **Las tablas de PDF hay que reconstruirlas.** Al agrupar las palabras con la misma
+   posición `y`, el script recupera cada fila de la factura. Esto funciona con un PDF
+   limpio y simple. Las facturas reales tienen líneas partidas, columnas de ancho
+   variable y pies de página, y rompen reglas tan simples.
+
+## Herramientas
+
+Varias herramientas convierten documentos a Markdown. Difieren en sus puntos fuertes y
+cambian rápido. Verificado por última vez el 2026-10-03.
+
+- **pandoc** es un conversor de línea de comandos, de larga trayectoria, entre muchos
+  formatos de documento. Es fuerte con Word y documentos estructurados similares.
+- **MarkItDown** es una herramienta de Python de código abierto que convierte archivos de
+  Office, PDF y otros a Markdown para usarlos con modelos de lenguaje.
+- **Docling** es un conjunto de herramientas de código abierto que analiza el diseño de
+  los documentos y maneja tablas y páginas escaneadas de forma más ambiciosa.
+
+Consulta la página de cada proyecto para ver qué admite hoy: [pandoc](https://pandoc.org),
+[MarkItDown](https://github.com/microsoft/markitdown) y
+[Docling](https://github.com/docling-project/docling). Sigue los hábitos de la lección 3.8
+antes de instalar: revisa el nombre, los mantenedores y el historial de versiones.
+
+## Una lista de comprobación de calidad
+
+Sea cual sea la herramienta, compara la salida con el original:
+
+1. **Cuenta** las filas, columnas y secciones.
+2. **Revisa los números** en tres lugares: el primero, uno del medio y el último.
+3. **Revisa los encabezados** y sus niveles.
+4. **Busca contenido perdido:** notas al pie, encabezados, celdas combinadas, texto en imágenes.
+5. **Busca desorden,** sobre todo en páginas de varias columnas.
+6. **Revisa los caracteres especiales:** acentos y signos de moneda.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+Abre la factura en PDF y las filas reconstruidas del ejemplo. Comprueba que cantidad por
+precio unitario sea igual al total en cada una de las tres líneas.
+
+### Ahora tú
+
+Un conversor convierte una página de PDF de tres columnas en un texto donde la columna
+derecha aparece antes que la izquierda. ¿Qué comprobación lo habría detectado?
+
+<Checkpoint question="Muestra la respuesta">
+	Leer la salida en orden y compararla con la página (comprobación 5 de la
+	lista). El desorden se nota en oraciones que saltan entre temas.
+</Checkpoint>
+
+## Errores comunes
+
+- **Confiar en la salida sin comprobarla.**
+- **Usar una sola herramienta para todo.** Prueba otra cuando un documento se convierte mal.
+- **Convertir páginas escaneadas sin OCR.** No obtienes nada.
+- **Enviar documentos confidenciales a un conversor en línea.** Se aplica la lección 2.8.
+- **Olvidar el original.** Consérvalo y anota la herramienta que usaste.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Conviértelo a Markdown.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente vuelve a escribir el texto y lo "mejora", omite una fila de la
+		tabla o inventa una cifra faltante, sin que puedas notarlo.
+	</Fragment>
+	<Fragment slot="good">
+		Convertí un PDF de factura de proveedor a Markdown con una herramienta
+		automática. Voy a pegar el Markdown y el texto del original. Compáralos y
+		enumera cualquier diferencia: líneas faltantes, números cambiados, columnas
+		fusionadas o encabezados perdidos. No reescribas el documento. Di "no se
+		encontraron diferencias" solo si revisaste cada línea.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Le da al asistente una tarea de **comprobación** con ambas **entradas**, y
+		la **restricción** de no reescribir, de modo que las diferencias siguen
+		siendo visibles.
+	</Fragment>
+	<Fragment slot="check">
+		Revisa por muestreo tres de las diferencias que enumera, y también tres
+		líneas que dice que están bien. Un asistente que revisa a otro asistente es
+		solo una primera pasada.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Por qué es más fácil convertir un archivo de Word que un PDF?">
+	Word guarda estructura real, como encabezados y tablas. Un PDF guarda solo las
+	posiciones de las palabras.
+</Checkpoint>
+
+<Checkpoint question="¿Qué se perdió al convertir el libro de Excel?">
+	Los encabezados de mes en celdas combinadas, así que las columnas ya no
+	estaban rotuladas por mes.
+</Checkpoint>
+
+<Checkpoint question="Menciona dos elementos de la lista de comprobación de calidad.">
+	Por ejemplo: contar filas y columnas, revisar números, revisar los niveles de
+	encabezado o buscar desorden.
+</Checkpoint>
+
+## Para profundizar
+
+- La Parte 6 lee Excel con pandas y maneja los encabezados combinados para el análisis.

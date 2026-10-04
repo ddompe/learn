@@ -1,0 +1,161 @@
+---
+title: Leer y escribir Excel
+description: Lee hojas de Excel con pandas y openpyxl, y maneja encabezados combinados y varias hojas.
+sidebar:
+  order: 1
+lessonId: '6.1'
+estimatedMinutes: 25
+prerequisites: ['4.13', '5.7']
+translationStatus: machine
+sourceHash: 2214eda1a019
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Leer un libro de Excel en pandas. - Manejar varias hojas y encabezados
+	combinados. - Explicar por qué un libro "bonito" todavía no es un conjunto de
+	datos.
+</LessonGoals>
+
+## Por qué importa
+
+La mayoría de los datos de negocio nacen en Excel, y no en forma ordenada. Los libros
+tienen títulos, celdas de encabezado combinadas, filas de subtotales y varias hojas.
+Leer uno con la configuración por defecto te da columnas llamadas `Unnamed: 1`. Para
+automatizar un informe, tienes que convertir el libro que hicieron las personas en una
+tabla que un programa pueda usar.
+
+<CaseStudy>
+	El libro de resumen mensual de Café Central tiene un título combinado,
+	encabezados de mes combinados sobre dos columnas y una fila de totales escrita
+	a mano. Daniela necesita sus números en una tabla. Descarga los documentos de
+	Office de la lección 5.7 si todavía no los tienes.
+</CaseStudy>
+
+## Dos herramientas
+
+- **pandas** lee una hoja en una tabla (un DataFrame, lección 6.2) con `pd.read_excel`.
+- **openpyxl** es la biblioteca que está por debajo. Da acceso a detalles como rangos
+  combinados, fuentes y fórmulas. pandas la usa automáticamente con `.xlsx`, y ya la
+  tienes en el proyecto.
+
+Ambas están instaladas en el proyecto del curso (lección 4.13). Si empiezas tu propio proyecto, añádelas con `uv add pandas openpyxl`.
+
+## Leer una hoja
+
+<Example file="part06/01_excel.py" />
+
+Paso a paso:
+
+1. `sheet_name=None` lee **todas** las hojas en un diccionario. El libro tiene dos: `Resumen`
+   y `Notas`.
+2. Leer `Resumen` con los valores por defecto trata la primera fila, el título combinado,
+   como encabezado. Todas las demás columnas pasan a ser `Unnamed: n`. No hay nada malo
+   en el archivo. Lo que está mal es el valor por defecto para este diseño.
+3. Leer con `header=None` da la cuadrícula en bruto. La fila 1 contiene los nombres de los
+   meses, pero una celda combinada guarda su valor solo en su **primera** celda. La otra
+   celda está vacía. `ffill()` ("relleno hacia adelante") copia el mes a lo largo.
+4. Unimos el mes y la etiqueta para formar nombres de columna claros, como `Enero 2024 Monto`,
+   y conservamos las filas que están debajo de los encabezados.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Libro: título, meses combinados, etiquetas, filas, totales"] --> B["Leer con header=None"]
+  B --> C["Rellenar los meses combinados"]
+  C --> D["Construir un nombre claro por columna"]
+  D --> E["Tabla con encabezados correctos"]`}
+/>
+
+## Qué comprobar en un libro
+
+- **Varias hojas.** ¿Cuál tiene los datos?
+- **Filas de encabezado.** ¿Cuántas y combinadas?
+- **Totales y notas en el área de datos.** Quítalos antes de analizar.
+- **Fórmulas.** pandas lee el último resultado guardado. Un archivo escrito por un
+  programa puede tener fórmulas sin resultados guardados, que se leen como vacías.
+- **Filas, columnas y hojas ocultas.**
+
+## Escribir Excel
+
+`DataFrame.to_excel(path, index=False)` escribe una hoja. La lección 6.10 cubre el
+formato. Escribir crea un archivo nuevo y no edita el original.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+1. Ejecuta el ejemplo y compara las tres listas de columnas impresas.
+2. Cambia `header=None` por `header=1` en la primera lectura. ¿Qué cambia?
+
+### Ahora tú
+
+La última fila de la tabla es `Total`. ¿Por qué sería un problema si sumaras la columna
+`Monto` de esta tabla?
+
+<Checkpoint question="Muestra la respuesta">
+	La fila de total también se contaría, así que la suma se duplicaría. Los
+	totales mezclados en el área de datos deben quitarse antes de analizar.
+</Checkpoint>
+
+## Errores comunes
+
+- **Confiar en el encabezado por defecto.** Mira primero la cuadrícula en bruto.
+- **Olvidar que las celdas combinadas solo conservan su primer valor.**
+- **Leer todas las hojas y suponer que coinciden.**
+- **Dejar filas de totales en los datos.**
+- **Sobrescribir el libro original.** Escribe los resultados en un archivo nuevo.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Lee este Excel.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente escribe `pd.read_excel(path)` y obtienes columnas `Unnamed`,
+		con los encabezados combinados perdidos.
+	</Fragment>
+	<Fragment slot="good">
+		Mi libro "cafe_central_monthly_summary.xlsx" tiene una hoja "Resumen". La
+		fila 1 es un título combinado, la fila 2 tiene nombres de mes combinados
+		sobre dos columnas cada uno (B2:C2 y D2:E2), la fila 3 tiene las etiquetas
+		Sucursal, Ventas, Monto, Ventas, Monto, y las filas 4 a 6 son tiendas, con
+		una fila Total después. Escribe código de pandas que devuelva una tabla con
+		un nombre de columna claro por columna (mes y etiqueta juntos), sin el
+		título y sin la fila Total. Imprime los nombres de las columnas y la
+		cantidad de filas.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Describe con exactitud el diseño de la **entrada**, indica la **salida**
+		deseada y pide una **verificación** (nombres y conteo).
+	</Fragment>
+	<Fragment slot="check">
+		Compara los nombres impresos con el libro y comprueba que la fila Total ya
+		no está y que las tres tiendas permanecen.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Por qué los encabezados combinados producen columnas `Unnamed`?">
+	El valor por defecto trata la primera fila como encabezado, y una celda
+	combinada llena solo su primera columna, dejando las demás sin nombre.
+</Checkpoint>
+
+<Checkpoint question="¿Qué hace sheet_name=None?">
+	Lee todas las hojas en un diccionario.
+</Checkpoint>
+
+<Checkpoint question="¿Qué hace ffill aquí?">
+	Copia hacia adelante el último valor no vacío, de modo que el nombre del mes
+	llena el rango combinado.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 6.7 explica por qué incluso una versión limpia de este libro no es un buen conjunto de datos.

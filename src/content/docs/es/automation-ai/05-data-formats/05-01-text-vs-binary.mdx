@@ -1,0 +1,149 @@
+---
+title: Formatos de texto y binarios
+description: Entiende por qué los formatos de texto plano son fáciles de leer, comparar y versionar, y los binarios no.
+sidebar:
+  order: 1
+lessonId: '5.1'
+estimatedMinutes: 15
+prerequisites: ['1.5', '3.4']
+translationStatus: machine
+sourceHash: 37c2a9a20d68
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar la diferencia entre formatos de texto y binarios. - Decir por qué
+	los formatos de texto son fáciles de comparar, versionar y procesar. - Elegir
+	un formato preguntando para qué sirve el archivo.
+</LessonGoals>
+
+## Por qué importa
+
+Los datos llegan en muchos formatos, y cada uno te exige algo distinto. Antes de abrir un
+archivo, debes saber de qué tipo es: ¿puedes leerlo a simple vista, comparar dos
+versiones, dárselo a un asistente de IA o ponerlo bajo Git? La respuesta depende de una
+sola división: texto o binario.
+
+<CaseStudy>
+	Daniela recibe las ventas de Café Central como CSV, la lista de clientes como
+	JSON, un resumen mensual como libro de Excel y una factura de proveedor como
+	PDF. Cuatro archivos y cuatro maneras muy distintas de trabajar con ellos.
+</CaseStudy>
+
+## Texto y binario
+
+La lección 1.5 presentó la idea. Un **formato de texto** guarda caracteres, así que un
+editor de texto puede mostrarlo. CSV, JSON, YAML, TOML y Markdown son formatos de texto.
+Un **formato binario** guarda bytes que solo el programa adecuado puede interpretar. El
+`.xlsx` de Excel, el `.docx` de Word, el PDF y Parquet son binarios.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Texto plano: CSV, JSON, YAML, TOML, Markdown"] --> B["Fácil de leer, comparar, versionar y dar a una IA"]
+  C["Binario: xlsx, docx, PDF, Parquet"] --> D["Necesita el programa adecuado, más difícil de comparar"]`}
+/>
+
+## Lo que te da el texto
+
+1. **Puedes leerlo.** Ábrelo en cualquier editor y verás lo que contiene.
+2. **Puedes comparar versiones.** Un cambio aparece como las líneas exactas que cambiaron.
+3. **Git funciona bien.** El historial y la revisión tienen sentido (lección 3.4).
+4. **Casi cualquier herramienta lo lee.** Python, Excel, bases de datos y asistentes de IA.
+5. **Es robusto.** Si una parte de un archivo de texto se daña, el resto suele seguir legible.
+
+<Example file="part05/01_text_vs_binary.py" />
+
+La primera parte muestra el beneficio. Cambiar un monto cambia exactamente una línea, y
+la diferencia se ve de un vistazo. La segunda parte muestra el costo: el archivo de Excel
+empieza con `PK` (un zip, lección 1.5) y no se puede decodificar como texto.
+
+## Lo que te da el binario
+
+Los formatos binarios no son malos. Pueden ser **más pequeños**, **más rápidos** y llevar
+**contenido más rico**: formato, gráficos y tipos. Excel conserva fórmulas y colores.
+Parquet (lección 5.9) guarda tablas grandes de forma compacta. La contrapartida es que
+necesitas un programa, o una biblioteca, para abrirlos.
+
+## Elegir un formato
+
+Pregunta para qué sirve el archivo.
+
+| Si el archivo es...                              | Prefiere    |
+| ------------------------------------------------ | ----------- |
+| Una tabla para intercambiar entre herramientas   | CSV         |
+| Registros anidados, o datos para un programa     | JSON        |
+| Configuración que edita una persona              | YAML o TOML |
+| Texto para que lean personas e IA                | Markdown    |
+| Un informe para que las personas lean e impriman | PDF o Word  |
+| Una tabla muy grande para análisis               | Parquet     |
+
+## Manos a la obra
+
+### Ahora tú
+
+Café Central guarda su lista de precios en un archivo de Excel. El equipo la edita cada
+mes y quiere ver quién cambió qué. ¿Qué sugerirías?
+
+<Checkpoint question="Muestra una respuesta de ejemplo">
+	Guarda la lista de precios como CSV, que es texto, y almacénala en Git. Cada
+	cambio aparece entonces como una línea, con un autor y un mensaje. Excel aún
+	puede abrir y editar el CSV (con cuidado, ver lección 5.2).
+</Checkpoint>
+
+## Errores comunes
+
+- **Guardar los datos por defecto en un formato binario "bonito".** Pregunta quién lo usará y cómo.
+- **Suponer que texto significa simple.** Los formatos de texto también tienen reglas y trampas.
+- **Poner archivos binarios grandes en Git.** El historial crece y los cambios son opacos.
+- **Abrir un archivo binario en un editor de texto y guardarlo.** Destruye el archivo.
+- **Elegir un formato porque es familiar.** Elígelo porque se ajusta al uso.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">¿Cuál es el mejor formato de archivo?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		Obtienes un "depende", con una lista de formatos y ninguna decisión.
+	</Fragment>
+	<Fragment slot="good">
+		Mantengo una lista de precios de unas 40 filas y 5 columnas. Un colega y yo
+		la editamos cada mes, quiero ver quién cambió qué y un script de Python la
+		lee. Usamos Excel. Recomiéndame un formato y explica por qué en tres
+		oraciones. Menciona el principal inconveniente de tu elección y cómo
+		reducirlo.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Da **contexto** (tamaño, personas, herramientas), pide una sola **decisión**
+		y un inconveniente honesto, que es una **verificación** incorporada.
+	</Fragment>
+	<Fragment slot="check">
+		Comprueba que el razonamiento mencione la comparación de versiones y quién
+		lee el archivo. Pregunta qué pasa si el archivo crece diez veces.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Un archivo CSV es un formato de texto o binario?">
+	De texto.
+</Checkpoint>
+
+<Checkpoint question="Menciona dos beneficios de los formatos de texto.">
+	Se pueden leer en cualquier editor y comparar línea por línea. También
+	funcionan bien con Git y con asistentes de IA.
+</Checkpoint>
+
+<Checkpoint question="Menciona una ventaja de un formato binario.">
+	Menor tamaño, lectura más rápida o contenido más rico, como formato y tipos.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 5.2 examina a fondo el formato de texto más común, el CSV.

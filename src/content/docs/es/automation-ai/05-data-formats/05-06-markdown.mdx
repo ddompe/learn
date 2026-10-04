@@ -1,0 +1,158 @@
+---
+title: Markdown, la lingua franca de los LLM
+description: Escribe en Markdown y entiende por qué los modelos de IA lo leen y lo escriben con tanta naturalidad.
+sidebar:
+  order: 6
+lessonId: '5.6'
+estimatedMinutes: 20
+prerequisites: ['5.1', '2.1']
+translationStatus: machine
+sourceHash: 486ff704f755
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Escribir encabezados, listas, enlaces, código y tablas en Markdown. -
+	Explicar por qué los LLM manejan tan bien el Markdown. - Elegir entre
+	Markdown, CSV o JSON al darle datos a un asistente.
+</LessonGoals>
+
+## Por qué importa
+
+Este mismo curso está escrito en un pariente cercano de Markdown. También lo están las
+respuestas que recibes de los asistentes de IA: los encabezados, las viñetas y las tablas
+de una respuesta de chat son Markdown. Es el lenguaje común entre las personas y los
+modelos de lenguaje. Conocerlo te permite escribir mejores prompts, leer la salida de la
+IA como fue pensada y escribir documentos que las herramientas puedan procesar.
+
+<CaseStudy>
+	Daniela quiere pegar los totales por categoría en un asistente de IA y pedir
+	comentarios. Una pequeña tabla en Markdown es más clara para el modelo que una
+	captura de pantalla de una hoja de cálculo, y más económica que los mismos
+	datos en JSON.
+</CaseStudy>
+
+## Lo esencial
+
+**Markdown** es texto plano con unas pocas marcas ligeras que indican estructura.
+
+| Escribes                                     | Obtienes                       |
+| -------------------------------------------- | ------------------------------ |
+| `# Título`                                   | Un encabezado principal        |
+| `## Sección`                                 | Un encabezado de segundo nivel |
+| `- elemento`                                 | Una viñeta                     |
+| `1. paso`                                    | Un elemento numerado           |
+| `**negrita**`, `*cursiva*`                   | Negrita y cursiva              |
+| `[texto](https://…)`                         | Un enlace                      |
+| `` `código` ``                               | Código en línea                |
+| Un bloque delimitado por tres acentos graves | Un bloque de código            |
+| Filas `\| a \| b \|`                         | Una tabla                      |
+
+Como es solo texto, un archivo Markdown se abre en cualquier parte, se puede versionar en
+Git y se ve razonable incluso sin renderizar.
+
+## Una tabla, desde un programa
+
+<Example file="part05/06_markdown.py" />
+
+El programa escribe una tabla Markdown a partir de filas de datos. La línea de `---`
+marca el encabezado, y `---:` alinea a la derecha una columna numérica.
+
+## Por qué a los LLM les gusta Markdown
+
+1. **Es texto plano,** así que son simplemente tokens (lección 2.1).
+2. **Su estructura es ligera,** así que añade pocos tokens extra. Compara los tamaños al
+   final de la salida: las mismas tres filas ocupan 130 caracteres en Markdown y 224 en
+   JSON. Un CSV es el más corto (73), pero lleva menos estructura y tiene los problemas
+   de delimitador de la lección 5.2.
+3. **Los modelos han visto enormes cantidades,** en documentación, foros y
+   repositorios de código. Lo escriben con fluidez.
+4. **Es fácil de comprobar,** porque puedes leerlo sin renderizar.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Tus datos"] --> B{"¿Quién los lee?"}
+  B -- "Una persona o un chat de IA" --> C["Tabla Markdown"]
+  B -- "Un programa" --> D["CSV o JSON"]`}
+/>
+
+Una regla práctica: para **personas y asistentes de chat**, usa Markdown. Para
+**programas**, usa CSV o JSON. En ambos casos, no le envíes a un asistente una tabla muy
+grande. Envía el encabezado y unas pocas filas (lección 2.3).
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+Escribe, en un archivo llamado `notes.md`, un encabezado, dos viñetas y una tabla de dos
+columnas propia. Abre la vista previa de Markdown de VS Code (el icono de vista previa en
+la parte superior derecha, o la paleta de comandos) y compara la vista en bruto con la
+renderizada.
+
+### Ahora tú
+
+Escribe esto como Markdown: un encabezado de segundo nivel "Totales", luego una tabla con
+las columnas Categoría y Total, y una fila para `jugo` con 112613.50.
+
+<Checkpoint question="Muestra la respuesta">
+	`## Totales`, luego una fila de encabezado `| Categoría | Total |`, una fila
+	separadora `| --- | ---: |` y `| jugo | 112613.50 |`.
+</Checkpoint>
+
+## Errores comunes
+
+- **Olvidar la fila separadora** en una tabla. Sin ella, la tabla no se renderiza.
+- **Barras verticales dentro de las celdas.** Escápalas como `\|`.
+- **Enviar tablas enormes a un chat.** Envía una muestra.
+- **Suponer que todas las herramientas renderizan Markdown igual.** Los detalles difieren.
+- **Usar Markdown para datos que un programa debe analizar con exactitud.** Usa CSV o JSON.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Conviértelo en una tabla.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente pierde una columna, fusiona dos filas o cambia los formatos de
+		los números sin avisarte.
+	</Fragment>
+	<Fragment slot="good">
+		Convierte el siguiente CSV (separador ';') en una tabla Markdown con las
+		mismas columnas, en el mismo orden y con el mismo número de filas. Alinea a
+		la derecha la columna numérica. No cambies ningún valor. Después de la
+		tabla, indica el número de filas y columnas de la entrada y de tu salida.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Da **restricciones** (sin cambios, misma forma) y un paso de
+		**verificación**: los conteos de filas y columnas.
+	</Fragment>
+	<Fragment slot="check">
+		Compara los conteos. Revisa la primera y la última fila contra el original y
+		busca números cambiados.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Por qué los LLM manejan bien Markdown?">
+	Es texto plano con estructura ligera, que los modelos han visto en enormes
+	cantidades, y es fácil de leer sin renderizar.
+</Checkpoint>
+
+<Checkpoint question="¿Qué fila hace que una tabla Markdown se renderice?">
+	La fila separadora bajo el encabezado, hecha de guiones.
+</Checkpoint>
+
+<Checkpoint question="¿Cuándo elegirías CSV en lugar de Markdown?">
+	Cuando un programa leerá los datos, o cuando quieras el texto más compacto.
+</Checkpoint>
+
+## Para profundizar
+
+- La Parte 8 usa herramientas basadas en Markdown para escribir informes.

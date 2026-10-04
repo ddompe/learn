@@ -1,0 +1,136 @@
+---
+title: TOML
+description: Lee y edita TOML, el formato de pyproject.toml.
+sidebar:
+  order: 5
+lessonId: '5.5'
+estimatedMinutes: 15
+prerequisites: ['4.3', '5.4']
+translationStatus: machine
+sourceHash: 7a01ef80428a
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Leer un archivo TOML. - Comparar TOML con JSON y YAML. - Editar un archivo
+	TOML sin romperlo.
+</LessonGoals>
+
+## Por qué importa
+
+Ya usas TOML: el `pyproject.toml` de tu proyecto está escrito en él (lecciones 3.8 y
+4.3). **TOML** (Tom's Obvious Minimal Language) es un formato de configuración diseñado
+para no ser ambiguo. Evita la mayoría de las trampas de YAML y admite comentarios, algo
+que JSON no permite.
+
+<CaseStudy>
+	Daniela abre el `pyproject.toml` de su proyecto de informes y quiere leer la
+	versión de Python y las dependencias. No tiene que adivinar qué significa cada
+	línea.
+</CaseStudy>
+
+## La forma de TOML
+
+<Example file="part03/08_pyproject_example.toml" />
+
+- `[project]` es una **tabla**, un grupo con nombre de configuraciones.
+- `name = "cafe-central-report"` es una clave y un valor. Las cadenas llevan comillas.
+- `dependencies = [ ... ]` es un **arreglo**. Los elementos se separan con comas.
+- Los comentarios empiezan con `#`.
+- Los números, los booleanos (`true`, `false`) y las fechas tienen sus propias formas, sin comillas.
+
+Como las cadenas deben ir entre comillas, `no` es solo una palabra con comillas
+alrededor. Las palabras sin comillas que no son números ni booleanos son errores, no
+sorpresas.
+
+## Leerlo en Python
+
+<Example file="part05/05_toml.py" />
+
+La biblioteca estándar de Python incluye `tomllib` para leer TOML, así que no hace falta
+ningún paquete. Lee el archivo en diccionarios y listas. No puede escribir TOML. Para
+cambiar un archivo, edítalo como texto, o usa `uv add` para las dependencias, que lo
+edita de forma segura.
+
+## Comparar los tres
+
+| Característica     | JSON                  | YAML                   | TOML                 |
+| ------------------ | --------------------- | ---------------------- | -------------------- |
+| Comentarios        | No                    | Sí                     | Sí                   |
+| Sangría            | No significativa      | Significativa          | No significativa     |
+| Sorpresas de tipos | Pocas                 | Muchas                 | Pocas                |
+| Ideal para         | Datos entre programas | Configuración compleja | Configuración simple |
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Datos intercambiados entre programas"] --> B["JSON"]
+  C["Configuración rica y anidada"] --> D["YAML"]
+  E["Configuración simple y clara"] --> F["TOML"]`}
+/>
+
+## Manos a la obra
+
+### Ahora tú
+
+Añade a mano una dependencia al ejemplo: `matplotlib`. ¿Qué debes vigilar?
+
+<Checkpoint question="Muestra la respuesta">
+Añade `"matplotlib>=3.8.0",` como un nuevo elemento entre comillas en el arreglo, con una coma después del elemento anterior. Una coma o unas comillas que falten vuelven inválido el archivo. En un proyecto real, prefiere `uv add matplotlib`, que además actualiza el archivo de bloqueo.
+</Checkpoint>
+
+## Errores comunes
+
+- **Faltan comillas en las cadenas.**
+- **Faltan comas en los arreglos.**
+- **Editar las dependencias a mano sin actualizar el archivo de bloqueo.** Usa `uv add`.
+- **Confundir una tabla con un arreglo.** `[project]` es una tabla, y `[...]` después de `=` es un arreglo.
+- **Esperar escribir TOML con la biblioteca estándar.** Solo lee.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Edita mi pyproject.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente reescribe todo el archivo y cambia otras configuraciones, o
+		inventa secciones nuevas.
+	</Fragment>
+	<Fragment slot="good">
+		Aquí está mi pyproject.toml. Añade matplotlib como dependencia, con la
+		versión 3.8.0 o más reciente. Haz el cambio más pequeño posible y muéstrame
+		un diff, no el archivo completo. Dime qué comando de uv haría esto de forma
+		segura y por qué es mejor que editarlo a mano.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Aporta la **entrada**, una **restricción** (el cambio más pequeño), un
+		**formato de salida** (diff) y pide la alternativa más segura.
+	</Fragment>
+	<Fragment slot="check">
+		Compara el diff con tu archivo. Ejecuta el comando de uv en una copia y
+		comprueba que el archivo de bloqueo se actualice.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="Menciona una ventaja de TOML sobre JSON.">
+	Permite comentarios.
+</Checkpoint>
+
+<Checkpoint question="¿Qué módulo estándar lee TOML en Python?">
+	`tomllib`.
+</Checkpoint>
+
+<Checkpoint question="¿Qué significa [project] en TOML?">
+	Inicia una tabla llamada `project`, un grupo de configuraciones relacionadas.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 5.6 pasa de la configuración al texto para personas e IA: Markdown.

@@ -1,0 +1,152 @@
+---
+title: JSON
+description: Lee y escribe JSON, y entiende objetos, arreglos, anidamiento y por qué un archivo con comentarios no es JSON válido.
+sidebar:
+  order: 3
+lessonId: '5.3'
+estimatedMinutes: 20
+prerequisites: ['5.1']
+translationStatus: machine
+sourceHash: 1bd3ec966dd5
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Leer objetos, arreglos y anidamiento en JSON. - Cargar un archivo JSON en
+	Python y manejar valores faltantes. - Explicar por qué falla un archivo JSON
+	con comentarios.
+</LessonGoals>
+
+## Por qué importa
+
+Cuando los datos tienen estructura, como un cliente con varios números de teléfono, una
+tabla plana resulta incómoda. **JSON** (JavaScript Object Notation) maneja el
+anidamiento y es la forma estándar en que los programas y los servicios web intercambian
+datos. Lo encontrarás en las API (lección 1.12), en configuraciones y en todo lo que
+devuelve un servicio de IA.
+
+<CaseStudy>
+	La lista de clientes de Café Central está guardada como JSON. Daniela descubre
+	que sus herramientas se niegan a leerla, porque alguien añadió líneas de
+	comentario al inicio.
+</CaseStudy>
+
+## Las piezas
+
+JSON tiene solo unos pocos bloques de construcción.
+
+| Pieza    | Se escribe como         | Ejemplo                     |
+| -------- | ----------------------- | --------------------------- |
+| Objeto   | `{ "key": value, ... }` | `{"id": "C001"}`            |
+| Arreglo  | `[ value, value ]`      | `["frecuente", "san josé"]` |
+| Cadena   | Comillas dobles         | `"Ana López"`               |
+| Número   | Dígitos                 | `1500.5`                    |
+| Booleano | `true` o `false`        | `true`                      |
+| Nulo     | `null`                  | `null`                      |
+
+Los objetos y los arreglos pueden contenerse entre sí, a cualquier profundidad. En
+Python, un objeto se convierte en un diccionario, un arreglo en una lista y `null` en
+`None` (lecciones 4.8 y 4.10).
+
+<Mermaid
+	diagram={`flowchart TD
+  A["Objeto: el archivo"] --> B["Clave customers: un arreglo"]
+  B --> C["Objeto: cliente C001"]
+  B --> D["Objeto: cliente C002"]
+  C --> E["Claves: id, name, city, email"]`}
+/>
+
+Reglas que hacen tropezar a los principiantes: las claves y las cadenas deben usar
+comillas **dobles**, no hay coma final después del último elemento y **no hay
+comentarios**.
+
+## Leer el archivo de clientes
+
+<Example file="part05/03_json.py" />
+
+El archivo real empieza con dos líneas que comienzan con `//`. El JSON estricto no
+permite comentarios, así que `json.loads` falla. El script quita primero las líneas de
+comentario y luego lee 8 clientes. Algunos tienen el nombre o el correo vacío, y el
+script lo informa. En el ejemplo escrito, un correo faltante es `null`.
+
+Fíjate en `ensure_ascii=False` en las dos últimas líneas. Sin él, `json.dumps` escribe
+`é` como `é`. Ambos son JSON válido, pero el primero es más fácil de leer.
+
+## Valores faltantes
+
+JSON puede decir "sin valor" de tres maneras, y los archivos las mezclan: `null`, una
+cadena vacía `""` o una clave ausente. Maneja todas. Prueba con `if not value` para
+vacío y `None`, o usa `.get("email")` para una clave ausente.
+
+## Manos a la obra
+
+### Ahora tú
+
+¿Cuáles de estos son JSON válido?
+
+1. `{"id": "C001", "name": "Ana"}`
+2. `{'id': 'C001'}`
+3. `{"id": "C001",}`
+
+<Checkpoint question="Muestra las respuestas">
+	Solo el 1. El segundo usa comillas simples y el tercero tiene una coma final.
+</Checkpoint>
+
+## Errores comunes
+
+- **Tratar como JSON válido un archivo con comentarios.** Quítalos primero, o pide un archivo limpio.
+- **Comillas simples o comas finales.** Ambas son inválidas.
+- **Suponer que todas las claves existen.** Usa `.get()`.
+- **Olvidar `ensure_ascii=False`** al escribir acentos para que los lean personas.
+- **Confundir `null`, vacío y ausente.**
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Analiza este JSON.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente llama directamente a `json.load`, que falla con las líneas de
+		comentario, y no maneja los nombres ni los correos vacíos.
+	</Fragment>
+	<Fragment slot="good">
+		Mi archivo customers.json tiene dos líneas de comentario que empiezan con //
+		antes del JSON, y luego un objeto con un arreglo "customers". Cada cliente
+		tiene id, name, city y email, y algunos nombres y correos son cadenas
+		vacías. Escribe Python que quite las líneas de comentario, cargue los datos
+		e imprima los id de los clientes sin nombre o sin correo. Deja el archivo
+		original sin cambios.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Aporta la estructura de la **entrada** y su rareza, una **tarea** precisa y
+		una **restricción** que protege el archivo.
+	</Fragment>
+	<Fragment slot="check">
+		Compara los id impresos con una búsqueda de valores vacíos en el archivo.
+		Confirma la cantidad de clientes.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿En qué se convierten los objetos y arreglos de JSON en Python?">
+	En diccionarios y listas.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué falla la carga de un archivo JSON con comentarios //?">
+	El JSON estricto no permite comentarios.
+</Checkpoint>
+
+<Checkpoint question="¿Cuáles son tres maneras en que puede faltar un valor?">
+	`null`, una cadena vacía o una clave ausente.
+</Checkpoint>
+
+## Para profundizar
+
+- La Parte 10 muestra servicios de IA que devuelven JSON que leen los programas.

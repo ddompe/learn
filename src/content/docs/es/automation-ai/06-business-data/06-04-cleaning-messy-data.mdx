@@ -1,0 +1,155 @@
+---
+title: Limpiar datos desordenados
+description: Corrige tipos, duplicados, valores faltantes y texto inconsistente, y lleva un registro de cada cambio.
+sidebar:
+  order: 4
+lessonId: '6.4'
+estimatedMinutes: 30
+prerequisites: ['4.9', '4.12', '6.3']
+translationStatus: machine
+sourceHash: 45cb6f5c8393
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Limpiar una tabla paso a paso: tipos, duplicados, valores faltantes y texto.
+	- Conservar los datos originales y un registro de los cambios. - Comprobar el
+	resultado limpio contra el original.
+</LessonGoals>
+
+## Por qué importa
+
+La limpieza es donde se va la mayor parte del tiempo en el trabajo con datos, y donde se
+cometen errores silenciosos. Un paso de limpieza descuidado puede eliminar filas, cambiar
+números o fusionar cosas que deben seguir separadas, y nadie lo notará. La disciplina de
+esta lección es: cambia los datos de forma deliberada, registra cada cambio y verifica el
+resultado.
+
+<CaseStudy>
+	Las ventas de enero tienen formatos mezclados de fecha y monto, seis líneas
+	duplicadas, variantes de escritura de las categorías y siete ventas sin
+	cliente. Daniela necesita una tabla limpia, y el dueño necesita confiar en
+	ella.
+</CaseStudy>
+
+## El plan
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Leer todo como texto"] --> B["Quitar duplicados exactos"]
+  B --> C["Convertir fechas"]
+  C --> D["Convertir montos a Decimal"]
+  D --> E["Normalizar categorías"]
+  E --> F["Manejar clientes faltantes"]
+  F --> G["Tabla limpia más un registro"]`}
+/>
+
+## El módulo de limpieza
+
+Se reutilizan las funciones de las lecciones 4.9 y 4.12. Están reunidas en un módulo que devuelve la tabla limpia y un registro.
+
+<Example file="part06/cafe_clean.py" />
+
+Por qué cada paso se hace así:
+
+1. **Leer como texto** (`dtype=str`, `keep_default_na=False`). pandas no adivina tipos ni convierte
+   los campos vacíos en valores faltantes. Tú decides.
+2. **Quitar duplicados exactos** con `drop_duplicates()`. Solo se van las filas idénticas. Dos
+   ventas con el mismo ID pero montos distintos se quedarían, y una persona debería revisarlas.
+3. **Convertir fechas** con `parse_date`, porque los formatos están mezclados y el estilo con barras tiene el día primero (lección 4.12).
+4. **Convertir montos** a `Decimal`, para dinero exacto (lección 1.8).
+5. **Normalizar categorías** con `simplify`, de modo que `Café`, `cafe` y `café` pasen a ser `cafe`.
+6. **Marcar los clientes faltantes** como `SIN-CLIENTE` en lugar de eliminar las filas. Son ventas reales y el total debe seguir cuadrando.
+
+Y fíjate en lo que devuelve la función: el **registro**, una lista de lo que hizo.
+
+<Example file="part06/04_cleaning.py" />
+
+La ejecución informa 246 filas leídas, 6 duplicados eliminados, 7 filas sin cliente marcadas y 240 filas en
+el resultado. Los tipos ahora son fechas, montos `Decimal` y texto.
+
+## Reglas de una buena limpieza
+
+1. **Nunca sobrescribas el original.** Lee desde el archivo en bruto y escribe los resultados en otro lugar.
+2. **Registra lo que cambias,** con conteos. Una sorpresa en los conteos es una señal.
+3. **Prefiere marcar a eliminar.** Conserva la fila, señala el problema.
+4. **Haz las reglas explícitas.** "Las fechas con barras tienen el día primero" es una regla. Anótala.
+5. **Comprueba los totales** antes y después. Quitar duplicados debe reducir la cantidad exactamente en el número informado.
+6. **No encadenes cambios que no puedas explicar.** Cada paso debe tener una razón.
+
+## Manos a la obra
+
+### Ahora tú
+
+Un analista decide eliminar todas las filas sin cliente, "para simplificar". ¿Qué le hace
+eso al total mensual y qué harías en su lugar?
+
+<Checkpoint question="Muestra la respuesta">
+	El total quedaría demasiado bajo, porque esas siete ventas fueron reales.
+	Conservarlas con un marcador como SIN-CLIENTE, informa cuántas hay y pídele a
+	quien registra los datos que corrija el origen.
+</Checkpoint>
+
+## Errores comunes
+
+- **Sobrescribir el archivo original.**
+- **Eliminar filas para hacer desaparecer los errores.**
+- **Limpiar sin contar.** No puedes saber qué cambió.
+- **Usar floats para dinero.**
+- **Adivinar el orden de las fechas.** Compruébalo con valores no ambiguos.
+- **Suponer que los duplicados siempre son errores.** Dos ventas idénticas pueden ocurrir. Aquí se repite la línea completa, incluido el ID.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Limpia mis datos.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente elimina las filas con cualquier valor faltante, convierte los
+		montos a floats y no te dice qué quitó.
+	</Fragment>
+	<Fragment slot="good">
+		Escribe una función de pandas que limpie un CSV con punto y coma con las
+		columnas ID, Fecha, Cliente, Monto, Categoría. Lee todo como texto. Elimina
+		solo las filas duplicadas exactas. Convierte Fecha (formatos 2024-01-01,
+		2024/01/01 y 01/01/2024, con el día primero) a fechas y Monto (formatos
+		1500, 1400.50, $1500,50) a Decimal. Pasa las categorías a minúsculas y quita
+		los acentos. No elimines ninguna otra fila: marca los clientes en blanco
+		como SIN-CLIENTE. Devuelve la tabla limpia y una lista de mensajes con la
+		cantidad de filas afectadas por cada paso.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Especifica cada **regla** y **restricción** y pide un **registro**, de modo
+		que el asistente no pueda tomar decisiones silenciosas.
+	</Fragment>
+	<Fragment slot="check">
+		Compara el registro con tus propios conteos: filas de entrada, duplicados,
+		blancos, filas de salida. Revisa por muestreo tres filas, una de cada
+		formato de fecha.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Por qué conservar intactos los datos originales?">
+	Para poder comprobar la limpieza contra ellos y rehacerla si cambia una regla.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué marcar los clientes faltantes en lugar de eliminar esas filas?">
+	Son ventas reales. Eliminarlas haría incorrectos los totales.
+</Checkpoint>
+
+<Checkpoint question="¿Qué te da el registro de limpieza?">
+	Un registro de lo que cambió y cuántas filas afectó cada paso, para que las
+	sorpresas sean visibles.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 6.5 usa la tabla limpia para reproducir tablas dinámicas.

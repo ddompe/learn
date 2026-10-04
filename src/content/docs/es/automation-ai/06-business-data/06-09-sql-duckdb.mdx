@@ -1,0 +1,150 @@
+---
+title: SQL con DuckDB
+description: Consulta CSV, Parquet y DataFrames con SQL.
+sidebar:
+  order: 9
+lessonId: '6.9'
+estimatedMinutes: 25
+prerequisites: ['6.5', '5.9']
+translationStatus: machine
+sourceHash: 4b704e7a7901
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar qué es SQL y por qué vale la pena conocerlo. - Escribir una
+	consulta simple con `SELECT`, `WHERE`, `GROUP BY` y `ORDER BY`. - Usar DuckDB
+	para consultar un DataFrame y un archivo CSV.
+</LessonGoals>
+
+## Por qué importa
+
+**SQL** (Structured Query Language, lenguaje de consulta estructurado) es el lenguaje
+estándar para hacerle preguntas a las tablas. Las bases de datos, los almacenes de datos
+y las herramientas de análisis lo hablan. Aprender un poco de SQL te permite comunicarte
+con ellos y te da una segunda forma de comprobar tus resultados de pandas. **DuckDB** es
+una base de datos pequeña que se ejecuta dentro de tu programa de Python, así que no hay
+nada que instalar ni poner en marcha. Consulta directamente DataFrames, archivos CSV y
+archivos Parquet.
+
+<CaseStudy>
+	El contador del dueño usa SQL. Daniela escribe los totales por categoría como
+	una consulta, para que puedan ejecutar la misma pregunta sobre la base de
+	datos de la empresa.
+</CaseStudy>
+
+## La forma de una consulta
+
+Una consulta dice lo que quieres, no cómo calcularlo.
+
+```text
+SELECT categoria, count(*) AS ventas, round(sum(monto), 2) AS total
+FROM sales
+GROUP BY categoria
+ORDER BY total DESC
+```
+
+| Cláusula   | Significado                            | Equivalente en pandas  |
+| ---------- | -------------------------------------- | ---------------------- |
+| `SELECT`   | Qué columnas o cálculos                | Elegir columnas, `agg` |
+| `FROM`     | Qué tabla                              | El DataFrame           |
+| `WHERE`    | Conservar solo las filas que coinciden | Filtro booleano        |
+| `GROUP BY` | Una fila por grupo                     | `groupby`              |
+| `ORDER BY` | Ordenar el resultado                   | `sort_values`          |
+
+<Mermaid
+	diagram={`flowchart LR
+  A["DataFrame o CSV o Parquet"] --> B["DuckDB ejecuta el SQL"]
+  B --> C["Tabla de resultados"]`}
+/>
+
+## DuckDB en acción
+
+<Example file="part06/09_duckdb.py" />
+
+- `duckdb.sql(...)` encuentra por nombre el DataFrame llamado `sales` y lo consulta.
+- El resultado coincide con la tabla dinámica de pandas de la lección 6.5: los sándwiches
+  primero, con 138,310.5. Dos métodos, la misma respuesta, lo cual es una buena comprobación.
+- `read_csv(...)` lee el archivo CSV directamente del disco, sin pandas. Cuenta 246 filas,
+  con los duplicados incluidos, porque el archivo no se ha limpiado.
+
+En este pequeño ejemplo los montos se convierten a números (floats) para DuckDB. Para
+contabilidad, conserva los decimales exactos en el paso de limpieza, como antes.
+
+## Cuándo elegir SQL o pandas
+
+Usa pandas para limpiar y reorganizar en Python. Usa SQL cuando los datos estén en una
+base de datos, cuando la pregunta sea un resumen simple o cuando tus colegas ya lean SQL.
+Muchos analistas combinan ambos.
+
+## Manos a la obra
+
+### Ahora tú
+
+Escribe una consulta para el monto total solo de las ventas de `jugo`. Luego revela la
+respuesta.
+
+<Checkpoint question="Muestra la respuesta">
+	`SELECT sum(monto) FROM sales WHERE categoria = 'jugo'`. El valor de texto va
+	entre comillas simples. El resultado es 112613.5.
+</Checkpoint>
+
+## Errores comunes
+
+- **Comillas dobles alrededor de valores de texto.** En SQL significan nombres de columna. Usa comillas simples.
+- **Olvidar `GROUP BY`** al mezclar una columna y una suma.
+- **Consultar datos sin limpiar.** Limpia primero, o los grupos serán incorrectos.
+- **Confiar en SQL generado sin ejecutar una comprobación.**
+- **Suponer que todas las bases de datos comparten todas las funciones.** Los dialectos difieren un poco.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Escribe SQL.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente inventa nombres de tablas y columnas que no existen en tus
+		datos.
+	</Fragment>
+	<Fragment slot="good">
+		Uso DuckDB en Python. Un DataFrame de pandas llamado sales tiene las
+		columnas ID (texto), fecha (fecha), cliente (texto), monto (número) y
+		categoria (texto). Escribe una consulta que devuelva, para cada categoria,
+		el número de ventas y el monto total, ordenado por total, de mayor a menor.
+		Muestra la llamada de Python que la ejecuta sobre el DataFrame. Usa solo
+		estas columnas.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Da el **esquema**, una **tarea** precisa y la **restricción** de usar solo
+		las columnas existentes.
+	</Fragment>
+	<Fragment slot="check">
+		Compara el resultado con el groupby de pandas. Si un número difiere,
+		averigua por qué.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué hace GROUP BY?">
+	Produce una fila por grupo, para que puedas contar o sumar dentro de cada uno.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué DuckDB es cómodo para el análisis?">
+	Se ejecuta dentro de tu programa y consulta DataFrames, CSV y Parquet sin un
+	servidor.
+</Checkpoint>
+
+<Checkpoint question="¿Cómo se escribe un valor de texto en SQL?">
+	Entre comillas simples.
+</Checkpoint>
+
+## Para profundizar
+
+- La Parte 9 puede usar consultas SQL dentro de un flujo automatizado.

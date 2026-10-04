@@ -1,0 +1,141 @@
+---
+title: Fechas, horas y zonas horarias
+description: Interpreta fechas, agrupa por semana y maneja zonas horarias.
+sidebar:
+  order: 8
+lessonId: '6.8'
+estimatedMinutes: 25
+prerequisites: ['6.4']
+translationStatus: machine
+sourceHash: a2affc453a09
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Trabajar con columnas de fechas reales en lugar de texto. - Agrupar una
+	tabla por día, semana o mes. - Convertir una hora entre zonas horarias.
+</LessonGoals>
+
+## Por qué importa
+
+El negocio se organiza por tiempo: días, semanas, meses, trimestres. Cuando las fechas
+son fechas reales, y no texto, puedes agrupar, comparar y ordenar por ellas. Las zonas
+horarias añaden una segunda capa: el mismo instante tiene horas distintas en el reloj en
+San José y en un servidor en la nube de otro país.
+
+<CaseStudy>
+	El dueño quiere las ventas semanales y saber cuál es el día de la semana más
+	concurrido. Más adelante, un servicio en la nube registra los pedidos en UTC,
+	y Daniela debe cruzarlos con las ventas locales.
+</CaseStudy>
+
+## Fechas como fechas
+
+La lección 6.4 convirtió el texto mezclado en fechas reales. Una columna de fechas reales
+tiene el tipo `datetime64` y da acceso a sus partes mediante `.dt`: `.dt.day_name()`,
+`.dt.month`, `.dt.isocalendar().week`.
+
+Comprueba siempre el orden de día y mes al convertir (lección 4.12). El archivo de ventas
+lo demuestra: `13/01/2024` solo puede tener el día primero.
+
+## Agrupar por tiempo
+
+`resample` agrupa por un período de tiempo, como un group-by para fechas. Necesita la
+fecha como índice.
+
+<Example file="part06/08_dates.py" />
+
+- `resample("W-SUN")` crea semanas que terminan en domingo. Otros códigos: `"D"` días, `"MS"` meses.
+- La última semana termina el 4 de febrero porque los últimos días del archivo (29 al 31 de enero) caen en la semana que termina entonces.
+- `.dt.day_name()` da el día de la semana, y `value_counts()` muestra el más concurrido: miércoles (Wednesday).
+
+## Zonas horarias
+
+Una fecha y hora sin zona es **ingenua** (_naive_). Es ambigua. Con una zona es **con
+zona horaria** (_aware_). Costa Rica no tiene horario de verano y está en UTC-6 todo el
+año, pero muchos lugares cambian sus relojes dos veces al año, lo que complica los
+cálculos.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["08:00 San José, ingenua"] -->|"tz_localize America/Costa_Rica"| B["08:00 -06:00, con zona horaria"]
+  B -->|"tz_convert UTC"| C["14:00 UTC"]`}
+/>
+
+`tz_localize` asigna una zona a una hora ingenua. `tz_convert` cambia una hora con zona a
+otra zona. El ejemplo muestra las 08:00 en Costa Rica como las 14:00 UTC.
+
+Reglas: guarda las horas en **UTC**, convierte a la hora local solo para mostrarlas y
+nunca compares una hora ingenua con una que tenga zona.
+
+## Manos a la obra
+
+### Ahora tú
+
+El registro de un servidor dice que un pedido se hizo a las `2024-01-15 20:30 UTC`. ¿Cuál
+es la hora local en Costa Rica y en qué día?
+
+<Checkpoint question="Muestra la respuesta">
+	14:30 del 15 de enero de 2024, porque Costa Rica está seis horas detrás de
+	UTC.
+</Checkpoint>
+
+## Errores comunes
+
+- **Mantener las fechas como texto.** Entonces ordenar y agrupar usan el orden del texto.
+- **Intercambiar día y mes.**
+- **Mezclar horas ingenuas y con zona horaria.**
+- **Ignorar el horario de verano de otros lugares.** Usa zonas con nombre, no desfases fijos.
+- **Agrupar por semana sin decir dónde empieza la semana.**
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Arregla las fechas.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente deja que pandas adivine, así que `01/02/2024` pasa a ser el 2
+		de enero, y nadie lo nota.
+	</Fragment>
+	<Fragment slot="good">
+		Mi columna "Fecha" tiene texto en tres formatos: 2024-01-13, 2024/01/13 y
+		13/01/2024. En el formato con barras y el año al final, el día va primero.
+		Escribe código de pandas que convierta la columna a fechas reales sin
+		adivinar, y luego agrupe las ventas por semana que termina en domingo.
+		Incluye una comprobación de que ninguna fecha cae fuera de enero de 2024.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Indica los **formatos y la regla de orden** (entrada y restricción) y añade
+		una **comprobación de sensatez**.
+	</Fragment>
+	<Fragment slot="check">
+		Comprueba tres fechas a mano, incluida 13/01/2024, y confirma que los
+		totales semanales suman el total general.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué hace resample?">
+	Agrupa una tabla por un período de tiempo, como semana o mes, usando el índice
+	de fechas.
+</Checkpoint>
+
+<Checkpoint question="¿Cuál es la diferencia entre horas ingenuas y con zona horaria?">
+	Una hora con zona horaria tiene una zona y una ingenua no, así que una hora
+	ingenua es ambigua.
+</Checkpoint>
+
+<Checkpoint question="¿En qué zona deberías guardar las horas?">
+	UTC, convirtiendo a la hora local solo para mostrarlas.
+</Checkpoint>
+
+## Para profundizar
+
+- La Parte 7 usa estos totales semanales para los gráficos.

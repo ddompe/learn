@@ -1,0 +1,162 @@
+---
+title: Gráficos honestos
+description: Elige el gráfico adecuado para una pregunta y reconoce los gráficos engañosos.
+sidebar:
+  order: 1
+lessonId: '7.1'
+estimatedMinutes: 20
+prerequisites: ['6.5']
+translationStatus: machine
+sourceHash: 0a8c90a34d20
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Elegir un tipo de gráfico acorde con una pregunta. - Reconocer las formas
+	comunes en que los gráficos engañan. - Revisar tus propios gráficos antes de
+	compartirlos.
+</LessonGoals>
+
+## Por qué importa
+
+Un gráfico es una afirmación. La gente recuerda la imagen y olvida los números. Un
+gráfico puede engañar sin un solo número falso, solo por las decisiones sobre el eje, el
+tipo o el rango de tiempo. Hacerlo por accidente es tan dañino como hacerlo a propósito.
+Tus informes inspirarán más confianza si los gráficos son honestos.
+
+<CaseStudy>
+	El dueño pregunta: "¿Están cayendo las ventas semanales?" Daniela puede
+	dibujar la respuesta para que parezca un colapso o una pequeña baja. Ambos
+	gráficos usan los mismos números.
+</CaseStudy>
+
+## Empieza por la pregunta
+
+Elige el gráfico según lo que quieres mostrar.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["¿Cuál es la pregunta?"] --> B{"¿Comparar categorías?"}
+  B -- Sí --> C["Gráfico de barras"]
+  A --> D{"¿Cambio en el tiempo?"}
+  D -- Sí --> E["Gráfico de líneas"]
+  A --> F{"¿Dispersión de los valores?"}
+  F -- Sí --> G["Diagrama de caja o histograma"]
+  A --> H{"¿Dos medidas relacionadas?"}
+  H -- Sí --> I["Gráfico de dispersión"]
+  A --> J{"¿Partes de un todo, de 2 a 4 partes?"}
+  J -- Sí --> K["Barra apilada, o un gráfico circular con pocas porciones"]`}
+/>
+
+## Formas en que los gráficos engañan
+
+1. **Un eje truncado.** Las barras codifican el valor por su **longitud**, así que el eje
+   debe empezar en cero. Cortarlo exagera las diferencias.
+2. **Un rango de tiempo elegido a conveniencia.** Empezar en un pico o en un valle cuenta
+   una historia distinta.
+3. **Gráficos circulares con muchas porciones,** o efectos 3D. Los ángulos y la
+   profundidad son difíciles de comparar.
+4. **Ejes duales** con escalas distintas, que permiten hacer que dos líneas cualesquiera
+   parezcan relacionadas.
+5. **Ejes y unidades sin rotular.** ¿"Ventas" en qué? ¿Colones, miles de colones?
+6. **Barras sin ordenar.** Ordena las categorías por valor a menos que tengan un orden natural.
+7. **Color que no aporta significado,** o color como único recurso para separar categorías, algo que no ayuda a los lectores daltónicos.
+
+## Míralo
+
+<Example file="part07/01_honest_charts.py" />
+
+El script dibuja dos veces los mismos cuatro totales semanales.
+
+![Gráfico de barras con el eje vertical comenzando cerca de 86,000. La última semana parece casi vacía comparada con las tres primeras.](/charts/automation-ai/part07/01_truncated_axis.png)
+
+En el primer gráfico, el eje empieza cerca de la barra más pequeña. La semana 4 parece
+como si casi no se hubiera vendido nada.
+
+![Gráfico de barras con el eje vertical comenzando en cero. La última semana es algo más corta que las tres primeras.](/charts/automation-ai/part07/01_zero_axis.png)
+
+En el segundo, el eje empieza en cero y se ve la historia real: la semana más grande es
+aproximadamente 1.26 veces la más pequeña. Una baja real, pero no un colapso. El script
+imprime esa razón, así que siempre puedes comparar un gráfico con los números.
+
+## Una lista de comprobación antes de compartir
+
+1. ¿El gráfico responde una **pregunta** que está escrita en el título?
+2. ¿Las barras empiezan en **cero**?
+3. ¿Se muestran las **unidades** y el **período**?
+4. ¿Las categorías están **ordenadas** con sentido?
+5. ¿Cambiaría el mensaje si eligiera otro rango de tiempo?
+6. ¿Puede leerlo una persona daltónica?
+7. ¿El número del gráfico coincide con la tabla de la que salió?
+
+## Manos a la obra
+
+### Ahora tú
+
+Un gerente muestra un gráfico de líneas cuyo eje y va de 98 a 102 y dice "¡miren qué volátiles son las ventas!". ¿Qué está mal?
+
+<Checkpoint question="Muestra la respuesta">
+	El eje estrecho magnifica cambios minúsculos de unos pocos puntos
+	porcentuales. Muestra la escala completa o el cambio en porcentaje, y pregunta
+	si esos cambios son significativos.
+</Checkpoint>
+
+## Errores comunes
+
+- **Elegir el gráfico antes que la pregunta.**
+- **Valores por defecto que truncan.** Algunas herramientas empiezan el eje en el valor más bajo. Compruébalo.
+- **Decorar.** Las sombras, el 3D y los degradados no aportan nada.
+- **Ocultar la fuente de los datos o el período.**
+- **Confiar en un gráfico generado por IA sin leer el eje.**
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Haz un gráfico de las ventas.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		Obtienes un gráfico circular o de barras en 3D con un título predeterminado,
+		sin unidades y sin un mensaje claro.
+	</Fragment>
+	<Fragment slot="good">
+		Quiero mostrarle al dueño si las ventas semanales están cayendo. Mis datos
+		son cuatro totales semanales en colones, del 4 de enero al 28 de enero de
+		2024. Recomiéndame un tipo de gráfico y explica por qué. Luego enumera las
+		configuraciones que lo harían honesto o engañoso, como el inicio del eje y
+		el rango de tiempo. No lo dibujes todavía.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Parte de la **pregunta** y los **datos** (contexto y entrada), y pide los
+		riesgos antes de escribir código, que es el paso de **verificación**.
+	</Fragment>
+	<Fragment slot="check">
+		Comprueba que la respuesta diga que las barras necesitan una línea base en
+		cero. Luego pregúntate si cuatro puntos bastan para decir "cayendo".
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Por qué el eje de un gráfico de barras debe empezar en cero?">
+	Las barras codifican el valor por su longitud, así que un eje cortado exagera
+	las diferencias.
+</Checkpoint>
+
+<Checkpoint question="¿Qué gráfico sirve para un cambio en el tiempo?">
+	Un gráfico de líneas.
+</Checkpoint>
+
+<Checkpoint question="Menciona otras dos formas en que un gráfico puede engañar.">
+	Un rango de tiempo elegido a conveniencia, ejes duales, efectos 3D, unidades
+	sin rotular o un gráfico circular con muchas porciones.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 7.2 construye paso a paso un gráfico estático honesto.
