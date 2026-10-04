@@ -1,0 +1,155 @@
+---
+title: Reading and writing Excel
+description: Read Excel sheets with pandas and openpyxl, and handle merged headers and multiple sheets.
+sidebar:
+  order: 1
+lessonId: '6.1'
+estimatedMinutes: 25
+prerequisites: ['4.13', '5.7']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Read an Excel workbook into pandas. - Handle multiple sheets and merged
+	headers. - Explain why a "pretty" workbook is not yet a dataset.
+</LessonGoals>
+
+## Why this matters
+
+Most business data starts life in Excel, and not in tidy form. Workbooks have titles, merged
+header cells, subtotal rows, and several sheets. Reading one with default settings
+gives you columns named `Unnamed: 1`. To automate a report, you have to turn the
+workbook people made into a table a program can use.
+
+<CaseStudy>
+	Café Central's monthly summary workbook has a merged title, month headers
+	merged over two columns, and a hand-typed totals row. Daniela needs its
+	numbers in a table. Download the office documents from lesson 5.7 if you do
+	not have them yet.
+</CaseStudy>
+
+## Two tools
+
+- **pandas** reads a sheet into a table (a DataFrame, lesson 6.2) with `pd.read_excel`.
+- **openpyxl** is the library underneath. It gives access to details such as merged
+  ranges, fonts, and formulas. pandas uses it automatically for `.xlsx`, and you
+  already have it in the project.
+
+Both are installed in the course project (lesson 4.13). If you start your own project, add them with `uv add pandas openpyxl`.
+
+## Reading a sheet
+
+<Example file="part06/01_excel.py" />
+
+Step by step:
+
+1. `sheet_name=None` reads **all** sheets into a dictionary. The workbook has two: `Resumen`
+   and `Notas`.
+2. Reading `Resumen` with the defaults treats the first row, the merged title, as the header.
+   Every other column becomes `Unnamed: n`. Nothing is wrong with the file. The default is wrong for this layout.
+3. Reading with `header=None` gives the raw grid. Row 1 holds the month names, but a
+   merged cell stores its value only in its **first** cell. The other cell is empty.
+   `ffill()` ("forward fill") copies the month across.
+4. We join the month and the label to make clear column names, such as `Enero 2024 Monto`,
+   and keep the rows below the headers.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Workbook: title, merged months, labels, rows, totals"] --> B["Read with header=None"]
+  B --> C["Fill the merged months across"]
+  C --> D["Build one clear name per column"]
+  D --> E["Table with proper headers"]`}
+/>
+
+## Things to check in a workbook
+
+- **Several sheets.** Which one has the data?
+- **Header rows.** How many, and merged?
+- **Totals and notes in the data area.** Remove them before analysis.
+- **Formulas.** pandas reads the last saved result. A file written by a program
+  may have formulas without saved results, which read as empty.
+- **Hidden rows, columns, and sheets.**
+
+## Writing Excel
+
+`DataFrame.to_excel(path, index=False)` writes a sheet. Lesson 6.10 covers formatting.
+Writing creates a new file, and does not edit your original.
+
+## Hands-on
+
+### Worked example
+
+1. Run the example, and compare the three printed column lists.
+2. Change `header=None` to `header=1` in the first read. What changes?
+
+### Your turn
+
+The last row of the table is `Total`. Why would it be a problem if you summed the `Monto`
+column of this table?
+
+<Checkpoint question="Show the answer">
+	The total row would be counted as well, so the sum would be doubled. Totals
+	mixed into the data area must be removed before analysis.
+</Checkpoint>
+
+## Common mistakes
+
+- **Trusting the default header.** Look at the raw grid first.
+- **Forgetting that merged cells only keep their first value.**
+- **Reading all sheets and assuming they match.**
+- **Leaving totals rows in the data.**
+- **Overwriting the original workbook.** Write results to a new file.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Read this Excel.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant writes `pd.read_excel(path)` and you get `Unnamed` columns,
+		with the merged headers lost.
+	</Fragment>
+	<Fragment slot="good">
+		My workbook "cafe_central_monthly_summary.xlsx" has a sheet "Resumen". Row 1
+		is a merged title, row 2 has month names merged over two columns each (B2:C2
+		and D2:E2), row 3 has the labels Sucursal, Ventas, Monto, Ventas, Monto, and
+		rows 4 to 6 are shops, with a Total row after that. Write pandas code that
+		returns a table with one clear column name per column (month and label
+		together), without the title and without the Total row. Print the column
+		names and the row count.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It describes the **input** layout exactly, states the wanted **output**, and
+		asks for a **verification** (names and count).
+	</Fragment>
+	<Fragment slot="check">
+		Compare the printed names with the workbook, and check that the Total row is
+		gone and the three shops remain.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Why do merged headers produce `Unnamed` columns?">
+	The default treats the first row as the header, and a merged cell fills only
+	its first column, leaving the others unnamed.
+</Checkpoint>
+
+<Checkpoint question="What does sheet_name=None do?">
+	It reads all sheets into a dictionary.
+</Checkpoint>
+
+<Checkpoint question="What does ffill do here?">
+	It copies the last non-empty value forward, so the month name fills the merged
+	range.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 6.7 explains why even a clean version of this workbook is not a good dataset.

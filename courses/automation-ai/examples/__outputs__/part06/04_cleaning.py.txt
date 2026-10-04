@@ -1,0 +1,10 @@
+Read 246 rows
+Removed 6 exact duplicate rows
+Marked 7 rows with no customer as SIN-CLIENTE
+Result: 240 rows
+Types: {'ID': 'str', 'fecha': 'datetime64[s]', 'cliente': 'str', 'monto': 'object', 'categoria': 'str'}
+  ID      fecha cliente   monto categoria
+T001 2024-01-01    C004 2200.00      jugo
+T002 2024-01-01    C002    1500    pastel
+T003 2024-01-01    C004 1400.00        te
+Categories: ['cafe', 'jugo', 'pastel', 'sandwich', 'te']

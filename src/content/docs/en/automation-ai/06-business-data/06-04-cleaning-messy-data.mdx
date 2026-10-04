@@ -1,0 +1,149 @@
+---
+title: Cleaning messy data
+description: Fix types, duplicates, missing values, and inconsistent text, and keep a log of every change.
+sidebar:
+  order: 4
+lessonId: '6.4'
+estimatedMinutes: 30
+prerequisites: ['4.9', '4.12', '6.3']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Clean a table step by step: types, duplicates, missing values, and text. -
+	Keep the original data and a log of changes. - Check the cleaned result
+	against the original.
+</LessonGoals>
+
+## Why this matters
+
+Cleaning is where most of the time in data work goes, and where silent mistakes are made. A
+careless cleaning step can drop rows, change numbers, or merge things that should stay
+apart, and nobody will notice. The discipline of this lesson is: change data
+deliberately, log every change, and verify the result.
+
+<CaseStudy>
+	The January sales have mixed date and amount formats, six duplicated lines,
+	spelling variants of the categories, and seven sales without a customer.
+	Daniela needs a clean table, and the owner needs to trust it.
+</CaseStudy>
+
+## The plan
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Read everything as text"] --> B["Remove exact duplicates"]
+  B --> C["Convert dates"]
+  C --> D["Convert amounts to Decimal"]
+  D --> E["Normalise categories"]
+  E --> F["Handle missing customers"]
+  F --> G["Clean table plus a log"]`}
+/>
+
+## The cleaning module
+
+The functions from lessons 4.9 and 4.12 are reused. They are gathered in a module that returns the clean table and a log.
+
+<Example file="part06/cafe_clean.py" />
+
+Why each step is done that way:
+
+1. **Read as text** (`dtype=str`, `keep_default_na=False`). pandas does not guess types or turn empty
+   fields into missing values. You decide.
+2. **Remove exact duplicates** with `drop_duplicates()`. Only identical rows go. Two sales with the same
+   ID but different amounts would stay, and a person should look at them.
+3. **Convert dates** with `parse_date`, because the formats are mixed, and the slash style is day first (lesson 4.12).
+4. **Convert amounts** to `Decimal`, for exact money (lesson 1.8).
+5. **Normalise categories** with `simplify`, so `Café`, `cafe`, and `café` become `cafe`.
+6. **Mark missing customers** as `SIN-CLIENTE` rather than dropping the rows. They are real sales, and the total must still tie.
+
+And notice what the function returns: the **log**, a list of what it did.
+
+<Example file="part06/04_cleaning.py" />
+
+The run reports 246 rows read, 6 duplicates removed, 7 rows with no customer marked, and 240 rows in
+the result. The types are now dates, `Decimal` amounts, and text.
+
+## Rules of good cleaning
+
+1. **Never overwrite the original.** Read from the raw file, and write results elsewhere.
+2. **Log what you change,** with counts. A surprise in the counts is a signal.
+3. **Prefer marking over deleting.** Keep the row, flag the problem.
+4. **Make rules explicit.** "Dates with slashes are day first" is a rule. Write it down.
+5. **Check the totals** before and after. Removing duplicates should reduce the count by exactly the number reported.
+6. **Don't chain changes you can't explain.** Each step should have a reason.
+
+## Hands-on
+
+### Your turn
+
+An analyst decides to drop all rows with no customer, "to keep it simple". What does that do to the
+monthly total, and what would you do instead?
+
+<Checkpoint question="Show the answer">
+	The total would be too low, because those seven sales were real. Keep them
+	with a marker such as SIN-CLIENTE, report how many there are, and ask whoever
+	enters the data to fix the source.
+</Checkpoint>
+
+## Common mistakes
+
+- **Overwriting the original file.**
+- **Dropping rows to make errors disappear.**
+- **Cleaning without counting.** You can't tell what changed.
+- **Using floats for money.**
+- **Guessing the date order.** Check it against unambiguous values.
+- **Assuming that duplicates are always errors.** Two identical sales can happen. Here the whole line, including the ID, repeats.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Clean my data.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant drops rows with any missing value, converts amounts to floats,
+		and does not tell you what it removed.
+	</Fragment>
+	<Fragment slot="good">
+		Write a pandas function that cleans a semicolon CSV with the columns ID,
+		Fecha, Cliente, Monto, Categoría. Read everything as text. Remove only exact
+		duplicate rows. Convert Fecha (formats 2024-01-01, 2024/01/01, and
+		01/01/2024, day first) to dates and Monto (formats 1500, 1400.50, $1500,50)
+		to Decimal. Lowercase the categories and remove accents. Do not drop any
+		other rows: mark blank customers as SIN-CLIENTE. Return the clean table and
+		a list of messages with the number of rows affected by each step.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It specifies every **rule** and **constraint** and asks for a **log**, so
+		the assistant can't make silent choices.
+	</Fragment>
+	<Fragment slot="check">
+		Compare the log to your own counts: rows in, duplicates, blanks, rows out.
+		Spot-check three rows, one from each date format.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Why keep the original data untouched?">
+	So that you can check the cleaning against it, and redo it if a rule changes.
+</Checkpoint>
+
+<Checkpoint question="Why mark missing customers instead of dropping those rows?">
+	They are real sales. Dropping them would make the totals wrong.
+</Checkpoint>
+
+<Checkpoint question="What does the cleaning log give you?">
+	A record of what changed and how many rows each step affected, so that
+	surprises are visible.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 6.5 uses the clean table to reproduce pivot tables.

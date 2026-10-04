@@ -1,0 +1,9 @@
+Shape (rows, columns): (246, 5)
+Columns: ['ID', 'Fecha', 'Cliente', 'Monto', 'Categoría']
+Types: {'ID': 'str', 'Fecha': 'str', 'Cliente': 'str', 'Monto': 'str', 'Categoría': 'str'}
+     ID       Fecha Cliente    Monto Categoría
+0  T001  01/01/2024    C004  2200.00      jugo
+1  T002  2024-01-01    C002     1500    pastel
+2  T003  2024-01-01    C004  1400.00        té
+Column Monto, first 3: ['2200.00', '1500', '1400.00']
+Row 0: {'ID': 'T001', 'Fecha': '01/01/2024', 'Cliente': 'C004', 'Monto': '2200.00', 'Categoría': 'jugo'}

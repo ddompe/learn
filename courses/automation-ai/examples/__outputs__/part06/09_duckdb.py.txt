@@ -1,0 +1,7 @@
+categoria  ventas    total
+ sandwich      44 138310.5
+     jugo      55 112613.5
+     cafe      42  81111.5
+   pastel      55  76815.0
+       te      44  65210.5
+Rows counted straight from the CSV file: 246

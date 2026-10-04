@@ -1,0 +1,140 @@
+---
+title: Merging datasets
+description: Reproduce VLOOKUP and XLOOKUP with merge, and understand join types.
+sidebar:
+  order: 6
+lessonId: '6.6'
+estimatedMinutes: 25
+prerequisites: ['6.4', '5.3']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Join two tables on a shared key with `merge`. - Explain inner, left, right,
+	and outer joins. - Check a join for lost or multiplied rows.
+</LessonGoals>
+
+## Why this matters
+
+Data about one business is spread across tables: sales in one, customers in another.
+In Excel you bring them together with `VLOOKUP` or `XLOOKUP`. In pandas, you use `merge`,
+which is more powerful and can show what did **not** match, the part that Excel hides
+behind `#N/A`.
+
+<CaseStudy>
+	The sales table has a customer ID, but not the name or city. The customer list
+	has those. Daniela wants sales by city, and a list of sales whose customer
+	cannot be found.
+</CaseStudy>
+
+## Keys and join types
+
+A **key** is a column that identifies a row, such as the customer ID. A **join** combines
+rows from two tables where the keys match. The join type decides what happens to rows
+without a match.
+
+| Join    | Keeps                                               | Excel analogy                    |
+| ------- | --------------------------------------------------- | -------------------------------- |
+| `inner` | Only rows with a match in both tables               | Filter out every `#N/A`          |
+| `left`  | All rows of the left table, with blanks if no match | `XLOOKUP` with a not-found value |
+| `right` | All rows of the right table                         | The reverse of `left`            |
+| `outer` | All rows of both                                    | No direct equivalent             |
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Sales (left): 240 rows"] --> C["merge on cliente, how=left"]
+  B["Customers (right): 8 rows"] --> C
+  C --> D["240 rows plus name and city"]`}
+/>
+
+## In action
+
+<Example file="part06/06_merge.py" />
+
+Reading the output:
+
+- The customer IDs are unique, which is what a lookup table needs.
+- A `left` join keeps all 240 sales. The row count before and after is the same, which is the
+  first check of any join.
+- Seven sales have no customer record. They carry `SIN-CLIENTE`, which matches nobody, so the name is missing.
+  `isna()` finds them.
+- Customer `C004` exists, but its name is empty in the source. That is a different problem,
+  a gap in the customer data, and the empty string shows it.
+- Grouping the joined table by city gives the totals per city.
+
+## The two classic failures
+
+1. **Rows multiply.** If the key is **not unique** in the right table, each sale matches
+   several rows, and the total grows. Check `is_unique` first, and compare row counts.
+2. **Rows vanish.** An `inner` join silently drops sales without a customer. Use `left` and
+   inspect the non-matches.
+
+## Hands-on
+
+### Your turn
+
+The customer list accidentally contains `C002` twice. What happens to the sales of `C002` in a left join, and how would you notice?
+
+<Checkpoint question="Show the answer">
+	Each C002 sale matches two rows, so the sales appear twice and the totals are
+	too high. You would notice that the row count after the join is larger than
+	before, or that `is_unique` is False.
+</Checkpoint>
+
+## Common mistakes
+
+- **Not checking the row count** after a join.
+- **Using inner when you wanted to see the gaps.**
+- **Joining on text that differs by case, spaces, or accents.** Clean the keys first.
+- **Duplicate keys in the lookup table.**
+- **Columns with the same name in both tables.** pandas adds suffixes; rename on purpose.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Join these tables.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant picks an inner join, so unmatched sales vanish, and never
+		checks that the key is unique.
+	</Fragment>
+	<Fragment slot="good">
+		I have a pandas table "sales" (240 rows, key column cliente) and a table
+		"customers" (8 rows, key column cliente, plus name and city). Write code
+		that left-joins customers onto sales. Before the join, check that the key is
+		unique in customers. After the join, check that the row count is still 240,
+		and list the sales with no matching customer. Do not drop any rows.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It names the **join type and key**, and requires **checks** before and
+		after, which is where join errors hide.
+	</Fragment>
+	<Fragment slot="check">
+		Confirm the counts, and verify one unmatched sale by looking for its
+		customer ID in the customer file.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What does a left join keep?">
+	All rows of the left table, with blanks where the right table has no match.
+</Checkpoint>
+
+<Checkpoint question="Why check that the key is unique?">
+	A duplicate key multiplies the matching rows and inflates totals.
+</Checkpoint>
+
+<Checkpoint question="What is the first check after a join?">
+	Compare the row count before and after.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 6.9 does the same join in SQL.

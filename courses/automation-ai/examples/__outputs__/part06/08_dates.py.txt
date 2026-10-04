@@ -1,0 +1,11 @@
+Weekly totals (weeks end on Sunday):
+fecha
+2024-01-07    109212.50
+2024-01-14    109213.50
+2024-01-21    109412.50
+2024-01-28     87014.50
+2024-02-04     59208.00
+Freq: W-SUN
+Busiest weekday by number of sales: Wednesday
+Opening time in Costa Rica: 2024-01-01 08:00:00-06:00
+The same moment in UTC:     2024-01-01 14:00:00+00:00

@@ -1,0 +1,137 @@
+---
+title: Tidy data
+description: Explain why a pretty spreadsheet is a poor dataset, and reshape it with melt.
+sidebar:
+  order: 7
+lessonId: '6.7'
+estimatedMinutes: 20
+prerequisites: ['6.1', '6.5']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain what tidy data is. - Recognise a wide, human-friendly table. -
+	Reshape a wide table into tidy rows.
+</LessonGoals>
+
+## Why this matters
+
+People build spreadsheets to be **read**: months across the top, shops down the side,
+totals at the bottom. Programs need data to be **processed**: one row per observation, one
+column per variable. A table that is easy to read is often hard to group, filter, or chart.
+Knowing the difference saves a lot of rework.
+
+<CaseStudy>
+	The monthly summary workbook has a column for each month and measure. Next
+	month, someone adds new columns. Daniela's formulas break. As tidy rows, the
+	next month would just be new rows.
+</CaseStudy>
+
+## What tidy means
+
+Data is **tidy** when:
+
+1. Each **variable** is a column.
+2. Each **observation** is a row.
+3. Each kind of observation is in its own table.
+
+In the summary workbook, "month" is not a column. It is hidden in the headers `Diciembre 2023`
+and `Enero 2024`, and so are the measures `Ventas` and `Monto`. The shop is a column, but the
+numbers for several months and measures live side by side.
+
+| Wide (for reading)          | Tidy (for processing)                |
+| --------------------------- | ------------------------------------ |
+| One row per shop            | One row per shop, month, and measure |
+| New month means new columns | New month means new rows             |
+| Hard to group by month      | `groupby("mes")`                     |
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Wide: shop, Dic Ventas, Dic Monto, Ene Ventas, Ene Monto"] -->|"melt: unpivot"| B["Long: shop, month, measure, value"]`}
+/>
+
+## Reshaping
+
+Reshaping from wide to long is called **unpivoting**, and pandas offers `melt` for it. The
+example below does it with an explicit loop, so each step is visible.
+
+<Example file="part06/07_tidy.py" />
+
+The 3 shops, 2 months, and 2 measures give 12 rows, each saying one thing: this shop, in this month, had this value for this measure. Now grouping by month is one line, and a new month needs no new code.
+
+Notice that we dropped the `Total` row. Totals are a calculation from the data, and do not belong in it. You can always recompute them.
+
+## Hands-on
+
+### Your turn
+
+Which of these is tidy?
+
+1. Columns: `fecha`, `categoria`, `monto`.
+2. Columns: `categoria`, `enero`, `febrero`, `marzo`.
+
+<Checkpoint question="Show the answer">
+	The first. The second has the month spread over the column names, which is the
+	wide shape. As tidy rows it would be `categoria`, `mes`, `monto`.
+</Checkpoint>
+
+## Common mistakes
+
+- **Treating the "pretty" report as the dataset.**
+- **Keeping totals inside the data.**
+- **Putting values in column names.**
+- **Reshaping before cleaning.** Clean first.
+- **Losing labels when unpivoting.** Keep the shop and the month in each row.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Reshape this.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant melts every column, including the labels, and loses which
+		month a value belongs to.
+	</Fragment>
+	<Fragment slot="good">
+		My table has a column "sucursal" and the columns "Diciembre 2023 Ventas",
+		"Diciembre 2023 Monto", "Enero 2024 Ventas", and "Enero 2024 Monto". Write
+		pandas code that turns it into tidy rows with the columns sucursal, mes,
+		medida (ventas or monto), and valor. Keep the shop in every row. Print the
+		number of rows and show that the sum of monto per mes matches the original
+		columns.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It states the **input** and **output** column names exactly, and asks for a
+		**verification** against the original.
+	</Fragment>
+	<Fragment slot="check">
+		Compare the monthly sums to the Total row of the workbook: 263,950 and
+		254,850.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What is tidy data?">
+	Each variable is a column, each observation is a row, and each kind of
+	observation has its own table.
+</Checkpoint>
+
+<Checkpoint question="Why do totals not belong in the data?">
+	They are calculated from it, and keeping them risks counting them twice.
+</Checkpoint>
+
+<Checkpoint question="What does melt do?">
+	It turns a wide table into a long one, with the former column names becoming
+	values.
+</Checkpoint>
+
+## Going deeper
+
+- Part 7 charts depend on tidy data.

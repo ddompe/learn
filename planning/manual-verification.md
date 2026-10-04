@@ -59,6 +59,15 @@ leaves something unverified. Updated 2026-10-03.
 - [ ] 5.9: pyarrow installs cleanly with `uv add pyarrow` on Windows and macOS, and the claim that pandas needs a Parquet engine.
 - [ ] Dataset: the xlsx is byte-reproducible only with the pinned openpyxl version in `uv.lock`; if the generator output changes after an openpyxl upgrade, regenerate and recommit the xlsx and zip.
 
+## Part 6 (pandas and Excel)
+
+- [ ] All Part 6 outputs depend on pandas 3.x and DuckDB from `uv.lock`; if learners get another pandas major version, `dtypes` shown as `str` may appear as `object`, and other output can differ (lesson 6.2 mentions this).
+- [ ] 6.1: the Spanish and English Excel column letters and the `header=None` workflow work on the real downloaded workbook in Excel.
+- [ ] 6.10: the generated workbook opens in Excel with the bold header, `#,##0.00` format, frozen row, and fitted widths.
+- [ ] 6.8: the claim that Costa Rica uses UTC-6 all year with no daylight saving time.
+- [ ] 6.9: `duckdb.sql` finding a DataFrame by variable name inside a function scope and across versions.
+- [ ] Pivot labels and week numbers in 6.5 (ISO weeks) read sensibly to a business audience.
+
 ## Pedagogy and voice (author review)
 
 - [ ] Read Parts 0 to 2 end to end for flow, repetition, and tone. Intro repetition was reduced on 2026-10-03; re-check.

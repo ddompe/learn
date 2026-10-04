@@ -1,0 +1,8 @@
+Sheets: ['Resumen', 'Notas']
+Read as is, the columns are: ['Café Central - Resumen mensual por sucursal', 'Unnamed: 1', 'Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4']
+['Sucursal', 'Diciembre 2023 Ventas', 'Diciembre 2023 Monto', 'Enero 2024 Ventas', 'Enero 2024 Monto']
+Sucursal Diciembre 2023 Ventas Diciembre 2023 Monto Enero 2024 Ventas Enero 2024 Monto
+San José                    62               118400                58           109900
+ Heredia                    41                76250                44            80100
+Alajuela                    37                69300                35            64850
+   Total                   140               263950               137           254850

@@ -1,0 +1,135 @@
+---
+title: Selecting and filtering
+description: Select columns and filter rows with conditions.
+sidebar:
+  order: 3
+lessonId: '6.3'
+estimatedMinutes: 20
+prerequisites: ['6.2', '4.11']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Select one or several columns. - Filter rows with one or more conditions. -
+	Avoid the classic mistakes with `and`, `&`, and brackets.
+</LessonGoals>
+
+## Why this matters
+
+Almost every question about data starts with "only the...": only juice, only the first
+week, only sales without a customer. In Excel you use filters. In pandas, you write
+the conditions, and they become part of a script that can be repeated. The syntax has a few
+traps worth knowing.
+
+<CaseStudy>
+	Daniela wants the juice sales, the large coffee sales, and the sales with no
+	customer. The last one is a data quality question: someone forgot to enter the
+	customer.
+</CaseStudy>
+
+## Selecting columns
+
+One column: `sales["monto"]` (a Series). Several columns: pass a **list**, so there are
+double brackets: `sales[["ID", "monto"]]` (a DataFrame).
+
+## Filtering rows
+
+A condition on a column gives a column of True and False, one per row. Putting it
+inside brackets keeps only the True rows.
+
+<Example file="part06/03_select_filter.py" />
+
+This script uses the cleaned table (lesson 6.4 builds it). Reading the output:
+
+- `sales["categoria"] == "jugo"` keeps the 55 juice sales.
+- For two conditions at once, use `&` for AND and `|` for OR, and put **each condition in
+  brackets**: `(a) & (b)`. Python's `and` does not work on columns.
+- Comparing dates works with date text: `sales["fecha"] < "2024-01-08"` gives the first week.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Table, 240 rows"] --> B["Condition: categoria is cafe"]
+  B --> C["Condition: monto at least 2500"]
+  C --> D["Rows that pass both"]`}
+/>
+
+## Handy filters
+
+| Goal                     | Code                                      |
+| ------------------------ | ----------------------------------------- |
+| One of several values    | `sales["categoria"].isin(["cafe", "te"])` |
+| Not equal                | `sales["categoria"] != "te"`              |
+| Not (invert a condition) | `~(condition)`                            |
+| Missing values           | `sales["cliente"].isna()`                 |
+| Text contains            | `sales["ID"].str.startswith("T0")`        |
+
+Filtering gives a new table. To keep it, assign it: `juice = sales[...]`.
+
+## Hands-on
+
+### Your turn
+
+Write the filter for "tea sales above 1500". Then reveal the answer.
+
+<Checkpoint question="Show the answer">
+`sales[(sales["categoria"] == "te") & (sales["monto"] > 1500)]`. Both conditions are in brackets, and they are joined with `&`.
+</Checkpoint>
+
+## Common mistakes
+
+- **Using `and`/`or`.** They fail with columns. Use `&` and `|`.
+- **Forgetting the brackets** around each condition.
+- **Using `=` instead of `==`.**
+- **Single brackets for several columns.** Use a list: `[["a", "b"]]`.
+- **Changing a filtered table and expecting the original to change.**
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Filter the data.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant guesses the columns and writes `and` between conditions, which
+		raises an error.
+	</Fragment>
+	<Fragment slot="good">
+		My pandas table "sales" has columns ID, fecha (datetime), cliente (text),
+		monto (Decimal), and categoria (text). Write the code to get the sales where
+		categoria is "cafe" and monto is at least 2500, and another filter for sales
+		where cliente equals "SIN-CLIENTE". Print the number of rows of each. Use &
+		and brackets, not "and".
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It states the **schema** (input), the exact **conditions**, and the
+		**constraint** about the syntax. The counts offer a **check**.
+	</Fragment>
+	<Fragment slot="check">
+		Count one filter manually in the CSV with a text search, and compare it to
+		the printed number.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Why do you need brackets around each condition?">
+	`&` binds more tightly than comparisons, so without brackets Python combines
+	the wrong parts and raises an error.
+</Checkpoint>
+
+<Checkpoint question="How do you select two columns?">
+	Pass a list of names: `sales[["ID", "monto"]]`.
+</Checkpoint>
+
+<Checkpoint question="What does isin do?">
+	It tests whether each value is in a given list.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 6.4 cleans the table before you filter it for real.

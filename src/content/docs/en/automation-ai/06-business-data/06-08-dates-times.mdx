@@ -1,0 +1,134 @@
+---
+title: Dates, times, and time zones
+description: Parse dates, group by week, and handle time zones.
+sidebar:
+  order: 8
+lessonId: '6.8'
+estimatedMinutes: 25
+prerequisites: ['6.4']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Work with real date columns instead of text. - Group a table by day, week,
+	or month. - Convert a time between time zones.
+</LessonGoals>
+
+## Why this matters
+
+Business is organised by time: days, weeks, months, quarters. Once dates are real
+dates, not text, you can group, compare, and sort by them. Time zones add a second layer: the same moment has
+different clock times in San José and in a cloud server in another country.
+
+<CaseStudy>
+	The owner wants weekly sales and to know the busiest weekday. Later, a cloud
+	service logs orders in UTC, and Daniela must match them with local sales.
+</CaseStudy>
+
+## Dates as dates
+
+Lesson 6.4 converted the mixed text into real dates. A real date column has the type
+`datetime64`, and gives access to parts through `.dt`: `.dt.day_name()`, `.dt.month`,
+`.dt.isocalendar().week`.
+
+Always check the order of day and month when converting (lesson 4.12). The sales file
+proves it: `13/01/2024` can only be day first.
+
+## Grouping by time
+
+`resample` groups by a time period, like a group-by for dates. It needs the date as the
+index.
+
+<Example file="part06/08_dates.py" />
+
+- `resample("W-SUN")` makes weeks that end on Sunday. Other codes: `"D"` days, `"MS"` months.
+- The last week ends on 4 February because the file's last days (29 to 31 January) fall in the week that finishes then.
+- `.dt.day_name()` gives the weekday, and `value_counts()` shows the busiest: Wednesday.
+
+## Time zones
+
+A date and time without a zone is **naive**. It is ambiguous. With a zone it is **aware**.
+Costa Rica has no daylight saving time, and is at UTC-6 all year, but many places change
+their clocks twice a year, which makes calculations tricky.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["08:00 San José, naive"] -->|"tz_localize America/Costa_Rica"| B["08:00 -06:00, aware"]
+  B -->|"tz_convert UTC"| C["14:00 UTC"]`}
+/>
+
+`tz_localize` attaches a zone to a naive time. `tz_convert` changes an aware time to another
+zone. The example shows 08:00 in Costa Rica as 14:00 UTC.
+
+Rules: store times in **UTC**, convert to local time only for display, and never compare
+a naive time with an aware one.
+
+## Hands-on
+
+### Your turn
+
+A server log says an order was made at `2024-01-15 20:30 UTC`. What is the local time in Costa Rica, and on which day?
+
+<Checkpoint question="Show the answer">
+	14:30 on 15 January 2024, because Costa Rica is six hours behind UTC.
+</Checkpoint>
+
+## Common mistakes
+
+- **Keeping dates as text.** Sorting and grouping then use text order.
+- **Swapping day and month.**
+- **Mixing naive and aware times.**
+- **Ignoring daylight saving elsewhere.** Use named zones, not fixed offsets.
+- **Grouping by week without saying where the week starts.**
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Fix the dates.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant lets pandas guess, so `01/02/2024` becomes January 2nd, and
+		nobody notices.
+	</Fragment>
+	<Fragment slot="good">
+		My column "Fecha" has text in three formats: 2024-01-13, 2024/01/13, and
+		13/01/2024. In the slash format with the year last, the day comes first.
+		Write pandas code that converts the column to real dates without guessing,
+		and then groups the sales by week ending on Sunday. Include a check that no
+		date is outside January 2024.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It states the **formats and the order rule** (input and constraint), and
+		adds a **sanity check**.
+	</Fragment>
+	<Fragment slot="check">
+		Check three dates by hand, including 13/01/2024, and confirm the week totals
+		add to the grand total.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What does resample do?">
+	It groups a table by a time period, such as week or month, using the date
+	index.
+</Checkpoint>
+
+<Checkpoint question="What is the difference between naive and aware times?">
+	An aware time has a time zone and a naive one does not, so a naive time is
+	ambiguous.
+</Checkpoint>
+
+<Checkpoint question="In which zone should you store times?">
+	UTC, converting to local time only for display.
+</Checkpoint>
+
+## Going deeper
+
+- Part 7 uses these weekly totals for charts.

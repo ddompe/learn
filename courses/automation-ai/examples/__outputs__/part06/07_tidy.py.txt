@@ -1,0 +1,9 @@
+Rows: 12
+sucursal            mes medida  valor
+San José Diciembre 2023 ventas     62
+ Heredia Diciembre 2023 ventas     41
+Alajuela Diciembre 2023 ventas     37
+San José Diciembre 2023  monto 118400
+mes
+Diciembre 2023    263950
+Enero 2024        254850

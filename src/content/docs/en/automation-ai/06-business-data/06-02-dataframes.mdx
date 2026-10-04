@@ -1,0 +1,144 @@
+---
+title: DataFrames, a sheet you control
+description: Understand DataFrames, columns, the index, and dtypes in Excel terms.
+sidebar:
+  order: 2
+lessonId: '6.2'
+estimatedMinutes: 20
+prerequisites: ['6.1']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain a DataFrame using Excel terms. - Read its shape, columns, index, and
+	dtypes. - Say where the Excel analogy helps and where it breaks.
+</LessonGoals>
+
+## Why this matters
+
+pandas is the main tool for tabular data in Python, and the **DataFrame** is its
+central object. If you think of it as an Excel sheet that you control with code, you are
+partly right. The parts where you are wrong will cost you hours, so this lesson covers both.
+
+<CaseStudy>
+	Daniela loads the sales CSV into a DataFrame and wants to know: how big is it,
+	what are the columns, and what type is each one?
+</CaseStudy>
+
+## The analogy
+
+| Excel                              | pandas                                         |
+| ---------------------------------- | ---------------------------------------------- |
+| A sheet                            | A DataFrame                                    |
+| A column header                    | A column name                                  |
+| A column of cells                  | A **Series** (a column with a name and a type) |
+| A row number                       | The **index** (labels for rows)                |
+| A cell format (number, text, date) | A **dtype** (data type of the column)          |
+| A formula in a cell                | An operation on a whole column                 |
+
+## Where the analogy breaks
+
+1. **Every column has one type.** In Excel, a column can hold numbers and text mixed. In pandas,
+   a column that mixes them becomes text (or "object").
+2. **You work on whole columns,** not on cells one by one. `sales["Monto"] * 2` doubles every row at once.
+3. **No hidden state.** There are no colours, merged cells, or formulas that carry meaning.
+   What you see in the table is all there is.
+4. **Operations return new tables.** Your original is not changed unless you assign the result.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["DataFrame"] --> B["Index: labels of rows"]
+  A --> C["Column ID: Series, text"]
+  A --> D["Column Fecha: Series, text"]
+  A --> E["Column Monto: Series, text"]`}
+/>
+
+## First look
+
+<Example file="part06/02_dataframe.py" />
+
+- `shape` is `(246, 5)`: 246 rows and 5 columns.
+- `dtypes` lists the type of each column. Here, all are `str` (text), including `Monto`
+  and `Fecha`. A CSV has no types, and the messy formats stop pandas from guessing numbers or dates.
+  That is why lesson 6.4 converts them.
+- `head(3)` shows the first three rows. The numbers on the left are the index.
+- `sales["Monto"]` selects a column. `sales.iloc[0]` selects the first row by position.
+
+This course uses pandas 3, where text columns have the dtype `str`. In older versions
+you will see `object`, which means the same here.
+
+## Hands-on
+
+### Worked example
+
+1. Load the sales as in the example.
+2. Print `sales.info()` and `sales.describe()`. What does each tell you? The result of
+   `describe()` has few columns. Why?
+
+### Your turn
+
+What is the type of `sales["Monto"]` after reading, and why can you not add the amounts yet?
+
+<Checkpoint question="Show the answer">
+	It is text (`str`), because the file has mixed formats like `$1500,50`. Adding
+	text joins it instead of adding numbers (lesson 4.8). The amounts must be
+	converted first.
+</Checkpoint>
+
+## Common mistakes
+
+- **Expecting numbers from a CSV.** Check `dtypes`.
+- **Looping over rows to do arithmetic.** Work on whole columns.
+- **Confusing index with position.** `iloc` is by position; `loc` is by label.
+- **Modifying a copy.** Assign the result to a name.
+- **Printing a huge table.** Use `head()`.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Explain DataFrames.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		You get an abstract definition with terms like "labelled two-dimensional
+		structure" and no link to what you know.
+	</Fragment>
+	<Fragment slot="good">
+		I know Excel well and have never used pandas. Explain a DataFrame in 150
+		words using my Excel knowledge: sheet, column, row number, cell format. Then
+		list three things that behave differently from Excel. Use the example of a
+		sales table with columns ID, Fecha, Monto.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It gives **context** and a **constraint** (150 words, Excel terms), and asks
+		for the differences, which prevents a misleading analogy.
+	</Fragment>
+	<Fragment slot="check">
+		Compare the differences it lists with the four in this lesson, especially
+		one type per column.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What is a dtype?">
+	The data type of a column, such as text, integer, or date.
+</Checkpoint>
+
+<Checkpoint question="What does shape tell you?">
+	The number of rows and columns.
+</Checkpoint>
+
+<Checkpoint question="Name one way a DataFrame differs from an Excel sheet.">
+	Each column has a single type; you work on whole columns; and it carries no
+	formatting or merged cells.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 6.3 picks columns and rows out of a table.

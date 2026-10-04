@@ -1,0 +1,134 @@
+---
+title: Grouping and pivoting
+description: Reproduce Excel pivot tables with groupby and pivot_table.
+sidebar:
+  order: 5
+lessonId: '6.5'
+estimatedMinutes: 20
+prerequisites: ['6.4']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Group rows and summarise them with `groupby`. - Build a pivot table with
+	`pivot_table`. - Check that your summary ties to the grand total.
+</LessonGoals>
+
+## Why this matters
+
+The pivot table is the most used analysis tool in Excel. Its logic is: split the rows into
+groups, calculate something for each group, and combine the results. pandas does the same,
+in code that can be rerun on next month's file, without anyone dragging fields around.
+
+<CaseStudy>
+	The owner asks: how much did we sell in each category, and how did each
+	category do week by week?
+</CaseStudy>
+
+## Split, apply, combine
+
+<Mermaid
+	diagram={`flowchart LR
+  A["240 rows"] --> B["Split by categoria"]
+  B --> C["Apply: count and sum in each group"]
+  C --> D["Combine: one row per category"]`}
+/>
+
+`groupby("categoria")` splits the table. You then pick a column and what to calculate:
+
+```text
+sales.groupby("categoria")["monto"].agg(["count", "sum"])
+```
+
+## In action
+
+<Example file="part06/05_group_pivot.py" />
+
+The first table gives, for each category, the number of sales and their total. The grand
+total is 474,061.00 colones. This is your **control figure**: you can compare it with
+the sum of the cleaned amounts, and with the original file.
+
+The second table is a **pivot table**: categories as rows, ISO week numbers as columns,
+and the sum of amounts in the cells. `pivot_table` takes `index` (rows), `columns`,
+`values`, and `aggfunc`. It is the same four boxes as the Excel dialog.
+
+The last line is a check: the sum of the whole pivot equals the grand total. If it didn't, a
+row would have been lost, for example by a missing value in a grouping column.
+
+## Excel pivot to pandas
+
+| Excel PivotTable box | pandas argument          |
+| -------------------- | ------------------------ |
+| Rows                 | `index=`                 |
+| Columns              | `columns=`               |
+| Values               | `values=` and `aggfunc=` |
+| Filters              | Filter the table first   |
+
+## Hands-on
+
+### Your turn
+
+How would you get the average sale per category instead of the total?
+
+<Checkpoint question="Show the answer">
+	Use the mean aggregation instead of the sum, by calling `mean` on the grouped
+	amounts. With exact decimals, check that the result is what you expect, or
+	divide the sum by the count.
+</Checkpoint>
+
+## Common mistakes
+
+- **Not checking the total.** A pivot that doesn't tie hides lost rows.
+- **Grouping by a column with inconsistent text.** `cafe` and `Café` become two groups. Clean first.
+- **Missing values in grouping columns.** The default drops those rows from the groups.
+- **Averaging averages.** Combine sums and counts instead.
+- **Reading the week number as a date.** It is a label.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Make a pivot.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant picks columns at random, or sums a column that is still text.
+	</Fragment>
+	<Fragment slot="good">
+		My pandas table "sales" has columns fecha (datetime), categoria (text), and
+		monto (Decimal). Write code that gives, for each categoria, the number of
+		sales and the total monto, and a pivot table of the totals with categoria as
+		rows and the ISO week as columns. Then add a check that proves that the
+		pivot total equals the grand total.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It gives the **schema**, a precise **task**, and requests a built-in
+		**verification**.
+	</Fragment>
+	<Fragment slot="check">
+		Run the check. Also pick one category and week, and add its amounts by hand
+		from the table.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What are the three steps of a group-by?">
+	Split into groups, apply a calculation to each, and combine the results.
+</Checkpoint>
+
+<Checkpoint question="Which pivot_table argument holds the row labels?">
+	`index`.
+</Checkpoint>
+
+<Checkpoint question="Why compare the pivot total with the grand total?">
+	It shows that no rows were lost in the grouping.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 6.6 adds customer names with a merge, the pandas version of VLOOKUP.

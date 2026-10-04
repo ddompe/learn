@@ -1,0 +1,141 @@
+---
+title: SQL with DuckDB
+description: Query CSV, Parquet, and DataFrames with SQL.
+sidebar:
+  order: 9
+lessonId: '6.9'
+estimatedMinutes: 25
+prerequisites: ['6.5', '5.9']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain what SQL is and why it is worth knowing. - Write a simple query with
+	`SELECT`, `WHERE`, `GROUP BY`, and `ORDER BY`. - Use DuckDB to query a
+	DataFrame and a CSV file.
+</LessonGoals>
+
+## Why this matters
+
+**SQL** (Structured Query Language) is the standard language for asking questions of tables.
+Databases, data warehouses, and analytics tools all speak it. Learning a little SQL lets you
+talk to them, and gives you a second way to check your pandas results. **DuckDB** is a small
+database that runs inside your Python program, so there is nothing to install or run. It
+queries DataFrames, CSV files, and Parquet files directly.
+
+<CaseStudy>
+	The owner's accountant uses SQL. Daniela writes the category totals as a
+	query, so they can run the same question on the company's database.
+</CaseStudy>
+
+## The shape of a query
+
+A query says what you want, not how to compute it.
+
+```text
+SELECT categoria, count(*) AS ventas, round(sum(monto), 2) AS total
+FROM sales
+GROUP BY categoria
+ORDER BY total DESC
+```
+
+| Clause     | Meaning                       | pandas equivalent     |
+| ---------- | ----------------------------- | --------------------- |
+| `SELECT`   | Which columns or calculations | Choose columns, `agg` |
+| `FROM`     | Which table                   | The DataFrame         |
+| `WHERE`    | Keep only matching rows       | Boolean filter        |
+| `GROUP BY` | One row per group             | `groupby`             |
+| `ORDER BY` | Sort the result               | `sort_values`         |
+
+<Mermaid
+	diagram={`flowchart LR
+  A["DataFrame or CSV or Parquet"] --> B["DuckDB runs the SQL"]
+  B --> C["Result table"]`}
+/>
+
+## DuckDB in action
+
+<Example file="part06/09_duckdb.py" />
+
+- `duckdb.sql(...)` finds the DataFrame called `sales` by name, and queries it.
+- The result matches the pandas pivot of lesson 6.5: sandwiches first, with 138,310.5. Two methods, the same
+  answer, which is a good check.
+- `read_csv(...)` reads the CSV file straight from disk, without pandas. It counts 246 rows,
+  duplicates included, since the file has not been cleaned.
+
+The amounts are converted to numbers (floats) for DuckDB in this small example. For
+accounting, keep exact decimals in the cleaning step, as before.
+
+## When to pick SQL or pandas
+
+Use pandas to clean and reshape in Python. Use SQL when the data sits in a database, when
+the question is a plain summary, or when colleagues already read SQL. Many analysts mix both.
+
+## Hands-on
+
+### Your turn
+
+Write a query for the total amount of the `jugo` sales only. Then reveal the answer.
+
+<Checkpoint question="Show the answer">
+	`SELECT sum(monto) FROM sales WHERE categoria = 'jugo'`. The text value is in
+	single quotes. The result is 112613.5.
+</Checkpoint>
+
+## Common mistakes
+
+- **Double quotes around text values.** In SQL they mean column names. Use single quotes.
+- **Forgetting `GROUP BY`** when mixing a column and a sum.
+- **Querying uncleaned data.** Clean first, or the groups are wrong.
+- **Trusting generated SQL without running a check.**
+- **Assuming all databases share every function.** Dialects differ a little.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Write SQL.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant invents table and column names that do not exist in your data.
+	</Fragment>
+	<Fragment slot="good">
+		I use DuckDB in Python. A pandas DataFrame named sales has the columns ID
+		(text), fecha (date), cliente (text), monto (number), and categoria (text).
+		Write a query that returns, for each categoria, the number of sales and the
+		total monto, sorted by total, largest first. Show the Python call that runs
+		it on the DataFrame. Use only these columns.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It provides the **schema**, a precise **task**, and the **constraint** to
+		use only existing columns.
+	</Fragment>
+	<Fragment slot="check">
+		Compare the result with the pandas groupby. If a number differs, find out
+		why.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What does GROUP BY do?">
+	It produces one row per group, so you can count or sum within each.
+</Checkpoint>
+
+<Checkpoint question="Why is DuckDB convenient for analysis?">
+	It runs inside your program and queries DataFrames, CSV, and Parquet without a
+	server.
+</Checkpoint>
+
+<Checkpoint question="How do you write a text value in SQL?">
+	In single quotes.
+</Checkpoint>
+
+## Going deeper
+
+- Part 9 can use SQL queries inside an automated pipeline.

@@ -1,0 +1,139 @@
+---
+title: Presentable Excel output
+description: Write formatted Excel files that colleagues can open and use.
+sidebar:
+  order: 10
+lessonId: '6.10'
+estimatedMinutes: 25
+prerequisites: ['6.1', '6.5']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Write a DataFrame to an Excel file. - Format headers, number formats, column
+	widths, and frozen rows. - Check the written file by reading it back.
+</LessonGoals>
+
+## Why this matters
+
+The last step of most business analysis is handing someone a file. They will open it in
+Excel, not in Python. A file with raw column names, a stray index, and a narrow column
+that shows `####` makes your work look careless, and invites mistakes. A few lines of
+formatting fix that.
+
+<CaseStudy>
+	Daniela sends the category totals to the owner each month. She wants a clean
+	sheet with a bold header, thousands separators, and a frozen top row.
+</CaseStudy>
+
+## Write, then format
+
+1. `DataFrame.to_excel(path, index=False)` writes the table. `index=False` stops the
+   row numbers from appearing as a column.
+2. **openpyxl** then opens the file to style it (lesson 6.1).
+
+<Example file="part06/10_excel_output.py" />
+
+What it does:
+
+- Bold white text on a coloured fill for the header.
+- `number_format = "#,##0.00"` shows thousands separators and two decimals. The cell still
+  holds a number, so it can be summed. Only the look changes.
+- Column widths are set from the longest value in each column.
+- `freeze_panes = "A2"` keeps the header visible when scrolling.
+- The script **reads the file back** and prints what it finds. Never assume a file is right because the code ran.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["DataFrame"] --> B["to_excel"]
+  B --> C["openpyxl styles"]
+  C --> D["Save"]
+  D --> E["Read back and check"]`}
+/>
+
+## Rules for sharing files
+
+1. **Numbers as numbers.** Don't write text such as "1,500.00".
+2. **Dates as dates,** with a date format.
+3. **One header row,** no merged cells. The people downstream may want to use the data.
+4. **Write a new file.** Don't overwrite someone's workbook.
+5. **Put notes on a separate sheet,** not in the data area.
+6. **Open it in Excel before sending it.** Look at it once.
+
+## Hands-on
+
+### Your turn
+
+The `total` column shows `81111.5` and the owner wants `81,111.50`. Which setting changes that, and does it change the stored number?
+
+<Checkpoint question="Show the answer">
+	The number format of the cells: `#,##0.00`. It changes only how the number
+	looks. The value stays 81111.5, so formulas and sums still work.
+</Checkpoint>
+
+## Common mistakes
+
+- **Leaving the index column in.**
+- **Writing numbers as formatted text.**
+- **Merging cells for looks.**
+- **Not checking the file in Excel.**
+- **Overwriting the source workbook.**
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Save to Excel.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		You get the default: an index column, no formatting, and narrow columns.
+	</Fragment>
+	<Fragment slot="good">
+		Write Python that saves a pandas DataFrame with columns categoria, ventas,
+		and total to an Excel file with one sheet named "Totales". No index column.
+		Make the header bold with a coloured fill, format total as #,##0.00, set
+		each column width to fit its content, and freeze the header row. Keep
+		numbers as numbers. Then read the file back and print the header, the number
+		format of the first total, and the row count.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It lists every **output requirement** and asks for a **read-back check**.
+	</Fragment>
+	<Fragment slot="check">
+		Open the file in Excel. Make sure the totals are numbers (right-aligned,
+		summable) and the header stays visible while scrolling.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Why use index=False?">
+	It stops pandas from writing the row numbers as an extra column.
+</Checkpoint>
+
+<Checkpoint question="Does a number format change the value in the cell?">
+	No. It changes only how the value is displayed.
+</Checkpoint>
+
+<Checkpoint question="Why read the file back after writing it?">
+	To confirm that the file has what you intended, instead of assuming.
+</Checkpoint>
+
+## End-of-part checklist
+
+You have finished Part 6 when you can tick every item:
+
+- [ ] I loaded the Excel summary with proper headers.
+- [ ] My cleaning function turns the 246 rows into 240 clean rows, with a log.
+- [ ] I reproduced the category totals with groupby, pivot_table, and SQL, and they agree.
+- [ ] I joined sales to customers and found the sales with no customer.
+- [ ] I wrote a formatted workbook and opened it in Excel.
+
+## Going deeper
+
+- Part 7 turns these tables into charts.

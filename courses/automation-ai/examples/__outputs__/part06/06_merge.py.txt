@@ -1,0 +1,10 @@
+Customers: 8 | unique ids: True
+Rows before and after the join: 240 240
+Sales with no customer record: 7 ( ['SIN-CLIENTE'] )
+Customer exists but name is empty: ['C004']
+city
+Alajuela    123816.50
+Cartago      74108.00
+Escazú       55107.50
+Heredia      93611.50
+San José    116515.50

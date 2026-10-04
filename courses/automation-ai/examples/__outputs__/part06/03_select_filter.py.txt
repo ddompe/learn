@@ -1,0 +1,9 @@
+Columns: ['ID', 'fecha', 'cliente', 'monto', 'categoria']
+  ID   monto
+T001 2200.00
+T002    1500
+T003 1400.00
+Juice sales: 55
+Coffee sales of 2500 or more: 13
+Sales with no customer: ['T013', 'T074', 'T082', 'T123', 'T197', 'T225', 'T231']
+Sales in the first week: 58

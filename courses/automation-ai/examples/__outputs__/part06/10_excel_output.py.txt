@@ -1,0 +1,5 @@
+Header: ['categoria', 'ventas', 'total']
+Header bold: True
+Frozen at: A2
+Number format of C2: #,##0.00
+Rows written: 5
