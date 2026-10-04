@@ -1,0 +1,5 @@
+Error type: FileNotFoundError
+Call chain in this file, oldest first:
+  line 16: in <module>
+  line 12: in main
+  line 8: in read_sales

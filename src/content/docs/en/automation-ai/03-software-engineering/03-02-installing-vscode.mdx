@@ -1,0 +1,162 @@
+---
+title: Installing VS Code
+description: Install Visual Studio Code and find your way around the explorer, editor, terminal, and extensions.
+sidebar:
+  order: 2
+lessonId: '3.2'
+estimatedMinutes: 20
+prerequisites: ['3.1']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Install VS Code on your computer. - Open a folder in VS Code. - Name the
+	four areas you will use: explorer, editor, terminal, and extensions.
+</LessonGoals>
+
+## Why this matters
+
+From here on, you will do almost everything in one program: **VS Code**. It is a free
+code editor from Microsoft that also holds a terminal, version control, an AI
+assistant, and a debugger. Using one tool for all of it means fewer installations,
+fewer differences between your screen and the lessons, and fewer places for things to
+go wrong.
+
+<CaseStudy>
+	Daniela opens the Café Central folder in VS Code. Without leaving the window
+	she can read the CSV, run a command in the terminal, and ask an assistant
+	about the data.
+</CaseStudy>
+
+## Install it
+
+Download VS Code from the official site, [https://code.visualstudio.com](https://code.visualstudio.com). Choose the
+version for your system.
+
+<OsTabs>
+	<Fragment slot="windows">
+		Choose the **User Installer**, which does not need administrator rights. Run
+		it and accept the defaults. On the "Select Additional Tasks" step, tick
+		**Add to PATH** if offered, and **Add "Open with Code" action to Windows
+		Explorer file context menu**.
+	</Fragment>
+	<Fragment slot="macos">
+		Download the macOS version. Open the downloaded file, then drag **Visual
+		Studio Code** into the **Applications** folder. Start it from Applications.
+	</Fragment>
+</OsTabs>
+
+If your company laptop blocks installation, ask IT whether VS Code is available in the
+company software portal. Do not look for workarounds.
+
+## Open a folder
+
+VS Code works with **folders**, not single files. A folder holds everything for one
+project.
+
+1. Start VS Code.
+2. Choose **File**, then **Open Folder**.
+3. Select the Café Central folder that you unzipped in lesson 0.3.
+4. If VS Code asks whether you trust the authors of the files, choose **Yes, I trust the
+   authors** for your own folders. Be careful with folders downloaded from unknown
+   sources.
+
+## The four areas
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Explorer: the files in the folder"] --> B["Editor: the open file"]
+  B --> C["Terminal: type commands"]
+  D["Extensions: add features"] -.-> B`}
+/>
+
+- The **Explorer** (left side) lists the files and folders. Click a file to open it.
+- The **editor** (centre) shows and changes the open file.
+- The **terminal** (bottom) is the terminal from lesson 1.9. Open it from the **Terminal**
+  menu, **New Terminal**. It starts in your project folder, which is very handy.
+- **Extensions** (left bar, the four-squares icon) add features. Search by name and
+  choose **Install**. Only install extensions from publishers you trust.
+
+Open `cafe_central_sales.csv` from the Explorer. It opens as plain text, and nothing
+changes it. That is the safe way to look at a CSV.
+
+## Hands-on
+
+### Worked example
+
+1. Open the Café Central folder.
+2. Click the sales CSV and scroll to the bottom. How many lines are there? The line
+   number appears at the bottom right when you click in the text.
+3. Open a terminal inside VS Code and run `pwd` (macOS, or PowerShell) to see that it
+   starts in the same folder.
+
+### Your turn
+
+Find three differences between how VS Code shows the CSV and how Excel would. Then
+reveal the answers.
+
+<Checkpoint question="Show some answers">
+	VS Code shows the raw text and the `;` separators, not columns. It does not
+	change dates or amounts. It shows line numbers. Nothing is saved unless you
+	press Save.
+</Checkpoint>
+
+## Common mistakes
+
+- **Opening a single file instead of a folder.** Many features, such as the terminal in
+  the right place, work best with a folder.
+- **Confusing VS Code with Visual Studio.** They are different products. You want VS Code.
+- **Installing many extensions at once.** Add one at a time and only when needed.
+- **Editing the original data.** Make a copy of the data folder before experimenting.
+- **Ignoring the trust prompt.** It exists for a reason. Trust only folders you know.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">VS Code won't open.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant lists generic fixes like reinstalling or deleting settings,
+		some of which can lose your configuration.
+	</Fragment>
+	<Fragment slot="good">
+		I installed VS Code with the user installer on Windows 11 on a company
+		laptop, without administrator rights. When I double-click the icon, nothing
+		happens and no window appears. I did not change any settings before this.
+		List the three most likely causes in order, and for each give a safe check
+		that does not delete anything.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It provides **context** (OS, rights), the **input** (exact symptom), and the
+		**constraint** that checks must be safe.
+	</Fragment>
+	<Fragment slot="check">
+		Run the checks in order. Skip any that ask you to delete folders or disable
+		security software without IT approval.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Why open a folder rather than a single file?">
+	A folder is a project. VS Code can show all its files and start a terminal in
+	the right place.
+</Checkpoint>
+
+<Checkpoint question="Name the four areas of VS Code that you will use.">
+	Explorer, editor, terminal, and extensions.
+</Checkpoint>
+
+<Checkpoint question="Does opening a CSV in VS Code change it?">
+	No. It shows the raw text. It changes only if you edit and save.
+</Checkpoint>
+
+## Going deeper
+
+- The official VS Code documentation has a short "Getting started" tour.

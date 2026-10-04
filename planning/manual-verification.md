@@ -30,6 +30,16 @@ leaves something unverified. Updated 2026-10-03.
 - [ ] 2.4 and 2.9: the pricing and vendor links still resolve (Anthropic, OpenAI, Google). `lastVerified` is 2026-10-03.
 - [ ] 2.8: privacy statements about consumer vs enterprise plans are still generally true; no legal claims were intended.
 
+## Part 3 (tools and UI, all untested on real machines)
+
+- [ ] 3.2: VS Code User Installer on Windows needs no admin rights; menu names (File, Open Folder, Terminal, New Terminal) and the trust prompt wording.
+- [ ] 3.3: Copilot sign-in steps, chat view location, inline suggestion keys (Tab, Esc), agent mode availability on the Free plan; the plan limits are intentionally not stated, only linked.
+- [ ] 3.5: Git for Windows installer defaults; macOS prompt to install command line tools on first `git`; Source Control "Initialize Repository", "+" stage, Commit button; unstaged-commit behaviour in VS Code.
+- [ ] 3.6: GitHub "Publish Branch" flow, private repo creation page options, `git branch -M main` and push over HTTPS authentication in VS Code.
+- [ ] 3.7: Git status shows `.gitignore` but not `.env` after following the steps.
+- [ ] 3.8: PyPI page layout names used (release history, project links).
+- [ ] 3.9: the dataset claim "246 rows = 240 sales plus 6 repeated lines" (checked by pytest, not by eye).
+
 ## Pedagogy and voice (author review)
 
 - [ ] Read Parts 0 to 2 end to end for flow, repetition, and tone. Intro repetition was reduced on 2026-10-03; re-check.

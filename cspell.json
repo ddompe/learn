@@ -4,6 +4,7 @@
 	"language": "en,en-GB,es",
 	"ignorePaths": [
 		"node_modules",
+		".claude",
 		"dist",
 		".astro",
 		"package-lock.json",
@@ -13,6 +14,11 @@
 	],
 	"words": [
 		"mojibake",
+		"tomllib",
+		"pandsa",
+		"openpyxll",
+		"oneline",
+		"claude",
 		"daniela",
 		"anonimizar",
 		"Categor",

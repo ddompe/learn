@@ -1,0 +1,1 @@
+CAFE_API_KEY is not set. Ask the owner for a key and put it in .env.

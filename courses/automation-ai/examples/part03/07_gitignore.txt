@@ -1,0 +1,9 @@
+# Secrets: never commit these
+.env
+
+# Python leftovers
+__pycache__/
+.venv/
+
+# Private data that must not leave this computer
+data/customers_private.csv

@@ -15,11 +15,16 @@ const { file, course = 'automation-ai' } = Astro.props;
 const root = join(process.cwd(), 'courses', course, 'examples');
 const code = readFileSync(join(root, file), 'utf8');
 const outputPath = join(root, '__outputs__', `${file}.txt`);
+const lang = file.endsWith('.py')
+	? 'python'
+	: file.endsWith('.toml')
+		? 'toml'
+		: 'text';
 const output = existsSync(outputPath) ? readFileSync(outputPath, 'utf8') : null;
 ---
 
 <div class="example">
-	<Code code={code} lang="python" title={file} />
+	<Code code={code} lang={lang} title={file} />
 	{output !== null && (
 		<>
 			<p class="output-label">{labels.example.output}</p>

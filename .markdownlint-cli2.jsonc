@@ -8,5 +8,11 @@
 		"MD010": false,
 	},
 	"globs": ["**/*.md", "**/*.mdx"],
-	"ignores": ["node_modules", "dist", ".astro", "courses/*/examples/**"],
+	"ignores": [
+		".claude",
+		"node_modules",
+		"dist",
+		".astro",
+		"courses/*/examples/**",
+	],
 }

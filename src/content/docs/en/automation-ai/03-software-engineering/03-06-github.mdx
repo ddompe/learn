@@ -1,0 +1,160 @@
+---
+title: GitHub
+description: Put a private copy of your repository on GitHub, push and pull changes, and learn what a pull request is.
+sidebar:
+  order: 6
+lessonId: '3.6'
+estimatedMinutes: 25
+prerequisites: ['3.5']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain what GitHub is and how it differs from Git. - Create a private
+	repository and push your project to it. - Explain what a pull request is.
+</LessonGoals>
+
+## Why this matters
+
+So far, your history lives on one computer. **GitHub** is a website that hosts Git
+repositories. A copy there gives you a backup, a way to work from another computer, and a
+way to work with other people. It is also where most open source software lives.
+
+Git and GitHub are different things. Git is the tool that tracks history. GitHub is a
+service that stores repositories.
+
+<CaseStudy>
+	Daniela's laptop is replaced. Because her repository is on GitHub, she clones
+	it on the new machine and continues with the full history.
+</CaseStudy>
+
+## Local and remote
+
+A **remote** is a copy of the repository somewhere else, here on GitHub. You send commits
+to it with **push** and fetch new commits from it with **pull**.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Your computer: local repository"] -->|"push"| B["GitHub: remote repository"]
+  B -->|"pull"| A`}
+/>
+
+## Create a private repository
+
+1. Sign in to [https://github.com](https://github.com) (the account from lesson 3.3).
+2. Create a **new repository**. Give it a simple name, such as `cafe-central`.
+3. Choose **Private**. Only you (and people you invite) can see a private repository.
+4. Do not tick the options to add a README, license, or `.gitignore` for now.
+
+**Warning:** a public repository is visible to everyone, and search engines index it. Do
+not publish customer data or secrets. When in doubt, choose Private.
+
+## Push from VS Code
+
+In the Source Control view, choose **Publish Branch** (or **Publish to GitHub**). VS Code
+asks you to sign in to GitHub in the browser, and then to choose a name and whether the
+repository is private or public. Choose private. Your commits appear on github.com.
+
+Or from the terminal, using the address that GitHub shows on the new repository page:
+
+```text
+git branch -M main
+git remote add origin https://github.com/YOUR-NAME/cafe-central.git
+git push -u origin main
+```
+
+From then on, `git push` sends new commits and `git pull` fetches changes made
+elsewhere.
+
+## Branches and pull requests
+
+A **branch** is a separate line of work in the same repository. You can try a change on a
+branch without touching the main line. A **pull request** is a request on GitHub to
+merge a branch into the main line, so that others can review it first.
+
+Solo, you often commit straight to `main`. In teams, a pull request is how changes get
+reviewed. You do not need them now, but you will see the words everywhere.
+
+## Hands-on
+
+### Worked example
+
+1. Create a private repository on GitHub named `cafe-central`.
+2. Publish your local repository to it.
+3. Reload the page on github.com and find your two commits in the history.
+4. Make another small change in VS Code, commit it, and push. Reload and check.
+
+### Your turn
+
+Which of these should never be in a public repository?
+
+1. The sales summary scripts you wrote.
+2. A file with customer emails.
+3. A file with an API key.
+
+<Checkpoint question="Show the answers">
+	2 and 3. The scripts may be fine to share, but customer data and keys must
+	stay private (lesson 3.7).
+</Checkpoint>
+
+## Common mistakes
+
+- **Creating a public repository by accident.** Check the visibility before you click
+  create. You can change it later, but anything that was public may have been copied.
+- **Pushing secrets or personal data.** Deleting them later does not remove them from
+  history (lesson 3.7).
+- **Confusing Git and GitHub.** One is the tool, the other the hosting service.
+- **Pasting a password for push.** Use the browser sign-in that VS Code offers.
+- **Forgetting to push.** Commits stay on your computer until you push.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Upload my project to GitHub.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant may create a public repository, upload every file in the
+		folder, or ask you to share your password.
+	</Fragment>
+	<Fragment slot="good">
+		I have a local Git repository with two commits. I want to put it on GitHub
+		as a private repository named cafe-central, using VS Code on Windows. Give
+		me the steps in order. Make sure the repository is private, and tell me what
+		to check before I push so that no customer data or keys are included. Do not
+		ask me to share a password or token.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It states the **context**, the **constraint** (private, no secrets), and
+		asks for a pre-push **verification**.
+	</Fragment>
+	<Fragment slot="check">
+		After publishing, open the repository in a private browser window. If you
+		can see it without logging in, it is public.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What is the difference between Git and GitHub?">
+	Git tracks history on your computer. GitHub is a website that hosts
+	repositories.
+</Checkpoint>
+
+<Checkpoint question="What do push and pull do?">
+	Push sends your commits to the remote. Pull fetches commits from it.
+</Checkpoint>
+
+<Checkpoint question="What is a pull request?">
+	A request on GitHub to merge a branch into the main line so that others can
+	review it.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 3.7 explains how to keep secrets out of your repository.

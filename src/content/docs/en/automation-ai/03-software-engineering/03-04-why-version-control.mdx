@@ -1,0 +1,158 @@
+---
+title: Why version control
+description: Understand snapshots and history, and why a folder of final_v2_REAL files is not enough.
+sidebar:
+  order: 4
+lessonId: '3.4'
+estimatedMinutes: 15
+prerequisites: ['3.2']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain the problem that version control solves. - Describe a snapshot and a
+	history. - Name what you gain compared with saving copies of files.
+</LessonGoals>
+
+## Why this matters
+
+You know this folder:
+
+```text
+monthly_report.xlsx
+monthly_report_v2.xlsx
+monthly_report_v2_final.xlsx
+monthly_report_v2_final_REAL.xlsx
+monthly_report_v2_final_REAL_Daniela_fixed.xlsx
+```
+
+Which one is current? What changed between them? Who changed it, and why? Nobody
+knows, and you cannot go back to the good version from Tuesday without guessing.
+**Version control** is a system built to answer those questions.
+
+When an AI assistant edits your files, this matters even more. You want an easy way to
+see exactly what changed, and to undo it.
+
+<CaseStudy>
+	Daniela keeps a copy of the monthly script for every change. Last month she
+	fixed a bug and broke the totals. She cannot tell which of her six copies had
+	the working version.
+</CaseStudy>
+
+## Snapshots and history
+
+Version control keeps a series of **snapshots** of your project. Each snapshot records
+the state of all your files at one moment, with a short message that says what you
+changed and why. The list of snapshots is the **history**.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Snapshot 1: first version"] --> B["Snapshot 2: fix dates"]
+  B --> C["Snapshot 3: remove duplicates"]
+  C --> D["Snapshot 4: add chart"]`}
+/>
+
+With a history you can:
+
+- See what changed between any two snapshots.
+- Go back to an earlier snapshot.
+- Read why each change was made.
+- Try something risky, knowing you can undo it.
+- Work with other people without overwriting each other (lesson 3.6 and beyond).
+
+There is one working folder with the current files. The history lives beside it, so you
+do not multiply the files.
+
+## Git
+
+**Git** is the most widely used version control system. It is free and works on your
+own computer, without internet. Nearly all software teams use it. You will use it through
+VS Code and, a little, through the terminal.
+
+A project tracked by Git is a **repository**, or repo.
+
+Git is built for text files, like code and CSV. It can store Excel files, but it cannot
+show what changed inside them. That is one reason why this course keeps its work in text.
+
+## Version control is not a backup
+
+A repository on your computer does not protect you from losing the computer. Sync
+services (lesson 1.6) copy files but keep no meaningful history. For both, you push the
+repository to a remote copy (lesson 3.6).
+
+## Hands-on
+
+### Your turn
+
+Look at your own documents folder. Find one file that exists in several versions.
+
+1. How do you know which is the latest?
+2. Could you say what changed between the last two?
+3. Could you return to the version from a month ago?
+
+<Checkpoint question="What does this show?">
+	Most people answer "not reliably" to at least two of the three. Version
+	control makes each answer reliable.
+</Checkpoint>
+
+## Common mistakes
+
+- **Thinking Git is only for programmers.** Anyone with files that change over time can use it.
+- **Treating Git as a backup.** Without a remote copy, a lost computer means lost history.
+- **Believing a repository is a special folder you cannot open.** It is a normal folder
+  with a hidden `.git` folder inside.
+- **Expecting to compare Excel files line by line.** Git sees them as binary files.
+- **Waiting until the project is big.** Start on day one.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">How do I use git?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		You get a long list of commands without the reasons for them. Without a
+		mental model, they are easy to forget or misuse.
+	</Fragment>
+	<Fragment slot="good">
+		I am an Excel user who keeps files like report_v2_final.xlsx. Explain what
+		Git does differently, in five sentences, using the words snapshot, history,
+		and repository. Do not show any commands yet. End with one question I can
+		ask myself to decide whether Git helps with my current project.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It states the **context** and the **constraint** (no commands yet), so the
+		answer builds a mental model first. The closing question gives you something
+		to apply.
+	</Fragment>
+	<Fragment slot="check">
+		Check that the explanation describes snapshots with messages, not "copies of
+		files". Try to explain it to a colleague in two sentences.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What is a snapshot?">
+	A record of the state of all your files at one moment, with a message
+	describing the change.
+</Checkpoint>
+
+<Checkpoint question="Is Git a backup?">
+	No. A repository only on your computer is lost with the computer. A remote
+	copy provides the backup.
+</Checkpoint>
+
+<Checkpoint question="Why does Git work best with text files?">
+	It can show line-by-line changes in text. It cannot see inside binary files
+	such as Excel.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 3.5 starts using Git in VS Code.

@@ -5,3 +5,4 @@ pnpm-lock.yaml
 courses/*/examples/.venv/
 courses/*/examples/__outputs__/
 courses/*/examples/data/
+.claude/

@@ -119,6 +119,12 @@ Part 2: brief agreed (`briefs/part-02.md`), examples in `examples/part02/` (3 sc
 outputs), lessons 2.1-2.9 drafted (2.4 and 2.9 carry `lastVerified: 2026-10-03`; no model names or
 real prices in the body, only official-page links).
 
+Part 3 (Stage 6 start): brief agreed (`briefs/part-03.md`), examples in `examples/part03/` (tests and
+outputs), lessons 3.1-3.10 drafted (3.3 carries `lastVerified`). `Example` now infers the code
+language from the file extension (py, toml, text).
+
+Spanish: a background agent translates Parts 0-2 on a worktree branch; merge it when it reports.
+
 ### How to resume (read this first)
 
 Repo state: all work is committed and pushed on `main`; the site is live at

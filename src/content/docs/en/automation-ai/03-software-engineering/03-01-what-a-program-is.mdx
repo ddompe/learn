@@ -1,0 +1,142 @@
+---
+title: What a program is
+description: Understand source code, interpreters, and compilers, and read a first tiny program.
+sidebar:
+  order: 1
+lessonId: '3.1'
+estimatedMinutes: 15
+prerequisites: ['1.4', '1.9', '1.10']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain what source code is. - Explain the difference between an interpreter
+	and a compiler. - Read a six-line program and say what it does.
+</LessonGoals>
+
+## Why this matters
+
+Everything you will automate is a **program**: a list of instructions that a computer
+follows exactly. If you can read a short program, you can check what an AI assistant
+wrote for you. You do not need to write programs yet. Reading comes first.
+
+<CaseStudy>
+	Daniela's monthly routine, in her head, is a list of steps: open the file,
+	count the rows, check the total. A program is the same list written so
+	precisely that a computer can follow it.
+</CaseStudy>
+
+## Source code
+
+**Source code** is a program written as text in a **programming language**. It is saved
+in a plain text file, like a CSV, but with different rules. Python is the language
+this course uses. A Python file ends in `.py`.
+
+A computer's processor cannot read Python directly. It only understands very low-level
+instructions. Something has to translate.
+
+## Interpreters and compilers
+
+Two kinds of translators exist.
+
+- A **compiler** translates the whole program ahead of time into a file the processor
+  can run directly. You then run that file. Languages such as C and Rust work this way.
+- An **interpreter** reads the source code and carries out the instructions as it goes,
+  line by line. Python works this way.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Source code: report.py"] --> B["Python interpreter"]
+  B --> C["The computer does the work"]
+  C --> D["Result on screen or in a file"]`}
+/>
+
+With Python you keep the source file and give it to the interpreter each time. That is
+why you can read, change, and rerun a program quickly. It is also why you need Python
+installed to run someone else's Python program (lesson 4.2).
+
+## Reading a first program
+
+<Example file="part03/01_program.py" />
+
+Read it from top to bottom:
+
+1. A line starting with `"""` is a **docstring**, a note that describes the program.
+2. `from pathlib import Path` borrows a tool for working with file paths (lesson 1.4).
+3. `sales_file = ...` stores the location of the sales file under the name `sales_file`.
+   A name that holds a value is a **variable**.
+4. `lines = ...` reads the file and splits it into a list of lines.
+5. `print(...)` shows a message. The program reports 246 rows: the 240 sales plus six
+   repeated lines. It subtracts one for the header.
+
+You do not need to remember the syntax. The point is that every line does one thing, and
+you can say what.
+
+## Hands-on
+
+### Your turn
+
+Predict what the program would print if the file had only a header and 3 sales rows.
+
+<Checkpoint question="Show the answer">
+	"The file has 3 sales rows (not counting the header)." The program counts
+	lines and subtracts one for the header.
+</Checkpoint>
+
+## Common mistakes
+
+- **Thinking you must memorise syntax.** Reading comes first. Assistants help with writing.
+- **Confusing the program with its result.** The `.py` file holds instructions. The output appears when you run it.
+- **Editing a program in Word.** Use a code editor (lesson 3.2). Word adds hidden formatting.
+- **Treating errors as failure.** An error message is the computer telling you what it could not do.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">What is code?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		You get a textbook definition with jargon and no link to your own work.
+	</Fragment>
+	<Fragment slot="good">
+		I use Excel formulas every day but have never programmed. Explain what a
+		Python program is, in under 120 words, by comparing it to an Excel workbook.
+		Then show where the comparison breaks down. Use one example: a program that
+		counts the rows in a CSV file.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It gives the **context** (Excel user), a **constraint** (length and one
+		example), and asks for the limits of the analogy, which prevents a
+		misleading mental model.
+	</Fragment>
+	<Fragment slot="check">
+		Check that the answer says a program is a list of instructions that run in
+		order, and that it does not claim a program "thinks". Try to say each step
+		back in your own words.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What is source code?">
+	A program written as text in a programming language.
+</Checkpoint>
+
+<Checkpoint question="What is the difference between an interpreter and a compiler?">
+	A compiler translates the whole program ahead of time. An interpreter carries
+	out the instructions as it reads them.
+</Checkpoint>
+
+<Checkpoint question="What does a variable do?">
+	It gives a name to a value, so the program can use it later.
+</Checkpoint>
+
+## Going deeper
+
+- Part 4 explains Python in depth. Lesson 4.1 tells the story of why it dominates data work.

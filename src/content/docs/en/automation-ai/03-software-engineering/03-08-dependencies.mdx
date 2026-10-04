@@ -1,0 +1,163 @@
+---
+title: Dependencies and package reuse
+description: Understand packages, registries, version numbers, and the risks of using other people's code.
+sidebar:
+  order: 8
+lessonId: '3.8'
+estimatedMinutes: 20
+prerequisites: ['3.1']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain what a package and a dependency are. - Read a dependency list with
+	version rules. - Describe the supply-chain risk and how to reduce it.
+</LessonGoals>
+
+## Why this matters
+
+Nobody writes everything from scratch. To read an Excel file or work with tables, you use
+code that other people already wrote and shared. That is the reason Python is so useful.
+It also means your project relies on strangers' code. Knowing how that reuse works, and
+where it can go wrong, is part of working safely.
+
+<CaseStudy>
+	Daniela's report needs to read Excel files and work with tables. She does not
+	write that code. She installs two packages that others maintain.
+</CaseStudy>
+
+## Packages and registries
+
+A **package** is a bundle of reusable code with a name and a version. A **dependency** is
+a package that your project needs. A **registry** is an online library of packages. For
+Python, the main registry is **PyPI** (the Python Package Index). Tools like uv download
+packages from it.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Your project lists: pandas, openpyxl"] --> B["uv asks the registry, PyPI"]
+  B --> C["Packages are downloaded"]
+  C --> D["Your program can import them"]
+  C --> E["Each package has its own dependencies"]`}
+/>
+
+Packages depend on other packages, which depend on others. A short list of two
+dependencies can bring in dozens of packages.
+
+## The dependency list
+
+A Python project declares its dependencies in a file called `pyproject.toml`. You will
+meet it in lesson 4.3. This is a small one:
+
+<Example file="part03/08_pyproject_example.toml" />
+
+Reading it:
+
+- `name` and `version` identify your project.
+- `requires-python` says which Python versions work.
+- `dependencies` lists the packages. `pandas>=2.1.0` means "pandas version 2.1.0 or newer".
+
+## Versions
+
+A version looks like `2.1.0`. Packages change, and some versions break old code. A
+**lock file** records the exact versions that were installed, so that your project works
+the same tomorrow and on another computer. In this course, uv writes `uv.lock`. Commit it
+to Git.
+
+## Supply-chain risk
+
+Using other people's code is a **supply chain**: you trust everyone along it. Risks:
+
+- **Typosquatting.** A malicious package whose name is one letter off a famous one, such
+  as `pandsa` instead of `pandas`.
+- **Hijacked packages.** A real package is compromised by an attacker.
+- **Abandoned packages.** No one fixes bugs or security problems.
+- **AI inventing package names.** An assistant may suggest a package that does not exist.
+  An attacker can later register that name.
+
+Habits that reduce the risk:
+
+1. Check the exact spelling against the package's page on PyPI.
+2. Prefer well-known, widely used, actively maintained packages.
+3. Add few dependencies. Each one is a trust decision.
+4. Commit the lock file and update deliberately.
+5. Never install a package just because a chat told you to. Verify it first.
+
+## Hands-on
+
+### Worked example
+
+Open [https://pypi.org](https://pypi.org) and search for `pandas`. Look at its page. Find the latest
+version, the release date, the project links, and the number of releases. Compare it
+with a package whose name is almost the same. What differs?
+
+### Your turn
+
+An assistant tells you to run `uv add openpyxll`. What do you do?
+
+<Checkpoint question="Show the answer">
+	Stop and check the spelling. The real package is `openpyxl`, one fewer `l`.
+	Search for the name on PyPI and compare its page with the project's own
+	documentation before installing anything.
+</Checkpoint>
+
+## Common mistakes
+
+- **Installing whatever an assistant names.** Verify the name and the package page.
+- **Never updating.** Old versions collect known security problems.
+- **Updating blindly.** An update can change behaviour. Update, test, then commit the lock file.
+- **Ignoring the lock file.** Without it, the same project can behave differently next month.
+- **Adding a heavy package for a tiny job.** Ask whether the standard library already does it.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Install the best package for Excel.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant names a package from memory, which may be outdated,
+		misspelled, or invented, and tells you to install it without checks.
+	</Fragment>
+	<Fragment slot="good">
+		I need to read .xlsx files in Python, with uv as my package manager. Suggest
+		two well-known packages. For each, give its exact name on PyPI, what it is
+		for, and what I should check on its PyPI page to make sure it is the real,
+		maintained package. Do not give me an install command until I confirm the
+		names.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It states the **context** (uv, xlsx), the **task**, and a **constraint**
+		that delays the install. It also asks for **verification** steps.
+	</Fragment>
+	<Fragment slot="check">
+		Search each name on PyPI. Check the release history, the project links, and
+		that the name matches exactly. A package that does not exist is a warning
+		sign.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What is a dependency?">
+	A package that your project needs in order to work.
+</Checkpoint>
+
+<Checkpoint question="What is typosquatting?">
+	Publishing a malicious package with a name almost the same as a popular one,
+	hoping people mistype it.
+</Checkpoint>
+
+<Checkpoint question="Why commit the lock file?">
+	It records the exact versions, so the project behaves the same on every
+	computer and over time.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 4.3 shows how uv creates and updates this file for you.

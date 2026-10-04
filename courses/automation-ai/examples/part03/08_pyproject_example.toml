@@ -1,0 +1,8 @@
+[project]
+name = "cafe-central-report"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "pandas>=2.1.0",
+    "openpyxl>=3.1.0",
+]

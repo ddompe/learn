@@ -1,0 +1,188 @@
+---
+title: Git basics in VS Code
+description: Create a repository, stage changes, commit with a clear message, and read the history.
+sidebar:
+  order: 5
+lessonId: '3.5'
+estimatedMinutes: 25
+prerequisites: ['3.2', '3.4']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Create a repository for your project. - Stage and commit a change with a
+	clear message. - Read the history in VS Code and in the terminal.
+</LessonGoals>
+
+## Why this matters
+
+Git only helps if you use it. This lesson takes you through the whole basic loop on a
+real folder: tell Git about a project, change something, record the change, and look back.
+It is also your safety net for the Copilot work in lesson 3.3.
+
+<CaseStudy>
+	Daniela turns the Café Central folder into a repository. Her first snapshot
+	holds the data. Her second adds a small notes file about the dates problem.
+</CaseStudy>
+
+## Install Git
+
+VS Code uses Git, but does not include it.
+
+<OsTabs>
+	<Fragment slot="windows">
+		Download **Git for Windows** from
+		[https://git-scm.com](https://git-scm.com), run the installer, and accept
+		the defaults. Then open a new terminal and run `git --version`.
+	</Fragment>
+	<Fragment slot="macos">
+		Open Terminal and run `git --version`. If Git is missing, macOS offers to
+		install the command line developer tools. Accept, wait for the installation,
+		and run the command again.
+	</Fragment>
+</OsTabs>
+
+You should see a version number. Remember lesson 1.10: if the terminal says "not found",
+open a new terminal window after installing.
+
+Next, tell Git who you are. It writes this name on every snapshot. Use your name and an
+email address you are happy to have in the history.
+
+```text
+git config --global user.name "Daniela Mora"
+git config --global user.email "daniela@example.com"
+```
+
+## Three places
+
+Git thinks in three places.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Working folder: your files as they are now"] -->|"stage"| B["Staging area: the changes to record"]
+  B -->|"commit"| C["History: saved snapshots"]`}
+/>
+
+- The **working folder** holds your files, as you edit them.
+- The **staging area** holds the changes you chose for the next snapshot. You pick what
+  goes in, so each snapshot tells one clear story.
+- A **commit** is a snapshot saved in the history, with a **commit message**.
+
+## The loop in VS Code
+
+1. Open the folder in VS Code (lesson 3.2).
+2. Click the **Source Control** icon in the left bar, and choose **Initialize Repository**.
+3. The files appear in a list of changes. Hover over a file and click the **+** to stage
+   it, or stage all.
+4. Type a message in the box, such as `Add the January sales data`, and click **Commit**.
+5. Edit a file, and the change appears in the list again. Stage it and commit again.
+6. Click on a changed file to see the **diff**, which shows removed lines in red and
+   added ones in green.
+
+## The same loop in the terminal
+
+```text
+git init
+git status
+git add cafe_central_sales.csv
+git commit -m "Add the January sales data"
+git log --oneline
+```
+
+- `git init` makes the folder a repository.
+- `git status` shows what changed and what is staged.
+- `git add` stages a file.
+- `git commit -m` saves the snapshot with a message.
+- `git log --oneline` lists the history, one line per commit.
+
+VS Code and the terminal are two views of the same thing. You can mix them.
+
+## Good commit messages
+
+A message should say what and why, in a short line that completes "This commit will...":
+
+- Good: `Fix duplicate rows in January totals`
+- Poor: `update`, `stuff`, `final`
+
+## Hands-on
+
+### Worked example
+
+1. In VS Code, open the Café Central folder.
+2. Initialise the repository and make a first commit that contains the data files.
+3. Create a file `notes.md` that says "Dates come in three formats." Stage it and commit
+   it with a clear message.
+4. Open the history with `git log --oneline` in the terminal and find both commits.
+
+### Your turn
+
+Change the notes file by adding a second line. Before you commit, open the diff.
+
+1. Which colour is the new line?
+2. What happens if you commit without staging first?
+
+<Checkpoint question="Show the answers">
+	1. Green. 2. In VS Code you are asked whether to stage all changes and commit.
+	On the terminal, nothing is committed, because the staging area is empty.
+</Checkpoint>
+
+## Common mistakes
+
+- **Not installing Git.** Source Control shows a message about Git missing.
+- **Committing everything under the message "update".** Future you will not know what is
+  in it. Write the reason.
+- **Committing secrets or private data.** Check what you stage (lesson 3.7).
+- **Making one giant commit at the end.** Small commits are easier to understand and undo.
+- **Panicking over a command you do not understand.** Run `git status` first. It changes nothing.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Commit my files.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant runs or suggests committing everything, including data you did
+		not mean to include, and invents a vague message.
+	</Fragment>
+	<Fragment slot="good">
+		My project folder contains cafe_central_sales.csv,
+		cafe_central_customers.json, and a file called .env with a secret. I want to
+		make my first Git commit with only the sales CSV and a notes.md file. Give
+		me the exact terminal commands, in order. For each, say what it changes.
+		Finish with the command that proves .env is not staged.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It supplies the **input** (the files) and the **constraint** (which to
+		include), asks for commands with **explanations**, and ends with a
+		**verification** step.
+	</Fragment>
+	<Fragment slot="check">
+		Run `git status` before committing and confirm that `.env` is not in the "to
+		be committed" list. Run `git log --oneline` afterwards.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What does staging do?">
+	It chooses which changes go into the next commit.
+</Checkpoint>
+
+<Checkpoint question="What makes a good commit message?">
+	A short line that says what changed and why, such as "Fix duplicate rows in
+	January totals".
+</Checkpoint>
+
+<Checkpoint question="Which command lists the history, one line per commit?">
+	`git log --oneline`.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 3.6 puts a copy of the repository on GitHub.

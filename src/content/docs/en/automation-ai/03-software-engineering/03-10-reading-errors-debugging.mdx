@@ -1,0 +1,179 @@
+---
+title: Reading errors and debugging
+description: Read a traceback, use the VS Code debugger, and ask Copilot about an error effectively.
+sidebar:
+  order: 10
+lessonId: '3.10'
+estimatedMinutes: 25
+prerequisites: ['3.3', '3.9']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Read a traceback from the bottom up. - Explain what the VS Code debugger
+	does. - Ask an assistant about an error with the information it needs.
+</LessonGoals>
+
+## Why this matters
+
+Programs fail. It is normal, and it is not a sign that you did something wrong. What
+matters is whether you can read the message. An error message is the computer telling
+you what it could not do, and where. Most beginners panic and look at none of it. This
+lesson teaches you to read it.
+
+<CaseStudy>
+	Daniela's program stops with a wall of red text. It says that a file was not
+	found. The answer is in that text, if she knows where to look.
+</CaseStudy>
+
+## Anatomy of a traceback
+
+When a Python program fails, it prints a **traceback**: the list of steps that led to the
+failure. Here is the shape, from a program that tries to read a missing file.
+
+<Example file="part03/10_traceback.py" />
+
+The output shows the error type, then the call chain. The program started at the bottom
+of the file, called `main`, which called `read_sales`, which tried to read the file.
+
+A real traceback has these parts:
+
+| Part                     | What it tells you                           |
+| ------------------------ | ------------------------------------------- |
+| The last line            | The error type and message: what went wrong |
+| The file and line number | Where in your code it happened              |
+| The lines above          | The path of calls that led there            |
+
+**Read from the bottom.** The last line says what went wrong. Then find the lines that
+name your own files.
+
+Common error types:
+
+- `FileNotFoundError`: the path is wrong (lesson 1.4).
+- `UnicodeDecodeError`: wrong encoding (lesson 1.7).
+- `KeyError`: you asked for a column or name that is not there.
+- `ModuleNotFoundError`: a package is not installed (lesson 3.8).
+- `SyntaxError`: the program is not written correctly.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["Program fails"] --> B["Read the last line: the error type"]
+  B --> C["Find the first line that names your file"]
+  C --> D["Check that line and the values it uses"]
+  D --> E["Fix, run again"]`}
+/>
+
+## The debugger
+
+A **debugger** runs your program one step at a time so that you can look inside. In VS
+Code, you click in the margin next to a line number to set a **breakpoint**, a red dot
+where the program will stop. When it stops, you can see the values of variables, and
+step to the next line. It answers "what is the value here?", without guessing.
+
+You will use the debugger properly in Part 4, once you run Python yourself. For now, know
+that it exists, and what a breakpoint is.
+
+## Asking an assistant about an error
+
+Give it what it needs:
+
+1. The **whole** error message, not just the last line.
+2. The **code** around the line that failed.
+3. What you were **trying to do** and what you expected.
+4. What **changed** since it last worked.
+5. Your **system** if it might matter.
+
+Do not include secrets. Remove keys, passwords, and personal data from the message.
+
+## Hands-on
+
+### Worked example
+
+Read the output of the example above. Which line of the file called `read_text`? Which
+function does the error type point to, and what would you check first?
+
+### Your turn
+
+A traceback ends with `FileNotFoundError: No such file or directory: 'cafe_central_sales.csv'`.
+The file is in your project folder.
+
+1. What do you check first?
+2. What does lesson 1.4 suggest?
+
+<Checkpoint question="Show the answers">
+	1. The folder you ran the program from. A relative path is measured from the
+	current folder. 2. Print or check the current folder, or use an absolute path,
+	and look for typos in the file name.
+</Checkpoint>
+
+## Common mistakes
+
+- **Reading only the first line.** The useful part is the last line, and the line
+  naming your file.
+- **Pasting only "it doesn't work".** An assistant cannot help without the message.
+- **Changing several things at once.** Change one thing, run, and observe.
+- **Panicking.** An error is information.
+- **Trusting a fix you do not understand.** Ask why it works.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">It doesn't work.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		With no error and no code, the assistant guesses, usually with generic
+		advice that wastes your time.
+	</Fragment>
+	<Fragment slot="good">
+		I am running count_rows.py in VS Code on Windows. I expected it to print the
+		number of rows in cafe_central_sales.csv, and instead it ends with
+		"FileNotFoundError: No such file or directory". The full traceback and the
+		code are below. The file is in my project folder, and I started the program
+		from the terminal in that folder. Explain which line failed, why, and give
+		me the two most likely fixes. Tell me how I can check each one.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It gives all the **input** (error, code, what you expected), **context**
+		(OS, how you ran it), and asks for causes with **verification**.
+	</Fragment>
+	<Fragment slot="check">
+		Test the cheaper fix first. Make sure the explanation points to a line in
+		your code, and that you understand it before accepting a change.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Which part of a traceback do you read first?">
+	The last line, which gives the error type and message.
+</Checkpoint>
+
+<Checkpoint question="What is a breakpoint?">
+	A marker where the debugger pauses the program so you can inspect its values.
+</Checkpoint>
+
+<Checkpoint question="Name three things to give an assistant when asking about an error.">
+	The full error message, the code around the failing line, and what you were
+	trying to do. What changed and your system also help.
+</Checkpoint>
+
+## End-of-part checklist
+
+You have finished Part 3 when you can tick every item:
+
+- [ ] The Café Central folder is open in VS Code.
+- [ ] I asked Copilot a question and rejected or changed one suggestion.
+- [ ] The folder is a Git repository with at least two commits and clear messages.
+- [ ] A private GitHub repository holds the same commits.
+- [ ] A `.env` file with a fake key exists and `git status` does not list it.
+- [ ] I can point at the line in a traceback that names the file and line number.
+
+## Going deeper
+
+- Part 4 installs Python with uv, so that you can run programs yourself.

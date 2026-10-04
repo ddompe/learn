@@ -1,0 +1,172 @@
+---
+title: GitHub Copilot in VS Code
+description: Set up Copilot, use its suggestions and chat, and learn to review before you accept.
+sidebar:
+  order: 3
+lessonId: '3.3'
+estimatedMinutes: 25
+prerequisites: ['3.2', '2.7']
+lastVerified: 2026-10-03
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Sign in to GitHub Copilot in VS Code. - Use inline suggestions, chat, and
+	agent mode for a small task. - Review a suggestion before accepting it.
+</LessonGoals>
+
+## Why this matters
+
+**GitHub Copilot** is the AI assistant this course uses inside VS Code. It can suggest
+the next lines as you type, answer questions about your files, and, in some modes,
+make changes across several files. It speeds up a lot of work. It also writes mistakes
+confidently, as you saw in lesson 2.6. The skill is to use it and to review it.
+
+The names of plans, modes, and limits change often. This lesson teaches the working
+habits that last, and puts the perishable facts in one marked section.
+
+<CaseStudy>
+	Daniela asks Copilot to explain the six-line program from lesson 3.1. Then she
+	asks it to count only the rows from January. She reads the suggestion line by
+	line before she accepts it.
+</CaseStudy>
+
+## Set it up
+
+1. Create a free GitHub account at [https://github.com](https://github.com) if you do not have one. Use an
+   email address you control.
+2. In VS Code, open the Copilot chat view (the chat icon in the title bar or side bar).
+3. Choose **Sign in** and follow the browser prompt to connect your GitHub account.
+4. If your company provides Copilot, ask IT which account to use. Company accounts may
+   have different rules (lesson 2.8).
+
+If sign-in fails, note the exact message and ask your assistant for help, without
+pasting any secrets.
+
+## Three ways to use it
+
+- **Inline suggestions.** As you type, grey text appears. Press **Tab** to accept it or
+  **Esc** to dismiss it.
+- **Chat.** You ask a question in plain language and get an answer. You can attach a file
+  or the selected code as context.
+- **Agent mode.** You describe a goal, and Copilot plans and makes changes in your files,
+  perhaps running commands. This is powerful and needs the most care. Always review what
+  it did.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["You write a clear request"] --> B["Copilot suggests"]
+  B --> C{"You read and understand it?"}
+  C -- Yes --> D["Accept and test"]
+  C -- No --> E["Ask for an explanation, or reject"]`}
+/>
+
+## Review before you accept
+
+Use this routine every time:
+
+1. **Read it.** Can you say, line by line, what it does?
+2. **Check it against your data.** Does it use the real column and file names?
+3. **Look for surprises.** Deleted files, commands you do not know, network calls, or
+   new installs.
+4. **Run it on a small case** and compare with a result you can verify.
+5. **Keep a safety net.** Version control (Part 3, next lessons) lets you undo.
+
+An unread suggestion that "looks fine" is the start of most problems.
+
+## Check these yourself
+
+This section changes often. Last verified on 2026-10-03.
+
+- What the Free plan includes, its monthly limits, and the current names of modes and
+  paid plans are listed in the official [GitHub Copilot documentation](https://docs.github.com/en/copilot).
+- Whether your employer provides Copilot, and which data it may see.
+- Which models Copilot lets you choose. The list changes.
+
+Upgrading to a paid plan is worth considering only after you regularly reach the free
+limits. Do not pay to start learning.
+
+## Hands-on
+
+### Worked example
+
+1. In VS Code, create a new file called `count_rows.py` and paste in the six lines from
+   lesson 3.1.
+2. Select the lines and ask in chat: "Explain what this program does, line by line, for
+   someone who uses Excel."
+3. Compare the explanation with the one in lesson 3.1. Do they agree?
+
+### Your turn
+
+Ask Copilot: "Change this program so it counts only the rows whose date contains
+2024-01." Read the suggestion before you accept it. Look for at least one problem. Hint:
+the dates in the file come in several formats (lesson 0.3).
+
+<Checkpoint question="Show what to look for">
+	The suggestion probably only matches the `2024-01` format and misses
+	`01/01/2024` and `2024/01/01`. A confident suggestion can be incomplete, and
+	only a check against the data reveals it.
+</Checkpoint>
+
+## Common mistakes
+
+- **Accepting everything.** Press Tab only for what you understand.
+- **Giving no context.** The assistant cannot see what is not in the chat or the open files.
+- **Using agent mode on valuable files without a safety net.** Commit first (lesson 3.5).
+- **Trusting suggestions for exact facts,** such as the names of functions in a new library.
+- **Pasting secrets into chat.** Never (lessons 1.12 and 2.8).
+- **Assuming it learned from your last session.** Restate the context.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Write the whole report script.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		Copilot produces a large script that assumes file names, column names, and
+		formats it cannot know. Too long to review, it fails or silently gives wrong
+		numbers.
+	</Fragment>
+	<Fragment slot="good">
+		I have a semicolon-separated file named cafe_central_sales.csv in this
+		folder, with the columns ID, Fecha, Cliente, Monto, Categoría. As a first
+		step only, write a short Python program that prints the number of rows. Do
+		not install anything. After the code, explain each line in one sentence and
+		tell me one way it could be wrong for this file.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It supplies the **input** (file and columns), narrows the **task** to a
+		first step, adds **constraints**, and requests an explanation and a
+		**verification** hint.
+	</Fragment>
+	<Fragment slot="check">
+		Run it on the real file and compare the count with the editor's line count
+		minus one. Read the "one way it could be wrong" and test that case.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Name three ways to use Copilot.">
+	Inline suggestions, chat, and agent mode.
+</Checkpoint>
+
+<Checkpoint question="What should you do before accepting a suggestion?">
+	Read and understand it, check it against your data, look for surprises, and
+	test it on a small case.
+</Checkpoint>
+
+<Checkpoint question="Why should you commit before using agent mode?">
+	Agent mode can change many files. A commit lets you return to the earlier
+	state.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 3.10 shows how to ask Copilot about an error effectively.
