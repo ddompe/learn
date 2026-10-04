@@ -1,0 +1,180 @@
+---
+title: APIs y claves de API
+description: Entiende qué es una API y por qué una clave de API debe tratarse como una contraseña.
+sidebar:
+  order: 12
+lessonId: '1.12'
+estimatedMinutes: 15
+prerequisites: ['1.11']
+translationStatus: machine
+sourceHash: 137265a029cd
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar qué es una API. - Explicar qué es una clave de API y para qué se
+	usa. - Describir hábitos seguros para mantener las claves en secreto.
+</LessonGoals>
+
+## Por qué importa
+
+Muchos servicios que usarás, incluidas las herramientas de IA, ofrecen una forma de que
+los programas hablen con ellos directamente. Necesitas entender el concepto de API,
+porque es fácil cometer un error costoso: compartir una clave que cualquiera puede usar
+para gastar tu dinero.
+
+Esta lección es solo de conceptos. Aquí no crearás ni usarás una clave.
+
+<CaseStudy>
+	Café Central usa un servicio que envía el clima diario de las tiendas. Un
+	script le pide el pronóstico al servicio. El servicio necesita saber quién
+	pregunta, para limitar el uso y cobrarle a la empresa correcta. Esa identidad
+	es la clave de API.
+</CaseStudy>
+
+## Qué es una API
+
+Una **API** (interfaz de programación de aplicaciones, por sus siglas en inglés) es una
+puerta que permite que un programa hable con otro. Una página web está hecha para
+personas. Una API está hecha para programas: responde con datos, no con una página con
+estilo.
+
+Piensa en un restaurante. No entras a la cocina. Lees el menú, pides por medio del
+mesero y recibes un plato. El menú es la API. El mesero lleva tu pedido a la cocina y
+trae la respuesta. A diferencia de un restaurante, el "mesero" es una solicitud web,
+como viste en la lección 1.11.
+
+## Qué es una clave de API
+
+Una **clave de API** es una cadena larga de letras y dígitos que identifica quién llama.
+El servicio la usa para:
+
+- Saber a qué cuenta cobrar.
+- Limitar cuánto puede usar cada cliente.
+- Bloquear abusos.
+
+<Mermaid
+	diagram={`sequenceDiagram
+  participant P as Tu programa
+  participant S as Servicio
+  P->>S: Solicitud más clave de API
+  S->>S: Verifica la clave y la cuenta
+  S-->>P: Respuesta con datos`}
+/>
+
+## Por qué una clave es un secreto
+
+Cualquiera que tenga tu clave puede actuar como tú. Puede generar costos en tu cuenta o
+leer datos que te pertenecen. Las claves suelen filtrarse por accidente:
+
+- Pegadas en un chat, un correo o un asistente de IA.
+- Guardadas en un archivo que se comparte o se sube a un sitio público.
+- Incluidas en una captura de pantalla.
+
+Buenos hábitos:
+
+1. Trata una clave como una contraseña. Nunca la compartas.
+2. No la pongas en archivos que compartes o subes. La Parte 3 enseña cómo mantenerla fuera.
+3. Usa una clave distinta para cada propósito, para poder cancelar una sin romper las demás.
+4. Si una clave se filtra, **revócala** de inmediato en el sitio del servicio y crea una nueva.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+Lee esta solicitud ficticia. La clave es inventada.
+
+```text
+GET /forecast?city=San+Jose
+Host: weather.example.com
+Authorization: Bearer cafe-demo-1234567890
+```
+
+La primera línea pide un pronóstico para San José. La línea `Authorization` lleva la
+clave. Si esta solicitud se enviara en un correo, la clave viajaría con ella.
+
+### Ahora tú
+
+¿Cuáles de estas opciones son seguras?
+
+1. Pegar una clave en un chat con un asistente de IA para preguntar por qué falla.
+2. Describirle al asistente el mensaje de error sin la clave.
+3. Poner la clave en una hoja de cálculo que envías por correo a un colega.
+
+<Checkpoint question="Muestra las respuestas">
+	Solo la 2 es segura. Describe el problema y oculta la clave, porque los chats
+	y los correos pueden almacenarse o reenviarse.
+</Checkpoint>
+
+## Errores comunes
+
+- **Pegar una clave en un chat.** Quítala antes de pegar cualquier cosa.
+- **Subir una clave a un proyecto compartido (commit).** La Parte 3 explica cómo evitarlo.
+- **Tomar una captura de pantalla con la clave visible.**
+- **Compartir una sola clave entre muchas personas.** Crea una clave para cada persona o propósito.
+- **Ignorar una filtración.** Revoca la clave de inmediato, aunque creas que nadie se dio cuenta.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">
+		Esta es mi clave sk-live-12345, ¿por qué falla?
+	</Fragment>
+	<Fragment slot="whatGoesWrong">
+		Acabas de compartir un secreto con un tercero. Aunque el asistente dé buenos
+		consejos, la clave puede haberse almacenado y debe tratarse como filtrada.
+	</Fragment>
+	<Fragment slot="good">
+		Mi programa llama a una API del clima y recibe el error "401 Unauthorized".
+		Estoy enviando la clave en un encabezado Authorization. No voy a compartir
+		la clave. Enumera las tres causas más probables de este error, en orden de
+		probabilidad, y una forma de comprobar cada una sin exponer la clave.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Declara la **restricción** desde el inicio (no se comparte la clave), da la
+		**entrada** (el error) y pide causas ordenadas con comprobaciones seguras.
+	</Fragment>
+	<Fragment slot="check">
+		Asegúrate de que ninguna comprobación sugerida te pida pegar la clave.
+		Verifica las afirmaciones sobre el formato del encabezado en la
+		documentación del propio servicio.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué es una API?">
+	Una puerta que permite que un programa hable con otro y obtenga datos de
+	vuelta.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué una clave de API debe mantenerse en secreto?">
+	Cualquiera que la tenga puede actuar como tú, gastando tu dinero o leyendo tus
+	datos.
+</Checkpoint>
+
+<Checkpoint question="¿Qué haces si una clave se filtra?">
+	La revocas de inmediato en el sitio del servicio y creas una nueva.
+</Checkpoint>
+
+## Lista de verificación de fin de parte
+
+Terminaste la Parte 1 cuando puedas marcar todos los puntos:
+
+- [ ] Escribí la ruta absoluta de la carpeta de Café Central.
+- [ ] Abrí una terminal en esa carpeta y listé sus archivos.
+- [ ] Imprimí las primeras líneas del archivo de ventas en la terminal.
+- [ ] Puedo explicar por qué `Categoría` puede convertirse en `CategorÃ­a`.
+- [ ] Puedo explicar por qué el dinero no se guarda como floats.
+- [ ] Puedo explicar por qué una clave de API debe mantenerse en secreto.
+
+## Para profundizar
+
+- La Parte 2 explica qué es un modelo de IA y por qué debes verificar lo que dice.

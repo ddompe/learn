@@ -1,0 +1,212 @@
+---
+title: Conoce Café Central
+description: Conoce a la empresa del caso de estudio, descarga sus datos de práctica y detecta dos problemas en ellos.
+sidebar:
+  order: 3
+lessonId: '0.3'
+estimatedMinutes: 20
+prerequisites: ['0.1']
+translationStatus: machine
+sourceHash: 23bb43aa6d04
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import OsTabs from '@components/OsTabs.astro';
+import Mermaid from '@components/Mermaid.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Describir el problema de informes mensuales de Café Central en dos
+	oraciones. - Descargar y descomprimir los datos de práctica en una carpeta que
+	puedas volver a encontrar. - Abrir el archivo de ventas en un editor de texto
+	y detectar dos rarezas.
+</LessonGoals>
+
+## Por qué importa
+
+Aprender con ejemplos inventados y simplistas es aburrido, y las lecciones rara vez se
+trasladan al trabajo real. Los datos reales son desordenados. Tienen fechas raras,
+filas repetidas y una ortografía que cambia de una fila a otra.
+
+Este curso usa una sola empresa ficticia de principio a fin, con datos desordenados a
+propósito. Te encontrarás los mismos problemas en tus propios archivos.
+
+<CaseStudy>
+	Café Central S.A. es una empresa de café ficticia con sede en San José, Costa
+	Rica, y varias tiendas. Cada tienda exporta sus ventas como un archivo.
+	Daniela, la analista de operaciones, los recolecta cada mes, los corrige a
+	mano y arma un informe para el dueño.
+</CaseStudy>
+
+## La historia del informe mensual
+
+Esto es lo que Daniela hace hoy y lo que el curso la ayuda a hacer al final.
+
+<Mermaid
+	diagram={`flowchart LR
+  subgraph today["Hoy: manual, casi un día"]
+    direction LR
+    A["Las tiendas envían archivos de ventas por correo"] --> B["Copiar en una sola hoja de Excel"]
+    B --> C["Corregir fechas y montos a mano"]
+    C --> D["Eliminar duplicados a ojo"]
+    D --> E["Armar el informe"]
+  end`}
+/>
+
+<Mermaid
+	diagram={`flowchart LR
+  subgraph later["Al final del curso: un solo comando"]
+    direction LR
+    A["Archivos de ventas en una carpeta"] --> B["Un script los lee y los limpia"]
+    B --> C["Se producen gráficos y un informe"]
+    C --> D["Informe listo para el dueño"]
+  end`}
+/>
+
+Los puntos de dolor se relacionan con el curso así:
+
+| Punto de dolor                                      | Dónde lo aborda el curso |
+| --------------------------------------------------- | ------------------------ |
+| Los archivos son difíciles de encontrar y abrir     | Parte 1                  |
+| Las tildes y los símbolos se ven mal                | Parte 1                  |
+| Es difícil confiar en lo que dice una IA sobre ello | Parte 2                  |
+| Los cambios se pierden; no hay historial            | Parte 3                  |
+| Limpieza a mano                                     | Partes 4 a 6             |
+| Gráficos e informes armados a mano                  | Partes 7 y 8             |
+| Hay que repetir todo el proceso                     | Parte 9                  |
+
+## Descarga los datos
+
+Los datos de práctica son un archivo zip pequeño con tres archivos: un mes de ventas,
+una lista de clientes y un archivo readme breve.
+
+1. [Descarga los datos de Café Central (zip)](/downloads/automation-ai/cafe-central-data.zip).
+2. Crea una carpeta para el curso en un lugar que recuerdes, como `Documents`.
+   Por ahora evita las carpetas sincronizadas en la nube; la Parte 1 explica por qué.
+3. Mueve el archivo zip a esa carpeta y descomprímelo.
+
+<OsTabs>
+	<Fragment slot="windows">
+		Haz clic derecho en el archivo zip y elige **Extraer todo**, luego
+		**Extraer**.
+	</Fragment>
+	<Fragment slot="macos">
+		Haz doble clic en el archivo zip. Aparece una carpeta con el mismo nombre a
+		su lado.
+	</Fragment>
+</OsTabs>
+
+Recuerda dónde pusiste la carpeta. La lección 1.4 enseña a describir una ubicación con
+precisión. Por ahora solo necesitas poder encontrarla de nuevo.
+
+## Manos a la obra
+
+### Mira el archivo sin Excel
+
+No abras el archivo de ventas con doble clic. Excel intentaría ser servicial. Puede
+cambiar fechas y montos y, si guardas, sobrescribe el original. Conserva los archivos
+exactamente como los descargaste.
+
+En su lugar, abre `cafe_central_sales.csv` en un editor de texto plano. En Windows,
+usa el Bloc de notas. En macOS, usa TextEdit (elige **Formato** y luego **Convertir en
+texto simple**). Un archivo **CSV** (valores separados por comas, por sus siglas en
+inglés) es texto plano en el que cada línea es una fila y un separador divide las
+columnas. Deberías ver algo así al comienzo:
+
+```text
+ID;Fecha;Cliente;Monto;Categoría
+T001;01/01/2024;C004;2200.00;jugo
+T002;2024-01-01;C002;1500;pastel
+```
+
+### Ahora tú
+
+Recorre el archivo y encuentra **dos** cosas que confundirían a Excel o a un script.
+Estos son los tipos de cosas que debes buscar:
+
+- Fechas escritas en más de un estilo.
+- Montos escritos en más de un estilo, por ejemplo con un `$` o una coma.
+- La misma categoría escrita de varias maneras.
+- Dos líneas idénticas seguidas.
+- El separador: este archivo usa `;` en lugar de `,`.
+
+<Checkpoint question="¿Qué encontraste? Mira algunas respuestas">
+	El archivo contiene todo lo anterior. Por ejemplo, las fechas `01/01/2024`,
+	`2024-01-01` y `2024/01/01` significan el mismo día. Un monto aparece como
+	`$1500,50`, que mezcla un símbolo de moneda con una coma decimal. La categoría
+	del café aparece como `café` y como `cafe`. La transacción `T050` aparece dos
+	veces seguidas. No necesitas corregir nada de esto ahora. Las Partes 5 y 6
+	enseñan cómo.
+</Checkpoint>
+
+## Errores comunes
+
+- **Abrir el CSV en Excel y guardar.** Excel puede reinterpretar fechas y números en
+  silencio, y al guardar sobrescribe el original. Si quieres experimentar, copia el archivo.
+- **Perder la carpeta.** Si no encuentras los datos en una semana, ponlos en `Documents` y
+  anota la ubicación en una nota.
+- **Suponer que los datos están limpios.** Los datos desordenados son lo normal. Notar el
+  desorden es la primera habilidad.
+- **Guardar el zip en una carpeta sincronizada.** Las carpetas sincronizadas en la nube
+  pueden cambiar los archivos u ocultarlos. Por ahora usa una carpeta local.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Explícame este CSV.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente adivina el separador y el formato de fecha. Puede leer
+		`$1500,50` como mil quinientos cincuenta, o como 150 050, y suena seguro en
+		ambos casos.
+	</Fragment>
+	<Fragment slot="good">
+		Adjunto las primeras 20 líneas de un archivo de ventas de una empresa de
+		café. Columnas: ID, Fecha, Cliente, Monto, Categoría. El separador es un
+		punto y coma. Dime qué significa probablemente cada columna y enumera todos
+		los supuestos que haces, en especial sobre los formatos de fecha y sobre
+		cómo se escriben los montos. Luego enumera las filas que parezcan
+		inconsistentes.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		El prompt da la **entrada** (un extracto) y una **tarea** (describir cada
+		columna). Exige que el asistente **enumere sus supuestos**, lo que convierte
+		suposiciones ocultas en afirmaciones que puedes comprobar. También da
+		**contexto**: qué tipo de empresa y de archivo es.
+	</Fragment>
+	<Fragment slot="check">
+		Elige tres filas y compruébalas a mano contra lo que afirma el asistente.
+		¿La fecha significa lo que dice? ¿El monto es el que ves en el archivo? No
+		confíes en el resumen de un archivo hasta haber revisado tú mismo algunas
+		filas.
+	</Fragment>
+</PromptExample>
+
+<Checkpoint question="¿Por qué evitar abrir el CSV con doble clic?">
+	Excel puede cambiar fechas y montos sin avisar, y al guardar se sobrescribiría
+	el archivo original.
+</Checkpoint>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="Describe el problema de Café Central en dos oraciones.">
+	Cada mes, Daniela recolecta los archivos de ventas de las tiendas, corrige
+	fechas y montos a mano, elimina duplicados a ojo y arma un informe, lo que le
+	toma casi un día. El curso le enseña a hacerlo con un solo comando repetible.
+</Checkpoint>
+
+<Checkpoint question="¿Qué es un archivo CSV?">
+	Un archivo de texto plano en el que cada línea es una fila y un carácter
+	separador divide las columnas.
+</Checkpoint>
+
+<Checkpoint question="Nombra dos rarezas del archivo de ventas.">
+	Cualquiera de estas: formatos de fecha mezclados, estilos de monto mezclados,
+	ortografía inconsistente de las categorías, filas duplicadas, un separador
+	`;`.
+</Checkpoint>
+
+## Para profundizar
+
+- La Parte 1 explica las rutas, las codificaciones de texto y por qué se dañan las tildes. La Parte 5 cubre el CSV en profundidad.

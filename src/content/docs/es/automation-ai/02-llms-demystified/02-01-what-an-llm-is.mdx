@@ -1,0 +1,163 @@
+---
+title: Qué es realmente un LLM
+description: Entiende los tokens y la predicción del siguiente token, la única idea detrás de todo asistente de chat.
+sidebar:
+  order: 1
+lessonId: '2.1'
+estimatedMinutes: 15
+prerequisites: ['0.1']
+translationStatus: machine
+sourceHash: 3ab19bf9e217
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar qué es un token. - Explicar la predicción del siguiente token con
+	un ejemplo pequeño. - Describir en qué es bueno un LLM y qué se deduce de cómo
+	funciona.
+</LessonGoals>
+
+## Por qué importa
+
+Un asistente de IA parece entenderte. Si crees que sí, confiarás demasiado en él. Si
+piensas que es magia, no puedes prever cuándo va a fallar. Un modelo mental correcto te
+permite usarlo bien y notar los problemas a tiempo.
+
+<CaseStudy>
+	Daniela le pide a un asistente que describa las ventas de enero de Café
+	Central. La respuesta se lee fluida y segura. Para juzgarla, necesita saber
+	qué hizo el asistente para producir esas oraciones.
+</CaseStudy>
+
+## Tokens
+
+Un **modelo de lenguaje grande** (LLM, por sus siglas en inglés de _large language
+model_) es un programa entrenado con una enorme cantidad de texto para predecir qué
+texto viene a continuación. ChatGPT, Copilot y Claude son productos construidos sobre
+LLM.
+
+Un LLM no lee letras ni palabras completas. Lee **tokens**: pequeñas piezas de texto.
+Un token puede ser una palabra corta, parte de una palabra más larga o un signo de
+puntuación. En inglés, un token equivale a unos cuatro caracteres, o tres cuartos de
+una palabra. El texto en español suele necesitar más tokens para el mismo significado.
+
+Por ejemplo, "Café Central vende café" puede dividirse en piezas como "Caf", "é",
+" Central", " vende", " café". La división exacta depende del modelo.
+
+## Predicción del siguiente token
+
+Un LLM hace una sola cosa: dados los tokens hasta el momento, elige un siguiente token
+probable. Luego añade ese token al texto y repite.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Texto hasta ahora"] --> B["Predecir el siguiente token"]
+  B --> C["Añadirlo al texto"]
+  C --> A`}
+/>
+
+Para ver la idea, aquí hay un modelo de juguete. "Lee" un texto diminuto y cuenta qué
+palabra sigue a cuál. Luego predice la que sigue con más frecuencia.
+
+<Example file="part02/01_next_word.py" />
+
+Después de "the", la palabra "cafe" siguió tres veces y "shop" una vez, así que el modelo
+de juguete predice "cafe". No tiene idea de lo que es un café. Solo cuenta.
+
+Un LLM real hace algo parecido en espíritu, pero a una escala enorme. Ha aprendido
+patrones de miles de millones de páginas y mira mucho más que la última palabra. Por
+eso puede escribir párrafos fluidos, traducir y seguir instrucciones.
+
+## Qué se deduce de esto
+
+- **Produce texto plausible, no hechos comprobados.** Plausible y verdadero son cosas
+  distintas. La lección 2.6 vuelve sobre esto.
+- **No "busca" cosas por sí mismo.** Lo que sabe viene de su entrenamiento, a menos que
+  el producto añada un paso de búsqueda (lección 2.2).
+- **El mismo prompt puede dar respuestas distintas.** La elección del siguiente token
+  tiene algo de aleatoriedad.
+- **La redacción importa.** Un prompt distinto cambia el texto inicial, así que cambia
+  la predicción. Por eso dar instrucciones es una habilidad (lección 2.7).
+
+No concluyas que los LLM son inútiles. Predecir bien el texto resulta muy útil para
+redactar borradores, resumir, explicar y escribir código. Solo hay que conocer los
+límites.
+
+## Manos a la obra
+
+### Ahora tú
+
+Cambia el texto de juguete en tu cabeza. Supón que el texto fuera: "the cafe sells coffee
+and the cafe sells coffee and the cafe sells tea".
+
+1. ¿Qué predeciría el modelo de juguete después de "sells"?
+2. ¿Esa predicción es un hecho sobre el mundo?
+
+<Checkpoint question="Muestra las respuestas">
+	1. "coffee", porque siguió a "sells" dos veces y "tea" una. 2. No. Solo
+	refleja el texto que vio el modelo. Un modelo real es igual a mayor escala:
+	refleja su texto de entrenamiento.
+</Checkpoint>
+
+## Errores comunes
+
+- **Creer que el modelo entiende como una persona.** Predice texto. Hablar de
+  "entender" es una manera útil de expresarse, pero mala para predecir los fallos.
+- **Suponer que la respuesta se buscó en alguna parte.** A menos que el producto busque,
+  fue generada.
+- **Esperar la misma respuesta dos veces.** La variación es normal.
+- **Juzgar por la fluidez.** Una redacción fluida no dice nada sobre la exactitud.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Explica cómo funcionas.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente da una explicación pulida pero vaga, posiblemente con
+		afirmaciones sobre "entender" o "pensar" que suenan tranquilizadoras y
+		enseñan poco.
+	</Fragment>
+	<Fragment slot="good">
+		Soy usuario de Excel y no tengo conocimientos de programación. Explica en
+		menos de 150 palabras qué es un token y cómo eliges el siguiente. Usa una
+		analogía con hojas de cálculo. Luego dime en qué cosa te hace mal tu forma
+		de funcionar.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Da el **contexto** (la audiencia), una **restricción** (longitud, una
+		analogía) y pide una limitación, algo que un prompt deficiente nunca sacaría
+		a la luz.
+	</Fragment>
+	<Fragment slot="check">
+		Verifica que la respuesta hable de predecir piezas de texto, no de "saber" o
+		"pensar". Compara su limitación con la lista de esta lección.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué es un token?">
+	Una pequeña pieza de texto, como una palabra corta o parte de una palabra, que
+	un LLM lee y escribe.
+</Checkpoint>
+
+<Checkpoint question="¿Qué hace un LLM en cada paso?">
+	Predice un siguiente token probable dados los tokens hasta el momento, lo
+	añade y repite.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué una respuesta fluida puede estar equivocada?">
+	El modelo está optimizado para producir texto plausible, no para comprobar
+	hechos.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 2.2 explica de dónde viene el conocimiento del modelo y por qué tiene una fecha de corte.

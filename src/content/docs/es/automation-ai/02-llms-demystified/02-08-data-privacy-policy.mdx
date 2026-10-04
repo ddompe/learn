@@ -1,0 +1,173 @@
+---
+title: Privacidad de datos y política de la empresa
+description: Decide qué puedes compartir con una herramienta de IA y en qué se diferencian los planes para consumidores y los empresariales.
+sidebar:
+  order: 8
+lessonId: '2.8'
+estimatedMinutes: 20
+prerequisites: ['2.4', '2.5']
+translationStatus: machine
+sourceHash: 0ec62dd35f4a
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Clasificar los datos como seguros o no seguros para pegar en una herramienta
+	de IA. - Explicar en qué pueden diferir los planes para consumidores y los
+	empresariales. - Saber qué hacer antes de usar una herramienta nueva en el
+	trabajo.
+</LessonGoals>
+
+## Por qué importa
+
+Pegar datos en un chat es fácil y parece privado. No siempre lo es. El texto va a
+servidores operados por otra empresa. Según el plan y la configuración, puede
+almacenarse, ser revisado por personas o usarse para entrenar modelos futuros. Compartir
+los datos equivocados puede violar una ley de privacidad, un contrato o las reglas de tu
+empleador, y no se puede deshacer.
+
+<CaseStudy>
+	Daniela quiere ayuda con el archivo de clientes, que contiene nombres,
+	ciudades y correos. Antes de pegar nada, tiene que decidir qué es seguro.
+</CaseStudy>
+
+## Tipos de datos
+
+| Tipo                        | Ejemplos en Café Central                             | Riesgo                              |
+| --------------------------- | ---------------------------------------------------- | ----------------------------------- |
+| Públicos                    | El menú, el horario de atención                      | Bajo                                |
+| Internos                    | Totales mensuales de ventas, procedimientos internos | Medio. Revisa la política.          |
+| Datos personales            | Nombres, correos y teléfonos de clientes             | Alto. Se aplican leyes y contratos. |
+| Secretos                    | Contraseñas, claves de API, datos bancarios          | Nunca los compartas                 |
+| Confidenciales por contrato | La lista de precios de un proveedor bajo NDA         | Alto. Lo decide el contrato.        |
+
+Los **datos personales** son información que identifica a una persona. Muchos países los
+regulan.
+
+## Planes para consumidores frente a planes empresariales
+
+El mismo proveedor suele vender planes distintos con promesas distintas.
+
+- Los **planes para consumidores** (gratuitos o personales) son para individuos. Por
+  defecto, tus conversaciones pueden conservarse y usarse para mejorar los modelos, a
+  menos que lo desactives. La configuración y los términos difieren entre proveedores y
+  cambian con el tiempo.
+- Los **planes de negocio y empresariales** suelen incluir compromisos por escrito: los
+  datos no se usan para entrenar modelos, el acceso está controlado y la retención es
+  limitada. Tu empresa firma un contrato para ellos.
+
+No puedes saber por el nombre del producto qué plan aplica. Revisa la cuenta.
+
+## Reglas prácticas
+
+1. **Busca la política de IA de tu empresa.** Si no hay ninguna, pregunta a tu jefatura o a TI.
+2. **Usa la herramienta aprobada por la empresa** para los datos de trabajo.
+3. **Comparte lo mínimo.** Reemplaza los nombres por códigos (C001) y quita los correos que
+   no necesites. Esto se llama **anonimizar**. Ten cuidado: unos pocos detalles juntos
+   aún pueden identificar a una persona.
+4. **Nunca pegues secretos,** sea cual sea el plan.
+5. **Revisa la configuración** del historial de chat y del entrenamiento con tus datos.
+6. **Ante la duda, no pegues.** Describe en su lugar la estructura de tus datos.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["Quiero pegar datos"] --> B{"¿Contienen un secreto?"}
+  B -- Sí --> X["Nunca los pegues"]
+  B -- No --> C{"¿Son datos personales o confidenciales?"}
+  C -- No --> D["Está bien, dentro de la política de la empresa"]
+  C -- Sí --> E{"¿La herramienta está aprobada por la empresa para estos datos?"}
+  E -- Sí --> F["Comparte lo mínimo"]
+  E -- No --> G["Anonimízalos o no los pegues"]`}
+/>
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+Compara estas dos entradas sobre el mismo cliente.
+
+- No seguro: `María García, maria@example.com, Heredia, compró 12 cafés`
+- Más seguro: `C003, Heredia, compró 12 cafés`
+
+La segunda conserva lo que necesita el análisis y quita a quién se refiere.
+
+### Ahora tú
+
+Clasifica cada elemento como seguro, anonimizar primero o nunca:
+
+1. Las ventas totales por categoría de enero.
+2. El archivo de clientes con nombres y correos.
+3. La contraseña de la base de datos de ventas.
+
+<Checkpoint question="Muestra las respuestas">
+	1. Probablemente seguro, dentro de una herramienta aprobada y siguiendo la
+	política. 2. Anonimizar primero, o usar solo una herramienta aprobada para
+	datos personales. 3. Nunca.
+</Checkpoint>
+
+## Errores comunes
+
+- **Suponer que el "modo privado" significa privado.** Normalmente solo afecta tu historial.
+- **Usar una cuenta personal para datos de trabajo.** Las protecciones de tu empresa no se aplican.
+- **Anonimizar borrando solo los nombres.** Los correos, las ciudades y los detalles poco
+  comunes aún pueden identificar a las personas.
+- **Pegar un archivo completo cuando bastarían cinco filas.**
+- **Suponer que la política no cambiará.** Los términos de servicio se actualizan.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">¿Está bien pegarte datos de clientes?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente da una tranquilización general o una advertencia vaga. No puede
+		ver tu plan, el contrato de tu empresa ni la ley que te aplica.
+	</Fragment>
+	<Fragment slot="good">
+		Trabajo en Costa Rica para una empresa pequeña y quiero pedirle a una
+		herramienta de IA que limpie una lista de clientes con nombres, correos y
+		ciudades. Sin ver mis datos, enumera las preguntas que debería responder
+		antes de pegarlos: sobre la política de mi empresa, el tipo de plan y la
+		configuración. Luego muestra cómo convertir esta fila de ejemplo en una
+		anonimizada: "María García, maria@example.com, Heredia". No me digas si es
+		legal para mí.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Plantea el **contexto** y la **tarea** como una lista de comprobación, y la
+		**restricción** impide que el asistente dé un veredicto legal que no puede
+		conocer. Ofrece una **entrada** concreta para practicar.
+	</Fragment>
+	<Fragment slot="check">
+		Responde cada pregunta de verdad, con la política de tu empresa y la
+		configuración de tu cuenta, no con las suposiciones del asistente. Ante la
+		duda, consulta a TI o a tu contacto legal.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="Nombra dos tipos de datos que nunca o casi nunca debes pegar en un chat para consumidores.">
+	Secretos, como contraseñas y claves, y datos personales o confidenciales por
+	contrato.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué los planes para consumidores y los empresariales del mismo proveedor pueden diferir?">
+	Los planes empresariales vienen con un contrato que a menudo limita la
+	retención y prohíbe entrenar con tus datos. Los planes para consumidores
+	siguen los términos por defecto.
+</Checkpoint>
+
+<Checkpoint question="¿Qué significa anonimizar?">
+	Quitar o reemplazar los detalles que identifican a una persona, como cambiar
+	un nombre por un código.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 3.7 muestra cómo mantener los secretos fuera de tus proyectos.

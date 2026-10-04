@@ -1,0 +1,168 @@
+---
+title: Hardware, sistemas operativos y aplicaciones
+description: Conoce las tres capas con las que se construye toda computadora y de qué se encarga cada una.
+sidebar:
+  order: 1
+lessonId: '1.1'
+estimatedMinutes: 15
+prerequisites: ['0.1']
+translationStatus: machine
+sourceHash: 78bb864ca859
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Nombrar las tres capas de una computadora: hardware, sistema operativo y
+	aplicaciones. - Explicar de qué se encarga cada capa. - Usar las capas para
+	ubicar de dónde viene un problema.
+</LessonGoals>
+
+## Por qué importa
+
+Cuando algo sale mal en una computadora, la primera pregunta es: ¿dónde está el
+problema? ¿La máquina es demasiado lenta, Windows o macOS se está portando mal, o la
+falla es del programa? Quienes saben responder esa pregunta resuelven los problemas más
+rápido y le hacen mejores preguntas a un asistente de IA.
+
+<CaseStudy>
+	Cuando Daniela hace doble clic en `cafe_central_sales.csv`, cooperan tres
+	capas. El disco guarda el archivo, el sistema operativo lo encuentra y decide
+	qué programa lo abre, y Excel muestra las filas en pantalla. Si el archivo no
+	se abre, la causa está en una de esas capas.
+</CaseStudy>
+
+## Las tres capas
+
+<Mermaid
+	diagram={`flowchart TB
+  A["Aplicaciones: Excel, un navegador, VS Code"]
+  B["Sistema operativo: Windows, macOS, Linux"]
+  C["Hardware: procesador, memoria, disco, pantalla"]
+  A --> B --> C`}
+/>
+
+El **hardware** es la máquina física. Cuatro partes importan para este curso:
+
+- El **procesador** (CPU) ejecuta instrucciones, un paso diminuto a la vez, muy rápido.
+- La **memoria** (RAM) es el espacio de trabajo a corto plazo. Es rápida, pero se vacía
+  cuando se apaga la corriente.
+- El **almacenamiento** (un disco o SSD) es el estante a largo plazo. Es más lento, pero
+  conserva los archivos cuando se apaga la corriente.
+- La **pantalla, el teclado y la tarjeta de red** conectan la máquina contigo y con el mundo.
+
+Un **sistema operativo** (SO) es el programa que administra el hardware y lo reparte
+entre los demás programas. Lleva el control de los archivos, inicia y detiene programas,
+controla quién puede hacer qué y se comunica con los dispositivos. Windows, macOS y
+Linux son sistemas operativos.
+
+Una **aplicación** es un programa que hace un trabajo por ti, como una hoja de cálculo,
+un navegador o un editor de código. Las aplicaciones nunca tocan el hardware
+directamente. Le piden al sistema operativo, por ejemplo: "por favor, lee este archivo".
+
+Una analogía útil: el hardware es un edificio, el sistema operativo es el administrador
+del edificio y las aplicaciones son los inquilinos. Los inquilinos le piden al
+administrador las llaves y la electricidad. No reconectan los cables del edificio. Como
+toda analogía, tiene límites: un inquilino que se porta mal puede igual hacer más lento
+todo el edificio.
+
+## Memoria frente a almacenamiento
+
+Muchas personas confunden estas dos cosas, y la confusión causa pérdidas reales.
+
+Cuando abres una hoja de cálculo, el SO copia el archivo del almacenamiento a la
+memoria. Tus cambios viven en la memoria hasta que guardas. Si se va la luz antes de
+guardar, los cambios se pierden. Guardar escribe la memoria de vuelta en el
+almacenamiento.
+
+## Manos a la obra
+
+### Ejemplo resuelto: ¿dónde está el problema?
+
+Relaciona cada síntoma con la capa que más probablemente falla.
+
+| Síntoma                                                     | Capa probable                              |
+| ----------------------------------------------------------- | ------------------------------------------ |
+| Todo va lento cuando hay muchos programas abiertos          | Hardware (memoria insuficiente)            |
+| Un archivo se abre con el programa equivocado               | Sistema operativo (asociación de archivos) |
+| Una fórmula funciona en una hoja de cálculo pero no en otra | Aplicación                                 |
+| Un mensaje dice "el disco está lleno"                       | Hardware (almacenamiento)                  |
+
+### Ahora tú
+
+Para cada problema de Café Central, nombra la capa. Luego revela las respuestas.
+
+1. La laptop de Daniela se congela cuando abre doce archivos grandes a la vez.
+2. Al hacer doble clic en un archivo `.csv` se abre el Bloc de notas en lugar de Excel.
+3. Una macro que funcionaba el año pasado deja de funcionar después de que Excel se actualiza.
+
+<Checkpoint question="Muestra las respuestas">
+	1. Hardware: se agota la memoria. 2. Sistema operativo: guarda la
+	configuración que vincula los tipos de archivo con los programas. 3.
+	Aplicación: la nueva versión de Excel cambió su comportamiento.
+</Checkpoint>
+
+## Errores comunes
+
+- **Confundir memoria con almacenamiento.** "Mi computadora tiene 16 GB" puede referirse
+  a cualquiera de las dos. Pregunta siempre cuál.
+- **Culpar a la aplicación de todo.** A veces la causa es el SO o el disco.
+- **No guardar.** Los cambios sin guardar viven solo en la memoria.
+- **Suponer que una computadora nueva arregla el trabajo lento.** Si un programa está mal
+  diseñado, un hardware más rápido ayuda solo un poco.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">¿Por qué mi computadora está lenta?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente da una lista genérica: reiniciar, cerrar pestañas, borrar
+		archivos, buscar virus. No puede saber cuál aplica, así que pierdes tiempo
+		con las que no son.
+	</Fragment>
+	<Fragment slot="good">
+		Tengo una laptop con Windows, 8 GB de memoria y un SSD. Se pone lenta solo
+		cuando abro archivos de Excel de unos 50 MB y tengo un navegador con muchas
+		pestañas abiertas. ¿Qué capa es la causa más probable: hardware, sistema
+		operativo o aplicación? Dame primero la causa más probable y luego dos cosas
+		más baratas que pueda probar para confirmarla.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		El prompt da **contexto** (la máquina y cuándo aparece la lentitud) y le
+		pide al asistente elegir entre las tres capas de esta lección. El **formato
+		de salida** (una causa probable más dos pruebas) convierte los consejos en
+		experimentos.
+	</Fragment>
+	<Fragment slot="check">
+		Haz las pruebas que sugiere. Por ejemplo, cierra el navegador y mira si
+		Excel se acelera. Si el síntoma no cambia, la primera hipótesis estaba
+		equivocada y debes decírselo en una pregunta de seguimiento.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Cuál es la diferencia entre memoria y almacenamiento?">
+	La memoria es rápida y temporal, y se vacía cuando se apaga la corriente. El
+	almacenamiento es más lento y conserva los archivos de forma permanente.
+</Checkpoint>
+
+<Checkpoint question="¿Qué hace el sistema operativo?">
+	Administra el hardware y lo reparte entre los programas: archivos, inicio de
+	programas, dispositivos y permisos.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué las aplicaciones le piden al sistema operativo que lea un archivo en lugar de leer el disco directamente?">
+	El SO mantiene los archivos organizados y los protege, de modo que muchos
+	programas pueden compartir el disco de forma segura.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 1.2 muestra en qué se diferencian Windows, macOS y Linux de maneras que causan problemas reales.

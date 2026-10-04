@@ -1,0 +1,163 @@
+---
+title: 'Costo: tokens y precios'
+description: Estima cuánto cuesta una tarea y entiende por qué los servicios de IA cobran por token.
+sidebar:
+  order: 9
+lessonId: '2.9'
+estimatedMinutes: 15
+prerequisites: ['2.1', '2.3']
+lastVerified: 2026-10-03
+translationStatus: machine
+sourceHash: 7e9d06246c8c
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar por qué los servicios de IA cobran por token. - Estimar los tokens
+	y el costo de una tarea. - Nombrar las principales cosas que encarecen una
+	tarea.
+</LessonGoals>
+
+## Por qué importa
+
+Muchos asistentes parecen gratuitos, y un plan gratuito puede bastar para aprender. Pero
+cuando una empresa automatiza trabajo con IA, o cuando usas planes de pago, aparecen los
+costos, y pueden sorprenderte. Una pequeña estimación antes de un trabajo grande evita
+una factura desagradable. Los precios cambian a menudo, así que esta lección enseña el
+método y te muestra dónde encontrar las cifras actuales.
+
+<CaseStudy>
+	Café Central quiere resumir automáticamente el archivo de ventas de cada mes.
+	Le preguntan a Daniela cuánto podría costar eso al año.
+</CaseStudy>
+
+## Por qué por token
+
+Recuerda que el modelo lee y escribe tokens (lección 2.1). El trabajo que hace, y las
+computadoras que necesita, crecen con la cantidad de tokens. Por eso los servicios cobran
+por los tokens procesados, normalmente por millón. Cobran de forma distinta por:
+
+- **Tokens de entrada:** todo lo que envías, incluida la conversación hasta el momento y los archivos pegados.
+- **Tokens de salida:** lo que escribe el modelo. Suelen costar más por token.
+
+Algunos servicios añaden tarifas más baratas para la entrada repetida o para trabajo que
+puede esperar. Consulta la página del proveedor para ver los detalles.
+
+Además, las suscripciones, como los planes mensuales, esconden los precios por token
+detrás de una cuota fija y límites de uso.
+
+## Una estimación sencilla
+
+1. Estima el tamaño de la **entrada** en tokens. Una regla aproximada para el inglés:
+   caracteres divididos entre 4. El español suele necesitar más.
+2. Estima el tamaño de la **salida**.
+3. Multiplica cada uno por su precio por millón de tokens, dividido entre un millón.
+4. Multiplica por la cantidad de veces que lo harás.
+
+<Example file="part02/09_cost.py" />
+
+Los precios de este script son ejemplos inventados, no reales. El archivo de ventas tiene
+unos 8400 caracteres, o sea unos 2100 tokens. Con las tarifas de ejemplo, un resumen
+cuesta alrededor de un centavo y medio. Ejecútalo cada mes durante un año y el costo
+sigue siendo pequeño.
+
+La estimación es aproximada. Los conteos reales de tokens difieren según el modelo, y el
+mismo trabajo podría salir más barato o más caro.
+
+## Qué hace más cara una tarea
+
+- **Una entrada más larga:** archivos grandes, chats largos reenviados cada vez (lección 2.3).
+- **Una salida más larga:** una respuesta corta cuesta menos que un informe largo.
+- **Un modelo más capaz:** los modelos grandes cuestan más por token que los pequeños.
+- **La repetición:** un trabajo ejecutado sobre miles de archivos multiplica todo.
+- **Reintentos y pruebas:** mientras construyes una automatización, ejecutarás el trabajo muchas veces.
+
+## Verifica estos datos tú mismo
+
+Los precios cambian a menudo. Última verificación: 2026-10-03. Busca las cifras actuales
+en la página oficial de precios del proveedor, como las que se enumeran en la lección
+2.4, y reemplaza las tarifas de ejemplo cuando hagas tu propia estimación.
+
+## Manos a la obra
+
+### Ahora tú
+
+Con las tarifas de ejemplo del script (3 dólares por millón de tokens de entrada y 15
+dólares por millón de tokens de salida), estima el costo de un trabajo con 100 000
+tokens de entrada y 2000 tokens de salida.
+
+<Checkpoint question="Muestra la respuesta">
+	Entrada: 100 000 por 3 dividido entre 1 000 000 son 0.30 dólares. Salida: 2000
+	por 15 dividido entre 1 000 000 son 0.03 dólares. El total es 0.33 dólares.
+</Checkpoint>
+
+## Errores comunes
+
+- **Olvidar que la entrada incluye toda la conversación.** Los chats largos se encarecen.
+- **Usar el precio de hoy para el plan del año que viene.** Los precios y los modelos cambian.
+- **Comparar precios sin comparar calidad.** Un modelo más barato que necesita reintentos puede costar más.
+- **Ignorar los límites de los planes de suscripción.** "Ilimitado" suele tener límites de uso justo.
+- **Probar con todo el conjunto de datos.** Prueba primero con unas pocas filas.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">¿Cuánto va a costar esto?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente menciona un precio de memoria, probablemente desactualizado, y
+		no muestra cómo llegó a él.
+	</Fragment>
+	<Fragment slot="good">
+		Planeo resumir cada mes un archivo CSV de unos 8000 caracteres, con una
+		salida de unos 500 tokens. Te daré los precios de entrada y salida por
+		millón de tokens de la página de precios de mi proveedor: entrada 3.00
+		dólares, salida 15.00 dólares. Muestra el cálculo paso a paso en una tabla,
+		para una ejecución y para doce ejecuciones. No uses ningún precio que yo no
+		te haya dado.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Aporta la **entrada** (tamaños y precios) y una **restricción** que prohíbe
+		los precios recordados. El **formato de salida** paso a paso funciona además
+		como **verificación**.
+	</Fragment>
+	<Fragment slot="check">
+		Rehaz la aritmética con una calculadora o una hoja de cálculo. Confirma que
+		los precios de la respuesta son los que diste, y que la estimación de tokens
+		usa unos cuatro caracteres por token.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Por qué los servicios de IA cobran por token?">
+	El trabajo de cómputo crece con la cantidad de tokens procesados, así que los
+	tokens son la unidad natural de costo.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué los chats largos son más caros de lo que parecen?">
+	Toda la conversación se envía como entrada con cada mensaje nuevo.
+</Checkpoint>
+
+<Checkpoint question="¿Qué suele costar más por token, la entrada o la salida?">
+	La salida.
+</Checkpoint>
+
+## Lista de verificación de fin de parte
+
+Terminaste la Parte 2 cuando puedas marcar todos los puntos:
+
+- [ ] Puedo explicar la predicción del siguiente token en dos oraciones.
+- [ ] Reescribí uno de mis prompts reales con los seis elementos.
+- [ ] Clasifiqué mis propios datos de trabajo como seguros o no seguros para pegar.
+- [ ] Estimé el costo de una tarea en tokens.
+
+## Para profundizar
+
+- La Parte 3 configura las herramientas que usarás con un asistente de IA durante el resto del curso.

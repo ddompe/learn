@@ -1,0 +1,148 @@
+---
+title: Tipos de archivo y extensiones
+description: Aprende que una extensión es una etiqueta y no una garantía, y cómo saber qué contiene realmente un archivo.
+sidebar:
+  order: 5
+lessonId: '1.5'
+estimatedMinutes: 15
+prerequisites: ['1.4']
+translationStatus: machine
+sourceHash: f8505fd20f61
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar que la extensión de un archivo es una convención y no una garantía.
+	- Distinguir entre archivos de texto y archivos binarios. - Mostrar el
+	contenido real de un archivo mirando sus primeros bytes.
+</LessonGoals>
+
+## Por qué importa
+
+Confías en que `sales.csv` es un archivo CSV y `report.xlsx` es un archivo de Excel.
+Normalmente es cierto. Pero el nombre es solo una etiqueta que cualquiera puede
+cambiar. Cuando un archivo no abre, o se abre como un sinsentido, saber qué hay
+realmente adentro es el primer paso.
+
+<CaseStudy>
+	Un proveedor le envía a Daniela por correo un archivo llamado `invoice.pdf`.
+	No se abre. En realidad es un archivo comprimido en zip al que alguien le
+	cambió el nombre. Saber cómo mirar adentro le ahorra una tarde.
+</CaseStudy>
+
+## Qué es una extensión
+
+La **extensión** es la parte del nombre de un archivo posterior al último punto, como
+`.csv` o `.xlsx`. El sistema operativo la usa para adivinar qué programa debe abrir el
+archivo. Eso es todo. Cambiar el nombre de `notes.txt` a `notes.xlsx` no lo convierte
+en una hoja de cálculo. Solo hace que Excel intente abrir algo que no puede leer.
+
+Windows oculta las extensiones por defecto. Un archivo llamado `sales.csv.xlsx` aparece
+entonces como `sales.csv`, y no puedes saber el tipo real. Puedes mostrarlas en el
+Explorador de archivos (**Vista**, luego **Mostrar**, luego **Extensiones de nombre de
+archivo**) y en Finder (**Finder**, **Ajustes**, **Avanzado**, luego **Mostrar todas las
+extensiones de archivo**).
+
+## Archivos de texto y archivos binarios
+
+Todo archivo es una secuencia de bytes. La pregunta es cómo leerlos.
+
+- Un **archivo de texto** contiene caracteres legibles. CSV, JSON y el simple `.txt` son
+  archivos de texto. Puedes abrirlos en un editor de texto.
+- Un **archivo binario** contiene bytes que no están pensados para leerse como
+  caracteres. Las imágenes, los PDF, los archivos zip y los `.xlsx` de Excel son
+  binarios. Un editor de texto muestra un sinsentido.
+
+Ten en cuenta que los archivos `.xlsx` y `.docx` son en realidad archivos zip con varios
+archivos de texto pequeños. Por eso puedes ver `PK` en uno dañado.
+
+Muchos formatos binarios empiezan con unos pocos bytes fijos llamados **número
+mágico**. Le dice a los programas qué es realmente el archivo. Un archivo zip empieza
+con las dos letras `PK`. Un archivo de texto como un CSV no tiene número mágico.
+Simplemente empieza con su primer carácter.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+<Example file="part01/05_file_types.py" />
+
+El archivo zip empieza con `PK`, como se esperaba. El CSV empieza con `ID;Fecha`, que
+es simplemente su fila de encabezado. La notación `b'...'` significa "bytes", y `\x03\x04`
+muestra bytes que no son caracteres imprimibles.
+
+No necesitas ejecutar esto todavía. Python llega en la Parte 4. Lo importante es la
+idea: mira lo que contiene el archivo, no cómo se llama.
+
+### Ahora tú
+
+Predice qué verías en los primeros bytes de cada archivo:
+
+1. Un archivo `.docx`.
+2. Un archivo de texto al que le cambiaste el nombre a `.pdf`.
+
+<Checkpoint question="Muestra las respuestas">
+	1. Empieza con `PK`, porque un `.docx` es un archivo zip. 2. Empieza con tus
+	primeros caracteres de texto, no con el `%PDF` con el que empieza un PDF real.
+</Checkpoint>
+
+## Errores comunes
+
+- **Confiar en la extensión.** Es una pista, no una prueba.
+- **Cambiar el nombre para convertir.** Cambiar `.csv` por `.xlsx` no convierte nada. Para
+  convertir, abre el archivo en un programa y guárdalo en el nuevo formato.
+- **Extensiones ocultas.** Actívalas para ver lo que realmente tienes.
+- **Abrir un archivo binario en un editor de texto y guardar.** Esto lo destruye.
+- **Suponer que CSV es un solo formato.** Los separadores y las codificaciones varían. Ver la Parte 5.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">¿Qué es este archivo?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente no puede ver tu archivo. Adivina a partir del nombre, así que
+		un archivo mal etiquetado recibe una respuesta segura y equivocada.
+	</Fragment>
+	<Fragment slot="good">
+		Recibí un archivo llamado invoice.pdf que no se abre. Sus primeros bytes,
+		mostrados como texto, son: PK seguido de caracteres ilegibles. Uso Windows
+		con Excel y Word instalados. Basándote solo en esos bytes, ¿qué tipo de
+		archivo es más probable que sea? Dame el tipo más probable, una alternativa
+		y una forma segura de comprobarlo sin ejecutar nada.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		El prompt da la **entrada** (los bytes reales) y le dice al asistente que se
+		base solo en ellos. Pide un paso de **verificación** que sea seguro.
+	</Fragment>
+	<Fragment slot="check">
+		Confirma que mencione archivos zip o archivos de Office, porque `PK` es su
+		firma. No abras ni ejecutes un archivo sospechoso, aunque el asistente diga
+		que es seguro.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Cambiar el nombre de un archivo cambia lo que hay adentro?">
+	No. Solo cambia la etiqueta.
+</Checkpoint>
+
+<Checkpoint question="¿Qué es un número mágico?">
+	Unos pocos bytes fijos al comienzo de un archivo binario que identifican su
+	tipo real.
+</Checkpoint>
+
+<Checkpoint question="¿Un archivo CSV es de texto o binario?">
+	De texto.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 1.7 explica cómo los bytes de un archivo de texto se convierten en letras.

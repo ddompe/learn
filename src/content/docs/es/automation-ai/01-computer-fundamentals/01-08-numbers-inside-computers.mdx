@@ -1,0 +1,149 @@
+---
+title: Los números dentro de las computadoras
+description: Aprende por qué los enteros y los decimales se comportan distinto, y por qué el dinero necesita decimales exactos.
+sidebar:
+  order: 8
+lessonId: '1.8'
+estimatedMinutes: 15
+prerequisites: ['1.3']
+translationStatus: machine
+sourceHash: bf554c6b32ea
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar la diferencia entre enteros y números de punto flotante. - Explicar
+	por qué `0.1 + 0.2` no es exactamente `0.3`. - Explicar por qué los cálculos
+	con dinero deben usar decimales exactos.
+</LessonGoals>
+
+## Por qué importa
+
+Las computadoras son muy buenas para la aritmética, pero no siempre como esperas. Con
+los decimales aparecen errores diminutos. En un informe que suma miles de montos, un
+error oculto puede hacer que un total difiera en un céntimo del que figura en el libro
+contable. Ese tipo de diferencia cuesta horas rastrearla.
+
+<CaseStudy>
+	Café Central registra cada venta en colones, con céntimos. Daniela suma 240
+	ventas y obtiene un total un céntimo distinto del sistema de contabilidad. Su
+	fórmula no tiene nada malo. La causa es cómo se almacenan los números.
+</CaseStudy>
+
+## Enteros y floats
+
+Un **entero** es un número entero: 3, 150, -7. Las computadoras guardan los enteros de
+forma exacta, hasta un límite muy grande.
+
+Un **número de punto flotante** (en inglés, **float**) contiene un número con coma
+decimal, como 2.5 o 0.1. Para caber en una cantidad fija de espacio, la computadora
+guarda una aproximación cercana en binario (base 2), de la misma manera en que no
+puedes escribir un tercio exactamente como decimal.
+
+Así como 1/3 es 0.3333... en decimal, 0.1 es un patrón sin fin en binario. La
+computadora lo corta y resulta un error diminuto. Normalmente es invisible. A veces no.
+
+Excel también usa floats. Oculta la mayor parte del error redondeando lo que muestra.
+
+## Decimales exactos
+
+Para el dinero necesitamos números que se comporten como los decimales en papel. Muchos
+lenguajes ofrecen un tipo decimal exacto. En Python se llama `Decimal`. Guarda los
+dígitos como dígitos, así que `0.1` es exactamente un décimo.
+
+Los decimales son más lentos que los floats, pero para datos de negocio la diferencia no
+importa. Una buena regla: **usa floats para mediciones y decimales para dinero.**
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+<Example file="part01/08_numbers.py" />
+
+Las dos primeras líneas muestran la sorpresa del float: `0.1 + 0.2` y `0.1 * 3` imprimen
+ambos `0.30000000000000004`, no `0.3`. Con `Decimal`, las mismas sumas son exactas. La
+última línea suma tres montos de Café Central de forma exacta.
+
+Fíjate en que los números entre comillas, `"0.1"`, son texto. Construimos los decimales
+a partir de texto, no de floats, porque un float ya es aproximado cuando llega a
+`Decimal`.
+
+### Ahora tú
+
+Predice cuáles serán exactas y luego revela las respuestas.
+
+1. Sumar los números enteros 2 y 3.
+2. Sumar los floats 0.5 y 0.25.
+3. Sumar los floats 0.1 y 0.2.
+
+<Checkpoint question="Muestra las respuestas">
+	1. Exacta. Los enteros son exactos. 2. También exacta. 0.5 y 0.25 son sumas de
+	potencias de dos, así que el binario puede escribirlos con precisión. 3. No es
+	exacta. 0.1 y 0.2 tienen patrones binarios sin fin.
+</Checkpoint>
+
+## Errores comunes
+
+- **Usar floats para el dinero.** Usa decimales, o céntimos enteros guardados como enteros.
+- **Comparar floats por igualdad.** `0.1 + 0.2 == 0.3` es falso. Compara con una pequeña
+  tolerancia.
+- **Crear un Decimal a partir de un float.** Usa texto: `Decimal("0.1")`.
+- **Confiar en lo que se muestra.** Una celda que muestra 0.30 puede contener 0.30000000000000004.
+- **Formatos mezclados en los datos.** El archivo de Café Central escribe algunos montos
+  como `$1500,50`. Debes limpiarlos antes de hacer aritmética. Las Partes 5 y 6 muestran cómo.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">
+		¿Por qué mi total tiene un céntimo de diferencia?
+	</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente dice "probablemente es redondeo" y sugiere redondear todo. Eso
+		oculta la causa y puede trasladar el error a otro lugar.
+	</Fragment>
+	<Fragment slot="good">
+		Sumo 240 montos de ventas, cada uno con dos decimales, en Python usando
+		floats. Mi total es 12345.670000000002, pero mi sistema de contabilidad dice
+		12345.67. Explica por qué ocurre esto en tres oraciones. Luego muestra cómo
+		sumar los montos de forma exacta. Dime si debo guardar los montos como
+		Decimal o como céntimos enteros, y por qué.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Indica la **entrada** (los totales exactos), da el **contexto** (Python y
+		floats) y fija una **restricción** sobre la longitud de la explicación. Pide
+		una decisión con razones, no solo código.
+	</Fragment>
+	<Fragment slot="check">
+		Verifica que la respuesta construya los decimales a partir de texto, no de
+		floats. Recalcula a mano un total pequeño, como tres montos, para confirmar
+		el método exacto.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Por qué 0.1 + 0.2 no es exactamente 0.3 en una computadora?">
+	Los floats se guardan en binario, donde 0.1 y 0.2 son patrones sin fin que se
+	cortan, así que la suma arrastra un error diminuto.
+</Checkpoint>
+
+<Checkpoint question="¿Qué debes usar para el dinero?">
+	Decimales exactos, o céntimos enteros guardados como enteros.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué construir un Decimal a partir del texto '0.1' en lugar del número 0.1?">
+	Construirlo a partir de texto mantiene los dígitos exactos. Un float ya sería
+	aproximado.
+</Checkpoint>
+
+## Para profundizar
+
+- La Parte 6 usa decimales exactos al limpiar los montos de Café Central.

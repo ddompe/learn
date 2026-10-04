@@ -1,0 +1,196 @@
+---
+title: Qué es (y qué no es) la automatización
+description: Decide qué tareas vale la pena automatizar y si la herramienta adecuada es una fórmula, Power Query o un script.
+sidebar:
+  order: 2
+lessonId: '0.2'
+estimatedMinutes: 15
+prerequisites: ['0.1']
+translationStatus: machine
+sourceHash: e79d73dac0e2
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Distinguir las tareas que vale la pena automatizar de las que no. - Aplicar
+	la prueba "¿bastaría una fórmula o Power Query?". - Elegir entre una fórmula,
+	Power Query, un script o no hacer nada.
+</LessonGoals>
+
+## Por qué importa
+
+**Automatizar** significa hacer que una computadora realice una tarea que hoy haces a
+mano, de modo que se ejecute igual cada vez. Suena como una buena idea para cualquier
+tarea. No lo es.
+
+Hay dos errores comunes. El primero es escribir un script para un trabajo que una tabla
+dinámica resuelve en cinco minutos. El segundo es pasar una semana automatizando una
+tarea que haces dos veces al año. En ambos casos, la automatización cuesta más que el
+trabajo que ahorra.
+
+Esta lección te da una prueba breve para evitar los dos errores.
+
+<CaseStudy>
+	Cada mes, Daniela, de Café Central, recibe la exportación de ventas de cada
+	tienda. Las combina, corrige las fechas, elimina duplicados y arma un informe
+	para el dueño. Le toma casi un día entero. Pero no todas las tareas que hace
+	valen la pena automatizarse. En esta lección vas a asignar cada una de sus
+	tareas a la herramienta correcta.
+</CaseStudy>
+
+## ¿Vale la pena automatizarlo?
+
+Hazte tres preguntas antes de elegir una herramienta.
+
+1. **¿Con qué frecuencia lo hago?** Una tarea diaria o mensual se amortiza rápido. Una
+   tarea anual casi nunca.
+2. **¿Cuánto tiempo toma cada vez?** Cinco minutos son difíciles de mejorar. Tres horas
+   son una candidata fuerte.
+3. **¿Los pasos son siempre los mismos?** Una computadora sigue los pasos al pie de la
+   letra. Si necesitas criterio cada vez, como decidir cómo redactar un correo a un
+   cliente, la automatización ayuda menos.
+
+Una regla aproximada: si el tiempo que tardarías en construir la automatización es
+mayor que el tiempo que ahorrarías en un año, todavía no la automatices.
+
+## La prueba de la herramienta
+
+Si vale la pena automatizar una tarea, elige la herramienta más simple que haga el
+trabajo. Primero van las herramientas que ya conoces.
+
+- Una **fórmula** calcula valores dentro de una hoja de cálculo. Ejemplos: `SUM`, `VLOOKUP`, `IF`.
+- **Power Query** es la función de Excel y PowerBI que importa, limpia y reorganiza
+  datos, y recuerda los pasos para que puedas actualizarlos.
+- Un **script** es un programa pequeño: un archivo de texto con instrucciones que una
+  computadora ejecuta. Lo necesitas cuando las otras herramientas no alcanzan el
+  problema.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["Una tarea que repito"] --> B{"¿Con suficiente frecuencia y duración para que valga la pena?"}
+  B -- No --> Z["Todavía no la automatices"]
+  B -- Sí --> C{"¿Puede hacerlo una fórmula o una tabla dinámica?"}
+  C -- Sí --> F["Usa una fórmula o una tabla dinámica"]
+  C -- No --> D{"¿Puede hacerlo Power Query?"}
+  D -- Sí --> P["Usa Power Query"]
+  D -- No --> S["Usa un script"]`}
+/>
+
+¿Cuándo gana un script? Normalmente cuando el trabajo involucra muchos archivos,
+archivos fuera de Excel como PDF o páginas web, pasos que deben ejecutarse en un
+horario sin ti, o lógica difícil de expresar en Power Query. También ayuda cuando
+quieres guardar tus pasos como texto plano que se puede probar y rastrear, de lo cual
+trata la Parte 3.
+
+Fíjate en que la mayoría de los caminos del diagrama no terminan en un script. Es a
+propósito. Este curso enseña scripts porque los casos difíciles los necesitan, no
+porque siempre sean mejores.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+Aquí hay cuatro tareas, clasificadas con la prueba.
+
+| Tarea                                                                 | Frecuencia | Resultado                                                  |
+| --------------------------------------------------------------------- | ---------- | ---------------------------------------------------------- |
+| Total de ventas por categoría en una hoja                             | Semanal    | Tabla dinámica. Toma minutos y no necesita código.         |
+| Agregar una columna "mes" a partir de una columna de fecha            | Mensual    | Fórmula, o un paso de Power Query.                         |
+| Combinar 12 archivos CSV de las tiendas y eliminar duplicados         | Mensual    | Power Query puede hacerlo. Un script también es razonable. |
+| Leer precios de la factura en PDF de un proveedor y enviar un resumen | Mensual    | Script. Las fórmulas y Power Query no leen bien los PDF.   |
+
+### Ahora tú
+
+Café Central tiene cinco tareas más. Clasifica cada una como fórmula, Power Query,
+script o no automatizar. Luego abre las respuestas.
+
+1. Marcar los precios del menú navideño una vez al año.
+2. Convertir 240 filas de fechas en texto, con muchos formatos, en fechas reales, cada mes.
+3. Resaltar en rojo cualquier venta superior a 5000 colones.
+4. Descargar cada mañana el mismo informe web del portal de un proveedor y archivarlo.
+5. Escribir cada mes una nota personal de agradecimiento al mejor cliente.
+
+<Checkpoint question="Muestra las respuestas de las cinco tareas">
+	1. No automatizar. Ocurre una vez al año y toma unos minutos. 2. Power Query.
+	Está hecho para limpiar columnas y conserva los pasos. Un script también sirve
+	si ya tienes uno. 3. Fórmula, con formato condicional. 4. Script. Se repite en
+	un horario e involucra una página web. 5. No automatizar. Requiere criterio
+	personal, que es justamente el sentido de la nota.
+</Checkpoint>
+
+Ahora repite la prueba con la tarea semanal o mensual que anotaste en la lección 0.1.
+¿Qué respuesta obtienes?
+
+## Errores comunes
+
+- **Escribir un script para todo.** Un script parece más poderoso, pero una tabla
+  dinámica que puedes cambiar en segundos suele ser mejor. Revisa primero las fórmulas
+  y Power Query.
+- **Automatizar una tarea poco frecuente.** Si la haces dos veces al año, el tiempo de
+  construcción rara vez se recupera.
+- **Olvidar que alguien tiene que mantenerla.** Los archivos cambian de formato y las
+  tiendas cambian de sistema. Una automatización que nadie entiende se rompe en
+  silencio. La Parte 3 enseña cómo mantener las automatizaciones comprensibles.
+- **Automatizar un proceso defectuoso.** Si los pasos no están claros a mano, una
+  computadora repetirá la confusión más rápido. Escribe primero los pasos.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Automatiza mi informe mensual.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente escribe un script enorme para una tarea que quizá resuelve una
+		tabla dinámica. Inventa nombres de archivo y estructuras de columnas que no
+		coinciden con las tuyas, así que el código falla o, peor aún, se ejecuta y
+		produce números equivocados.
+	</Fragment>
+	<Fragment slot="good">
+		Soy analista financiero y uso Excel y Power Query. Cada mes recibo 5
+		archivos CSV de ventas, cada uno con las columnas Fecha, Cliente, Monto y
+		Categoría. Los combino en una hoja, elimino las filas duplicadas y armo una
+		tabla dinámica con el monto total por categoría. Me toma unas 2 horas. Antes
+		de escribir código, dime si una fórmula, una tabla dinámica o Power Query
+		pueden hacerlo. Sugiere un script solo si no pueden. Enumera los supuestos
+		que estás haciendo sobre mis archivos.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		El prompt bueno da la **entrada** (qué contienen los archivos) y los pasos
+		reales con su frecuencia. Agrega una **restricción**: decir primero si no
+		hace falta código. También pide los supuestos del asistente, lo que facilita
+		detectar suposiciones erróneas. La lección 2.7 cubre todos los elementos.
+	</Fragment>
+	<Fragment slot="check">
+		Compara los supuestos con tus archivos reales. Si el asistente recomienda
+		Power Query, pruébalo durante un mes antes de construir otra cosa. Si
+		recomienda un script, pregunta por qué las herramientas más simples no
+		bastan.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="Preparas un informe una vez al año que toma 20 minutos. ¿Deberías automatizarlo?">
+	Probablemente no. El tiempo de construcción superaría el tiempo ahorrado en
+	muchos años.
+</Checkpoint>
+
+<Checkpoint question="¿Qué es Power Query y cuándo supera a un script?">
+	Es la herramienta de Excel y PowerBI para importar y limpiar datos con pasos
+	que se recuerdan y se pueden actualizar. Supera a un script cuando los datos
+	ya están en archivos compatibles con Excel y tú o tu equipo ya conocen la
+	herramienta.
+</Checkpoint>
+
+<Checkpoint question="Nombra dos situaciones en las que un script es la mejor herramienta.">
+	Ejemplos: leer PDF o páginas web, procesar muchos archivos, ejecutarse en un
+	horario sin ti, o guardar los pasos en texto que se pueda probar.
+</Checkpoint>
+
+## Para profundizar
+
+- La Parte 3 explica por qué importa guardar los pasos como texto, y la Parte 9 muestra cómo programarlos.

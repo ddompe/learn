@@ -1,0 +1,182 @@
+---
+title: Archivos, carpetas y rutas
+description: Describe dónde vive un archivo usando rutas absolutas y relativas en Windows y macOS.
+sidebar:
+  order: 4
+lessonId: '1.4'
+estimatedMinutes: 20
+prerequisites: ['1.1', '1.2']
+translationStatus: machine
+sourceHash: a9cebaa28723
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar qué son un archivo, una carpeta y una ruta. - Leer y escribir rutas
+	absolutas y relativas en Windows y macOS. - Encontrar la ruta de un archivo en
+	tu propia computadora.
+</LessonGoals>
+
+## Por qué importa
+
+Todo programa que lee un archivo necesita que le digan dónde está. Esa descripción es
+una **ruta**. La mayoría de los errores de "archivo no encontrado" vienen de una ruta
+ligeramente equivocada. Si sabes leer rutas, puedes corregir esos errores en segundos.
+
+<CaseStudy>
+	En la lección 0.3 descomprimiste los datos de Café Central en una carpeta. Un
+	script que quiere leer `cafe_central_sales.csv` necesita la ruta de ese
+	archivo. Sin ella, hasta un script perfecto falla.
+</CaseStudy>
+
+## Archivos y carpetas
+
+Un **archivo** guarda información bajo un nombre. Una **carpeta** (también llamada
+directorio) guarda archivos y otras carpetas. Las carpetas dentro de carpetas forman un
+árbol.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["Documents"] --> B["cafe-central"]
+  A --> C["taxes"]
+  B --> D["cafe_central_sales.csv"]
+  B --> E["cafe_central_customers.json"]`}
+/>
+
+Una **ruta** enumera las carpetas por las que pasas para llegar a un archivo y termina
+con su nombre. Para el archivo de ventas de arriba, los pasos son: Documents, luego
+cafe-central, luego el archivo.
+
+## Rutas absolutas y relativas
+
+Una **ruta absoluta** parte de lo más alto del disco. Funciona desde cualquier lugar.
+Una **ruta relativa** parte de donde estás ahora. Es más corta, pero significa cosas
+distintas en lugares distintos.
+
+| Tipo     | Windows                                             | macOS                                             |
+| -------- | --------------------------------------------------- | ------------------------------------------------- |
+| Absoluta | `C:\Users\Daniela\Documents\cafe-central\sales.csv` | `/Users/daniela/Documents/cafe-central/sales.csv` |
+| Relativa | `cafe-central\sales.csv` (desde `Documents`)        | `cafe-central/sales.csv` (desde `Documents`)      |
+
+Fíjate en tres cosas:
+
+- Windows usa una barra invertida `\` entre carpetas y empieza con una letra de unidad
+  como `C:`.
+- macOS usa una barra inclinada `/` y empieza con una sola `/`, lo más alto del disco.
+- El lugar donde estás "parado" se llama **carpeta actual** o carpeta de trabajo. Las
+  rutas relativas se miden desde allí.
+
+Dos atajos son útiles. Un solo punto `.` significa "esta carpeta". Dos puntos `..`
+significan "la carpeta que está encima de esta".
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+<Example file="part01/04_paths.py" />
+
+Las primeras cuatro líneas muestran la ruta de Windows. El programa nos dice que es
+absoluta e informa su carpeta. Para macOS extrae el nombre del archivo y la extensión,
+la parte posterior al último punto. La ruta relativa no es absoluta, y sus partes son
+la carpeta y el archivo.
+
+### Encuentra una ruta en tu computadora
+
+<OsTabs>
+	<Fragment slot="windows">
+		Abre el Explorador de archivos y ve a la carpeta de Café Central. Haz clic
+		una vez en la barra de direcciones de arriba. La ruta se convierte en texto
+		que puedes leer y copiar. Mantén presionada la tecla **Mayús**, haz clic
+		derecho en el archivo CSV y elige **Copiar como ruta de acceso** para copiar
+		su ruta completa.
+	</Fragment>
+	<Fragment slot="macos">
+		Abre Finder y selecciona el archivo CSV. Presiona **Opción+Comando+C** para
+		copiar su ruta completa. También puedes hacer clic derecho en el archivo,
+		mantener presionada **Opción** y elegir **Copiar como nombre de ruta**.
+	</Fragment>
+</OsTabs>
+
+Pégala en un archivo de texto y léela de izquierda a derecha. Cuenta las carpetas.
+Luego escribe la ruta relativa desde tu carpeta Documentos.
+
+### Ahora tú
+
+Dada la ruta absoluta `/Users/daniela/Documents/cafe-central/sales.csv`, responde:
+
+1. ¿Cuál es el nombre del archivo?
+2. ¿Cuál es la carpeta que lo contiene?
+3. Si estás parado en `/Users/daniela/Documents`, ¿cuál es la ruta relativa?
+4. Si estás parado en `/Users/daniela/Documents/cafe-central`, ¿qué significa `..`?
+
+<Checkpoint question="Muestra las respuestas">
+	1. `sales.csv`. 2. `/Users/daniela/Documents/cafe-central`. 3.
+	`cafe-central/sales.csv`. 4. La carpeta `Documents`, un nivel más arriba.
+</Checkpoint>
+
+## Errores comunes
+
+- **Confundir el nombre que se muestra de una carpeta con su ruta.** Finder y el
+  Explorador muestran nombres amigables como "Escritorio". La ruta real es más larga.
+- **Usar una ruta relativa desde el lugar equivocado.** La misma ruta relativa apunta a
+  archivos distintos según la carpeta actual. Ante la duda, usa una ruta absoluta.
+- **Espacios y tildes en los nombres.** Están permitidos, pero algunas herramientas
+  necesitan comillas alrededor de la ruta. Prefiere nombres simples como `cafe-central`.
+- **Copiar una ruta de Windows en un script de Mac.** Los separadores y la letra de
+  unidad no funcionarán.
+- **Editar a mano el nombre del archivo.** Un solo error de tipeo hace que la ruta sea incorrecta.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Arregla mi ruta de archivo.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente no tiene con qué trabajar, así que inventa una ruta plausible
+		que no existe en tu máquina y puede mandarte a buscar en el lugar
+		equivocado.
+	</Fragment>
+	<Fragment slot="good">
+		Mi programa dice "archivo no encontrado" para la ruta
+		C:\Users\Daniela\Documents\cafe-central\sales.csv. En el Explorador de
+		archivos, el archivo se llama cafe_central_sales.csv y está en la misma
+		carpeta. Uso Windows. Compara la ruta del error con el nombre real del
+		archivo y dime exactamente qué caracteres difieren. Explica en una oración
+		por qué esto causa el error.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		El prompt da la **entrada** (el error exacto y el nombre real), el
+		**contexto** (Windows) y una **tarea** específica (comparar y nombrar la
+		diferencia). El asistente tiene poco margen para adivinar.
+	</Fragment>
+	<Fragment slot="check">
+		Mira tú mismo el nombre del archivo y confirma que la diferencia es la que
+		menciona. Luego prueba la ruta corregida antes de aceptar la explicación.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Cuál es la diferencia entre una ruta absoluta y una relativa?">
+	Una ruta absoluta parte de lo más alto del disco y funciona desde cualquier
+	lugar. Una ruta relativa parte de la carpeta actual.
+</Checkpoint>
+
+<Checkpoint question="¿Qué significa `..` en una ruta?">
+	La carpeta un nivel por encima de la actual.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué una ruta de Windows no funciona en una Mac?">
+	Windows usa letras de unidad y barras invertidas. macOS no tiene letras de
+	unidad y usa barras inclinadas.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 1.6 explica por qué las carpetas sincronizadas en la nube hacen que las rutas sean menos confiables.

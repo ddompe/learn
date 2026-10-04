@@ -1,0 +1,156 @@
+---
+title: Windows, macOS y Linux
+description: Conoce las diferencias entre sistemas operativos que causan problemas reales al compartir archivos y código.
+sidebar:
+  order: 2
+lessonId: '1.2'
+estimatedMinutes: 15
+prerequisites: ['1.1']
+translationStatus: machine
+sourceHash: 6ea5a15f5cd5
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Nombrar los tres sistemas operativos principales y dónde se usa cada uno. -
+	Explicar cuatro diferencias que causan problemas: separadores de ruta, finales
+	de línea, distinción entre mayúsculas y minúsculas, y permisos. - Reconocer
+	estos problemas cuando un archivo funciona en una máquina pero no en otra.
+</LessonGoals>
+
+## Por qué importa
+
+Puede que trabajes en un equipo donde una persona usa Windows, otra usa una Mac y los
+servidores corren Linux. Un archivo o un script que funciona en tu máquina puede fallar
+en la de un colega por razones que no tienen nada que ver con su contenido. Las razones
+son pequeñas diferencias entre sistemas operativos. Conocerlas te ahorra horas.
+
+<CaseStudy>
+	Daniela usa Windows. Mateo, el analista del dueño, usa una Mac. Cuando Daniela
+	le envía a Mateo un script que abre `C:\Users\Daniela\Documents\sales.csv`,
+	falla. La ruta es válida en su laptop y no significa nada en la de él.
+</CaseStudy>
+
+## Las tres familias
+
+- **Windows** es el más común en los equipos de escritorio de las empresas.
+- **macOS** corre en las computadoras de Apple.
+- **Linux** es gratuito y de código abierto. Rara vez lo usas en un escritorio de
+  trabajo, pero la mayoría de los servidores y servicios en la nube corren sobre él.
+  Muchas herramientas que conocerás se construyeron primero allí.
+
+macOS y Linux comparten un ancestro común, así que se comportan de forma parecida en
+muchos aspectos. Windows es el que se sale del patrón.
+
+## Cuatro diferencias que muerden
+
+### 1. Separadores de ruta y letras de unidad
+
+Windows escribe las rutas con una barra invertida y empieza con una letra de unidad,
+como en `C:\Users\Daniela`. macOS y Linux usan una barra inclinada y no tienen letras
+de unidad, como en `/Users/daniela`. La lección 1.4 cubre las rutas en detalle.
+
+### 2. Finales de línea
+
+Un archivo de texto marca el final de cada línea con caracteres invisibles. Windows usa
+dos (retorno de carro más avance de línea). macOS y Linux usan uno (avance de línea). La
+mayoría de las herramientas modernas manejan ambos, pero las herramientas antiguas o las
+comprobaciones estrictas a veces muestran símbolos extraños o líneas en blanco de más.
+
+### 3. Distinción entre mayúsculas y minúsculas
+
+En Linux, `Sales.csv` y `sales.csv` son dos archivos distintos. En Windows, y por
+defecto en macOS, son el mismo archivo. Un script que funciona en tu laptop puede
+fallar en un servidor Linux por una letra mayúscula.
+
+### 4. Permisos
+
+Los sistemas operativos controlan quién puede leer, cambiar o ejecutar cada archivo. Las
+laptops de empresa suelen bloquear la instalación de software sin derechos de
+administrador. La Parte 4 enseña herramientas que funcionan dentro de ese límite.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+<Example file="part01/04_paths.py" />
+
+La misma ubicación de archivo se escribe distinto en cada sistema. Fíjate en que la
+ruta de Windows tiene una letra de unidad y barras invertidas, mientras que la ruta de
+macOS empieza con una barra. La lección 1.4 explica qué significa cada línea.
+
+### Ahora tú
+
+Predice si cada afirmación es verdadera y luego revela las respuestas.
+
+1. Un script guardado en Windows como `Report.py` se puede iniciar en Linux como `report.py`.
+2. Una ruta que empieza con `C:` funciona en macOS.
+3. Dos personas pueden editar el mismo archivo en Windows y macOS, siempre que usen el mismo programa.
+
+<Checkpoint question="Muestra las respuestas">
+	1. Falso en Linux, porque los nombres difieren en una letra mayúscula. 2.
+	Falso. Las letras de unidad existen solo en Windows. 3. Normalmente es
+	verdadero, pero los finales de línea pueden diferir. La mayoría de las
+	herramientas modernas lo manejan.
+</Checkpoint>
+
+## Errores comunes
+
+- **Escribir una ruta con letra de unidad en código que compartes.** Solo funciona en tu máquina.
+- **Suponer que las mayúsculas no importan.** Importan en Linux, así que sé consistente.
+- **Creer que el SO es la única diferencia.** El software instalado y sus versiones también difieren.
+- **Intentar esquivar las restricciones de la empresa.** Si no puedes instalar algo,
+  pregunta a TI o usa el enfoque de la Parte 4 que no necesita derechos de administrador.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Haz que esto funcione en Mac.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente reescribe todo sin saber qué falló. Puede cambiar cosas que
+		estaban bien y pasar por alto la causa real, como la ruta de Windows.
+	</Fragment>
+	<Fragment slot="good">
+		Este script corre en mi laptop con Windows pero falla en la Mac de mi colega
+		con el error "No such file or directory:
+		C:\Users\Daniela\Documents\sales.csv". El script está abajo. Enumera todos
+		los lugares donde el código depende de Windows y explica cada uno en una
+		oración. No cambies nada todavía.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Da la **entrada** (el error exacto y dónde trabaja cada persona) y una
+		**restricción** (enumera, no reescribas). Pedir las causas antes de los
+		cambios te permite juzgar el diagnóstico.
+	</Fragment>
+	<Fragment slot="check">
+		Verifica que la lista incluya la letra de unidad y las barras invertidas. Si
+		culpa a algo que no tiene relación, pídele al asistente que señale la línea
+		exacta.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué sistema operativo tiene letras de unidad?">
+	Windows.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué un script puede fallar en Linux pero no en Windows por una letra mayúscula?">
+	Linux trata `Sales.csv` y `sales.csv` como archivos distintos. Windows los
+	trata como el mismo.
+</Checkpoint>
+
+<Checkpoint question="Nombra otras dos diferencias entre sistemas operativos.">
+	Los finales de línea y los permisos. Los separadores de ruta también difieren.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 1.9 presenta la terminal, que se ve distinta en Windows y en macOS.

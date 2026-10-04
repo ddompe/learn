@@ -1,0 +1,163 @@
+---
+title: Entrenamiento frente a inferencia
+description: Entiende de dónde viene el conocimiento de un modelo, por qué tiene una fecha de corte y cómo se añade la búsqueda.
+sidebar:
+  order: 2
+lessonId: '2.2'
+estimatedMinutes: 15
+prerequisites: ['2.1']
+translationStatus: machine
+sourceHash: b38b44f481ea
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar la diferencia entre entrenamiento e inferencia. - Explicar por qué
+	los modelos tienen una fecha de corte de conocimiento. - Describir cómo los
+	productos añaden búsqueda para obtener información actual.
+</LessonGoals>
+
+## Por qué importa
+
+Le preguntas a un asistente sobre un hecho reciente, una ley nueva o la versión de un
+programa, y recibes una respuesta segura pero desactualizada. No estaba mintiendo.
+Respondió con lo que aprendió antes de cierta fecha. Saber esto te ayuda a decidir
+cuándo confiar en una respuesta y cuándo pedir fuentes.
+
+<CaseStudy>
+	Daniela le pregunta a un asistente por las reglas tributarias de este año para
+	la importación de café. La respuesta describe las reglas del año pasado, en
+	tiempo presente.
+</CaseStudy>
+
+## Dos fases
+
+El **entrenamiento** es la fase en la que el modelo aprende. Lee una enorme cantidad de
+texto y ajusta sus números internos, llamados **parámetros**, hasta que predice bien el
+texto. El entrenamiento toma semanas en miles de computadoras especializadas y cuesta
+muchísimo. Ocurre una vez por versión del modelo.
+
+La **inferencia** es la fase en la que usas el modelo. Envías un prompt y el modelo
+genera una respuesta con sus parámetros fijos. Nada de lo que escribes cambia el modelo.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Datos de entrenamiento recopilados hasta una fecha"] --> B["Entrenamiento: meses, muy costoso"]
+  B --> C["Modelo terminado: los parámetros quedan fijos"]
+  C --> D["Inferencia: tus prompts, todos los días"]`}
+/>
+
+## La fecha de corte de conocimiento
+
+Los datos de entrenamiento se detienen en alguna fecha, la **fecha de corte de
+conocimiento**. El modelo no sabe nada de los hechos posteriores a esa fecha. Un modelo
+lanzado hoy puede tener una fecha de corte de muchos meses antes, y la gente sigue
+usándolo mucho tiempo después del lanzamiento. Así que la brecha entre su conocimiento y
+hoy crece.
+
+Dos consecuencias:
+
+- Las preguntas sobre hechos recientes reciben respuestas desactualizadas o inventadas.
+- Puede que el modelo no conozca las versiones más nuevas de las herramientas, lo que
+  importa para el código.
+
+Tu conversación no entrena al modelo. Cuando lo corriges, se ajusta solo dentro de la
+conversación (lección 2.3).
+
+## Cómo obtienen información actual los productos
+
+Muchos productos envuelven al modelo en pasos adicionales:
+
+1. Toman tu pregunta y buscan en la web o en una colección de documentos.
+2. Pegan los resultados relevantes en el prompt.
+3. El modelo escribe la respuesta usando ese texto.
+
+Esto suele llamarse **búsqueda** o **recuperación**. Reduce las respuestas
+desactualizadas, pero añade riesgos nuevos: la búsqueda puede traer páginas deficientes
+y el modelo puede malinterpretarlas. Busca enlaces a las fuentes y ábrelos.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+Pregúntale a tu asistente: "¿Cuál es tu fecha de corte de conocimiento y puedes buscar
+en la web en esta conversación?" Anota si dice que puede buscar y si muestra fuentes
+cuando lo hace.
+
+### Ahora tú
+
+Decide si interviene el entrenamiento o la inferencia:
+
+1. Pegas una tabla de ventas en el chat.
+2. Una empresa pasa meses preparando una nueva versión del modelo.
+3. El modelo escribe un resumen de tu tabla.
+
+<Checkpoint question="Muestra las respuestas">
+	1. Inferencia. Estás usando el modelo. 2. Entrenamiento. 3. Inferencia.
+</Checkpoint>
+
+## Errores comunes
+
+- **Suponer que el modelo conoce la fecha de hoy o las noticias.** Puede que no, a menos
+  que el producto se lo diga.
+- **Pensar que tu chat enseña al modelo.** No lo hace, a menos que el proveedor indique
+  otra cosa en su política (lección 2.8).
+- **Confiar en respuestas basadas en búsqueda sin abrir las fuentes.**
+- **Preguntar por versiones recién publicadas de una biblioteca sin dar la documentación.**
+  Pega en el prompt la parte relevante de la documentación.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">
+		¿Cuáles son las reglas tributarias más recientes para la importación de
+		café?
+	</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente responde con datos de entrenamiento, presentando reglas viejas
+		como si fueran actuales y, a menudo, sin ninguna advertencia.
+	</Fragment>
+	<Fragment slot="good">
+		Necesito las reglas vigentes de Costa Rica sobre impuestos a la importación
+		de café. Si no puedes buscar en la web en esta conversación, dilo primero y
+		describe solo lo que sabías según tu entrenamiento, con la fecha aproximada.
+		Si puedes buscar, dame enlaces a las fuentes oficiales que usaste. Termina
+		con una lista de lo que debería verificar con un contador.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Fija la **restricción** de que el asistente declare primero sus límites,
+		pide **fuentes** y termina con una lista de **verificación**.
+	</Fragment>
+	<Fragment slot="check">
+		Abre cada enlace. Comprueba que la página sea una fuente oficial y que
+		respalde la afirmación. Para cualquier cosa que afecte dinero o leyes,
+		confirma con un profesional.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Cuál es la diferencia entre entrenamiento e inferencia?">
+	El entrenamiento es cuando el modelo aprende de los datos, una sola vez y con
+	un gran costo. La inferencia es cuando usas el modelo terminado.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué un modelo tiene una fecha de corte de conocimiento?">
+	Sus datos de entrenamiento terminan en cierta fecha, así que no sabe nada de
+	los hechos posteriores.
+</Checkpoint>
+
+<Checkpoint question="¿Cómo dan los productos información actual a los modelos?">
+	Buscan páginas o documentos relevantes y pegan los resultados en el prompt.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 2.3 explica cuánto texto puede ver el modelo a la vez.

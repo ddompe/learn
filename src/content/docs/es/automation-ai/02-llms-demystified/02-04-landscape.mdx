@@ -1,0 +1,178 @@
+---
+title: 'El panorama: proveedores, modelos y productos'
+description: Distingue los proveedores, las familias de modelos y las aplicaciones construidas sobre ellos, y sabe dónde consultar los datos actuales.
+sidebar:
+  order: 4
+lessonId: '2.4'
+estimatedMinutes: 15
+prerequisites: ['2.1']
+lastVerified: 2026-10-03
+translationStatus: machine
+sourceHash: af5c4012759a
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Distinguir un proveedor, un modelo y un producto. - Explicar por qué el
+	mismo modelo puede aparecer en productos distintos. - Saber dónde comprobar tú
+	mismo los datos actuales.
+</LessonGoals>
+
+## Por qué importa
+
+La gente dice "ChatGPT", "Copilot" y "Claude" como si fueran el mismo tipo de cosa. No
+lo son, y la confusión lleva a malas decisiones: elegir la herramienta equivocada, pegar
+datos en el lugar equivocado o leer una comparación que mezcla categorías. Esta lección
+te da tres palabras para mantenerlas separadas. Los nombres, las funciones y los precios
+de este mercado cambian rápido, así que la lección enseña la estructura y te dice dónde
+consultar los detalles.
+
+<CaseStudy>
+	El dueño de Café Central le pregunta a Daniela: "¿Deberíamos usar ChatGPT o
+	Copilot para nuestros informes?" La pregunta mezcla un producto con otro, y
+	cada uno puede funcionar con varios modelos. Daniela necesita ordenar las
+	piezas antes de poder responder.
+</CaseStudy>
+
+## Tres capas
+
+<Mermaid
+	diagram={`flowchart TB
+  A["Producto: la aplicación que usas, como un sitio de chat o una extensión de editor"]
+  B["Modelo: el LLM entrenado que escribe las respuestas"]
+  C["Proveedor: la empresa que construyó y opera el modelo"]
+  A --> B --> C`}
+/>
+
+- Un **proveedor** es una empresa que entrena modelos. Ejemplos son OpenAI, Anthropic y
+  Google.
+- Un **modelo** es un LLM entrenado específico, normalmente parte de una **familia** que
+  tiene versiones pequeñas y rápidas y versiones grandes y capaces. Los modelos se
+  actualizan y se retiran a menudo.
+- Un **producto** es una aplicación que usas y que llama a un modelo detrás de escena.
+  Los productos añaden funciones: una ventana de chat, búsqueda, carga de archivos,
+  notas guardadas e integración con otras herramientas.
+
+De aquí se desprenden dos hechos:
+
+1. **Un producto puede ofrecer varios modelos,** y puede cambiar cuál usa sin mucho aviso.
+2. **Un modelo puede impulsar varios productos.** La aplicación de chat del propio
+   proveedor y la herramienta de un tercero pueden llamar al mismo modelo. Sus reglas
+   sobre tus datos pueden diferir.
+
+En este curso, el asistente de IA es GitHub Copilot en VS Code (Parte 3). Copilot es un
+producto. Los modelos que lleva dentro vienen de varios proveedores y pueden cambiar.
+
+## Modelos cerrados y abiertos
+
+La mayoría de los modelos conocidos son **cerrados**: los usas a través del servicio del
+proveedor. Algunos son **de pesos abiertos** (en inglés, _open-weight_), es decir, el
+proveedor publica los archivos del modelo para que puedas ejecutarlo tú mismo. La
+lección 2.5 los compara.
+
+## Cómo comparar herramientas con criterio
+
+Hazte estas preguntas, en este orden:
+
+1. ¿Qué producto estoy usando y a qué modelo llama?
+2. ¿En qué plan estoy? Los planes gratuitos, personales de pago y de empresa pueden
+   tratar los datos de forma distinta.
+3. ¿Puede buscar en la web, leer mis archivos o usar otras herramientas?
+4. ¿Cuáles son los límites y los costos?
+5. ¿Qué hace el proveedor con mis datos? (Lección 2.8.)
+
+## Verifica estos datos tú mismo
+
+Todo lo de esta sección cambia a menudo. Última verificación: 2026-10-03. No confíes
+en esta página para nombres o precios actuales.
+
+- Páginas de precios de los proveedores: [Anthropic](https://www.anthropic.com/pricing),
+  [OpenAI](https://openai.com/api/pricing/) y
+  [Google](https://ai.google.dev/gemini-api/docs/pricing).
+- La documentación del producto que usas, para conocer sus planes y límites actuales.
+- La política de IA de tu empresa, si existe.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+Abre la herramienta de IA que más usas. Anota: el nombre del producto, el proveedor
+detrás, el nombre del modelo si lo muestra y el plan en el que estás.
+
+### Ahora tú
+
+Clasifica estos elementos como proveedor, modelo o producto. Usa las definiciones de
+arriba.
+
+1. Un sitio web de chat hecho por el proveedor de un modelo.
+2. Un archivo de parámetros entrenados llamado, por ejemplo, "something-large".
+3. La empresa que entrena los modelos.
+
+<Checkpoint question="Muestra las respuestas">
+	1. Producto. 2. Modelo. 3. Proveedor.
+</Checkpoint>
+
+## Errores comunes
+
+- **Comparar un producto con un modelo.** "Copilot frente a una familia de modelos" no
+  es una comparación justa.
+- **Suponer que las versiones gratuita y de pago se comportan igual.** Las funciones,
+  los límites y la privacidad pueden diferir.
+- **Confiar en artículos de comparación viejos.** En este campo, el ranking del año
+  pasado suele estar desactualizado.
+- **Creer que el nombre del modelo lo explica todo.** El comportamiento también depende
+  de las instrucciones y herramientas del producto.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">¿Cuál es la mejor IA?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente elige algo, a menudo el producto de su propio proveedor. Mezcla
+		productos y modelos, y no puede saber qué es actual.
+	</Fragment>
+	<Fragment slot="good">
+		Soy analista financiero y estoy decidiendo qué herramienta de chat con IA
+		puede usar mi equipo para resumir informes internos. Te daré tres nombres de
+		producto. Para cada uno, dime el proveedor, si estás seguro de qué modelos
+		usa y qué tipo de plan mantendría nuestros datos fuera del entrenamiento de
+		modelos. Marca todo lo que no sepas con certeza o que pueda estar
+		desactualizado, y dime qué página oficial debería consultar para cada caso.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Usa la división en proveedor, modelo y producto, pide una comparación del
+		manejo de datos y exige que el asistente **señale la incertidumbre** y
+		remita a páginas oficiales.
+	</Fragment>
+	<Fragment slot="check">
+		Abre cada página oficial que mencione y confirma la afirmación. Trata como
+		desconocido todo lo que el asistente marque como incierto.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Cuál es la diferencia entre un proveedor, un modelo y un producto?">
+	Un proveedor es la empresa, un modelo es un LLM entrenado que ella fabrica y
+	un producto es la aplicación que usa modelos.
+</Checkpoint>
+
+<Checkpoint question="¿Puede un mismo modelo aparecer en varios productos?">
+	Sí, y los productos pueden manejar tus datos de forma distinta.
+</Checkpoint>
+
+<Checkpoint question="¿Dónde debes buscar precios y límites actuales?">
+	En las páginas oficiales del proveedor y del producto, no en un artículo viejo
+	ni en la respuesta de un chat.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 2.5 compara los modelos cerrados y abiertos, y el uso local y en la nube.

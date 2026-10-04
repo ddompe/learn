@@ -1,0 +1,149 @@
+---
+title: Carpetas sincronizadas en la nube
+description: Entiende en qué se diferencian OneDrive y herramientas similares de las carpetas locales, y por qué pueden romper proyectos.
+sidebar:
+  order: 6
+lessonId: '1.6'
+estimatedMinutes: 15
+prerequisites: ['1.4']
+translationStatus: machine
+sourceHash: 6e58241d2d2b
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar en qué se diferencia una carpeta sincronizada en la nube de una
+	carpeta local. - Nombrar tres maneras en que las carpetas sincronizadas causan
+	problemas en los proyectos. - Elegir un lugar seguro para los archivos del
+	curso.
+</LessonGoals>
+
+## Por qué importa
+
+Muchas laptops de empresa guardan el Escritorio y Documentos dentro de OneDrive,
+Dropbox o iCloud sin avisarte. Estas carpetas se comportan como carpetas normales,
+pero no lo son. Un programa que funciona en una carpeta local puede fallar en una
+sincronizada, y los mensajes de error rara vez mencionan la sincronización.
+
+<CaseStudy>
+	Daniela guarda sus archivos de Café Central en `Documents`, que su empresa
+	sincroniza con la nube. Después de ejecutar un script, algunos archivos
+	volvieron a versiones anteriores. El servicio de sincronización había
+	restaurado sus propias copias en medio del trabajo.
+</CaseStudy>
+
+## Cómo funciona una carpeta sincronizada
+
+Una **carpeta sincronizada en la nube** es una carpeta de aspecto normal vigilada por un
+programa en segundo plano. Cuando un archivo cambia, el programa lo sube. Cuando cambia
+la copia en la nube, el programa la descarga. Esto es útil para los respaldos y para
+compartir documentos.
+
+Pero el programa en segundo plano es otro actor que trabaja en tus archivos al mismo
+tiempo.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Tu programa"] --> B["Carpeta en el disco"]
+  C["Programa de sincronización"] <--> B
+  C <--> D["Copia en la nube"]`}
+/>
+
+## Tres maneras en que rompe proyectos
+
+1. **Marcadores de posición.** Para ahorrar espacio, el programa de sincronización puede
+   conservar solo un pequeño sustituto de un archivo. El contenido real se descarga
+   cuando lo abres. Un programa que lee la carpeta puede ver un archivo vacío o un error.
+2. **Bloqueos y conflictos.** El programa de sincronización puede retener un archivo
+   brevemente mientras lo sube. Si tu programa intenta escribir en ese momento, falla o
+   crea copias con nombres como `sales (conflicted copy).csv`.
+3. **Demasiados archivos pequeños.** Los proyectos con miles de archivos pequeños, que
+   encontrarás en las Partes 3 y 4, hacen que el programa de sincronización se vuelva
+   lento y a veces se confunda.
+
+Las rutas también cambian. Una carpeta que consideras `Documents` puede vivir en
+realidad en una ruta más larga que incluye el nombre del servicio de sincronización.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+Mira la ruta de tu carpeta Documentos, con el método de la lección 1.4. Si la ruta
+incluye `OneDrive`, `Dropbox`, `iCloud` o `Google Drive`, tu carpeta Documentos está
+sincronizada.
+
+### Ahora tú
+
+Elige una carpeta local para el curso. Buenas opciones son una carpeta nueva llamada
+`projects` dentro de tu carpeta de usuario, como `C:\Users\<tú>\projects` en Windows o
+`/Users/<tú>/projects` en macOS. Mueve allí la carpeta de Café Central y comprueba que
+la ruta no incluya el nombre de un servicio de sincronización.
+
+<Checkpoint question="¿Por qué es buena opción una ubicación corta y simple?">
+	Es fácil de escribir, no tiene espacios ni tildes, y ningún programa de
+	sincronización la vigila.
+</Checkpoint>
+
+## Errores comunes
+
+- **No saber que la carpeta está sincronizada.** Revisa la ruta.
+- **Mover archivos a una carpeta sincronizada mientras un script los usa.** Cierra antes los programas.
+- **Desactivar la sincronización en una laptop de empresa sin preguntar.** La política de
+  la empresa puede exigirla. Elige otra carpeta.
+- **Tratar la sincronización como control de versiones.** La sincronización conserva la
+  copia más reciente. La Parte 3 enseña el historial de verdad.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">OneDrive está dañado.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente enumera pasos genéricos: cerrar sesión, reinstalar,
+		restablecer. Algunos de ellos pueden borrar datos locales o romper la
+		configuración de tu empresa.
+	</Fragment>
+	<Fragment slot="good">
+		Uso una laptop de empresa con Windows. Mi carpeta Documentos está dentro de
+		OneDrive. Cuando mi programa escribe sales_summary.csv en ella, a veces veo
+		un segundo archivo llamado "sales_summary-DESKTOP.csv". No tengo derechos de
+		administrador. Explica por qué ocurre esto en dos oraciones. Luego sugiere
+		una solución que no implique reinstalar ni desactivar OneDrive.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Da el **contexto** (laptop de empresa, sin derechos de administrador), la
+		**entrada** (el síntoma exacto) y una **restricción** que descarta consejos
+		riesgosos.
+	</Fragment>
+	<Fragment slot="check">
+		Asegúrate de que la solución sugerida no borre nada. Pruébala primero con
+		una copia de los datos.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="Nombra una manera en que una carpeta sincronizada se diferencia de una local.">
+	Un programa en segundo plano sube y descarga archivos, lo que puede dejar
+	marcadores de posición, bloquear archivos o crear copias en conflicto.
+</Checkpoint>
+
+<Checkpoint question="¿Cómo puedes saber si una carpeta está sincronizada?">
+	Mira su ruta completa, que a menudo incluye el nombre del servicio de
+	sincronización.
+</Checkpoint>
+
+<Checkpoint question="¿La sincronización es lo mismo que el control de versiones?">
+	No. La sincronización refleja el estado más reciente. El control de versiones
+	conserva un historial al que puedes volver.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 1.7 pasa de dónde viven los archivos a lo que hay dentro de ellos.

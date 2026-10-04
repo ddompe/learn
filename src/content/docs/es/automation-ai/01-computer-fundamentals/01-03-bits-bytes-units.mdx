@@ -1,0 +1,143 @@
+---
+title: Bits, bytes y unidades
+description: Entiende cómo miden los datos las computadoras y por qué un disco de 1 TB aparece como 931 GB.
+sidebar:
+  order: 3
+lessonId: '1.3'
+estimatedMinutes: 15
+prerequisites: ['1.1']
+translationStatus: machine
+sourceHash: 3aefaca3e3f6
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Convertir entre bytes, kilobytes, megabytes y gigabytes. - Explicar la
+	diferencia entre KB y KiB. - Explicar por qué un disco de 1 TB muestra unos
+	931 GB.
+</LessonGoals>
+
+## Por qué importa
+
+Los tamaños de archivo aparecen en todas partes: límites del correo, límites de carga,
+espacio en disco y el costo de las herramientas de IA. Si no conoces las unidades, no
+puedes juzgar si un número es grande o pequeño. También te encontrarás con un hecho
+confuso: el disco que compraste no muestra el tamaño impreso en la caja.
+
+<CaseStudy>
+	Cada mes, la exportación de ventas de una tienda pesa unos 8 KB. El buzón del
+	dueño permite adjuntos de hasta 20 MB. Daniela se pregunta cuántos archivos de
+	tiendas caben en un solo correo.
+</CaseStudy>
+
+## Bits y bytes
+
+Un **bit** es la unidad de información más pequeña. Tiene dos valores posibles, 0 o 1.
+Las computadoras guardan todo como bits: números, texto, imágenes y programas.
+
+Un **byte** es un grupo de ocho bits. Un byte puede contener 256 valores distintos. Una
+letra del inglés ocupa un byte. Una letra con tilde como `í` ocupa dos en la
+codificación más común. La lección 1.7 explica por qué.
+
+## Kilo, mega, giga
+
+Las unidades mayores van por escalones.
+
+| Unidad | Significado (a la manera del fabricante) | Idea aproximada del tamaño            |
+| ------ | ---------------------------------------- | ------------------------------------- |
+| 1 KB   | 1000 bytes                               | Un correo corto                       |
+| 1 MB   | 1000 KB                                  | Una foto o una hoja de cálculo grande |
+| 1 GB   | 1000 MB                                  | Una película de calidad moderada      |
+| 1 TB   | 1000 GB                                  | Un disco muy grande                   |
+
+Esa es la forma decimal, basada en potencias de diez. Las computadoras prefieren las
+potencias de dos, así que existe un segundo conjunto de unidades, la forma binaria. Sus
+nombres incluyen "bi": kibibyte (KiB), mebibyte (MiB), gibibyte (GiB) y tebibyte (TiB).
+
+| Unidad binaria | Tamaño en bytes |
+| -------------- | --------------- |
+| 1 KiB          | 1024            |
+| 1 MiB          | 1024 KiB        |
+| 1 GiB          | 1024 MiB        |
+
+Los fabricantes de discos usan las unidades decimales porque dan números más grandes.
+Muchos sistemas operativos informan los tamaños con el conteo binario, pero pueden
+seguir llamándolo "GB". Por lo tanto, los tamaños no están mal. Están medidos en
+unidades distintas con el mismo nombre.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+<Example file="part01/03_units.py" />
+
+Un disco vendido como de 1 TB contiene exactamente 1 000 000 000 000 bytes. Al dividir
+entre 1024 tres veces se obtiene aproximadamente 931. El sistema operativo informa 931
+"GB", que en realidad son GiB. No falta nada. Es el mismo espacio contado con otra regla.
+
+### Ahora tú
+
+Con el tamaño de 8 KB de un archivo de tienda y un límite de 20 MB (usa las unidades
+decimales), ¿cuántos archivos de tienda caben en un correo?
+
+<Checkpoint question="Muestra la respuesta">
+	20 MB son 20 000 KB. Divididos entre 8 KB por archivo, son 2500 archivos. El
+	límite del buzón nunca es un problema para estos datos.
+</Checkpoint>
+
+## Errores comunes
+
+- **Confundir bits con bytes.** Las velocidades de red suelen citarse en bits (Mbps) y los
+  tamaños de archivo en bytes (MB). Divide entre ocho para compararlos.
+- **Pensar que el espacio faltante se perdió.** Un disco de 1 TB muestra menos por la
+  diferencia de unidades, más una pequeña cantidad que usa el sistema.
+- **Tratar KB y KiB como iguales en el código.** Sé explícito sobre cuál quieres decir.
+- **Olvidar la unidad.** "El archivo pesa 20" no significa nada. Escribe siempre la unidad.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">¿Qué tan grande es 1 TB?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente da un solo número, a menudo 1000 GB o 1024 GB, sin decir que
+		existen dos definiciones. No puedes saber cuál aplica a tu situación.
+	</Fragment>
+	<Fragment slot="good">
+		Mi disco nuevo de 1 TB muestra 931 GB en Windows. Explica en menos de 100
+		palabras si falta algo. Muestra las dos definiciones de terabyte y el
+		cálculo que lleva de una a la otra, con los números.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Indica el **contexto** (la observación de 931 GB), fija una **restricción**
+		(menos de 100 palabras) y pide un paso de **verificación**: el cálculo con
+		los números.
+	</Fragment>
+	<Fragment slot="check">
+		Rehaz el cálculo tú mismo: 1 000 000 000 000 dividido entre 1024 tres veces.
+		Si tu número no coincide, la respuesta está mal.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Cuántos bits hay en un byte?">Ocho.</Checkpoint>
+
+<Checkpoint question="¿Por qué un disco de 1 TB muestra unos 931 GB?">
+	El fabricante cuenta un terabyte como 10^12 bytes. El sistema operativo cuenta
+	en unidades de 1024, así que el mismo espacio son unos 931 GiB.
+</Checkpoint>
+
+<Checkpoint question="¿Cuál es la diferencia entre MB y MiB?">
+	MB son 1 000 000 de bytes. MiB son 1 048 576 bytes.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 1.7 muestra cómo se convierte el texto en bytes y por qué las tildes ocupan más de uno.

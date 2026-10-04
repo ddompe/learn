@@ -1,0 +1,163 @@
+---
+title: Cómo usar este curso
+description: Mira cómo está organizada cada lección y por qué cada una termina con una comparación de prompts para la IA.
+sidebar:
+  order: 4
+lessonId: '0.4'
+estimatedMinutes: 10
+prerequisites: ['0.1']
+translationStatus: machine
+sourceHash: b77fdaa56b4c
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Moverte por las secciones de una lección. - Explicar por qué cada lección
+	tiene una comparación de prompts para la IA. - Nombrar el hábito que nunca
+	debes saltarte.
+</LessonGoals>
+
+## Por qué importa
+
+Si sabes cómo está organizada una lección, puedes estudiar más rápido. También sabrás
+qué partes leer por encima y en cuáles ir más despacio.
+
+<CaseStudy>
+	Todas las lecciones del curso usan Café Central. Cuando veas "Daniela" o "el
+	dueño", se refiere a las personas de la lección 0.3.
+</CaseStudy>
+
+## Cómo está construida una lección
+
+Todas las lecciones tienen las mismas secciones, en el mismo orden.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Objetivos"] --> B["Por qué importa"]
+  B --> C["Conceptos"]
+  C --> D["Manos a la obra"]
+  D --> E["Errores comunes"]
+  E --> F["Pregúntale a tu asistente de IA"]
+  F --> G["Compruébalo tú mismo"]
+  G --> H["Para profundizar"]`}
+/>
+
+| Sección                         | Para qué sirve                                    |
+| ------------------------------- | ------------------------------------------------- |
+| Objetivos                       | Lo que podrás hacer después.                      |
+| Por qué importa                 | El problema de negocio, ligado a Café Central.    |
+| Conceptos                       | El modelo mental. Léelo despacio.                 |
+| Manos a la obra                 | Un ejemplo resuelto y luego un ejercicio para ti. |
+| Errores comunes                 | Fallos de otros, para que puedas evitarlos.       |
+| Pregúntale a tu asistente de IA | Un prompt deficiente y uno bueno, lado a lado.    |
+| Compruébalo tú mismo            | Unas preguntas con respuestas que puedes revelar. |
+| Para profundizar                | Lectura opcional.                                 |
+
+Intenta responder antes de revelar una respuesta. Adivinar y equivocarte enseña más que
+leer la respuesta.
+
+## Por qué cada lección termina con un prompt para la IA
+
+Los asistentes de IA son útiles, pero escriben con seguridad incluso cuando se
+equivocan. La sección de prompts muestra dos cosas.
+
+1. Un **prompt** es el texto que le escribes a un asistente de IA. Un prompt vago
+   obtiene una respuesta vaga o inventada. Un prompt específico obtiene una mejor.
+2. Sea cual sea la respuesta, debes **verificarla**.
+
+Por eso cada sección de prompts tiene cinco partes: un prompt deficiente, qué sale mal,
+un prompt bueno, por qué funciona y cómo verificar la respuesta. Verás unos 80 ejemplos
+a lo largo del curso y, al final, escribir buenos prompts se vuelve un hábito.
+
+Si te quedas con un solo hábito de este curso, que sea el último: **verifica la
+respuesta**. Los asistentes cambian a menudo, pero este hábito sigue siendo útil.
+
+## Manos a la obra
+
+### Practica con una sección de prompts
+
+Mira la sección de prompts de la lección 0.3. Responde con tus propias palabras:
+
+1. ¿Qué le faltaba al prompt deficiente?
+2. ¿Qué agregó el prompt bueno?
+3. ¿Qué verificarías en la respuesta?
+
+<Checkpoint question="Muestra una respuesta de ejemplo">
+	El prompt deficiente no incluía un extracto del archivo ni instrucciones sobre
+	los supuestos. El prompt bueno agregó el extracto, el separador y la petición
+	de enumerar los supuestos. Verificarías tres filas a mano contra lo que afirmó
+	el asistente.
+</Checkpoint>
+
+## Errores comunes
+
+- **Saltarte "Verifica la respuesta".** Es la parte más valiosa. Una respuesta sin
+  verificar es una conjetura.
+- **Leer sin practicar.** Los ejercicios son donde ocurre el aprendizaje.
+- **Copiar los prompts palabra por palabra.** Úsalos como modelos y luego cambia los
+  detalles para que coincidan con tu propio trabajo.
+- **Correr demasiado.** Las lecciones cortas están pensadas para hacerse una a la vez.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">¿Cómo uso este curso?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente nunca ha visto este curso, así que inventa una estructura
+		plausible con módulos y cuestionarios que quizá no existen.
+	</Fragment>
+	<Fragment slot="good">
+		Voy a empezar un curso gratuito en línea para profesionales de negocio. Cada
+		lección tiene estas secciones: Objetivos, Por qué importa, Conceptos, Manos
+		a la obra, Errores comunes, Pregúntale a tu asistente de IA, Compruébalo tú
+		mismo, Para profundizar. Uso Excel todos los días y nunca he programado.
+		Sugiere una rutina de estudio de 20 minutos para una lección, en 5 viñetas.
+		Dime qué secciones podría leer por encima si estoy corto de tiempo.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		El prompt bueno aporta **contexto** (quién eres y qué contiene el curso),
+		porque el asistente no puede ver el curso. Indica una **restricción** (20
+		minutos) y un **formato de salida** (5 viñetas).
+	</Fragment>
+	<Fragment slot="check">
+		Compara la rutina sugerida con la página real de la lección. ¿Omite Manos a
+		la obra o Compruébalo tú mismo? Si es así, no es una buena rutina, porque
+		esas son las secciones que enseñan.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Cuáles son las cinco partes de una sección de prompts?">
+	Prompt deficiente, qué sale mal, prompt bueno, por qué funciona y verifica la
+	respuesta.
+</Checkpoint>
+
+<Checkpoint question="¿Qué sección nunca te saltarías y por qué?">
+	"Verifica la respuesta" de la sección de prompts, porque los asistentes pueden
+	equivocarse con total seguridad.
+</Checkpoint>
+
+<Checkpoint question="¿Qué debes hacer antes de revelar una respuesta en Compruébalo tú mismo?">
+	Intentar responder primero con tus propias palabras.
+</Checkpoint>
+
+## Lista de verificación de fin de parte
+
+Terminaste la Parte 0 cuando puedas marcar todos los puntos:
+
+- [ ] Puedo decir en una oración en qué ruta de aprendizaje estoy.
+- [ ] Elegí una tarea de mi propio trabajo y la pasé por la prueba de la lección 0.2.
+- [ ] El zip de Café Central está descomprimido en una carpeta que puedo nombrar de memoria.
+- [ ] Abrí `cafe_central_sales.csv` en un editor de texto y encontré dos cosas que
+      confundirían a Excel o a un script.
+- [ ] Puedo nombrar las secciones de prompts y decir cuál nunca me saltaría.
+
+## Para profundizar
+
+- Lo siguiente es la Parte 1, que explica cómo almacenan las computadoras los archivos, el texto y los números.

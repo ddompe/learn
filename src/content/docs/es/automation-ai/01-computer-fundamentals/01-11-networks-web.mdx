@@ -1,0 +1,163 @@
+---
+title: Redes y la web en 15 minutos
+description: Entiende los clientes, los servidores, las URL y la solicitud y respuesta que hay detrás de cada página web.
+sidebar:
+  order: 11
+lessonId: '1.11'
+estimatedMinutes: 15
+prerequisites: ['1.1']
+translationStatus: machine
+sourceHash: c637b242e35b
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar qué son un cliente y un servidor. - Descomponer una URL en sus
+	partes. - Describir una solicitud y una respuesta HTTP.
+</LessonGoals>
+
+## Por qué importa
+
+Los asistentes de IA, el almacenamiento en la nube y la mayoría de las herramientas de
+negocio funcionan por internet. Cuando una falla, el error dice cosas como "404",
+"timeout" o "403 Forbidden". Conocer la conversación básica que hay detrás de una página
+web te permite leer estos mensajes en lugar de temerles. También te prepara para la
+lección 1.12.
+
+<CaseStudy>
+	El dueño de Café Central quiere que una cifra diaria de ventas aparezca en una
+	página web. Detrás de escena, un navegador le pide datos a un servidor y el
+	servidor responde. Ese intercambio es lo que explica esta lección.
+</CaseStudy>
+
+## Clientes y servidores
+
+Un **cliente** pide algo. Un **servidor** responde. Tu navegador es un cliente. La
+computadora que guarda una página web es un servidor. Un servidor es simplemente una
+computadora que espera solicitudes. La mayoría están en centros de datos, pero una
+laptop también puede ser un servidor.
+
+## Anatomía de una URL
+
+Una **URL** es la dirección de algo en la web.
+
+<Example file="part01/11_urls.py" />
+
+Cada parte responde una pregunta:
+
+- El **esquema** (`https`) dice cómo conversar. HTTPS es la versión segura de HTTP.
+- El **host** (`learn.dompe.space`) dice a qué computadora preguntarle.
+- La **ruta** (`/en/automation-ai/`) dice qué quieres de ella.
+- La **consulta** (`lang=en`) agrega detalles adicionales a la solicitud.
+- El **fragmento** (`top`) es solo para tu navegador, para saltar a un punto de la página.
+
+El host se convierte en una dirección numérica mediante el **DNS**, un servicio de
+directorio para nombres.
+
+## Solicitud y respuesta
+
+La conversación usa un protocolo, o conjunto de reglas acordadas, llamado **HTTP**.
+
+<Mermaid
+	diagram={`sequenceDiagram
+  participant B as Navegador (cliente)
+  participant S as Servidor
+  B->>S: Solicitud: GET /en/automation-ai/
+  S-->>B: Respuesta: 200 OK más la página`}
+/>
+
+Una **solicitud** tiene un método (como GET para obtener, POST para enviar datos), una
+ruta y encabezados con detalles adicionales. Una **respuesta** tiene un **código de
+estado**, encabezados y normalmente un cuerpo, como la página o algunos datos.
+
+Los códigos de estado se agrupan por su primer dígito:
+
+| Código | Significado                               |
+| ------ | ----------------------------------------- |
+| 200    | OK, aquí está lo que pediste              |
+| 301    | Se movió a otra dirección                 |
+| 401    | Necesitas identificarte                   |
+| 403    | Estás identificado pero no tienes permiso |
+| 404    | No encontrado                             |
+| 429    | Demasiadas solicitudes, ve más despacio   |
+| 500    | El servidor tuvo un problema              |
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+En tu navegador, abre `https://learn.dompe.space/en/` y lee su URL. Nombra su esquema,
+host y ruta. Luego cambia el final de la dirección a `/en/no-such-page/` y presiona
+Enter. ¿A qué código de estado corresponde esa situación?
+
+### Ahora tú
+
+Relaciona cada situación con un código de estado:
+
+1. Escribiste la dirección de una página con un error de tipeo.
+2. El servidor se cayó mientras respondía.
+3. Iniciaste sesión, pero el archivo pertenece a otra persona.
+
+<Checkpoint question="Muestra las respuestas">
+	1. 404, no encontrado. 2. 500, un problema del servidor. 3. 403, prohibido.
+</Checkpoint>
+
+## Errores comunes
+
+- **Tratar un código de error como si fuera tu culpa.** Un código 5xx significa que el
+  problema es del servidor, no tuyo.
+- **Confundir 401 y 403.** 401 significa "¿quién eres?" y 403 significa "te conozco, pero no".
+- **Usar HTTP para datos privados.** Usa siempre HTTPS.
+- **Ignorar la consulta.** Todo lo que va después de `?` puede cambiar la respuesta.
+- **Creer que una página se ve igual para todos.** Los servidores pueden responder distinto.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Explícame internet.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		Recibes un recorrido largo y sin foco por cables, enrutadores e historia, y
+		poco que puedas usar.
+	</Fragment>
+	<Fragment slot="good">
+		Explica en exactamente cinco pasos numerados qué ocurre entre escribir
+		https://learn.dompe.space/en/ en mi navegador y ver la página. Usa las
+		palabras cliente, servidor, DNS, solicitud y respuesta, y define cada una en
+		una oración la primera vez que aparezca. No tengo conocimientos técnicos.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Fija el **formato de salida** (cinco pasos), la **audiencia** (sin
+		conocimientos técnicos) y exige términos específicos, de modo que la
+		respuesta encaje con la lección.
+	</Fragment>
+	<Fragment slot="check">
+		Verifica que el orden sea plausible: primero el DNS resuelve el nombre,
+		luego se envía la solicitud y después vuelve la respuesta. Si faltan pasos o
+		están desordenados, pregunta de nuevo.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Cuál es la diferencia entre un cliente y un servidor?">
+	Un cliente pide algo. Un servidor espera solicitudes y las responde.
+</Checkpoint>
+
+<Checkpoint question="¿Qué significa un 404?">
+	El servidor no pudo encontrar lo que se le pidió.
+</Checkpoint>
+
+<Checkpoint question="Nombra las partes de https://example.com/a?b=1.">
+	Esquema `https`, host `example.com`, ruta `/a` y consulta `b=1`.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 1.12 se apoya en esto para explicar qué es una API.
