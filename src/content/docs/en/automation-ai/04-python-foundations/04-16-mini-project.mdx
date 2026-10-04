@@ -1,0 +1,162 @@
+---
+title: 'Mini-project: a tested script'
+description: Build a script that summarises Café Central sales by category, with tests.
+sidebar:
+  order: 16
+lessonId: '4.16'
+estimatedMinutes: 40
+prerequisites: ['4.7', '4.9', '4.12', '4.14', '3.9']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Combine functions, files, and text handling in one script. - Read a test
+	suite for the script. - Check the output against the data.
+</LessonGoals>
+
+## Why this matters
+
+This lesson uses everything from Part 4 in one small, real tool. It reads the messy sales
+file, removes the duplicate lines, cleans the categories and amounts, and prints a total
+for each category. The functions are small, and each has a test.
+
+<CaseStudy>
+	Daniela's first monthly summary used to take most of a day. This script
+	produces the category totals in a second, and the tests make sure it stays
+	right.
+</CaseStudy>
+
+## The plan
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Read the CSV"] --> B["Remove duplicate rows"]
+  B --> C["Clean category and amount"]
+  C --> D["Total per category"]
+  D --> E["Print the summary"]`}
+/>
+
+## The script
+
+<Example file="part04/16_sales_summary.py" />
+
+Read it from the top:
+
+- `parse_amount` and `simplify` are the cleaners from lessons 4.12 and 4.9.
+- `read_sales` uses the `csv` module to read rows as dictionaries, by column name (lesson 4.13).
+- `remove_duplicates` keeps the first copy of each identical row, using a set (lesson 4.10).
+- `totals_by_category` loops over the rows and adds each amount to its category total (lesson 4.11).
+- `main` ties them together and prints. Only `main` prints. The others return values.
+
+The output shows 246 rows read and 240 after duplicates, then a total for each category.
+Because `simplify` merges `Café`, `cafe`, and `café`, there are five categories, not nine.
+
+## The tests
+
+The tests check each function on its own, with answers worked out by hand.
+
+<Example file="part04/test_16_sales_summary.py" />
+
+- `test_parse_amount_handles_all_three_formats` covers the three styles.
+- `test_simplify_merges_spelling_variants` checks the category merge.
+- `test_remove_duplicates_keeps_first_copy` uses a tiny list.
+- `test_totals_by_category_adds_exactly` checks exact decimal arithmetic.
+- `test_real_file_has_240_unique_rows` checks the real file, and ties back to lesson 0.3: 246 lines, 240 unique.
+
+Run the tests with:
+
+```text
+uv run pytest
+```
+
+## Hands-on
+
+### Worked example
+
+1. Copy the script into your `cafe-report` project and run it with `uv run`.
+2. Compare the row counts with the editor's line count.
+3. Pick one category and add a few of its amounts by hand. Does the script agree?
+
+### Your turn
+
+Add a new function `largest_sale(rows)` that returns the biggest amount. First write the
+test, with a tiny list where you know the answer. Then write the function.
+
+<Checkpoint question="Show a sample test">
+	For rows with amounts "10", "$25,50", and "5", the largest sale is
+	`Decimal("25.50")`. A test asserts that `largest_sale(rows) ==
+	Decimal("25.50")`. Writing the test first shows that you understand the goal
+	before the code exists.
+</Checkpoint>
+
+## Common mistakes
+
+- **Writing the whole script before running anything.** Build and run it in small steps.
+- **Tests that repeat the code.** Use expected values worked out by hand.
+- **Trusting the totals without a spot check.**
+- **Mixing printing and logic.** Keep the logic in functions that return values.
+- **Forgetting that fixing categories is a choice.** Document your rule.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Write the whole report script.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant produces a long script with assumed column names and no tests.
+		When it runs, you cannot tell whether the numbers are right.
+	</Fragment>
+	<Fragment slot="good">
+		I have a semicolon-separated UTF-8 file with columns ID, Fecha, Cliente,
+		Monto, Categoría. Amounts appear as "1500", "1400.50", and "$1500,50".
+		Categories appear as "Café", "cafe", "café". Write the script in small
+		functions: read, remove exact duplicate rows, clean amount (Decimal), clean
+		category, total per category. Add pytest tests with expected values worked
+		out by hand. Keep printing in main only. Explain how I can check the totals
+		independently.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It gives all the **input** facts, splits the **task** into steps, and
+		includes **tests** and a verification method.
+	</Fragment>
+	<Fragment slot="check">
+		Run the tests, then add up one category by hand from the CSV, and compare it
+		with the script's number.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Why do only main() and not the other functions print?">
+	Functions that return values can be tested and reused. Printing in one place
+	keeps the logic clean.
+</Checkpoint>
+
+<Checkpoint question="Why is the number of categories five, not nine?">
+	The cleaning step merges the spelling variants, such as Café, cafe, and café.
+</Checkpoint>
+
+<Checkpoint question="How do you know the totals are right?">
+	Tests with hand-worked values, plus a manual spot check of one category
+	against the CSV.
+</Checkpoint>
+
+## End-of-part checklist
+
+You have finished Part 4 when you can tick every item:
+
+- [ ] `uv --version` and `uv run python --version` work.
+- [ ] I can run a script with `uv run` and with the VS Code Run button.
+- [ ] I can say what adding the text `"1500"` to itself gives, and why.
+- [ ] My `parse_amount` passes the tests for three formats.
+- [ ] The summary script prints category totals, and its tests pass.
+
+## Going deeper
+
+- Part 5 looks at the file formats that business data comes in.

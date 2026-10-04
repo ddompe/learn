@@ -1,0 +1,152 @@
+---
+title: Running Python
+description: Use the interactive prompt, and run a script from the terminal and from VS Code.
+sidebar:
+  order: 4
+lessonId: '4.4'
+estimatedMinutes: 20
+prerequisites: ['4.3']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Use the Python REPL for quick experiments. - Run a script from the terminal
+	with `uv run`. - Run a script from VS Code.
+</LessonGoals>
+
+## Why this matters
+
+Writing Python is useful only if you can run it. There are three common ways, each
+for a different job. Knowing which to use saves you from copying code between tools and
+wondering why the results differ.
+
+<CaseStudy>
+	Daniela wants to test how Python adds three sale amounts. She tries it in the
+	REPL, then saves the idea as a script that she can run every month.
+</CaseStudy>
+
+## The REPL
+
+The **REPL** (read, evaluate, print, loop) is an interactive prompt. You type a line,
+Python runs it, and shows the result. It is a calculator for code.
+
+```text
+uv run python
+```
+
+The prompt changes to `>>>`. Try:
+
+```text
+>>> 2200 + 1500 + 1400
+5100
+>>> exit()
+```
+
+Use the REPL to try a small idea. Nothing is saved when you leave.
+
+## Running a script
+
+A **script** is a Python file that you run from start to finish. Here is the first one:
+
+<Example file="part04/04_hello.py" />
+
+From the project folder, run:
+
+```text
+uv run python 04_hello.py
+```
+
+`uv run` makes sure that the program runs inside the project's environment (lesson 4.3), with
+the right Python and packages. Always start programs with `uv run`.
+
+## Running in VS Code
+
+1. Install the **Python** extension (from the Microsoft publisher) in VS Code.
+2. Open the file. If VS Code asks for an interpreter, choose the one in `.venv` inside your project.
+3. Click the **Run** triangle at the top right of the editor. The output appears in the terminal below.
+
+The Run button does what the terminal command does. Use either, and notice that both
+show the same output. If they differ, one of them is using a different environment.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["REPL: try an idea"] --> B["Script: save it as a file"]
+  B --> C["uv run: run it in the project"]
+  B --> D["VS Code Run button"]`}
+/>
+
+## Hands-on
+
+### Worked example
+
+1. In your `cafe-report` project, create `hello.py` with the lines from the example.
+2. Run it with `uv run python hello.py`.
+3. Run it again with the Run button in VS Code.
+4. Change the amounts, save, and run it again.
+
+### Your turn
+
+Predict the output if you change `amounts` to `[100, 200]` and the greeting stays the same.
+
+<Checkpoint question="Show the answer">
+	"Hello from Café Central!" and then "Total of three sales: 300". The text
+	still says "three", because the message does not count the amounts. This is a
+	common source of wrong labels. Programs do what you wrote, not what you meant.
+</Checkpoint>
+
+## Common mistakes
+
+- **Running `python` instead of `uv run python`.** The wrong Python may start.
+- **Running from the wrong folder.** The file name is relative to the current folder.
+- **Editing a file and forgetting to save.** The old version runs.
+- **Typing code lines starting with `>>>`.** Those are the prompt, not part of the code.
+- **Expecting the REPL to remember.** Closing it forgets everything.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">How do I run this?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant lists five ways to run Python and does not choose, or picks
+		one that doesn't use your project's environment.
+	</Fragment>
+	<Fragment slot="good">
+		I use VS Code on macOS with a uv project called cafe-report. My script is
+		hello.py in the project folder. Give me the exact terminal command to run
+		it, and the exact steps to run it with the Run button. Tell me how to check
+		that both use the same Python.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It supplies **context** (OS, tools, file), asks for **both** ways, and
+		requires a **verification**.
+	</Fragment>
+	<Fragment slot="check">
+		Run both, and compare the output. Check the Python path shown by VS Code
+		against the one in `.venv`.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What is the REPL for?">
+	Trying small ideas interactively, without saving a file.
+</Checkpoint>
+
+<Checkpoint question="Why use `uv run`?">
+	It runs the program with the project's Python and packages.
+</Checkpoint>
+
+<Checkpoint question="How do you leave the REPL?">
+	Type `exit()` and press Enter.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 4.5 shows a third way to run code: notebooks, cell by cell.

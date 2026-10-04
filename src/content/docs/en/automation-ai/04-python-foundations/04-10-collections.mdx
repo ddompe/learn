@@ -1,0 +1,130 @@
+---
+title: Collections
+description: Use lists, dictionaries, tuples, and sets to hold many values.
+sidebar:
+  order: 10
+lessonId: '4.10'
+estimatedMinutes: 20
+prerequisites: ['4.8']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Choose between a list, a dictionary, a tuple, and a set. - Read and build
+	each with real sales rows. - Count items with a dictionary.
+</LessonGoals>
+
+## Why this matters
+
+Business data comes in groups: rows, columns, customers, categories. A **collection**
+holds many values in one variable. Each kind of collection suits a different job, and
+choosing the right one makes the code short and clear.
+
+<CaseStudy>
+	Daniela wants to count sales per category and know how many distinct customers
+	bought anything. A dictionary does the first, and a set does the second.
+</CaseStudy>
+
+## The four collections
+
+| Collection | Written as       | Key idea                        | Example use                         |
+| ---------- | ---------------- | ------------------------------- | ----------------------------------- |
+| List       | `[a, b, c]`      | Ordered, can change, can repeat | The rows of a file                  |
+| Dictionary | `{"key": value}` | Look up a value by its key      | Count per category                  |
+| Tuple      | `(a, b)`         | Ordered, cannot change          | A fixed pair, like an ID and amount |
+| Set        | `{a, b, c}`      | No repeats, no order            | Distinct customers                  |
+
+<Mermaid
+	diagram={`flowchart TD
+  A["Many values"] --> B{"Look up by name or key?"}
+  B -- Yes --> C["Dictionary"]
+  B -- No --> D{"Need to remove repeats?"}
+  D -- Yes --> E["Set"]
+  D -- No --> F{"Will it change?"}
+  F -- Yes --> G["List"]
+  F -- No --> H["Tuple"]`}
+/>
+
+## In action
+
+<Example file="part04/10_collections.py" />
+
+- `rows[:3]` takes the first three items of a list. Counting starts at zero: `rows[0]` is
+  the first one.
+- The dictionary `counts` maps each category, as written, to how many times it appears.
+  `counts.get(key, 0)` returns zero for a key not seen yet.
+- The set comprehension `{row[2] for row in rows if row[2]}` collects customers,
+  ignoring blanks and repeats. There are 8 distinct customers.
+
+The count also shows the mess in the categories: `café` appears 36 times, but `Café` 3 and
+`cafe` 4 times separately. Lesson 4.9's `simplify` merges them.
+
+## Hands-on
+
+### Your turn
+
+You have `ids = ["T1", "T2", "T2", "T3"]`.
+
+1. What is `len(ids)`?
+2. What is `len(set(ids))`?
+3. What does `set(ids)` tell you about the data?
+
+<Checkpoint question="Show the answers">
+	1. 4. 2. 3. 3. There is a repeated ID, so the data has a duplicate.
+</Checkpoint>
+
+## Common mistakes
+
+- **Starting to count at 1.** Positions start at 0.
+- **Changing a list while looping through it.** Build a new one instead (lesson 4.11).
+- **Expecting order from a set.** Sets have no order.
+- **Using a list to look things up.** A dictionary is far quicker and clearer.
+- **Forgetting that a key must exist.** Use `.get()` with a default.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Count the items.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant writes nested loops that are hard to read, and hides an
+		off-by-one error.
+	</Fragment>
+	<Fragment slot="good">
+		I have a list of sale rows, each a list like ["T001", "01/01/2024", "C004",
+		"2200.00", "jugo"]. Write Python that counts how many sales there are per
+		category (the fifth item), using a dictionary, and prints the categories in
+		alphabetical order. Add a check that the counts add up to the number of
+		rows.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It specifies the **input** structure, the **output format** (alphabetical),
+		and a **verification** (counts add up).
+	</Fragment>
+	<Fragment slot="check">
+		Run the check. Then count one category by hand with a text search in the
+		editor.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Which collection removes repeats?">A set.</Checkpoint>
+
+<Checkpoint question="What index does the first item of a list have?">
+	0.
+</Checkpoint>
+
+<Checkpoint question="When would you use a dictionary?">
+	When you look values up by a key, such as a count for each category.
+</Checkpoint>
+
+## Going deeper
+
+- Part 6 uses pandas, which does counts like this in one line.

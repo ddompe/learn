@@ -1,0 +1,6 @@
+2200: medium
+1500: medium
+1400: small
+6200: large
+800: small
+It took 3 sales to pass 5000 (running total 5100).

@@ -1,0 +1,180 @@
+---
+title: Installing uv and Python
+description: Install uv without administrator rights, install Python through it, and troubleshoot a locked-down laptop.
+sidebar:
+  order: 2
+lessonId: '4.2'
+estimatedMinutes: 25
+prerequisites: ['3.2', '1.10']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Install uv without administrator rights. - Install Python through uv. -
+	Troubleshoot the most common problems on a company laptop.
+</LessonGoals>
+
+## Why this matters
+
+Installing Python the traditional way is where many beginners get stuck: several
+versions, the wrong one on PATH, packages in the wrong place, and installers that need
+administrator rights. This course avoids all of that with one tool, **uv**. It installs
+Python, creates projects, and manages packages, all in your user folder.
+
+<CaseStudy>
+	Daniela's laptop is managed by IT. She cannot install programs system-wide. uv
+	installs to her own user folder, so she can work without asking for special
+	rights.
+</CaseStudy>
+
+## What uv is
+
+**uv** is a free, fast tool for Python projects. It does three jobs that used to need
+several tools:
+
+- It **installs Python** itself, in versions you choose.
+- It **creates projects** with their own packages (lesson 4.3).
+- It **runs** your programs in the right environment.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Install uv"] --> B["uv installs Python"]
+  B --> C["uv creates a project"]
+  C --> D["uv runs your program"]`}
+/>
+
+## Install uv
+
+Open a terminal (lesson 1.9). Run the command for your system, which comes from the
+official uv documentation at [docs.astral.sh/uv](https://docs.astral.sh/uv/).
+
+<OsTabs>
+  <Fragment slot="windows">
+```text
+PS> powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+  </Fragment>
+  <Fragment slot="macos">
+```text
+$ curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+  </Fragment>
+</OsTabs>
+
+A note on trust: these commands download a script and run it. That is a normal way to
+install developer tools, but it is a trust decision (lesson 3.8). You can read the
+script first by opening the address in a browser, and you can check the official
+instructions for other install methods.
+
+After the install, **open a new terminal** (lesson 1.10), then check:
+
+```text
+uv --version
+```
+
+You should see a version number.
+
+## Install Python
+
+```text
+uv python install 3.12
+uv python list
+```
+
+The first command downloads Python 3.12 into uv's own folder. The second lists the
+versions that uv knows. You do not need to put this Python on PATH. uv finds it when it
+runs your programs.
+
+The course pins Python 3.12. Using the same version as the examples avoids surprises.
+
+## If something goes wrong
+
+| Symptom                        | Likely cause and next step                                                                    |
+| ------------------------------ | --------------------------------------------------------------------------------------------- |
+| `uv` not found after install   | Terminal was open during the install. Open a new one (lesson 1.10).                           |
+| Script blocked on Windows      | Company policy limits scripts. Ask IT, or ask about the official alternative install methods. |
+| Download fails or times out    | A company proxy or firewall may block the site. Ask IT whether it can be allowed.             |
+| "Permission denied"            | You tried to install into a protected folder. Use the default user location.                  |
+| An old Python is found instead | Run programs with `uv run`, which picks the right one.                                        |
+
+Do not try to bypass company security controls. If the tools are blocked, ask IT for an
+approved way to get them.
+
+## Hands-on
+
+### Worked example
+
+1. Install uv with the command for your system.
+2. Open a new terminal and run `uv --version`.
+3. Run `uv python install 3.12`, then `uv python list`, and find 3.12 in the list.
+4. Write down the version numbers you see. They help when you ask for help.
+
+### Your turn
+
+After installing, the terminal says `uv: command not found`. Name the first thing to try.
+
+<Checkpoint question="Show the answer">
+	Close the terminal and open a new one, because PATH is read when a terminal
+	starts (lesson 1.10).
+</Checkpoint>
+
+## Common mistakes
+
+- **Installing Python from several places.** Use uv only, to avoid version confusion.
+- **Using an old terminal after the install.** Open a new one.
+- **Running commands as administrator.** You do not need it, and it can create files you
+  cannot change later.
+- **Copying commands from random websites.** Use the official documentation.
+- **Giving up on a blocked network.** Report the exact error to IT.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Install Python.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant sends you to an installer that needs administrator rights, and
+		adds pip or conda instructions that conflict with the course.
+	</Fragment>
+	<Fragment slot="good">
+		I am on a company-managed Windows 11 laptop without administrator rights. I
+		want to install Python 3.12 using uv only, not pip, conda, or the python.org
+		installer. I ran the official uv install command and got this error: [paste
+		the exact error]. Explain the likely cause in two sentences, and give me the
+		least risky next step. Do not suggest disabling security software.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It states the **context**, the **constraints** (uv only, no admin), and the
+		**input** (exact error). The last constraint rules out unsafe advice.
+	</Fragment>
+	<Fragment slot="check">
+		Verify the suggested step against the uv documentation. If it needs
+		administrator rights or changes security settings, stop and ask IT.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What three jobs does uv do?">
+	It installs Python, creates projects with their packages, and runs your
+	programs.
+</Checkpoint>
+
+<Checkpoint question="Why open a new terminal after installing uv?">
+	PATH is read when the terminal starts, so an old window does not know where
+	the new program is.
+</Checkpoint>
+
+<Checkpoint question="Do you need administrator rights for uv?">
+	No. It installs into your user folder.
+</Checkpoint>
+
+## Going deeper
+
+- The uv documentation lists other install methods, such as package managers.

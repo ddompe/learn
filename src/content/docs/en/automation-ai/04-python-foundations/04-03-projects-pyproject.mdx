@@ -1,0 +1,175 @@
+---
+title: Projects and pyproject.toml
+description: Create a project with uv, understand virtual environments, and read a pyproject.toml file.
+sidebar:
+  order: 3
+lessonId: '4.3'
+estimatedMinutes: 25
+prerequisites: ['4.2', '3.8']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+- Create a project with `uv init`.
+- Explain what a virtual environment is and why projects have one.
+- Read a basic `pyproject.toml` file.
+
+</LessonGoals>
+
+## Why this matters
+
+A Python **project** is a folder with your code plus a description of what it needs. This
+lets the project run the same on your laptop, a colleague's, and a server. Without
+projects, packages pile up in one shared place, and different tasks need different,
+conflicting versions.
+
+<CaseStudy>
+	Daniela creates a project called `cafe-report`. It lists pandas as a
+	dependency. When she shares the project, a colleague runs one command and gets
+	the same setup.
+</CaseStudy>
+
+## Create a project
+
+In a terminal, move to the folder where your projects live, and run:
+
+```text
+uv init cafe-report
+cd cafe-report
+```
+
+uv creates a folder with a few files:
+
+| File              | What it is                                                           |
+| ----------------- | -------------------------------------------------------------------- |
+| `pyproject.toml`  | The project description: name, version, Python version, dependencies |
+| `main.py`         | A starter program                                                    |
+| `.python-version` | The Python version this project uses                                 |
+| `README.md`       | A place to describe the project                                      |
+
+It also prepares the folder for Git. If your folder is already a repository, that is fine.
+
+## Reading pyproject.toml
+
+**TOML** is a text format for settings. It has `[sections]` and `name = value` lines.
+You saw a sample in lesson 3.8.
+
+<Example file="part03/08_pyproject_example.toml" />
+
+You will edit it rarely by hand. Commands like `uv add` change it for you.
+
+## Add a package
+
+```text
+uv add pandas
+```
+
+This does three things:
+
+1. It adds `pandas` to the `dependencies` in `pyproject.toml`.
+2. It creates a **virtual environment**, in a hidden folder called `.venv`, and installs
+   the package there.
+3. It writes `uv.lock`, a record of the exact versions (lesson 3.8).
+
+A **virtual environment** is a private folder of packages for one project. Two projects
+can use different versions without clashing. You never edit `.venv` by hand, and you do
+not commit it to Git.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["cafe-report/"] --> B["pyproject.toml: what the project needs"]
+  A --> C["uv.lock: exact versions"]
+  A --> D[".venv/: installed packages, not committed"]
+  A --> E["main.py: your code"]`}
+/>
+
+## Share a project
+
+Commit `pyproject.toml`, `uv.lock`, `.python-version`, and your code. Do not commit `.venv`.
+Add it to `.gitignore` (lesson 3.7). A colleague then clones the repository and runs:
+
+```text
+uv sync
+```
+
+which recreates the environment from the lock file.
+
+## Hands-on
+
+### Worked example
+
+1. Create the project with `uv init cafe-report` and open the folder in VS Code.
+2. Open `pyproject.toml`. Find the name, the Python version, and the dependencies list.
+3. Run `uv add pandas`. Look at `pyproject.toml` again, then find `uv.lock` and `.venv`.
+4. Add `.venv/` to `.gitignore` and make a commit.
+
+### Your turn
+
+Which files should be committed to Git?
+
+1. `pyproject.toml`
+2. `uv.lock`
+3. `.venv/`
+
+<Checkpoint question="Show the answer">
+	1 and 2. The `.venv` folder is rebuilt from them on any computer, so it stays
+	out of Git.
+</Checkpoint>
+
+## Common mistakes
+
+- **Working outside the project folder.** Run uv commands inside the project.
+- **Committing `.venv`.** It is large and machine-specific.
+- **Editing the lock file by hand.** Let uv write it.
+- **Mixing in pip.** Use `uv add`. Mixed tools lead to confusion.
+- **Copying the `.venv` folder to another computer.** Use `uv sync` instead.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Set up a Python project.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant uses `python -m venv` and `pip install`, which are not what
+		the course uses, and mixes tools.
+	</Fragment>
+	<Fragment slot="good">
+		Using only uv (no pip, venv, poetry, or conda), give me the exact commands
+		to create a Python 3.12 project called cafe-report, add pandas and openpyxl,
+		and run main.py. After each command, tell me which files it creates or
+		changes. Finish with the lines I should add to .gitignore.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		The **constraint** (uv only) keeps the answer in line with the course, and
+		the **output format** (command, then effect) makes the answer checkable.
+	</Fragment>
+	<Fragment slot="check">
+		Run the commands in a test folder and compare the files that appear with the
+		list the assistant gave. Make sure `.venv/` appears in the `.gitignore`
+		lines.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What does a virtual environment do?">
+	It gives a project its own private set of packages, so projects do not clash.
+</Checkpoint>
+
+<Checkpoint question="Which file records the exact package versions?">
+	`uv.lock`.
+</Checkpoint>
+
+<Checkpoint question="How does a colleague recreate your environment?">
+	They clone the repository and run `uv sync`.
+</Checkpoint>
+
+## Going deeper
+
+- Part 5 returns to TOML as a data format, alongside JSON and YAML.

@@ -1,0 +1,6 @@
+Rows read: 246, after removing duplicates: 240
+cafe         81111.50
+jugo        112613.50
+pastel       76815.00
+sandwich    138310.50
+te           65210.50

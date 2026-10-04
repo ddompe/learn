@@ -1,0 +1,152 @@
+---
+title: Notebooks in VS Code
+description: Run code cell by cell in a notebook inside VS Code using your project's environment.
+sidebar:
+  order: 5
+lessonId: '4.5'
+estimatedMinutes: 25
+prerequisites: ['4.4']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Create and run a notebook in VS Code. - Explain cells, kernels, and
+	execution order. - Avoid the most common notebook confusion.
+</LessonGoals>
+
+## Why this matters
+
+A **notebook** mixes code, results, and notes in one document. You run the code in small
+pieces called cells and see the result below each. This is ideal for exploring data,
+because you see the effect of each step. It is also where many beginners get confused,
+so it helps to learn the rules first.
+
+<CaseStudy>
+	Daniela wants to look at the sales file step by step: the columns first, then
+	a few rows, then the categories. A notebook lets her see each result before
+	moving on.
+</CaseStudy>
+
+## Cells, kernels, and order
+
+- A **cell** is a block of code (or text) that you run on its own.
+- A **kernel** is the running Python process behind the notebook. It keeps variables in
+  memory between cells.
+- Cells can be run in **any order**, and the kernel remembers what ran, not the order on the page.
+
+That last point causes the classic trap: you run cell 3, then cell 1, then cell 2, and
+your notebook shows results that no one can reproduce from top to bottom.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Cell 1: read the file"] --> B["Cell 2: split rows"]
+  B --> C["Cell 3: count categories"]
+  C --> D["Kernel keeps the variables in memory"]`}
+/>
+
+## Set it up in VS Code
+
+1. Install the **Jupyter** extension (from the Microsoft publisher).
+2. In your project, add the kernel package: `uv add --dev ipykernel`.
+3. Create a notebook with the command palette: **Create: New Jupyter Notebook**.
+4. At the top right, choose **Select Kernel**, then the Python environment in your
+   project's `.venv`.
+
+Write code in a cell and run it with the triangle, or press **Shift+Enter**.
+
+## A notebook-style script
+
+You can also write cells inside an ordinary `.py` file, marking each with `# %%`. With
+the Jupyter extension, VS Code shows **Run Cell** above each one. This keeps the file
+readable by Git and by any Python.
+
+<Example file="part04/05_explore.py" />
+
+The output below is what happens if the whole file runs from top to bottom. In a notebook
+you would see each part under its cell.
+
+## Habits that keep notebooks honest
+
+1. **Restart and run all** before you trust a result. This clears the memory and runs
+   every cell in order.
+2. Keep cells short and in logical order.
+3. Do not depend on a cell that is far below.
+4. Name things clearly. Ask what each cell needs from earlier ones.
+
+## Hands-on
+
+### Worked example
+
+1. Create a file `explore.py` in your project, and paste in the three cells from the example.
+2. Run each cell, one at a time, and look at the results.
+3. Run only the third cell in a fresh kernel. What happens?
+
+### Your turn
+
+Why does running only the third cell in a fresh kernel fail?
+
+<Checkpoint question="Show the answer">
+	It uses the variable `rows`, which is made by an earlier cell. A fresh kernel
+	has not run that cell, so the name does not exist. The error is `NameError`.
+</Checkpoint>
+
+## Common mistakes
+
+- **Running cells out of order.** Use Restart and Run All to check.
+- **Hidden state.** A variable deleted from the code can still exist in memory.
+- **Choosing the wrong kernel.** Packages seem to be missing. Select the project's `.venv`.
+- **Committing a notebook with large outputs.** It makes Git history noisy.
+- **Using a notebook for the final automation.** See lesson 4.7.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Make a notebook.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant suggests Google Colab or a browser-based Jupyter, uploads your
+		data, or installs packages with pip inside a cell.
+	</Fragment>
+	<Fragment slot="good">
+		I use VS Code with a uv project and the Jupyter extension. Create three
+		notebook cells in # %% format that read cafe_central_sales.csv
+		(semicolon-separated, UTF-8) from a data folder, print the header, count the
+		rows, and list the distinct categories. Do not use pip, and do not upload
+		anything. Keep each cell under 6 lines.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It provides **context**, **input** (file facts), and **constraints** that
+		keep the work local and consistent with the course.
+	</Fragment>
+	<Fragment slot="check">
+		Use Restart and Run All, and compare the row count with the file's line
+		count minus one.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What is a kernel?">
+	The running Python process behind the notebook, which remembers variables
+	between cells.
+</Checkpoint>
+
+<Checkpoint question="Why can notebook results be hard to reproduce?">
+	Cells can be run in any order, and the kernel's memory may hold state that the
+	page does not show.
+</Checkpoint>
+
+<Checkpoint question="What does Restart and Run All do?">
+	It clears the kernel and runs every cell in order, proving the notebook works
+	from top to bottom.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 4.6 shows the notebook tools you will meet outside VS Code.

@@ -1,0 +1,136 @@
+---
+title: Scripts vs notebooks
+description: Decide when to explore in a notebook and when to turn the work into a script, and convert one into the other.
+sidebar:
+  order: 7
+lessonId: '4.7'
+estimatedMinutes: 20
+prerequisites: ['4.5']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Decide between a notebook and a script for a given job. - Convert a
+	notebook-style file into a script. - Explain why scripts are easier to test
+	and schedule.
+</LessonGoals>
+
+## Why this matters
+
+A notebook is a great workbench and a poor factory. Exploring is its strength. But a
+notebook is awkward to run every month on its own, to test, or to review in Git. The
+usual path is to explore in a notebook, then move the working code into a script.
+
+<CaseStudy>
+	Daniela has explored the sales file in a notebook. Now she wants it to run
+	every month without her. That is the moment to graduate to a script.
+</CaseStudy>
+
+## Which one to use
+
+| Question                        | Notebook | Script                  |
+| ------------------------------- | -------- | ----------------------- |
+| Exploring an unfamiliar file?   | Yes      | Possible                |
+| Need to see each step's result? | Yes      | Add prints              |
+| Will it run again, unattended?  | No       | Yes                     |
+| Needs tests?                    | Hard     | Easy                    |
+| Easy to review in Git?          | Noisy    | Clean                   |
+| Sharing the story with others?  | Good     | Needs a report (Part 8) |
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Explore in a notebook"] --> B["Find what works"]
+  B --> C["Move it into functions in a script"]
+  C --> D["Add tests"]
+  D --> E["Run it on a schedule"]`}
+/>
+
+## Converting notebook code into a script
+
+Compare the notebook-style version with the script version of the same idea.
+
+Notebook-style, from lesson 4.5:
+
+<Example file="part04/05_explore.py" />
+
+As a script:
+
+<Example file="part04/07_script.py" />
+
+What changed:
+
+1. The repeated steps became a **function**, `read_rows`, that you can test.
+2. The code that runs when you start the file moved into `main()`.
+3. `if __name__ == "__main__":` means "only run `main()` when this file is started
+   directly". Another file can import the functions without running them.
+4. Constants like the file location moved to the top, with an upper-case name.
+
+## Hands-on
+
+### Your turn
+
+Take the three cells of `05_explore.py`. Which pieces would you turn into functions?
+
+<Checkpoint question="Show a sample answer">
+	Reading the file and splitting rows (a function that returns the rows) and
+	finding the distinct categories (a function that takes the rows). Printing
+	stays in `main()`.
+</Checkpoint>
+
+## Common mistakes
+
+- **Automating a notebook directly.** Convert it to a script first.
+- **Leaving exploration code in the script.** Keep it short and focused.
+- **Rewriting everything.** Move working code, then improve it.
+- **Forgetting `if __name__ == "__main__":`.** Importing the file would run the whole thing.
+- **Skipping tests after the move.** Add them as soon as there are functions (lesson 3.9).
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Turn my notebook into code.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant pastes all cells together in one block, with no functions or
+		tests.
+	</Fragment>
+	<Fragment slot="good">
+		Below are three notebook cells in # %% format. Convert them into a single
+		Python script with a function for each logical step, type hints, a main()
+		function, and the if __name__ == "__main__" guard. Keep the behaviour
+		identical. Do not add libraries. Then list which functions are easy to test
+		and what input I would use to test each.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It states the **task** structure, **constraints** (same behaviour, no
+		libraries), and asks for a **verification** plan.
+	</Fragment>
+	<Fragment slot="check">
+		Run the old and new versions, and compare the output line by line.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Why is a script easier to test than a notebook?">
+	Its logic sits in functions that tests can import and call with known inputs.
+</Checkpoint>
+
+<Checkpoint question="What does the line that starts with if __name__ do?">
+	It runs the code under it only when the file is started directly, not when it
+	is imported.
+</Checkpoint>
+
+<Checkpoint question="When is a notebook the better tool?">
+	When exploring an unfamiliar file and looking at each step's result.
+</Checkpoint>
+
+## Going deeper
+
+- Part 8 shows how to publish a story with results as a report.

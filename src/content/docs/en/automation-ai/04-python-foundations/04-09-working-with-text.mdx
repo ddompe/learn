@@ -1,0 +1,141 @@
+---
+title: Working with text
+description: Manipulate strings, use f-strings, and handle accented text so that Café and cafe match.
+sidebar:
+  order: 9
+lessonId: '4.9'
+estimatedMinutes: 20
+prerequisites: ['4.8', '1.7']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Clean and change strings with common methods. - Build messages with
+	f-strings. - Normalise accented text so that variants compare equal.
+</LessonGoals>
+
+## Why this matters
+
+Most business data is text: names, categories, notes, IDs. Real text is messy. It has
+extra spaces, different capitalisation, and accents written in different ways. In the
+sales file, the same category appears as `Café`, `café`, and `cafe`. If a program treats
+them as three categories, your totals are wrong.
+
+<CaseStudy>
+	Daniela wants one total for coffee. In the file, coffee appears as `Café`,
+	`café`, and `cafe`, and sandwiches as `Sándwich`, `sándwich`, and `sandwich`.
+	She needs a way to make them equal.
+</CaseStudy>
+
+## Strings and their methods
+
+A **string** is a piece of text, written in quotes. Strings have **methods**, which are
+built-in actions called with a dot.
+
+| Method           | What it does               | Example result          |
+| ---------------- | -------------------------- | ----------------------- |
+| `.strip()`       | Remove spaces at both ends | `"  Ana "` to `"Ana"`   |
+| `.lower()`       | Make lower case            | `"Café"` to `"café"`    |
+| `.upper()`       | Make upper case            | `"té"` to `"TÉ"`        |
+| `.replace(a, b)` | Replace a with b           | `"1,5"` to `"1.5"`      |
+| `.split(sep)`    | Cut into a list            | `"a;b"` to `["a", "b"]` |
+| `len(text)`      | Count the characters       | `len("Café")` is 4      |
+
+Methods return a new string. They do not change the original, because strings cannot be
+changed in place.
+
+An **f-string** puts values inside text. Put an `f` before the quote and the names in
+braces: `f"Category: {category}"`.
+
+## Accents
+
+Python reads text as Unicode (lesson 1.7), so `é` is one character and works like any other. But
+the same visible `é` can be stored in two ways: as one character, or as `e` plus a combining
+accent. To compare text reliably, normalise it.
+
+<Example file="part04/09_text.py" />
+
+The function `simplify` strips spaces, lowers the case, splits the accents off with
+`unicodedata.normalize`, and keeps only the characters that are not accents. That makes
+`Café`, `cafe`, and `café` all become `cafe`.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Café"] --> B["strip and lower"]
+  B --> C["split off the accent"]
+  C --> D["cafe"]`}
+/>
+
+Note the trade-off. Removing accents is good for matching, but you may want to keep the
+original for display. Often you store both.
+
+## Hands-on
+
+### Your turn
+
+What does `simplify("  Té ")` return?
+
+<Checkpoint question="Show the answer">
+	`"te"`: spaces removed, lower case, and the accent dropped.
+</Checkpoint>
+
+## Common mistakes
+
+- **Comparing text without cleaning it.** `"cafe" == "café"` is `False`.
+- **Forgetting that methods return new strings.** `name.strip()` alone changes nothing.
+  Assign the result.
+- **Removing accents from the displayed text.** Keep the original for output.
+- **Assuming that your editor shows the stored form.** Two visually equal strings may differ.
+- **Cleaning text with find and replace on each odd case.** Use a rule that handles them all.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Clean this text.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant strips accents from everything, lowercases names, or removes
+		punctuation that mattered.
+	</Fragment>
+	<Fragment slot="good">
+		I have a column of category names in Spanish: "Café", "cafe", "café",
+		"Sándwich", "sandwich". I want a Python function simplify(text) that makes
+		variants of the same word equal, so they can be grouped. Keep the original
+		text available for display. Show me the function, and test it on those five
+		values. Explain how it handles accents.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It gives the **input** (real values) and a **constraint** (keep the
+		original), asks for a **test** on the values, and explains the method.
+	</Fragment>
+	<Fragment slot="check">
+		Run it on your own list of values, including one with extra spaces. Check
+		that it does not change names of people.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Does `name.strip()` change `name`?">
+	No. It returns a new string. Assign the result to keep it.
+</Checkpoint>
+
+<Checkpoint question="Why might two copies of the word café be unequal?">
+	One may use a single `é` character, and the other `e` plus a combining accent.
+	Normalising makes them equal.
+</Checkpoint>
+
+<Checkpoint question="What is an f-string?">
+	A string with an `f` before it, which puts the values of names inside braces
+	into the text.
+</Checkpoint>
+
+## Going deeper
+
+- Part 5 returns to encodings when reading files from other systems.

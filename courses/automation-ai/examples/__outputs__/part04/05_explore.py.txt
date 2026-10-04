@@ -1,0 +1,4 @@
+['ID', 'Fecha', 'Cliente', 'Monto', 'Categoría']
+246 rows
+['T001', '01/01/2024', 'C004', '2200.00', 'jugo']
+['Café', 'Sándwich', 'cafe', 'café', 'jugo', 'pastel', 'sandwich', 'sándwich', 'té']

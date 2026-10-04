@@ -40,6 +40,16 @@ leaves something unverified. Updated 2026-10-03.
 - [ ] 3.8: PyPI page layout names used (release history, project links).
 - [ ] 3.9: the dataset claim "246 rows = 240 sales plus 6 repeated lines" (checked by pytest, not by eye).
 
+## Part 4 (installs and UI, untested on real machines)
+
+- [ ] 4.2: uv install commands for Windows (PowerShell) and macOS match the current uv docs; `uv python install 3.12` and `uv python list` behave as described; test on a locked-down corporate Windows laptop (milestone M4) and on macOS.
+- [ ] 4.3: `uv init cafe-report` creates `pyproject.toml`, `main.py`, `.python-version`, `README.md` (and what else it creates); `uv add` creates `.venv` and `uv.lock`; `uv sync` rebuilds.
+- [ ] 4.4: Python extension prompts, interpreter picker, Run button location.
+- [ ] 4.5: Jupyter extension, `uv add --dev ipykernel`, kernel picker, `# %%` Run Cell lenses, command palette name "Create: New Jupyter Notebook".
+- [ ] 4.6: `uv run --with jupyterlab jupyter lab` works; claims about Colab and marimo are still accurate.
+- [ ] 4.9: `unicodedata.normalize("NFKD", ...)` behaviour is as described, including text typed on a Mac that may arrive pre-decomposed.
+- [ ] 4.16: the script's numbers (category totals) agree with a manual spreadsheet total of one category.
+
 ## Pedagogy and voice (author review)
 
 - [ ] Read Parts 0 to 2 end to end for flow, repetition, and tone. Intro repetition was reduced on 2026-10-03; re-check.

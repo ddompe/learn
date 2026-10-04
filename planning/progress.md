@@ -123,6 +123,9 @@ Part 3 (Stage 6 start): brief agreed (`briefs/part-03.md`), examples in `example
 outputs), lessons 3.1-3.10 drafted (3.3 carries `lastVerified`). `Example` now infers the code
 language from the file extension (py, toml, text).
 
+Part 4: brief agreed (`briefs/part-04.md`), examples in `examples/part04/` (tests and outputs),
+lessons 4.1-4.16 drafted.
+
 Spanish: a background agent translates Parts 0-2 on a worktree branch; merge it when it reports.
 
 ### How to resume (read this first)

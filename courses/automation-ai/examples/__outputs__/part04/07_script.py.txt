@@ -1,0 +1,2 @@
+246 rows
+Categories as written: ['Café', 'Sándwich', 'cafe', 'café', 'jugo', 'pastel', 'sandwich', 'sándwich', 'té']

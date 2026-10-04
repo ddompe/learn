@@ -1,0 +1,134 @@
+---
+title: Making decisions and repeating
+description: Use if, for, and while to decide and repeat.
+sidebar:
+  order: 11
+lessonId: '4.11'
+estimatedMinutes: 20
+prerequisites: ['4.8', '4.10']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Use `if`, `elif`, and `else` to choose. - Use `for` to repeat over a
+	collection. - Use `while` to repeat until a condition changes.
+</LessonGoals>
+
+## Why this matters
+
+Automation is mostly two ideas: do something for every item, and do different things
+depending on the item. In Excel, these are fill-down and `IF`. In Python, they are `for`
+and `if`. With these two, and the collections from lesson 4.10, you can process a whole file.
+
+<CaseStudy>
+	Daniela wants to label each sale as small, medium, or large, and to know how
+	many sales it takes to pass a daily target.
+</CaseStudy>
+
+## Decisions: if
+
+```text
+if amount >= 5000:
+    label = "large"
+elif amount >= 1500:
+    label = "medium"
+else:
+    label = "small"
+```
+
+Python checks the conditions in order and runs the first block that is true. The lines
+inside a block are **indented** (moved right by four spaces). Indentation is how Python
+knows what belongs to what, so it matters.
+
+Comparisons give a boolean: `==` equal, `!=` not equal, `<`, `>`, `<=`, `>=`. Combine them
+with `and`, `or`, and `not`.
+
+## Repeating: for and while
+
+A `for` loop repeats once for each item in a collection. A `while` loop repeats as
+long as a condition stays true.
+
+<Example file="part04/11_control_flow.py" />
+
+The `for` loop visits each amount and decides its label. The `while` loop keeps adding sales
+to a running total until it passes 5000. It stops after 3 sales, at 5100.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["Start: running = 0"] --> B{"running < 5000?"}
+  B -- Yes --> C["Add the next amount"]
+  C --> B
+  B -- No --> D["Stop"]`}
+/>
+
+A `while` loop needs something inside it that eventually makes the condition false. If not,
+it runs forever. Stop a program that runs away with **Ctrl+C** in the terminal.
+
+## Hands-on
+
+### Your turn
+
+Predict what the program prints for `amounts = [800, 6000]`.
+
+<Checkpoint question="Show the answer">
+	`800: small` and `6000: large`. The `while` loop then adds 800 and 6000,
+	reaching 6800 after two sales, and stops.
+</Checkpoint>
+
+## Common mistakes
+
+- **Wrong indentation.** A line indented too much or too little changes the meaning.
+- **Using `=` instead of `==` in a condition.** One assigns, and the other compares.
+- **Changing a list while looping over it.** Make a new list instead.
+- **A `while` loop that never ends.** Make sure the condition can become false.
+- **Checking conditions in the wrong order.** In `if`/`elif`, put the narrowest condition first.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Loop over the file.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant removes rows from the list inside the loop, which skips items
+		without any error.
+	</Fragment>
+	<Fragment slot="good">
+		I have a list of amounts as Decimal values. Write Python that goes through
+		the list and builds a new list of those above 5000, without changing the
+		original list. Use a for loop first, then show the same thing as a list
+		comprehension. Explain in one sentence why you should not delete items from
+		a list that you are looping over.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		The **constraint** (do not change the original) avoids the classic bug, and
+		the **output format** gives two versions to compare.
+	</Fragment>
+	<Fragment slot="check">
+		Test with an empty list and with a list where every item matches. Both
+		should work.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="How does Python know which lines belong to an if block?">
+	By indentation.
+</Checkpoint>
+
+<Checkpoint question="When does a while loop stop?">
+	When its condition becomes false.
+</Checkpoint>
+
+<Checkpoint question="What is the difference between = and ==?">
+	`=` assigns a value to a name. `==` compares two values.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 4.12 wraps these ideas in functions you can reuse.

@@ -95,3 +95,18 @@ Decisions for the Spanish translation. Add terms as they are introduced.
 | test (pytest)                   | prueba / pytest                        | No            | pytest stays English                                                            |
 | traceback                       | traceback                              | Yes           | explain once: seguimiento de errores                                            |
 | debugger / breakpoint           | depurador / punto de interrupción      | No            |                                                                                 |
+| string / f-string               | cadena de texto / f-string             | No            | f-string stays English                                                          |
+| method                          | método                                 | No            |                                                                                 |
+| list / dictionary / tuple / set | lista / diccionario / tupla / conjunto | No            |                                                                                 |
+| loop                            | bucle                                  | No            |                                                                                 |
+| function / parameter / argument | función / parámetro / argumento        | No            |                                                                                 |
+| return                          | devolver (return)                      | Yes           | keyword stays English                                                           |
+| exception                       | excepción                              | No            |                                                                                 |
+| module                          | módulo                                 | No            |                                                                                 |
+| standard library                | biblioteca estándar                    | No            |                                                                                 |
+| virtual environment (.venv)     | entorno virtual                        | No            | already listed                                                                  |
+| uv                              | uv                                     | Yes           |                                                                                 |
+| pyproject.toml / TOML           | pyproject.toml / TOML                  | Yes           |                                                                                 |
+| REPL                            | REPL                                   | Yes           | explain once: consola interactiva                                               |
+| notebook / cell / kernel        | notebook / celda / kernel              | Yes           | cell: celda                                                                     |
+| script                          | script                                 | Yes           | already listed                                                                  |

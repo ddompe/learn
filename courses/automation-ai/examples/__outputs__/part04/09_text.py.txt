@@ -1,0 +1,9 @@
+'María García'
+MARÍA GARCÍA
+María Garcia
+Category: Café, length 4
+'Café' -> 'cafe'
+'cafe' -> 'cafe'
+'café' -> 'cafe'
+'Sándwich' -> 'sandwich'
+'sandwich' -> 'sandwich'

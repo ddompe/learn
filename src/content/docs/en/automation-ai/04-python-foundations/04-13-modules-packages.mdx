@@ -1,0 +1,150 @@
+---
+title: Modules and packages
+description: Import code from the standard library and from packages, and add a dependency with uv add.
+sidebar:
+  order: 13
+lessonId: '4.13'
+estimatedMinutes: 20
+prerequisites: ['4.3', '4.12', '3.8']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Import a module from the standard library. - Add a third-party package with
+	`uv add` and import it. - Check that a package is the right one before
+	installing it.
+</LessonGoals>
+
+## Why this matters
+
+You do not write everything yourself. Reading CSV files, counting, handling dates, and
+working with tables are all done by code that others wrote. In Python, you bring that code
+in with `import`. Knowing where it comes from, and how to add it safely, is part of
+working well.
+
+<CaseStudy>
+	Daniela reads the sales file with the `csv` module that comes with Python,
+	counts categories with `Counter`, and later checks her result with `pandas`, a
+	package she installs.
+</CaseStudy>
+
+## Modules and packages
+
+A **module** is a file of Python code that you can reuse. A **package** is a collection
+of modules, distributed through a registry (lesson 3.8).
+
+- The **standard library** is the modules that come with Python: `csv`, `pathlib`,
+  `decimal`, `datetime`, `collections`, and many more. No installation is needed.
+- **Third-party packages** are installed from PyPI with `uv add`: for example `pandas`.
+
+## Importing
+
+```text
+import csv
+from collections import Counter
+import pandas as pd
+```
+
+- `import csv` makes the module available as `csv`.
+- `from collections import Counter` takes one name from a module.
+- `import pandas as pd` gives a short nickname. `pd` is the universal nickname for pandas.
+
+<Example file="part04/13_modules.py" />
+
+The program reads the file with the standard `csv` module, which understands quotes and
+separators, so you do not split lines by hand. It counts categories with `Counter`, and
+then checks with pandas that both methods find the same number of rows.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Your script"] --> B["Standard library: csv, pathlib"]
+  A --> C["Installed packages: pandas"]
+  C --> D["Added with uv add, listed in pyproject.toml"]`}
+/>
+
+## Adding a package safely
+
+1. Decide whether you need it. Does the standard library already do the job?
+2. Check the exact name on PyPI (lesson 3.8): maintainers, release history, links.
+3. Run `uv add name` inside the project.
+4. Commit `pyproject.toml` and `uv.lock`.
+
+If you get `ModuleNotFoundError`, the package is not in the environment you are using. Run
+the program with `uv run`, and check that the package is in `pyproject.toml`.
+
+## Hands-on
+
+### Worked example
+
+1. In your `cafe-report` project, run `uv add pandas`.
+2. Create a file that imports pandas and prints `pd.__version__`.
+3. Run it with `uv run python my_check.py`.
+4. Open `pyproject.toml` and find pandas in the dependency list.
+
+### Your turn
+
+A script says `ModuleNotFoundError: No module named 'openpyxl'`. List two things you check.
+
+<Checkpoint question="Show the answer">
+	That you ran the program with `uv run` in the project folder, and that
+	`openpyxl` is listed in `pyproject.toml`. If it is not, add it with `uv add
+	openpyxl`, after checking the spelling.
+</Checkpoint>
+
+## Common mistakes
+
+- **Naming your own file like a module.** A file called `csv.py` hides the real `csv`.
+- **Installing with pip.** Use `uv add`.
+- **Importing everything with `*`.** It hides where names come from.
+- **Adding a package for a tiny job.** Each one is a dependency to maintain.
+- **Not committing the lock file.**
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Use the best library for this.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant names a library from memory, perhaps misspelled or outdated,
+		and tells you to pip install it.
+	</Fragment>
+	<Fragment slot="good">
+		I need to read a semicolon-separated UTF-8 file in Python 3.12. First tell
+		me if the standard library can do it. If it can, show the code. If a
+		third-party package would be much better, give its exact PyPI name, and what
+		I should check on its page before running uv add. I use uv, not pip.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		The **constraint** order (standard library first) avoids unnecessary
+		dependencies, and the **verification** step protects against invented names.
+	</Fragment>
+	<Fragment slot="check">
+		Search the package on PyPI, and compare its name letter by letter. Run the
+		code on a few rows.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What is the standard library?">
+	The modules that come with Python, which need no installation.
+</Checkpoint>
+
+<Checkpoint question="Which command adds a package to a uv project?">
+	`uv add name`.
+</Checkpoint>
+
+<Checkpoint question="Why avoid naming your own file csv.py?">
+	It would hide the real `csv` module, so imports would pick up your file
+	instead.
+</Checkpoint>
+
+## Going deeper
+
+- Part 6 uses pandas for real work.

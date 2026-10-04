@@ -1,0 +1,141 @@
+---
+title: Files and paths with pathlib
+description: Read and write files robustly on any operating system.
+sidebar:
+  order: 14
+lessonId: '4.14'
+estimatedMinutes: 20
+prerequisites: ['1.4', '4.13']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Build paths with `pathlib` that work on Windows and macOS. - Read, list, and
+	write files. - Locate data relative to the script instead of the current
+	folder.
+</LessonGoals>
+
+## Why this matters
+
+Lesson 1.4 showed that paths differ between systems and that a relative path depends on
+where you are standing. Hand-built text paths such as `"C:\\Users\\..."` break the moment
+a colleague runs the program. The `pathlib` module solves this: you describe a path in
+pieces, and it writes it correctly for the system.
+
+<CaseStudy>
+	Daniela's script runs fine from her project folder, but fails when a scheduled
+	task starts it from somewhere else. The fix is to find the data relative to
+	the script itself.
+</CaseStudy>
+
+## Path objects
+
+```text
+from pathlib import Path
+
+data_dir = Path("data")
+sales = data_dir / "cafe_central_sales.csv"
+```
+
+The `/` operator joins pieces with the right separator for the system. Useful parts and
+actions:
+
+| Expression             | Meaning                         |
+| ---------------------- | ------------------------------- |
+| `path.name`            | File name with extension        |
+| `path.suffix`          | Extension, such as `.csv`       |
+| `path.parent`          | The folder that holds it        |
+| `path.exists()`        | Whether it is there             |
+| `path.read_text(...)`  | Read the whole file as text     |
+| `path.write_text(...)` | Write text to the file          |
+| `folder.glob("*.csv")` | Find files that match a pattern |
+
+Always pass `encoding="utf-8"` when reading or writing text, so accents survive (lesson 1.7).
+
+## Find files relative to the script
+
+`Path(__file__)` is the location of the running script. Starting from it, you can reach
+other files whatever the current folder is.
+
+<Example file="part04/14_pathlib.py" />
+
+The example lists the data files, checks that the sales file exists, and writes and reads a small summary in a
+temporary folder that Python deletes afterwards. That temporary folder keeps the demo
+from leaving files behind.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["__file__: where the script is"] --> B[".parent: its folder"]
+  B --> C["/ 'data' / 'file.csv'"]
+  C --> D["A path that works from anywhere"]`}
+/>
+
+## Hands-on
+
+### Your turn
+
+Write the expression that points to `notes.txt` in a folder called `output`, next to the
+script.
+
+<Checkpoint question="Show the answer">
+	`Path(__file__).resolve().parent / "output" / "notes.txt"`. The `resolve()`
+	makes the path absolute.
+</Checkpoint>
+
+## Common mistakes
+
+- **Typing paths as text with backslashes.** Use `Path` and `/`.
+- **Relying on the current folder.** Anchor paths to `__file__`.
+- **Forgetting the encoding.** Add `encoding="utf-8"`.
+- **Overwriting an input file.** Write results to a different file or folder.
+- **Using absolute paths from your own machine in shared code.**
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Read the file.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant hard-codes a path from its example, like
+		`C:\Users\admin\data.csv`, which does not exist on your computer.
+	</Fragment>
+	<Fragment slot="good">
+		Write Python using pathlib that reads cafe_central_sales.csv (UTF-8) from a
+		"data" folder that sits next to the script, whatever folder the script is
+		started from. It must work on Windows and macOS. If the file does not exist,
+		raise an error that names the full path that was tried.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It states the **constraints** (any start folder, both systems), the
+		**input** location, and what to do on failure.
+	</Fragment>
+	<Fragment slot="check">
+		Run the script from another folder, for example one level up, and confirm it
+		still works.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What does the / operator do on Path objects?">
+	It joins path pieces with the correct separator for the system.
+</Checkpoint>
+
+<Checkpoint question="Why anchor paths to `__file__`?">
+	So the program finds its files no matter which folder it is started from.
+</Checkpoint>
+
+<Checkpoint question="Why pass encoding to read_text?">
+	So that accents are read and written correctly, instead of depending on the
+	system default.
+</Checkpoint>
+
+## Going deeper
+
+- Part 5 covers reading CSV, JSON, and other formats once you can find the file.

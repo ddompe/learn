@@ -1,0 +1,2 @@
+Most common category as written: [('pastel', 59)]
+pandas sees the same number of rows: True

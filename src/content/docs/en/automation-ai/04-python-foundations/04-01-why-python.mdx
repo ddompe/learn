@@ -1,0 +1,141 @@
+---
+title: Why Python
+description: See where Python comes from and why it became the default language for data and AI.
+sidebar:
+  order: 1
+lessonId: '4.1'
+estimatedMinutes: 10
+prerequisites: ['3.1']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Summarise where Python comes from. - Explain why Python is so common for
+	data and AI work. - State the trade-offs of choosing Python.
+</LessonGoals>
+
+## Why this matters
+
+You will spend the rest of the course writing and reading Python. It helps to know why we
+chose it, so that it does not feel like an arbitrary rule. It also helps in conversations
+with colleagues who prefer other tools.
+
+<CaseStudy>
+	Daniela's team has Excel, Power Query, and some macros. When she needs to
+	combine hundreds of files, or call an AI service, those tools run out of road.
+	Python is the tool that most people in her position pick up next.
+</CaseStudy>
+
+## A short history
+
+Guido van Rossum started Python in the late 1980s, and released it in 1991. He designed it
+to be easy to read, and to let a person say a lot in few lines. The name comes from the
+comedy group Monty Python, not the snake.
+
+Since then, three things made it the default for data work:
+
+1. **Readability.** Python code looks close to plain English. A beginner can read a
+   short program and guess what it does.
+2. **Batteries included.** The standard library covers files, dates, text, CSV, and
+   much more without extra downloads.
+3. **A huge ecosystem.** Thousands of free packages exist for data (pandas), charts
+   (matplotlib), documents, the web, and machine learning. Almost every AI tool offers a
+   Python interface first.
+
+## Why it matters for AI
+
+Most AI libraries and services are written for Python first, and most examples that you
+find online are in Python. AI assistants have also seen far more Python than most
+languages, so they write it well. This is a practical reason: you get the best help.
+
+## Trade-offs
+
+Python is not the best at everything.
+
+- **Speed.** Python is slower than languages like C or Rust for heavy computing. Libraries
+  hide this by doing the heavy work in fast code underneath. For business data, it is
+  rarely a problem.
+- **Mobile and web front ends.** Other languages dominate there.
+- **Versions and installs.** Setting up Python badly causes many headaches. That is why
+  lesson 4.2 uses uv.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Readable code"] --> D["Python for data and AI"]
+  B["Standard library"] --> D
+  C["Huge package ecosystem"] --> D`}
+/>
+
+## Hands-on
+
+### Your turn
+
+Ask yourself which of these jobs fit Python well:
+
+1. Combining 200 CSV files into one table.
+2. Writing a phone app.
+3. Calling an AI service for 5,000 customer comments.
+
+<Checkpoint question="Show the answers">
+	1 and 3 fit Python well. A phone app is better served by other languages.
+</Checkpoint>
+
+## Common mistakes
+
+- **Treating Python as the only option.** It is a good default, not a law.
+- **Comparing speeds without context.** For a monthly report, a second more or less does
+  not matter.
+- **Starting without a clear setup.** Lesson 4.2 prevents the typical problems.
+- **Thinking you must memorise syntax.** You will read far more than you write.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Is Python the best language?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		You get a long, hedged list of languages and no recommendation that applies
+		to you.
+	</Fragment>
+	<Fragment slot="good">
+		I am a finance analyst who uses Excel and Power Query. My tasks are
+		combining many CSV files, cleaning dates, and making monthly reports. Should
+		I learn Python or something else? Give one recommendation in one paragraph,
+		then two situations in which you would change it.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It supplies **context** (tools and tasks), a **task** that asks for a
+		decision, and an **output format** that makes the answer short and testable.
+	</Fragment>
+	<Fragment slot="check">
+		Check that the recommendation mentions your actual tasks, and ask whether
+		the two exceptions apply to you. Be skeptical of absolute claims.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Give two reasons why Python is popular for data work.">
+	Readable code and a huge ecosystem of packages. The standard library also
+	helps.
+</Checkpoint>
+
+<Checkpoint question="Is Python the fastest language?">
+	No. Libraries do the heavy work in faster code, and for business data the
+	speed is rarely a problem.
+</Checkpoint>
+
+<Checkpoint question="Why does the course care about how you install Python?">
+	A messy setup causes many beginner problems, so the course uses one clean
+	method.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 4.2 installs uv and Python.

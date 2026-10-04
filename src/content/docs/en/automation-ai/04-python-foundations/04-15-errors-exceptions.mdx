@@ -1,0 +1,139 @@
+---
+title: Errors and exceptions
+description: Handle expected failures, and raise errors that explain the problem.
+sidebar:
+  order: 15
+lessonId: '4.15'
+estimatedMinutes: 20
+prerequisites: ['4.12', '3.10']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain what an exception is. - Handle an expected failure with `try` and
+	`except`. - Raise an error with a clear message.
+</LessonGoals>
+
+## Why this matters
+
+Real files are missing, amounts contain `N/A`, and networks fail. A program that crashes
+with an unreadable message is hard to use. A program that ignores errors silently is
+worse, because it gives wrong results without warning. Good error handling sits in the middle: handle
+what you expect, and explain what you cannot fix.
+
+<CaseStudy>
+	Next month's file is missing, or one amount says `N/A`. Daniela wants the
+	program to say exactly which file or value is wrong, not to print a wall of
+	red text or quietly skip rows.
+</CaseStudy>
+
+## Exceptions
+
+When something goes wrong, Python **raises an exception**, such as `FileNotFoundError` or
+`ValueError`. If nothing handles it, the program stops and prints a traceback
+(lesson 3.10).
+
+You handle one with `try` and `except`:
+
+```text
+try:
+    risky_step()
+except FileNotFoundError:
+    explain_the_problem()
+```
+
+The code in `try` runs. If that exact kind of error happens, the `except` block runs
+instead. Other errors still stop the program, which is what you want.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["try: do the step"] --> B{"Error?"}
+  B -- No --> C["Carry on"]
+  B -- "Expected kind" --> D["except: explain or recover"]
+  B -- "Unexpected kind" --> E["Program stops with a traceback"]`}
+/>
+
+## Raise your own
+
+Use `raise` to stop with a clear message when a value is wrong.
+
+<Example file="part04/15_errors.py" />
+
+`read_text_or_explain` turns a bare `FileNotFoundError` into one that says which file and
+where to look. `parse_amount` turns a confusing `InvalidOperation` into a plain `ValueError`
+that shows the offending text.
+
+## Rules of thumb
+
+1. **Catch only what you expect,** and name the type.
+2. **Never write a bare `except:` or `except Exception: pass`.** It hides bugs.
+3. **Write messages for a human:** what failed, with which value, and what to check.
+4. **Decide what to do with bad rows:** stop, skip and report, or fix. Do not skip in silence.
+
+## Hands-on
+
+### Your turn
+
+A script reads 240 rows, and 3 have `N/A` as the amount. Name two sensible ways to handle that.
+
+<Checkpoint question="Show some answers">
+	Stop with an error that lists the bad rows, so someone fixes the data. Or skip
+	the bad rows, but print how many were skipped and their IDs. Silently ignoring
+	them is never acceptable.
+</Checkpoint>
+
+## Common mistakes
+
+- **Bare `except:`.** It catches everything, including your own typos.
+- **`except ...: pass`.** The error disappears and so does the evidence.
+- **Messages like "Error".** Say what and where.
+- **Catching too early.** Let errors travel up to the code that can decide what to do.
+- **Using errors for normal control flow.** Check simple conditions with `if`.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Make it not crash.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant wraps everything in `except: pass`, so the program no longer
+		crashes, and now also gives wrong totals with no warning.
+	</Fragment>
+	<Fragment slot="good">
+		My function parse_amount sometimes receives "N/A". Change it so that it
+		raises a ValueError that includes the bad text. Then show how the calling
+		code can catch that ValueError, count the bad rows, and print their IDs at
+		the end. Do not use a bare except, and do not hide errors.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		The **constraints** (specific error, no hiding) and the **output** (count
+		and IDs) keep the failure visible.
+	</Fragment>
+	<Fragment slot="check">
+		Feed it a file with one bad row and confirm that it reports that row.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What does except do?">
+	It runs when the matching kind of error occurs in the try block.
+</Checkpoint>
+
+<Checkpoint question="Why is a bare except a bad idea?">
+	It catches every error, including bugs, and hides them.
+</Checkpoint>
+
+<Checkpoint question="What should an error message contain?">
+	What failed, which value or file, and what to check.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 4.16 puts everything together in a tested script.

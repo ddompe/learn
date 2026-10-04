@@ -1,0 +1,143 @@
+---
+title: Notebooks elsewhere
+description: Recognise JupyterLab and Google Colab so you can follow examples written for them, and know the trade-offs.
+sidebar:
+  order: 6
+lessonId: '4.6'
+estimatedMinutes: 15
+prerequisites: ['4.5']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Recognise JupyterLab, Google Colab, and marimo. - Explain the trade-offs:
+	installs, data privacy, and reproducibility. - Know how to adapt an online
+	example to your VS Code project.
+</LessonGoals>
+
+## Why this matters
+
+Tutorials, blog posts, and colleagues often use notebooks in other places. You do not
+need to work in them, but you should recognise them, follow their examples, and know
+what you give up. The course workflow stays in VS Code, but here is the wider picture.
+
+<CaseStudy>
+	A colleague sends Daniela a link to a notebook on a cloud service, with a
+	note: "Just upload the sales file." Before she does, she needs to ask where
+	the data will go.
+</CaseStudy>
+
+## The classic Jupyter
+
+**Jupyter** is the original notebook system. The classic **JupyterLab** runs in a web
+browser, with the Python process on your computer or on a server. The notebook files end in
+`.ipynb`, and they are the same format that VS Code opens.
+
+If you want to try it with uv, one command starts it from your project:
+
+```text
+uv run --with jupyterlab jupyter lab
+```
+
+It opens a page in your browser. The local data stays on your machine.
+
+## Google Colab
+
+**Google Colab** is a notebook that runs on Google's servers. You open it in a browser
+with a Google account. There is nothing to install, which is convenient. But:
+
+- Your **code and data** go to Google's cloud. Do not upload customer data or anything
+  confidential without approval (lesson 2.8).
+- The session is **temporary**. Files you upload disappear when the session ends.
+- The packages and their **versions** may differ from your project, so results may differ.
+
+## marimo
+
+**marimo** is a newer notebook that stores the notebook as a plain Python file and
+re-runs dependent cells automatically, which removes the out-of-order problem. It is a
+bonus to try later. The course does not depend on it.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["Notebook options"] --> B["VS Code: local, course default"]
+  A --> C["JupyterLab: local, browser"]
+  A --> D["Colab: cloud, no install, data leaves your machine"]
+  A --> E["marimo: local, plain .py, reactive"]`}
+/>
+
+## Following an example written for another tool
+
+When a tutorial says:
+
+- "Run `!pip install package` in a cell": use `uv add package` in your terminal instead.
+- "Upload the file to the left panel": put the file in your project's data folder.
+- "Mount your Google Drive": read the file from a local folder.
+
+## Hands-on
+
+### Your turn
+
+A tutorial asks you to upload `cafe_central_customers.json` to Colab. Which question do you ask first?
+
+<Checkpoint question="Show the answer">
+	Does this file contain personal data, and is a consumer cloud tool approved
+	for it? The customer file has names and emails, so the answer is probably no.
+</Checkpoint>
+
+## Common mistakes
+
+- **Uploading company data to a cloud notebook without approval.**
+- **Assuming Colab results will match your project.** Versions may differ.
+- **Mixing `pip` into a uv project.** Use `uv add`.
+- **Forgetting that a Colab session is temporary.** Save your results.
+- **Using a different tool for every example.** It multiplies the setup problems.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Colab or Jupyter?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant picks one and gives general reasons, never asking about your
+		data.
+	</Fragment>
+	<Fragment slot="good">
+		I analyse sales data that contains customer names and emails, and my company
+		has no approved cloud notebook service. I use VS Code and uv on a managed
+		laptop. Compare Google Colab, JupyterLab, and a VS Code notebook for my
+		situation, using a table with privacy, setup effort, and reproducibility.
+		Make a recommendation, and say what you are assuming.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It gives the **context** that matters most (data and policy), requests a
+		fixed **output format**, and asks for **assumptions**.
+	</Fragment>
+	<Fragment slot="check">
+		Check the assumptions against your company policy. Confirm privacy claims on
+		the vendors' own pages.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Where does the code run in Google Colab?">
+	On Google's servers, so your code and data leave your computer.
+</Checkpoint>
+
+<Checkpoint question="What file format do Jupyter notebooks use?">
+	`.ipynb`.
+</Checkpoint>
+
+<Checkpoint question="What do you use instead of !pip install in your project?">
+	`uv add` in the terminal.
+</Checkpoint>
+
+## Going deeper
+
+- The marimo project documentation explains its reactive model.

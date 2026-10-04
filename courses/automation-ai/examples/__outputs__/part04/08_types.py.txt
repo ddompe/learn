@@ -1,0 +1,8 @@
+From the file: '2200.00' str
+Text plus text: 2200.002200.00
+As a Decimal: 2200.00 Decimal
+Decimal plus Decimal: 4400.00
+An integer: 7 int
+A float: 7.5 float
+A boolean: True bool
+Nothing: None NoneType

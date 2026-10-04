@@ -1,0 +1,140 @@
+---
+title: Functions
+description: Write and call functions with parameters and return values, and clean the messy amounts and dates.
+sidebar:
+  order: 12
+lessonId: '4.12'
+estimatedMinutes: 25
+prerequisites: ['4.9', '4.11']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Write a function with parameters and a return value. - Explain the
+	difference between printing and returning. - Write `parse_amount` and
+	`parse_date` for the Café Central data.
+</LessonGoals>
+
+## Why this matters
+
+A **function** is a named, reusable piece of code. It takes input, does a job, and gives
+back a result. Functions are what make programs readable, testable, and reusable. They
+are also what you will ask an assistant to write, and what you will check with tests.
+
+<CaseStudy>
+	The amounts in the sales file come in three styles: `1500`, `1400.50`, and
+	`$1500,50`. The dates come in three styles too. Daniela needs one function for
+	each that turns any style into a clean value.
+</CaseStudy>
+
+## Anatomy of a function
+
+```text
+def parse_amount(text):
+    ...
+    return value
+```
+
+- `def` starts the definition, followed by the name and **parameters** in brackets.
+- The indented lines are the **body**.
+- `return` hands a result back to the code that called the function.
+
+You **call** a function by writing its name with the input, the **argument**:
+`parse_amount("$1500,50")`.
+
+## Return, not print
+
+`print` shows something on the screen. `return` gives the value back so that other code
+can use it. A function that only prints cannot be used in a calculation or a test. In
+general, functions should return values, and only the outer layer of a program prints.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Input: '$1500,50'"] --> B["parse_amount"]
+  B --> C["Output: Decimal 1500.50"]`}
+/>
+
+## The two parsers
+
+<Example file="part04/12_functions.py" />
+
+`parse_amount` removes the `$` and turns a comma decimal separator into a point, then makes an exact `Decimal`.
+`parse_date` looks at how the text is written and splits it accordingly. The slash style
+`13/01/2024` is read day first, because the data contains `13/01/2024`, which could not be
+month first.
+
+Notice the docstring, the text in triple quotes. It says what the function does. Good
+functions have a clear name and a short docstring.
+
+## Hands-on
+
+### Your turn
+
+What does `parse_date("05/01/2024")` return? Is it May 1st or January 5th?
+
+<Checkpoint question="Show the answer">
+	January 5th, because the function reads the slash style day first. This is an
+	assumption about the data. In another dataset the order could be different, so
+	always check it against dates that cannot be ambiguous, like the 13th.
+</Checkpoint>
+
+## Common mistakes
+
+- **Printing instead of returning.** The caller gets `None`.
+- **Doing too much in one function.** One function, one job.
+- **Hidden assumptions.** Write them in the docstring, as with the day-first dates.
+- **Using global variables inside functions.** Pass what you need as parameters.
+- **No tests.** A function that cleans data needs tests with tricky inputs.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Write a function.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant guesses the purpose and returns code without a docstring, a
+		type, or a test.
+	</Fragment>
+	<Fragment slot="good">
+		Write a Python function parse_amount(text) that returns a Decimal. It must
+		accept "1500", "1400.50", and "$1500,50" (comma as the decimal separator),
+		and raise a ValueError with a clear message for anything else. Add a
+		docstring and a pytest test with these three cases and one invalid case.
+		Work out the expected values by hand.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It gives **input** examples, the exact **output** type, a **constraint** for
+		bad input, and asks for **verification** through tests.
+	</Fragment>
+	<Fragment slot="check">
+		Run the tests. Then try an input the assistant did not list, like
+		"1.500,50", and see what happens.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What is the difference between print and return?">
+	`print` shows text on the screen. `return` gives a value back to the caller so
+	it can be used.
+</Checkpoint>
+
+<Checkpoint question="What is a parameter?">
+	A name in the function definition that receives the input when the function is
+	called.
+</Checkpoint>
+
+<Checkpoint question="Why write a docstring?">
+	It explains what the function does and its assumptions, for readers and for
+	yourself later.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 4.13 shows how to use functions that other people have written.

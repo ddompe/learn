@@ -1,0 +1,4 @@
+First three IDs: ['T001', 'T002', 'T003']
+Sales per category as written: {'Café': 3, 'Sándwich': 4, 'cafe': 4, 'café': 36, 'jugo': 55, 'pastel': 59, 'sandwich': 8, 'sándwich': 33, 'té': 44}
+Distinct customers: 8
+A tuple: ('T001', '2200.00')

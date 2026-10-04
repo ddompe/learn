@@ -14,6 +14,10 @@
 	],
 	"words": [
 		"mojibake",
+		"unicodedata",
+		"jupyter",
+		"ipykernel",
+		"Rossum",
 		"tomllib",
 		"pandsa",
 		"openpyxll",

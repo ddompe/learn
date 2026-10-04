@@ -1,0 +1,149 @@
+---
+title: Values, types, and variables
+description: Understand types, and predict what operations do on text, numbers, and other values.
+sidebar:
+  order: 8
+lessonId: '4.8'
+estimatedMinutes: 20
+prerequisites: ['4.4', '1.8']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain what a type is. - Name the common types: text, integer, float,
+	Decimal, boolean, and None. - Predict the result of an operation on different
+	types.
+</LessonGoals>
+
+## Why this matters
+
+In Excel, a cell can look like a number and secretly be text, and then a sum comes out
+wrong. Python has the same issue, but it is stricter and clearer about it. The first
+thing to know about any value is its **type**: what kind of thing it is, and therefore
+what you can do with it.
+
+<CaseStudy>
+	Everything that Daniela reads from the sales CSV arrives as text, including
+	the amounts. If she adds two amounts without converting them, she joins the
+	text instead of adding the numbers.
+</CaseStudy>
+
+## Variables
+
+A **variable** is a name that points to a value. You create it with `=`:
+
+```text
+amount = 2200
+```
+
+Read it as "let `amount` be 2200", not as an equation. You can change it later. Choose
+names that say what the value is: `amount` is better than `x`.
+
+## The common types
+
+| Type    | Python name | Example           | Use                             |
+| ------- | ----------- | ----------------- | ------------------------------- |
+| Text    | `str`       | `"jugo"`          | Words, IDs, file contents       |
+| Integer | `int`       | `7`               | Counts                          |
+| Float   | `float`     | `7.5`             | Measurements, with small errors |
+| Decimal | `Decimal`   | `Decimal("7.50")` | Exact money (lesson 1.8)        |
+| Boolean | `bool`      | `True`, `False`   | Yes or no answers               |
+| Nothing | `NoneType`  | `None`            | "No value here"                 |
+
+`type(value)` tells you the type.
+
+## Types decide what operations mean
+
+<Example file="part04/08_types.py" />
+
+The line `Text plus text` shows the trap: `"2200.00" + "2200.00"` gives
+`2200.002200.00`. For text, `+` means "join". After converting to `Decimal`, the same `+`
+means "add", and the result is `4400.00`.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Text from the file: '2200.00'"] -->|"Decimal(...)"| B["Exact number: 2200.00"]
+  B --> C["Arithmetic works"]`}
+/>
+
+To convert, use the type's name as a function: `int("7")`, `float("7.5")`,
+`Decimal("7.50")`, `str(7)`.
+
+If the text is not valid for the type, Python stops with an error, which is better than
+silently adding wrong numbers.
+
+## Hands-on
+
+### Your turn
+
+Predict the result of each line, then reveal the answers.
+
+1. `"15" + "00"`
+2. `15 + 0`
+3. `"15" * 2`
+4. `type("15")`
+
+<Checkpoint question="Show the answers">
+1. `"1500"` (text joined).
+2. `15` (numbers added).
+3. `"1515"` (text repeated twice).
+4. `<class 'str'>`.
+</Checkpoint>
+
+## Common mistakes
+
+- **Doing arithmetic on text.** Convert first.
+- **Using floats for money.** Use `Decimal` (lesson 1.8).
+- **Using a name that is too short or unclear.**
+- **Reusing a variable name for something else.** It makes code harder to follow.
+- **Mixing `=` and `==`.** One assigns, and the other compares (lesson 4.11).
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Why is my total wrong?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant guesses: rounding, the wrong column, or a bug somewhere. It
+		cannot see the values.
+	</Fragment>
+	<Fragment slot="good">
+		My Python program reads amounts from a CSV and prints 2200.002200.00 when I
+		add two values. Here are the code and the first three rows. What is the type
+		of each value after reading the file? Explain why the result looks like
+		that, and show me the smallest fix that adds the numbers exactly. Money must
+		not use floats.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It provides the **input** (symptom, code, rows), asks about **types**
+		specifically, and adds a **constraint** (no floats).
+	</Fragment>
+	<Fragment slot="check">
+		Add a line that prints `type(value)` before and after the fix. Check the
+		result on three rows by hand.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What is a type?">
+	The kind of a value, which decides what operations can be done with it.
+</Checkpoint>
+
+<Checkpoint question="Why does adding the text 2200 to the text 2200 give 22002200?">
+	For text, `+` joins the strings.
+</Checkpoint>
+
+<Checkpoint question="Which type should you use for money?">
+	`Decimal`.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 4.9 goes deeper into text, the most common type in business files.
