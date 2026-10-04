@@ -52,6 +52,7 @@ function escapeHtml(text: string): string {
 
 	.prompt-good,
 	.prompt-bad {
+		min-width: 0;
 		padding: 1rem;
 		border-right: 1px solid var(--sl-color-gray-5);
 	}
@@ -86,21 +87,23 @@ function escapeHtml(text: string): string {
 
 	pre {
 		margin: 0;
-		background: var(--sl-color-gray-1);
+		background: var(--sl-color-gray-6);
 		padding: 0.75rem;
 		border-radius: 0.25rem;
 		overflow-x: auto;
+		white-space: pre-wrap;
+		overflow-wrap: anywhere;
 		font-size: 0.875rem;
 	}
 
 	code {
 		font-family: var(--sl-font-mono);
-		color: var(--sl-color-gray-7);
+		color: var(--sl-color-text);
 	}
 
 	.explanation {
 		padding: 1rem;
-		background: var(--sl-color-gray-1);
+		background: var(--sl-color-gray-6);
 		border-top: 1px solid var(--sl-color-gray-5);
 	}
 
