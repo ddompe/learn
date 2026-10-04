@@ -6,7 +6,26 @@ interface Props {
 const { diagram } = Astro.props;
 ---
 
-<div class="mermaid">{diagram}</div>
+<pre class="mermaid">{diagram}</pre>
+
+<script>
+	import mermaid from 'mermaid';
+
+	const dark = () => document.documentElement.dataset.theme !== 'light';
+
+	async function render() {
+		mermaid.initialize({
+			startOnLoad: false,
+			theme: dark() ? 'dark' : 'default',
+		});
+		const nodes = document.querySelectorAll<HTMLElement>(
+			'pre.mermaid:not([data-processed])',
+		);
+		await mermaid.run({ nodes: Array.from(nodes) });
+	}
+
+	render();
+</script>
 
 <style>
 	.mermaid {
@@ -18,5 +37,6 @@ const { diagram } = Astro.props;
 		border-radius: var(--sl-border-radius);
 		border: 1px solid var(--sl-color-gray-5);
 		font-size: 0.875rem;
+		overflow-x: auto;
 	}
 </style>
