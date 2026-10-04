@@ -1,0 +1,13 @@
+{
+	"lessonGoals": { "title": "In this lesson you will" },
+	"caseStudy": { "title": "Case study: Café Central" },
+	"example": { "output": "Output", "noOutput": "This example prints nothing." },
+	"prompt": {
+		"lousy": "Lousy prompt",
+		"whatGoesWrong": "What goes wrong",
+		"good": "Good prompt",
+		"whyItWorks": "Why it works",
+		"check": "Check the answer"
+	},
+	"checkpoint": { "question": "Question", "showAnswer": "Show the answer" }
+}

@@ -1,0 +1,16 @@
+{
+	"lessonGoals": { "title": "En esta lección vas a" },
+	"caseStudy": { "title": "Caso de estudio: Café Central" },
+	"example": {
+		"output": "Resultado",
+		"noOutput": "Este ejemplo no imprime nada."
+	},
+	"prompt": {
+		"lousy": "Prompt deficiente",
+		"whatGoesWrong": "Qué sale mal",
+		"good": "Prompt bueno",
+		"whyItWorks": "Por qué funciona",
+		"check": "Verifica la respuesta"
+	},
+	"checkpoint": { "question": "Pregunta", "showAnswer": "Mostrar la respuesta" }
+}

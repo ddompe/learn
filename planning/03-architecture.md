@@ -86,9 +86,9 @@ The repository is the whole learning site, not a single course, so name it gener
 │   │   │   │       │   └── ...
 │   │   │   │       └── 01-fundamentals/
 │   │   │   └── es/                         # mirrors en/
-│   │   └── i18n/
-│   │       ├── en.json         # custom UI strings
-│   │       └── es.json
+│   ├── i18n/
+│   │   ├── en.json             # custom UI strings
+│   │   └── es.json
 │   └── styles/
 ├── courses/
 │   └── automation-ai/
@@ -184,7 +184,7 @@ Notes:
 | `<LastVerified>`  | Shows the verification date for fast-changing pages.                                                  |
 | `<TryPython>`     | (Optional, M-later) In-browser Python via Pyodide, loaded lazily.                                     |
 
-All component UI strings ("Good prompt", "Show answer") come from `src/content/i18n/*.json`
+All component UI strings ("Good prompt", "Show answer") come from `src/i18n/*.json`
 so components are translated once.
 
 ## Code examples pipeline

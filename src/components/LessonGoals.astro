@@ -1,39 +1,30 @@
 ---
-interface Props {
-	title?: string;
-}
+import { getLabels } from '../lib/labels';
 
-const { title = 'Learning goals' } = Astro.props;
+const labels = getLabels(Astro.currentLocale);
 ---
 
 <section class="lesson-goals">
-	<h3>{title}</h3>
-	<ul>
-		<slot />
-	</ul>
+	<p class="title">{labels.lessonGoals.title}</p>
+	<slot />
 </section>
 
 <style>
 	.lesson-goals {
 		background: var(--sl-color-accent-low);
-		border-left: 4px solid var(--sl-color-accent);
-		padding: 1rem;
-		margin: 1rem 0;
+		border-inline-start: 4px solid var(--sl-color-accent);
+		padding: 1rem 1.25rem;
+		margin: 1.5rem 0;
 		border-radius: var(--sl-border-radius);
 	}
 
-	.lesson-goals h3 {
-		margin-top: 0;
-		margin-bottom: 0.5rem;
-		color: var(--sl-color-accent);
+	.title {
+		margin: 0 0 0.5rem;
+		font-weight: 600;
+		color: var(--sl-color-text-accent);
 	}
 
-	.lesson-goals ul {
+	.lesson-goals :global(ul) {
 		margin: 0;
-		padding-left: 1.5rem;
-	}
-
-	.lesson-goals li {
-		margin-bottom: 0.5rem;
 	}
 </style>

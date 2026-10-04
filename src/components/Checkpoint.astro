@@ -1,35 +1,51 @@
 ---
+import { getLabels } from '../lib/labels';
+
 interface Props {
-	prompt?: string;
-	title?: string;
+	question: string;
 }
 
-const { prompt = 'Try this', title = 'Checkpoint' } = Astro.props;
+const labels = getLabels(Astro.currentLocale);
+const { question } = Astro.props;
 ---
 
 <div class="checkpoint">
-	<h4>{title}</h4>
-	{prompt && <p class="prompt-text">{prompt}</p>}
-	<slot />
+	<p class="question">
+		<strong>{labels.checkpoint.question}:</strong> {question}
+	</p>
+	<details>
+		<summary>{labels.checkpoint.showAnswer}</summary>
+		<div class="answer">
+			<slot />
+		</div>
+	</details>
 </div>
 
 <style>
 	.checkpoint {
-		background: var(--sl-color-yellow-low);
-		border: 2px solid var(--sl-color-yellow);
+		border: 1px solid var(--sl-color-gray-5);
+		border-inline-start: 4px solid var(--sl-color-purple);
+		background: var(--sl-color-purple-low);
 		border-radius: var(--sl-border-radius);
-		padding: 1rem;
+		padding: 1rem 1.25rem;
 		margin: 1.5rem 0;
 	}
 
-	.checkpoint h4 {
-		margin-top: 0;
-		margin-bottom: 0.5rem;
-		color: var(--sl-color-yellow);
+	.question {
+		margin: 0 0 0.75rem;
 	}
 
-	.prompt-text {
-		margin: 0 0 1rem 0;
-		font-style: italic;
+	summary {
+		cursor: pointer;
+		font-weight: 600;
+		color: var(--sl-color-purple-high);
+	}
+
+	.answer {
+		margin-top: 0.75rem;
+	}
+
+	.answer :global(> :last-child) {
+		margin-bottom: 0;
 	}
 </style>

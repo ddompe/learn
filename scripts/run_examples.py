@@ -1,40 +1,59 @@
 #!/usr/bin/env python3
-"""
-Run all examples and capture outputs to __outputs__/ for embedding in lessons.
+"""Run every lesson example and write its stdout to examples/__outputs__/.
 
-Validates that example outputs are fresh and can be regenerated for every commit.
-Used in the CI check workflow.
+Lessons show these files next to the code (the <Example> component), so outputs are
+never written by hand. Run from anywhere: `uv run python scripts/run_examples.py`.
+Pass --check to fail if a committed output differs from a fresh run (used in CI).
 """
 
 import subprocess
 import sys
 from pathlib import Path
 
-def main():
-    repo_root = Path(__file__).parent.parent
-    examples_dir = repo_root / "courses" / "automation-ai" / "examples"
-    outputs_dir = examples_dir / "__outputs__"
+REPO = Path(__file__).resolve().parent.parent
 
-    if not examples_dir.exists():
-        print(f"Examples directory not found: {examples_dir}")
-        return 1
 
-    outputs_dir.mkdir(exist_ok=True)
-
-    # Run pytest to generate outputs
-    print("Running pytest to generate example outputs...")
-    result = subprocess.run(
-        ["uv", "run", "pytest", "-v"],
-        cwd=examples_dir,
-        capture_output=False
+def example_scripts(examples_dir: Path) -> list[Path]:
+    return sorted(
+        p
+        for p in examples_dir.glob("part*/**/*.py")
+        if not p.name.startswith("test_") and p.name != "__init__.py"
     )
 
-    if result.returncode != 0:
-        print("Example tests failed")
-        return 1
 
-    print("✓ All examples validated and outputs generated")
+def main() -> int:
+    check = "--check" in sys.argv[1:]
+    stale: list[str] = []
+    for examples_dir in sorted((REPO / "courses").glob("*/examples")):
+        outputs_dir = examples_dir / "__outputs__"
+        for script in example_scripts(examples_dir):
+            rel = script.relative_to(examples_dir)
+            result = subprocess.run(
+                ["uv", "run", "python", str(rel)],
+                cwd=examples_dir,
+                capture_output=True,
+                text=True,
+            )
+            if result.returncode != 0:
+                print(f"FAILED: {rel}\n{result.stderr}")
+                return 1
+            target = outputs_dir / f"{rel}.txt"
+            if check:
+                current = target.read_text() if target.exists() else None
+                if current != result.stdout:
+                    stale.append(str(rel))
+                continue
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(result.stdout)
+            print(f"wrote {target.relative_to(REPO)}")
+
+    if stale:
+        print("Outputs out of date (rerun scripts/run_examples.py):")
+        for rel in stale:
+            print(f"  {rel}")
+        return 1
     return 0
+
 
 if __name__ == "__main__":
     sys.exit(main())

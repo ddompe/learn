@@ -9,7 +9,7 @@ export default defineConfig({
 	vite: {
 		resolve: {
 			alias: {
-				'~': new URL('./src', import.meta.url).pathname,
+				'@components': new URL('./src/components', import.meta.url).pathname,
 				'@examples/automation-ai': new URL(
 					'./courses/automation-ai/examples',
 					import.meta.url,

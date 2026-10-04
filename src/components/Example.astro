@@ -1,37 +1,41 @@
 ---
+import { readFileSync, existsSync } from 'node:fs';
+import { join } from 'node:path';
+import { Code } from '@astrojs/starlight/components';
+import { getLabels } from '../lib/labels';
+
 interface Props {
-	label?: string;
+	file: string;
+	course?: string;
 }
 
-const { label = 'Output:' } = Astro.props;
+const labels = getLabels(Astro.currentLocale);
+const { file, course = 'automation-ai' } = Astro.props;
+
+const root = join(process.cwd(), 'courses', course, 'examples');
+const code = readFileSync(join(root, file), 'utf8');
+const outputPath = join(root, '__outputs__', `${file}.txt`);
+const output = existsSync(outputPath) ? readFileSync(outputPath, 'utf8') : null;
 ---
 
 <div class="example">
-	{label && <strong>{label}</strong>}
-	<slot />
+	<Code code={code} lang="python" title={file} />
+	{output !== null && (
+		<>
+			<p class="output-label">{labels.example.output}</p>
+			<Code code={output.trimEnd() || labels.example.noOutput} lang="text" />
+		</>
+	)}
 </div>
 
 <style>
 	.example {
-		background: var(--sl-color-gray-6);
-		border: 1px solid var(--sl-color-gray-5);
-		border-radius: var(--sl-border-radius);
-		padding: 1rem;
-		margin: 1rem 0;
-		font-family: var(--sl-font-mono);
-		font-size: 0.875rem;
+		margin: 1.5rem 0;
 	}
 
-	.example strong {
-		display: block;
-		margin-bottom: 0.5rem;
-		color: var(--sl-color-text);
+	.output-label {
+		margin: 0.75rem 0 0.25rem;
 		font-weight: 600;
-	}
-
-	.example :global(pre) {
-		margin: 0;
-		background: transparent;
-		padding: 0;
+		color: var(--sl-color-text-accent);
 	}
 </style>

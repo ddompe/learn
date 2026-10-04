@@ -1,129 +1,91 @@
 ---
-interface Props {
-	good: string;
-	bad: string;
-	explanation: string;
-}
+import { getLabels } from '../lib/labels';
 
-const { good, bad, explanation } = Astro.props;
-
-function escapeHtml(text: string): string {
-	const map: Record<string, string> = {
-		'&': '&amp;',
-		'<': '&lt;',
-		'>': '&gt;',
-		'"': '&quot;',
-		"'": '&#039;',
-	};
-	return text.replace(/[&<>"']/g, (char) => map[char]);
-}
+const labels = getLabels(Astro.currentLocale);
 ---
 
 <div class="prompt-example">
-	<div class="prompt-pair">
-		<div class="prompt-good">
-			<span class="badge good">✓ Good prompt</span>
-			<pre><code set:html={escapeHtml(good)} /></pre>
+	<section class="block lousy">
+		<p class="label">
+			<span aria-hidden="true">✗</span> {labels.prompt.lousy}
+		</p>
+		<div class="prompt">
+			<slot name="lousy" />
 		</div>
-		<div class="prompt-bad">
-			<span class="badge bad">✗ Avoid this</span>
-			<pre><code set:html={escapeHtml(bad)} /></pre>
+	</section>
+	<section class="block">
+		<p class="label">{labels.prompt.whatGoesWrong}</p>
+		<slot name="whatGoesWrong" />
+	</section>
+	<section class="block good">
+		<p class="label">
+			<span aria-hidden="true">✓</span> {labels.prompt.good}
+		</p>
+		<div class="prompt">
+			<slot name="good" />
 		</div>
-	</div>
-	<div class="explanation">
-		<strong>Why the difference matters:</strong>
-		<p set:html={explanation} />
-	</div>
+	</section>
+	<section class="block">
+		<p class="label">{labels.prompt.whyItWorks}</p>
+		<slot name="whyItWorks" />
+	</section>
+	<section class="block">
+		<p class="label">{labels.prompt.check}</p>
+		<slot name="check" />
+	</section>
 </div>
 
 <style>
 	.prompt-example {
-		margin: 2rem 0;
+		margin: 1.5rem 0;
 		border: 1px solid var(--sl-color-gray-5);
 		border-radius: var(--sl-border-radius);
 		overflow: hidden;
 	}
 
-	.prompt-pair {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 0;
-	}
-
-	.prompt-good,
-	.prompt-bad {
+	.block {
 		min-width: 0;
-		padding: 1rem;
-		border-right: 1px solid var(--sl-color-gray-5);
-	}
-
-	.prompt-bad {
-		border-right: none;
-		background: var(--sl-color-red-low);
-	}
-
-	.prompt-good {
-		background: var(--sl-color-green-low);
-	}
-
-	.badge {
-		display: inline-block;
-		font-size: 0.875rem;
-		font-weight: 600;
-		margin-bottom: 0.5rem;
-		padding: 0.25rem 0.5rem;
-		border-radius: 0.25rem;
-	}
-
-	.badge.good {
-		background: var(--sl-color-green);
-		color: white;
-	}
-
-	.badge.bad {
-		background: var(--sl-color-red);
-		color: white;
-	}
-
-	pre {
-		margin: 0;
-		background: var(--sl-color-gray-6);
-		padding: 0.75rem;
-		border-radius: 0.25rem;
-		overflow-x: auto;
-		white-space: pre-wrap;
-		overflow-wrap: anywhere;
-		font-size: 0.875rem;
-	}
-
-	code {
-		font-family: var(--sl-font-mono);
-		color: var(--sl-color-text);
-	}
-
-	.explanation {
-		padding: 1rem;
-		background: var(--sl-color-gray-6);
+		padding: 0.75rem 1.25rem;
 		border-top: 1px solid var(--sl-color-gray-5);
 	}
 
-	.explanation p {
-		margin: 0;
+	.block:first-child {
+		border-top: none;
 	}
 
-	@media (max-width: 768px) {
-		.prompt-pair {
-			grid-template-columns: 1fr;
-		}
+	.label {
+		margin: 0 0 0.25rem;
+		font-weight: 600;
+		color: var(--sl-color-text-accent);
+	}
 
-		.prompt-good,
-		.prompt-bad {
-			border-right: none;
-			border-bottom: 1px solid var(--sl-color-gray-5);
-		}
+	.lousy {
+		background: var(--sl-color-red-low);
+		border-inline-start: 4px solid var(--sl-color-red);
+	}
 
-		.prompt-bad {
-			border-bottom: none;
-		}
+	.good {
+		background: var(--sl-color-green-low);
+		border-inline-start: 4px solid var(--sl-color-green);
+	}
+
+	.lousy .label {
+		color: var(--sl-color-red-high);
+	}
+
+	.good .label {
+		color: var(--sl-color-green-high);
+	}
+
+	.prompt {
+		font-family: var(--sl-font-mono);
+		font-size: var(--sl-text-sm);
+		white-space: pre-wrap;
+		overflow-wrap: anywhere;
+	}
+
+	.block :global(> :last-child),
+	.prompt :global(> :last-child) {
+		margin-bottom: 0;
 	}
 </style>
