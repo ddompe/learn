@@ -1,0 +1,237 @@
+---
+title: 'Proyecto final: el pipeline mensual'
+description: Construye de principio a fin el pipeline mensual completo de Café Central, con un asistente de IA, pruebas y un horario.
+sidebar:
+  order: 4
+lessonId: '9.4'
+estimatedMinutes: 120
+prerequisites: ['9.1', '9.2', '8.3']
+translationStatus: machine
+sourceHash: e8c3b8816f6b
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Construir un pipeline completo, desde los archivos originales hasta un
+	informe, en un proyecto nuevo. - Trabajar en pasos pequeños y verificados con
+	un asistente de IA. - Demostrar que funciona: pruebas, un registro, un README
+	y un horario.
+</LessonGoals>
+
+## Por qué importa
+
+Este es el proyecto para el que se ha preparado todo el curso. Vas a juntar las piezas:
+los fundamentos de computación, un prompt claro, Git, Python, la limpieza de datos, los
+gráficos, un informe y un horario. El resultado es una herramienta que hace lo que a
+Daniela le tomaba un día, y que ella puede entregar a otra persona.
+
+Usarás un asistente de IA para casi todo el tecleo. Tu trabajo es lo que el asistente no
+puede hacer por ti: decidir qué es correcto, comprobar y mantener cada paso pequeño.
+
+<CaseStudy>
+	Café Central necesita que el informe mensual se construya solo. El encargo de
+	Daniela: poner el archivo de ventas en una carpeta, ejecutar un comando y
+	obtener los totales limpios, el gráfico y el informe en Word, PDF y HTML. Si
+	algo está mal con el archivo, que me lo diga con claridad.
+</CaseStudy>
+
+## El resultado
+
+Al final, una nueva carpeta de proyecto `cafe-monthly` contiene:
+
+```text
+cafe-monthly/
+├── README.md
+├── pyproject.toml
+├── uv.lock
+├── pipeline_config.toml
+├── .gitignore
+├── data/
+│   └── cafe_central_sales.csv
+├── src/
+│   ├── cleaning.py
+│   └── pipeline.py
+├── report/
+│   └── monthly_report.qmd
+├── tests/
+│   ├── test_cleaning.py
+│   └── test_pipeline.py
+└── .github/workflows/monthly_report.yml
+```
+
+Puedes organizarlo de otra manera. Lo que importa es que cada parte tenga una sola
+función.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["CSV original"] --> B["Comprobar la entrada"]
+  B --> C["Limpiar"]
+  C --> D["Resumir"]
+  D --> E["Totales en CSV y Excel"]
+  D --> F["Informe de Quarto: HTML, Word, PDF"]
+  G["Archivo de configuración y opciones"] --> B
+  H["Registro y código de salida"] -.-> B
+  I["Pruebas"] -.-> C
+  J["Horario: tu computadora o GitHub"] --> A`}
+/>
+
+## Los requisitos
+
+Tu pipeline está terminado cuando cumple cada elemento. Están escritos para que puedas
+comprobar cada uno.
+
+### Datos
+
+1. Lee el CSV de ventas, separado por punto y coma y en UTF-8, de la carpeta `data`.
+2. Interpreta los tres formatos de fecha (las fechas con barras van con el día primero) y
+   los tres formatos de monto.
+3. Elimina las filas duplicadas exactas, unifica las variantes de escritura de las
+   categorías y conserva, marcadas, las filas sin cliente.
+4. Los montos son decimales exactos. Los datos limpios de enero tienen 240 filas y un
+   total general de 474,061.00 colones.
+
+**Comportamiento** 5. Los ajustes vienen de un archivo de configuración; el mes y la carpeta de salida se pueden anular en la línea de comandos. 6. Escribe un archivo de registro e imprime el progreso. Un archivo equivocado o ausente detiene la ejecución con un mensaje claro y el código de salida 2. 7. Escribe los totales por categoría como CSV y como un archivo de Excel con formato. 8. Produce el informe, con un gráfico semanal con título que empieza en cero, una tabla por categoría y cifras en el texto que provienen de los datos, en HTML, Word y PDF. 9. El informe se puede generar para una sola categoría con un parámetro.
+
+**Calidad** 10. Las pruebas cubren los intérpretes de formatos, la limpieza (incluido el resultado de 240 filas) y cada fallo. 11. Un README dice qué hace, cómo ejecutarlo y qué decisiones se tomaron. 12. El proyecto está en Git con commits claros, en un repositorio privado, sin secretos ni datos privados. 13. Se ejecuta de forma programada, en tu computadora o en GitHub Actions, y lo has visto ejecutarse al menos una vez desde el horario.
+
+## Cómo construirlo con un asistente
+
+El método que funciona es el mismo en cada paso: **paso pequeño, prompt claro, ejecutar,
+comprobar, hacer commit.**
+
+| Paso | Construye                                                | Comprueba antes de hacer commit                                 |
+| ---- | -------------------------------------------------------- | --------------------------------------------------------------- |
+| 1    | Proyecto con uv; esqueleto del README; `.gitignore`      | `uv run python --version`; primer commit                        |
+| 2    | Intérpretes: `parse_amount`, `parse_date`, `simplify`    | Pasan las pruebas con valores calculados a mano                 |
+| 3    | `clean_sales` con registro                               | 246 filas de entrada, 240 de salida; los conteos coinciden      |
+| 4    | Totales; comprobación del total general                  | 474,061.00; un total manual de una categoría                    |
+| 5    | Configuración, opciones CLI, registro, códigos de salida | Provoca los fallos de archivo ausente y mes equivocado          |
+| 6    | Salidas en CSV y Excel                                   | Abre el archivo de Excel; acentos y formato numérico bien       |
+| 7    | El informe de Quarto; parámetro; tres formatos           | Los totales del texto igualan la tabla; el eje empieza en cero  |
+| 8    | Pruebas del pipeline, README terminado                   | `uv run pytest` en verde; un desconocido puede seguir el README |
+| 9    | Push a un repositorio privado                            | Sin secretos; `.env` ignorado                                   |
+| 10   | Prográmalo                                               | Ejecútalo dentro de dos minutos y luego a la hora real          |
+
+Ya escribiste la mayor parte del código de los pasos 2 a 7 antes en el curso. Puedes
+reutilizarlo, adaptarlo o reconstruirlo con el asistente. Si lo reconstruyes, compara lo
+que obtienes con tu versión anterior: es una buena manera de encontrar el error de un
+asistente.
+
+### Reglas de trabajo
+
+1. **Un paso por prompt.** Nunca pidas todo el pipeline de una vez.
+2. **Dale los hechos al asistente:** la estructura del archivo, los formatos y las reglas
+   exactas.
+3. **Escribe o revisa primero la prueba** cuando puedas: calcula a mano la respuesta
+   esperada.
+4. **Lee cada línea** antes de aceptarla (lección 3.3).
+5. **Haz commit después de cada paso** que funcione, con un mensaje claro (lección 3.5).
+6. **Cuando algo se rompa,** dale al asistente el traceback completo y el código
+   (lección 3.10).
+7. **Sin datos privados en los prompts** (lección 2.8). Los datos del curso son
+   ficticios.
+
+## Manos a la obra
+
+### El proyecto final
+
+Trabaja la tabla de arriba. Lleva un registro breve de los problemas que encuentres y de
+cómo los resolviste. Es la mejor documentación que puedes dejar para la siguiente persona,
+y para ti mismo.
+
+### Ahora tú
+
+Elige tu propia extensión, lo bastante pequeña para terminarla en una hora:
+
+1. Añade una opción `--category` al pipeline que restrinja los totales.
+2. Añade una comprobación que avise si algún día no tiene ventas.
+3. Añade el archivo de clientes e informa de las ventas por ciudad (lección 6.6).
+4. Envíate el informe: escribe la ruta de salida en el registro de una forma en la que
+   puedas hacer clic.
+
+<Checkpoint question="¿Cómo sabes que una extensión está terminada?">
+	Tiene una prueba que falla sin el cambio y pasa con él, el README la menciona
+	y está registrada con un commit de mensaje claro.
+</Checkpoint>
+
+## Errores comunes
+
+- **Pedirlo todo de una vez.** Produce un resultado grande, sin pruebas e incorrecto.
+- **Saltarte las comprobaciones** porque el asistente sonaba seguro (lección 2.6).
+- **Hacer commit de datos o claves.**
+- **Programar antes de que funcione a mano.**
+- **Cambiar los datos para que la prueba pase.**
+- **Sin README.** En seis meses el proyecto es un misterio.
+- **No observar nunca la primera ejecución programada.**
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Construye todo el pipeline.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		Obtienes cientos de líneas que suponen nombres de archivo y formatos, sin
+		pruebas. Cuando una cifra sale mal, no puedes saber qué parte tiene la
+		culpa.
+	</Fragment>
+	<Fragment slot="good">
+		Estamos construyendo un pipeline mensual de ventas en pasos pequeños. Paso
+		3: escribe clean_sales(path) en src/cleaning.py. Entrada: un CSV en UTF-8
+		separado por punto y coma con las columnas ID, Fecha, Cliente, Monto,
+		Categoría. Lee todo como texto. Elimina solo las filas duplicadas exactas.
+		Interpreta Fecha (2024-01-01, 2024/01/01 y 01/01/2024 con el día primero) y
+		Monto (1500, 1400.50 y $1500,50) como Decimal. Unifica las variantes de
+		escritura de las categorías pasando a minúsculas y quitando los acentos.
+		Conserva las filas sin cliente y márcalas como SIN-CLIENTE. Devuelve la
+		tabla y una lista de mensajes de registro con el número de filas que afectó
+		cada paso. Antes del código, escribe una prueba de pytest para los
+		intérpretes con valores calculados a mano. No toques otros archivos.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Aplica los seis elementos: **contexto** (el paso), **tarea**, **entrada**
+		(los hechos del archivo), **restricciones** (alcance pequeño, reglas),
+		**formato de salida** (función, registro, prueba) y **verificación** (la
+		prueba primero).
+	</Fragment>
+	<Fragment slot="check">
+		Ejecuta las pruebas y luego comprueba los conteos del registro: 246 filas de
+		entrada, 6 duplicados eliminados, 7 clientes marcados, 240 de salida. Revisa
+		al azar tres filas, una por cada formato de fecha.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Por qué construir el pipeline en pasos pequeños con un asistente?">
+	Cada paso se puede comprobar y registrar con un commit, de modo que un error
+	se detecta donde ocurrió y el código sigue siendo comprensible.
+</Checkpoint>
+
+<Checkpoint question="¿Qué debes hacer antes de programar la tarea?">
+	Lograr que funcione de forma fiable a mano, con registros y pruebas, y luego
+	probar el horario con dos minutos de antelación.
+</Checkpoint>
+
+<Checkpoint question="¿Cuáles son los dos números que te dicen que la limpieza es correcta?">
+	240 filas después de la limpieza y un total general de 474,061.00 colones.
+</Checkpoint>
+
+## Lista de verificación del curso
+
+Has terminado el curso base cuando puedas marcar todos los elementos:
+
+- [ ] Se cumplen todos los requisitos anteriores.
+- [ ] Puedo explicar cada paso del pipeline a un colega.
+- [ ] Sé qué partes revisaría primero si una cifra pareciera incorrecta.
+- [ ] He usado mis propios datos (anonimizados, o con permiso) en una tarea real, con el mismo método.
+
+## Para profundizar
+
+- La parte avanzada del curso llama a modelos de IA desde tus propios programas. Necesita todo lo que acabas de practicar.
+- Conserva el método: pasos pequeños, prompts claros y una comprobación de cada respuesta.

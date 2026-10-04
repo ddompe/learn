@@ -1,0 +1,181 @@
+---
+title: Introducción a Quarto
+description: Instala Quarto y genera tu primer documento.
+sidebar:
+  order: 2
+lessonId: '8.2'
+estimatedMinutes: 25
+prerequisites: ['8.1', '4.3']
+lastVerified: 2026-10-03
+translationStatus: machine
+sourceHash: 1985f53c64e6
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar qué es Quarto. - Instalar Quarto sin derechos de administrador. -
+	Escribir y generar un primer documento.
+</LessonGoals>
+
+## Por qué importa
+
+Un informe armado a mano con copiar y pegar queda desactualizado al día siguiente.
+**Quarto** es una herramienta que construye documentos a partir de texto y código:
+escribes el informe una vez y Quarto ejecuta el código, inserta los resultados y produce
+HTML, Word o PDF. El mes siguiente lo vuelves a ejecutar. Así un informe mensual se
+convierte en una automatización.
+
+<CaseStudy>
+	Cada mes Daniela copia cifras a un archivo de Word y pega un gráfico. Con
+	Quarto, las cifras y el gráfico los produce el propio informe.
+</CaseStudy>
+
+## Cómo funciona Quarto
+
+Un documento de Quarto es un archivo de texto que termina en `.qmd`. Tiene tres tipos de
+contenido:
+
+1. Un **encabezado** entre líneas `---`, con ajustes como el título y los formatos de
+   salida (YAML, lección 5.4).
+2. **Texto** escrito en Markdown (lección 5.6).
+3. **Bloques de código** (chunks) en Python (lección 8.3), que Quarto ejecuta.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["report.qmd: texto y código"] --> B["Quarto ejecuta el código"]
+  B --> C["Se insertan los resultados"]
+  C --> D["HTML, Word o PDF"]`}
+/>
+
+## Instálalo
+
+Quarto es un programa independiente de Python. Descárgalo del sitio oficial,
+[quarto.org](https://quarto.org/docs/get-started/). Su documentación lista los
+instaladores actuales. Última verificación: 2026-10-03.
+
+- En una computadora personal, sirve el instalador normal para tu sistema.
+- En una laptop administrada por la empresa, un instalador puede requerir derechos de
+  administrador. Si es así, pregunta a TI, o usa la descarga que es un archivo comprimido
+  (`.tar.gz` en macOS y Linux, `.zip` en Windows). Descomprímelo en una carpeta de tu
+  directorio de usuario y añade la subcarpeta `bin` de esa carpeta a tu PATH (lección
+  1.10). Hazlo solo si la política de la empresa lo permite.
+
+Luego comprueba, en una terminal nueva:
+
+```text
+quarto --version
+quarto check
+```
+
+`quarto check` prueba la instalación, incluido si encuentra el Python de tu proyecto.
+Quarto ejecuta tu código con el primer Python que encuentra. Si lo inicias con `uv run`,
+usa el entorno del proyecto, así que úsalo en todos los comandos:
+
+```text
+uv add ipykernel nbformat nbclient
+uv run quarto check
+```
+
+En VS Code, instala la extensión **Quarto** para tener colores de sintaxis y un botón de
+vista previa.
+
+## Un primer documento
+
+<Example file="part08/hello.qmd" />
+
+Genéralo:
+
+```text
+uv run quarto render hello.qmd
+```
+
+Quarto escribe `hello.html` junto al archivo fuente. El ajuste `embed-resources: true`
+empaqueta la página, sus estilos y sus imágenes en ese único archivo, así que puedes
+enviarlo por correo. Sin él, Quarto también escribe una carpeta de archivos de apoyo que
+debe viajar con la página. Ábrelo en un navegador. Para una vista previa en vivo que se
+actualiza al guardar, usa `uv run quarto preview hello.qmd`.
+
+Todo lo que ves en la página viene del archivo: el encabezado, la lista, el enlace y la
+tabla. Todavía no hay código. Eso viene a continuación.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+1. Instala Quarto y ejecuta `quarto --version`.
+2. Crea `hello.qmd` a partir del ejemplo y genéralo.
+3. Cambia el título y una fila de la tabla, genéralo de nuevo y compara.
+
+### Ahora tú
+
+¿Dónde aparece la salida de `quarto render hello.qmd` y qué archivo compartirías con un
+colega?
+
+<Checkpoint question="Muestra la respuesta">
+	`hello.html` aparece junto a `hello.qmd`. Como el documento define
+	`embed-resources: true`, ese único archivo está completo y es el que se
+	comparte. El `.qmd` es la fuente.
+</Checkpoint>
+
+## Errores comunes
+
+- **Ejecutar `quarto` fuera de `uv run`.** Puede usar otro Python, sin tus paquetes.
+- **Instalar Quarto en una carpeta que no está en el PATH.**
+- **Editar el HTML.** Se reconstruye en la siguiente generación. Edita el `.qmd`.
+- **Hacer commit de la salida generada** por accidente, si es grande. Ignórala en
+  `.gitignore`, a menos que la quieras en el repositorio.
+- **Olvidar las comillas en valores YAML con dos puntos.** El título `"Café: informe"` las
+  necesita.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">¿Cómo uso Quarto?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		Obtienes un recorrido por todas las funciones, libros, sitios web y
+		presentaciones, y ningún primer paso claro.
+	</Fragment>
+	<Fragment slot="good">
+		Uso VS Code en una laptop con Windows administrada por la empresa, sin
+		derechos de administrador, y uv para Python. Quiero generar un documento de
+		Quarto en HTML. Dame los pasos para instalar Quarto en mi carpeta de
+		usuario, los comandos para comprobar la instalación y el comando para
+		generar hello.qmd. Dime qué hacer si "quarto" no se encuentra después de
+		instalarlo. Usa solo la documentación oficial de Quarto como fuente e
+		indícame qué página revisar.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Indica el **contexto y los límites** (sin administrador), un solo
+		**objetivo**, los **pasos** a producir y una **verificación** (dónde
+		comprobar).
+	</Fragment>
+	<Fragment slot="check">
+		Compara los pasos con la página oficial de instalación, porque las versiones
+		y los instaladores cambian.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Cuáles son los tres tipos de contenido de un archivo .qmd?">
+	Un encabezado YAML, texto en Markdown y bloques de código.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué ejecutar Quarto con uv run?">
+	Para que use el Python y los paquetes del proyecto.
+</Checkpoint>
+
+<Checkpoint question="¿Qué hace quarto check?">
+	Prueba la instalación y muestra qué Python y qué motores puede usar Quarto.
+</Checkpoint>
+
+## Para profundizar
+
+- La documentación de Quarto tiene una guía completa de las opciones del documento.

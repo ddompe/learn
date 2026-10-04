@@ -1,0 +1,199 @@
+---
+title: Programar tareas en tu computadora
+description: Programa un script con el Programador de tareas en Windows, o con cron o launchd en macOS.
+sidebar:
+  order: 2
+lessonId: '9.2'
+estimatedMinutes: 30
+prerequisites: ['9.1', '1.10']
+translationStatus: machine
+sourceHash: 33328b2b150f
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar cómo un programador de tareas ejecuta un script. - Programar el
+	pipeline en tu propia computadora. - Evitar las razones comunes por las que
+	una tarea programada no hace nada.
+</LessonGoals>
+
+## Por qué importa
+
+Una automatización que debes acordarte de iniciar todavía no es automática. Un
+**programador de tareas** (scheduler) es una parte de tu sistema operativo que inicia
+programas a horas fijas. Una vez que le dices "ejecuta el pipeline a las 7 de la mañana
+el primer día de cada mes", el informe se construye solo.
+
+<CaseStudy>
+	Daniela quiere que el informe de enero esté esperando el primero de febrero.
+	Programa el pipeline en la computadora de su oficina.
+</CaseStudy>
+
+## Qué hace un programador de tareas
+
+<Mermaid
+	diagram={`flowchart LR
+  A["El reloj llega a la hora fijada"] --> B["El programador inicia tu comando"]
+  B --> C["El script corre en su propio entorno, reducido"]
+  C --> D["La salida va a un archivo de registro"]
+  D --> E["El código de salida indica éxito o fallo"]`}
+/>
+
+Los tres programadores difieren en la sintaxis, pero comparten las mismas necesidades.
+
+1. Un **comando** que ejecutar, con **rutas completas** para todo.
+2. Una **carpeta de trabajo**, para que las rutas relativas funcionen.
+3. Una **regla de tiempo.**
+4. Un lugar para la **salida**, para que puedas ver qué pasó.
+
+## Por qué las tareas programadas fallan en silencio
+
+Una tarea iniciada por un programador no corre en tu terminal. Tiene un **entorno
+reducido**:
+
+- **Un PATH mínimo** (lección 1.10). Un comando que funciona en tu terminal, como `uv`,
+  puede no encontrarse. Usa la ruta completa a `uv`.
+- **Una carpeta de trabajo distinta.** Las rutas relativas fallan a menos que antes
+  cambies de carpeta.
+- **Sin pantalla y sin usuario.** Nadie puede responder a una pregunta.
+- **La computadora debe estar encendida y activa** a esa hora. Una laptop dormida o
+  apagada pierde la tarea. Algunos programadores la ejecutan después, otros no.
+
+Por eso la lección 9.1 añadió registro y códigos de salida. El archivo de registro te
+dice qué pasó.
+
+## Los ajustes
+
+Un script auxiliar imprime los ajustes para cada sistema, para que puedas leerlos antes
+de usarlos. No instala nada.
+
+<Example file="part09/make_schedule.py" />
+
+### macOS y Linux: cron
+
+La primera línea es una entrada de **cron**. Los cinco campos son minuto, hora, día del
+mes, mes y día de la semana. `0 7 1 * *` significa las 07:00 del primer día de cada mes.
+Edita tu tabla con `crontab -e`, pega la línea y guarda. `crontab -l` la lista.
+
+La línea usa la ruta completa a `uv`. Encuentra la tuya con `which uv`. En versiones
+recientes de macOS, cron puede necesitar permiso para acceder a carpetas como Documentos
+o Escritorio, así que mantén el proyecto en una carpeta normal dentro de tu carpeta
+personal.
+
+### macOS: launchd
+
+macOS prefiere **launchd**. La tarea es un archivo pequeño (un `.plist`) en
+`~/Library/LaunchAgents/`. Nombra el programa, la carpeta de trabajo, la hora y los
+archivos de registro. Cárgalo con:
+
+```text
+launchctl load ~/Library/LaunchAgents/space.dompe.cafe-pipeline.plist
+```
+
+El plist que imprime el script auxiliar se comprobó con `plutil -lint`, una herramienta
+de macOS que verifica el formato del archivo.
+
+### Windows: Programador de tareas
+
+Guarda el archivo por lotes que imprime el script auxiliar como `run_pipeline.cmd` en la
+carpeta de tu proyecto. Cambia a la carpeta y ejecuta `uv` con su ruta completa, enviando
+la salida a un registro. Luego crea la tarea desde PowerShell con el comando `schtasks`
+que imprime el script auxiliar, o en la aplicación Programador de tareas: **Crear tarea
+básica**, elige Mensualmente y apunta al archivo por lotes.
+
+Si la tarea debe ejecutarse cuando no has iniciado sesión, Windows te pide tu contraseña.
+En una laptop administrada por la empresa, esto puede estar restringido por política.
+
+## Prueba antes de esperar un mes
+
+1. Ejecuta a mano el comando exacto desde una terminal nueva. ¿Funciona?
+2. Programa la tarea para **dentro de dos minutos** y espera el archivo de registro.
+3. Solo entonces fija el horario real.
+4. Después de la primera ejecución real, revisa el registro y los archivos de salida.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+1. Ejecuta `uv run python make_schedule.py` y lee la línea de cron. Identifica cada uno
+   de los cinco campos de tiempo.
+2. Cambia el día y la hora del script auxiliar a una hora dentro de dos minutos.
+   Prográmalo con la herramienta de tu sistema.
+3. Revisa el registro. Luego elimina la tarea de prueba: `crontab -e`,
+   `launchctl unload ...`, o borra la tarea en el Programador de tareas.
+
+### Ahora tú
+
+Una tarea programada con cron escribe "uv: command not found" en su registro. ¿Cuál es la
+causa y cómo se corrige?
+
+<Checkpoint question="Muestra la respuesta">
+	Cron arranca con un PATH mínimo que no incluye la carpeta donde vive uv. Usa
+	la ruta completa a uv en la línea de cron, como hace el script auxiliar.
+</Checkpoint>
+
+## Errores comunes
+
+- **Rutas relativas y un `cd` ausente.**
+- **Programas que no están en el PATH del programador.**
+- **Sin registro.** No puedes saber si se ejecutó.
+- **Olvidar que la computadora debe estar encendida.**
+- **Probar solo esperando.** Prueba con una tarea dentro de dos minutos.
+- **Dejar tareas de prueba olvidadas.**
+- **Programar en una computadora compartida de la empresa sin avisar a TI.**
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Programa mi script.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente elige un sistema por ti, usa rutas relativas y olvida los
+		registros, así que la tarea no hace nada en silencio.
+	</Fragment>
+	<Fragment slot="good">
+		Uso macOS y quiero ejecutar "uv run python pipeline.py" en
+		/Users/daniela/cafe-monthly a las 07:00 del primer día de cada mes. El
+		programa uv está en /Users/daniela/.local/bin/uv. Dame un plist de launchd
+		para esto, con la carpeta de trabajo y un archivo de registro dentro de la
+		carpeta de salida del proyecto, y los comandos exactos para cargarlo,
+		comprobar que está cargado y descargarlo. Dime tres razones por las que
+		podría no ejecutarse y cómo verlas.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Da el **contexto** (sistema, rutas, hora), los **requisitos de salida**
+		(plist, registro) y pide los comandos de **verificación** y las razones de
+		fallo.
+	</Fragment>
+	<Fragment slot="check">
+		Revisa el archivo con `plutil -lint`, prográmalo para dentro de dos minutos
+		y lee el registro.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Por qué un comando funciona en tu terminal pero falla en una tarea programada?">
+	El entorno del programador es reducido, con un PATH mínimo y una carpeta de
+	trabajo distinta.
+</Checkpoint>
+
+<Checkpoint question="¿Qué significa 0 7 1 * * en cron?">
+	A las 07:00 del primer día de cada mes.
+</Checkpoint>
+
+<Checkpoint question="¿Cuál es la mejor forma de probar un horario?">
+	Fíjalo para dentro de dos minutos, observa el registro y luego fija la hora
+	real.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 9.3 ejecuta el pipeline en la nube, en una computadora que siempre está
+  encendida.

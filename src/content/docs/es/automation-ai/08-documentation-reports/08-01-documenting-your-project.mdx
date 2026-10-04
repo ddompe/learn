@@ -1,0 +1,170 @@
+---
+title: Documenta tu proyecto
+description: Escribe un README y notas de proyecto que pueda seguir un desconocido, o tú mismo dentro de seis meses.
+sidebar:
+  order: 1
+lessonId: '8.1'
+estimatedMinutes: 20
+prerequisites: ['3.5', '5.6']
+translationStatus: machine
+sourceHash: dcf87fe86eff
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar por qué un proyecto necesita un README. - Escribir un README con
+	las secciones que un lector necesita. - Registrar decisiones para que otros
+	entiendan tus elecciones.
+</LessonGoals>
+
+## Por qué importa
+
+Dentro de seis meses abrirás tu propio proyecto y no recordarás cómo ejecutarlo. Un
+colega que lo herede estará aún más perdido. La documentación no es un trámite. Es lo que
+convierte un script que solo tú puedes ejecutar en una herramienta que un equipo puede
+usar. También es lo primero que lee un asistente de IA para entender tu proyecto.
+
+<CaseStudy>
+	Daniela se va de vacaciones y Mateo debe preparar el informe de febrero. Lo
+	único que tiene es la carpeta del proyecto. Con un buen README puede hacerlo
+	sin llamarla.
+</CaseStudy>
+
+## El README
+
+Un **README** es un archivo Markdown (lección 5.6) en la raíz del proyecto, llamado
+`README.md`. Los sitios que alojan Git, como GitHub, lo muestran en la página principal
+del proyecto. Responde, en orden, las preguntas que se hace quien llega por primera vez:
+
+1. **¿Qué es esto?** Una o dos oraciones.
+2. **¿Qué hace?** Los pasos principales.
+3. **¿Qué necesito?** Herramientas y versiones.
+4. **¿Cómo lo ejecuto?** Los comandos exactos.
+5. **¿Qué entra y qué sale?** Archivos de entrada y resultados.
+6. **¿Qué debo saber?** Decisiones y trampas.
+7. **¿Cómo compruebo que funciona?** Las pruebas.
+8. **¿A quién le pregunto?** Un contacto.
+
+<Example file="part08/README_example.md" />
+
+Fíjate en lo que este README hace bien:
+
+- Los comandos se pueden copiar y ejecutar.
+- Declara las decisiones que es fácil olvidar: las fechas con barras se leen con el día
+  primero, los montos son decimales exactos y las filas sin cliente se conservan.
+- Dice de dónde viene la entrada y adónde va la salida.
+- Es corto. Un README que nadie termina de leer no es documentación.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["Alguien nuevo abre el proyecto"] --> B["README: qué y por qué"]
+  B --> C["README: cómo ejecutarlo"]
+  C --> D["Lo ejecuta y revisa las pruebas"]
+  D --> E["Entiende las decisiones y puede modificarlo"]`}
+/>
+
+## Notas y decisiones del proyecto
+
+No todo cabe en el README. Mantén un `notes.md` corto o una carpeta `docs/` para:
+
+- **Decisiones:** qué elegiste, qué descartaste y por qué. Basta una entrada breve con
+  fecha.
+- **Problemas conocidos:** cosas que sabes que están mal y no has corregido.
+- **Notas sobre los datos:** de dónde vienen y cuáles son sus rarezas.
+
+Escríbelas mientras las recuerdas. Hoy cuestan minutos y después ahorran horas. Haz
+commit de ellas junto con el código (Parte 3), así el historial muestra cuándo se
+escribió cada una.
+
+## Comentarios y docstrings
+
+En el código, escribe un **docstring** al inicio de cada función (lección 4.12) que diga
+qué hace, y un comentario corto solo donde la razón no sea obvia. Los comentarios que
+repiten el código ("suma uno al contador") solo añaden ruido.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+1. Crea `README.md` en tu proyecto, con los encabezados del ejemplo.
+2. Completa cada uno para tu propio proyecto. Sé específico con los comandos.
+3. Pide a un colega, o a un asistente de IA, que lo siga paso a paso. ¿Dónde se atasca?
+
+### Ahora tú
+
+¿Cuáles de estos elementos van en el README y cuáles en las notas?
+
+1. El comando que ejecuta el informe.
+2. Por qué los montos no se guardan como floats.
+3. Un error conocido cuando el archivo no tiene datos de toda una semana.
+
+<Checkpoint question="Muestra una respuesta de ejemplo">
+	El 1 va en el README. El 2 es una decisión: puede ser una línea bajo
+	"Decisiones" en el README o una entrada más larga en las notas. El 3 es un
+	problema conocido que va en las notas, y quizá una advertencia corta en el
+	README.
+</Checkpoint>
+
+## Errores comunes
+
+- **Sin instrucciones.** El README dice qué es el proyecto, pero no cómo ejecutarlo.
+- **Comandos que no funcionan.** Pruébalos en una copia limpia.
+- **Desactualizado.** Actualiza el README en el mismo commit que el cambio.
+- **Escribir para ti.** Escribe para alguien que nunca ha visto el proyecto.
+- **Demasiado largo.** Enlaza a notas más extensas.
+- **Dejar que una IA invente funciones.** Verifica cada afirmación.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Escribe un README.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		Obtienes una plantilla genérica con funciones inventadas, insignias falsas y
+		comandos de herramientas que no usas.
+	</Fragment>
+	<Fragment slot="good">
+		Escribe un README.md para mi proyecto. Lee el CSV de ventas de Café Central
+		separado por punto y coma, limpia fechas, montos y categorías, elimina las
+		filas duplicadas exactas y genera un informe con Quarto. Uso uv con Python
+		3.12 y Quarto para el informe. Los comandos son: "uv sync", "uv run pytest"
+		y "quarto render monthly_report.qmd". Usa estas secciones: Qué hace,
+		Requisitos, Cómo ejecutarlo, Entrada y salida, Decisiones, Pruebas. No
+		añadas nada que yo no te haya dicho. Si necesitas más información,
+		pregúntame.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Da los **hechos** (entrada), los **comandos** exactos, una **estructura**
+		fija (formato de salida) y la **restricción** de no inventar.
+	</Fragment>
+	<Fragment slot="check">
+		Ejecuta cada comando del README en una copia nueva del proyecto. Elimina
+		cualquier afirmación que no puedas confirmar.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué preguntas debe responder un README?">
+	Qué es y qué hace el proyecto, qué se necesita, cómo ejecutarlo, qué entra y
+	qué sale, qué hay que saber, cómo probarlo y a quién preguntar.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué registrar las decisiones?">
+	Para que otras personas, y tú más adelante, entiendan por qué se tomaron las
+	decisiones y no las deshagan por accidente.
+</Checkpoint>
+
+<Checkpoint question="¿Cómo puedes probar un README?">
+	Pide a alguien que lo siga en una copia limpia y observa dónde se atasca.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 8.2 presenta Quarto, la herramienta para escribir informes con código.

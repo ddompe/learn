@@ -1,0 +1,180 @@
+---
+title: Exportar a Word, PDF y HTML
+description: Exporta informes en los formatos que esperan tus colegas.
+sidebar:
+  order: 5
+lessonId: '8.5'
+estimatedMinutes: 20
+prerequisites: ['8.3']
+lastVerified: 2026-10-03
+translationStatus: machine
+sourceHash: bf072c182042
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Generar un informe en HTML, Word y PDF. - Elegir el formato adecuado para el
+	lector. - Saber qué necesita cada formato y dónde se queda corto.
+</LessonGoals>
+
+## Por qué importa
+
+No todos tus colegas querrán una página web. El dueño puede querer un PDF para imprimir.
+El contador puede querer un archivo de Word para añadir comentarios. Una página web es
+lo mejor en pantalla y para compartir un enlace. Con Quarto, la misma fuente produce
+todos, y cada uno se mantiene coherente con los datos.
+
+<CaseStudy>
+	El dueño pide el informe de enero en PDF, y el contador quiere Word para
+	añadir notas. Daniela genera ambos a partir del mismo `monthly_report.qmd`.
+</CaseStudy>
+
+## Un comando por formato
+
+```text
+uv run quarto render monthly_report.qmd --to html
+uv run quarto render monthly_report.qmd --to docx
+uv run quarto render monthly_report.qmd --to typst
+```
+
+Quarto escribe `monthly_report.html`, `monthly_report.docx` y `monthly_report.pdf`. El
+formato `--to typst` produce un PDF. El encabezado del informe de la lección 8.3 ya lista
+los tres:
+
+```text
+format:
+  html: ...
+  docx: default
+  typst: default
+```
+
+Sin `--to`, Quarto genera el primer formato de la lista. Con `--to all` genera todos.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["monthly_report.qmd"] --> B["html: pantalla, enlace, interactivo"]
+  A --> C["docx: los colegas editan y comentan"]
+  A --> D["typst: PDF para imprimir o archivar"]`}
+/>
+
+## Elegir un formato
+
+| Formato | Mejor para                              | Cuidado con                                          |
+| ------- | --------------------------------------- | ---------------------------------------------------- |
+| HTML    | Leer en pantalla, compartir un archivo  | El contenido interactivo no está en Word ni en PDF   |
+| Word    | Edición y comentarios de otras personas | Diseño básico. Las ediciones se pierden al regenerar |
+| PDF     | Imprimir, archivar, diseño fijo         | Necesita un motor de PDF. No es editable             |
+
+## Motores de PDF
+
+Quarto tiene dos formas de crear un PDF:
+
+- `typst`: Quarto incluye el motor Typst, así que no hace falta instalar nada más. Es la
+  más sencilla y la que usa el informe.
+- `pdf`: usa LaTeX, un sistema de composición tipográfica independiente. Quarto puede
+  instalar una versión pequeña con `quarto install tinytex`. El resultado tiene el
+  aspecto académico clásico y requiere más configuración.
+
+Última verificación: 2026-10-03. Las opciones de motores de Quarto cambian entre
+versiones. Consulta la
+[documentación de Quarto sobre la salida en PDF](https://quarto.org/docs/output-formats/pdf-basics.html)
+si algo no funciona.
+
+## El resultado generado
+
+Para los tres formatos del mismo informe que viste, esto significa que el título y la
+numeración de la figura se conservan, la tabla aparece como una tabla real y las cifras
+en línea son las mismas en cada uno. Abre cada archivo y compáralos con los totales de tu
+tabla dinámica.
+
+## La regla de oro
+
+**Nunca edites la salida.** Si el contador añade comentarios al archivo de Word, guarda
+esos comentarios como un documento aparte. La siguiente generación reemplaza el archivo.
+Todas las correcciones van en la fuente `.qmd`.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+1. Genera los tres formatos para la categoría `jugo`, usando `-P category:jugo`.
+2. Abre cada uno. Comprueba que el total sea 112,614 colones en los tres.
+3. Mira el gráfico. ¿El eje empieza en cero en cada uno?
+
+### Ahora tú
+
+El dueño quiere un PDF, pero tu máquina no tiene LaTeX. ¿Qué formato generas y por qué
+funciona?
+
+<Checkpoint question="Muestra la respuesta">
+	`--to typst`. Quarto incluye el motor Typst, así que produce el PDF sin
+	ninguna instalación adicional.
+</Checkpoint>
+
+## Errores comunes
+
+- **Elegir `pdf` sin tener LaTeX instalado.** Usa `typst`, o instala TinyTeX.
+- **Editar la salida de Word.** Las ediciones se pierden en la siguiente generación.
+- **Esperar gráficos interactivos en Word o PDF.** Usa imágenes estáticas para ellos.
+- **Enviar HTML con archivos externos.** Usa `embed-resources: true`.
+- **No abrir el resultado.** Revisa cada formato al menos una vez.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Exporta a PDF.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente te dice que ejecutes `quarto render --to pdf`, que falla porque
+		LaTeX no está instalado, y te sugiere instalar un paquete muy grande.
+	</Fragment>
+	<Fragment slot="good">
+		Tengo un informe de Quarto monthly_report.qmd. Necesito un PDF y un archivo
+		de Word. No he instalado LaTeX y no tengo derechos de administrador. Dame
+		los ajustes del encabezado y los comandos para generar ambos, usando el
+		motor de PDF que no necesita instalación adicional. Dime qué debo revisar en
+		cada salida antes de enviarla.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Indica el **contexto y los límites**, pide **ajustes y comandos**, y exige
+		una **lista de comprobación** para verificar.
+	</Fragment>
+	<Fragment slot="check">
+		Genera ambos y compara los totales, la figura y la tabla en cada uno.
+		Confirma que el motor que nombra el asistente esté documentado por Quarto.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué opción de formato de Quarto produce un PDF sin LaTeX?">
+	`typst`, usado con `--to typst`.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué no editar el archivo de Word que produjo Quarto?">
+	La siguiente generación lo sobrescribe. Los cambios van en la fuente `.qmd`.
+</Checkpoint>
+
+<Checkpoint question="¿Qué formato le sirve a un colega que quiere añadir comentarios?">
+	Word.
+</Checkpoint>
+
+## Lista de verificación de fin de parte
+
+Has terminado la Parte 8 cuando puedas marcar todos los elementos:
+
+- [ ] Mi proyecto tiene un README que un desconocido puede seguir.
+- [ ] `quarto --version` funciona y generé `hello.qmd`.
+- [ ] Generé el informe mensual en HTML.
+- [ ] Lo generé para una categoría con un parámetro.
+- [ ] Exporté versiones en Word y PDF.
+
+## Para profundizar
+
+- La Parte 9 automatiza todo el proceso para que se ejecute solo.
