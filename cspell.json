@@ -8,6 +8,7 @@
 		".astro",
 		"package-lock.json",
 		"courses/*/examples/.venv",
+		"courses/*/examples/data",
 		"courses/*/examples/uv.lock"
 	],
 	"words": [

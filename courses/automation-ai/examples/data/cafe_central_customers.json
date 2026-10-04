@@ -1,30 +1,54 @@
 // Café Central customer database
-// Last updated: 2024-01-07
+// Last updated: 2024-01-31
 {
-	"customers": [
-		{
-			"id": "C001",
-			"name": "Ana López",
-			"city": "San José",
-			"email": "ana@example.com"
-		},
-		{
-			"id": "C002",
-			"name": "Carlos Rodríguez",
-			"city": "Alajuela",
-			"email": ""
-		},
-		{
-			"id": "C003",
-			"name": "María García",
-			"city": "Heredia",
-			"email": "maria@example.com"
-		},
-		{
-			"id": "C004",
-			"name": "",
-			"city": "Cartago",
-			"email": "unknown@example.com"
-		}
-	]
+  "customers": [
+    {
+      "id": "C001",
+      "name": "Ana López",
+      "city": "San José",
+      "email": "ana@example.com"
+    },
+    {
+      "id": "C002",
+      "name": "Carlos Rodríguez",
+      "city": "Alajuela",
+      "email": ""
+    },
+    {
+      "id": "C003",
+      "name": "María García",
+      "city": "Heredia",
+      "email": "maria@example.com"
+    },
+    {
+      "id": "C004",
+      "name": "",
+      "city": "Cartago",
+      "email": "unknown@example.com"
+    },
+    {
+      "id": "C005",
+      "name": "José Núñez",
+      "city": "San José",
+      "email": "jose@example.com"
+    },
+    {
+      "id": "C006",
+      "name": "Sofía Jiménez",
+      "city": "Heredia",
+      "email": "sofia@example.com"
+    },
+    {
+      "id": "C007",
+      "name": "Andrés Solís",
+      "city": "Escazú",
+      "email": ""
+    },
+    {
+      "id": "C008",
+      "name": "Lucía Peña",
+      "city": "Alajuela",
+      "email": "lucia@example.com"
+    }
+  ]
 }

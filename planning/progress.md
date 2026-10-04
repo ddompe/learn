@@ -84,6 +84,7 @@ unchecked items above, which need the user's GitHub/DNS access.
 - [x] `@examples/automation-ai` Vite alias for `?raw` imports.
 - [x] Components: `LessonGoals`, `PromptExample`, `Checkpoint`, `CaseStudy`, `Example`,
       `LastVerified`, `TranslationNotice`, `Mermaid`. UI strings in `src/content/i18n/{en,es}.json`.
+      (Reworked in Stage 5: see below.)
 - [x] `scripts/run_examples.py`, `scripts/generate_dataset.py`, `scripts/check_translations.py`.
 - [x] Café Central case-study dataset (messy CSV, JSON, generated reproducibly).
 - [x] Sample lesson (Part 0 / "Reading data from files") using every component, EN + ES.
@@ -93,7 +94,28 @@ unchecked items above, which need the user's GitHub/DNS access.
 Exit ✓: Sample lesson validates the entire content pipeline; components/scripts proven
 end to end; ready for piloting Parts 0–2 in Stage 5.
 
-## Stage 5 — Pilot content: Parts 0–2, English (M2) — not started
+## Stage 5 — Pilot content: Parts 0–2, English (M2) — in progress
+
+Work happens directly on `main` (no per-part branches for now).
+
+Part 0:
+
+- [x] Chapter brief approved (`courses/automation-ai/planning/briefs/part-00.md`).
+- [x] Components aligned with `planning/templates/lesson-template.mdx` and ADR-0009:
+      five-slot `PromptExample`, `Example file=` (reads tested files, shows generated
+      output), `OsTabs`, `Checkpoint question`, `@components` alias, UI strings moved to
+      `src/i18n/`. `LastVerified`, `TranslationNotice`, the barrel file and the sample
+      lesson were removed. Frontmatter schema extended (`lessonId`, `lastVerified`, ...).
+- [x] `scripts/run_examples.py` rewritten (writes `examples/__outputs__/`, `--check` for CI;
+      not yet wired into CI).
+- [x] Dataset generator rewritten (240 sales rows, duplicates, mixed dates and amounts,
+      accents), `scripts/package_datasets.py`, pytest in `examples/part00/`, zip committed
+      under `public/downloads/automation-ai/`.
+- [ ] Lessons 0.1-0.4 drafted (one per session).
+- [ ] Brief open question 4 (real learner pitfalls) still unanswered; pitfalls are hypotheses.
+- [ ] Unverified in a real browser: Mermaid rendering, new components.
+
+Parts 1 and 2: not started.
 
 ## Stage 6 — Parts 3–9 (M3–M9) — not started
 
