@@ -161,9 +161,18 @@ Repo state: all work is committed and pushed on `main`; the site is live at
 
 Next actions, in order:
 
-1. Part 0-2 read-through for flow (author review), then the pilot with 3-5 learners (M2 exit).
-   Before Stage 6, rebuild the `lastVerified` renderer (2.4 and 2.9 need it).
-2. Stage 6: Part 3 brief and lessons.
+1. **Author review** of Parts 0-9 (English), using `manual-verification.md`. Content is
+   drafted but not human-reviewed. Most unverified items are OS-specific steps (Windows) and
+   external facts.
+2. **Pilot** Parts 0-2 with 3-5 learners (M2 exit) and revise the template and guides.
+3. **Part 10** (Advanced, GitHub Copilot SDK, ADR-0015) is not started on purpose: the SDK is in
+   preview, needs a Copilot account and CLI to run, and its API could not be verified. Decide
+   between (a) writing it against a thin adapter with a fake client for tests, (b) waiting until
+   the SDK can be tried, or (c) a direct vendor SDK. Every Part 10 page is ⏱.
+4. **Spanish** (Stage 7): Parts 3-9 are not translated. Use `scripts/check_translations.py`;
+   Parts 0-2, course home and About are done (machine).
+5. **Infrastructure**: render `lastVerified` on ⏱ pages (2.4, 2.9, 3.3, 5.8, 7.5, 8.2, 8.5, 9.3) and the
+   machine-translation notice; Mermaid/component browser check; weekly link job first run.
 
 ### Known gaps and decisions
 
