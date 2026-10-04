@@ -123,6 +123,10 @@ Part 3 (Stage 6 start): brief agreed (`briefs/part-03.md`), examples in `example
 outputs), lessons 3.1-3.10 drafted (3.3 carries `lastVerified`). `Example` now infers the code
 language from the file extension (py, toml, text).
 
+Part 7: brief agreed (`briefs/part-07.md`), examples in `examples/part07/` (charts written to
+`public/charts/automation-ai/part07/`, Streamlit app tested with AppTest), lessons 7.1-7.5 drafted
+(7.5 carries `lastVerified`). New dependencies: seaborn, plotly, streamlit.
+
 Part 6: brief agreed (`briefs/part-06.md`), examples in `examples/part06/` (shared `cafe_clean.py`, 10
 scripts, tests, outputs), lessons 6.1-6.10 drafted. New dependency: duckdb.
 

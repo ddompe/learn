@@ -1,0 +1,141 @@
+---
+title: matplotlib
+description: Build and customise a static chart with matplotlib and save it as an image.
+sidebar:
+  order: 2
+lessonId: '7.2'
+estimatedMinutes: 25
+prerequisites: ['7.1', '6.5']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Draw a bar chart with matplotlib. - Add a title, labels, and value labels. -
+	Save the chart as an image file.
+</LessonGoals>
+
+## Why this matters
+
+**matplotlib** is the foundation of charting in Python. Other libraries, such as seaborn,
+are built on it. With it, you can produce exactly the chart that a report needs and save
+it as a file that can go into a document (Part 8) or an email.
+
+<CaseStudy>
+	Daniela needs a clear chart of January sales by category for the owner's
+	monthly report.
+</CaseStudy>
+
+## Figure and axes
+
+In matplotlib, a **figure** is the whole picture and an **axes** (singular: axis) is one chart inside it.
+You make both with one call, `plt.subplots()`, and then draw on the axes.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["Figure: the canvas"] --> B["Axes: one chart"]
+  B --> C["Bars or lines"]
+  B --> D["Title, labels, ticks"]`}
+/>
+
+## A first chart
+
+<Example file="part07/02_matplotlib.py" />
+
+![Horizontal bar chart of January 2024 sales by category, sorted from te at the bottom to sandwich at the top, each bar labelled with its total in colones.](/charts/automation-ai/part07/02_category_totals.png)
+
+What each part does:
+
+- The totals come from the cleaned table of lesson 6.4, as a `groupby` sum. They are sorted so the bars appear in order.
+- `barh` draws horizontal bars. Long category names fit better.
+- `bar_label` writes each value at the end of its bar, so readers don't need to estimate.
+- The title, the axis label with the unit (colones), and a little extra room on the right for the labels.
+- The top and right frame lines are hidden, as they add nothing.
+- `savefig` writes a PNG file. The script uses a mode that draws straight to files, so it works on a server with no screen.
+
+The amounts are converted to ordinary decimals (floats) for drawing only. The exact `Decimal` values stay in the table, and the chart is a picture, not a calculation.
+
+## Habits
+
+1. **Title** says what the chart shows. **Axis labels** include the unit.
+2. **Save to a file** with a clear name, rather than relying on a window.
+3. **Close the figure** with `plt.close()` after saving, so memory is released when you make many charts.
+4. **Keep the chart code in a function** so it can be reused each month (Part 9).
+
+## Hands-on
+
+### Worked example
+
+1. Run the script, and open the PNG.
+2. Change the colour, then sort the bars in descending order, and run it again.
+3. Remove `set_xlim` and see what happens to the largest label.
+
+### Your turn
+
+Add a line to the chart that says what the data is: "Source: Café Central sales, cleaned (240 rows)". Which method would you look up?
+
+<Checkpoint question="Show a hint">
+	Use the figure or axes text method, for example `axis.annotate` or
+	`figure.text`, to put small text under the chart. Ask your assistant to show
+	the exact call, then check the result in the saved image.
+</Checkpoint>
+
+## Common mistakes
+
+- **Forgetting the unit** on the axis.
+- **Using `plt.show()` in a script that should save a file.**
+- **Plotting `Decimal` values directly.** Convert to float for drawing.
+- **Many charts, no `close`.** Memory grows.
+- **Default blue-orange palettes with no meaning.** Use one colour unless colour carries information.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Plot this.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		You get a default chart with no title or units, a window that tries to open,
+		and a random colour scheme.
+	</Fragment>
+	<Fragment slot="good">
+		I have a pandas Series "totals" with the sales total in colones per
+		category, sorted from smallest to largest. Write matplotlib code that draws
+		a horizontal bar chart, with a title, an x-axis label "Colones", the value
+		written at the end of each bar with thousands separators, one colour, and
+		the top and right frame lines hidden. Save it as category_totals.png at 100
+		dpi and close the figure. Do not call plt.show().
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It gives the **input**, lists every **output requirement**, and states
+		**constraints** (save, no window).
+	</Fragment>
+	<Fragment slot="check">
+		Open the PNG and compare the labels with the table. Check that the largest
+		value is not cut off.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What is the difference between a figure and axes?">
+	The figure is the whole canvas, and the axes is one chart drawn on it.
+</Checkpoint>
+
+<Checkpoint question="Why save to a file instead of showing a window?">
+	A file works in scripts, on servers, and in reports, and can be rebuilt each
+	month.
+</Checkpoint>
+
+<Checkpoint question="Why convert Decimal to float for plotting?">
+	The drawing library works with ordinary numbers. The exact values stay in the
+	table.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 7.3 uses seaborn to build statistical charts faster.

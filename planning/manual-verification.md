@@ -68,6 +68,14 @@ leaves something unverified. Updated 2026-10-03.
 - [ ] 6.9: `duckdb.sql` finding a DataFrame by variable name inside a function scope and across versions.
 - [ ] Pivot labels and week numbers in 6.5 (ISO weeks) read sensibly to a business audience.
 
+## Part 7 (visualization)
+
+- [ ] The chart PNGs (white background) look acceptable on the dark theme; the four images in 7.1 to 7.3 are readable at phone width.
+- [ ] The Plotly iframe in 7.4 loads and is interactive on the deployed site (it needs internet for the CDN); dark theme and phone width.
+- [ ] 7.5: `uv run streamlit run part07/05_app.py` opens the browser app on Windows and macOS, and whether Streamlit asks for an email on first run; the shared-network and hosting remarks are still accurate (`lastVerified: 2026-10-03`).
+- [ ] The alt text of the charts reads well in a screen reader.
+- [ ] Chart PNG bytes stay reproducible with the pinned matplotlib/seaborn versions; if they change after an upgrade, rerun `scripts/run_examples.py` and recommit the images.
+
 ## Pedagogy and voice (author review)
 
 - [ ] Read Parts 0 to 2 end to end for flow, repetition, and tone. Intro repetition was reduced on 2026-10-03; re-check.

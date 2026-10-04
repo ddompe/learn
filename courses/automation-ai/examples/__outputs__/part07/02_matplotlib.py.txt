@@ -1,0 +1,3 @@
+Saved: 02_category_totals.png
+Categories, smallest first: ['te', 'pastel', 'cafe', 'jugo', 'sandwich']
+Largest: sandwich 138,310

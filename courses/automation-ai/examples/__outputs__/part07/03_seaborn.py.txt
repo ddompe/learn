@@ -1,0 +1,2 @@
+Heatmap grid shape (categories, weeks): (5, 5)
+Median amount per category: {'cafe': 1800.0, 'jugo': 2200.0, 'pastel': 1500.0, 'sandwich': 3200.0, 'te': 1400.5}

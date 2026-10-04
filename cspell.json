@@ -5,6 +5,7 @@
 	"ignorePaths": [
 		"node_modules",
 		".claude",
+		"public/charts",
 		"dist",
 		".astro",
 		"package-lock.json",
@@ -14,6 +15,15 @@
 	],
 	"words": [
 		"mojibake",
+		"xlim",
+		"streamlit",
+		"savefig",
+		"plotlyjs",
+		"plotly",
+		"headlessly",
+		"boxplot",
+		"barh",
+		"Boxplot",
 		"unpivoting",
 		"unpivot",
 		"startswith",

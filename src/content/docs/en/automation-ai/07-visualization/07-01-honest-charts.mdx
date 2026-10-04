@@ -1,0 +1,150 @@
+---
+title: Honest charts
+description: Choose the right chart for a question, and recognise misleading charts.
+sidebar:
+  order: 1
+lessonId: '7.1'
+estimatedMinutes: 20
+prerequisites: ['6.5']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Choose a chart type to match a question. - Recognise the common ways charts
+	mislead. - Check your own charts before sharing them.
+</LessonGoals>
+
+## Why this matters
+
+A chart is a claim. People remember the picture and forget the numbers. A chart can mislead without
+a single false number, just through the choices of the axis, the type, or the time range.
+Doing it by accident is as harmful as doing it on purpose. Your reports will be trusted
+more if the charts are honest.
+
+<CaseStudy>
+	The owner asks: "Are weekly sales falling?" Daniela can draw the answer to
+	look like a collapse or like a small dip. Both charts use the same numbers.
+</CaseStudy>
+
+## Start from the question
+
+Pick the chart from what you want to show.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["What is the question?"] --> B{"Compare categories?"}
+  B -- Yes --> C["Bar chart"]
+  A --> D{"Change over time?"}
+  D -- Yes --> E["Line chart"]
+  A --> F{"Spread of values?"}
+  F -- Yes --> G["Box plot or histogram"]
+  A --> H{"Two measures related?"}
+  H -- Yes --> I["Scatter plot"]
+  A --> J{"Parts of a whole, 2 to 4 parts?"}
+  J -- Yes --> K["Stacked bar, or a pie with few slices"]`}
+/>
+
+## Ways charts mislead
+
+1. **A truncated axis.** Bars encode value by **length**, so the axis must start at zero.
+   Cutting it exaggerates differences.
+2. **A cherry-picked time range.** Starting at a peak or a trough tells a different story.
+3. **Pie charts with many slices,** or 3D effects. Angles and depth are hard to compare.
+4. **Dual axes** with different scales, which let you make any two lines look related.
+5. **Unlabelled axes and units.** "Sales" in what? Colones, thousands of colones?
+6. **Unordered bars.** Sort categories by value unless they have a natural order.
+7. **Colour that carries no meaning,** or colour alone to separate categories for colour-blind readers.
+
+## See it
+
+<Example file="part07/01_honest_charts.py" />
+
+The script draws the same four weekly totals twice.
+
+![Bar chart with the vertical axis starting near 86,000. The last week looks almost empty compared with the first three.](/charts/automation-ai/part07/01_truncated_axis.png)
+
+On the first chart, the axis starts near the smallest bar. Week 4 looks as if almost nothing was sold.
+
+![Bar chart with the vertical axis starting at zero. The last week is somewhat shorter than the first three.](/charts/automation-ai/part07/01_zero_axis.png)
+
+On the second, the axis starts at zero, and the real story is visible: the largest week is
+about 1.26 times the smallest. A real drop, but not a collapse. The script prints that ratio, so you can always check a chart against the numbers.
+
+## A checklist before sharing
+
+1. Does the chart answer a **question** that is written in the title?
+2. Do bars start at **zero**?
+3. Are the **units** and the **period** shown?
+4. Are categories **sorted** sensibly?
+5. Would the message change if I chose a different time range?
+6. Can someone who is colour-blind read it?
+7. Does the number in the chart match the table it came from?
+
+## Hands-on
+
+### Your turn
+
+A manager shows a line chart whose y axis runs from 98 to 102 and says "look how volatile sales are!". What is wrong?
+
+<Checkpoint question="Show the answer">
+	The narrow axis magnifies tiny changes of a few percent. Show the full scale
+	or the change in percent, and ask whether those changes are meaningful.
+</Checkpoint>
+
+## Common mistakes
+
+- **Choosing the chart before the question.**
+- **Defaults that truncate.** Some tools start the axis at the lowest value. Check.
+- **Decorating.** Shadows, 3D, and gradients add nothing.
+- **Hiding the data source or the period.**
+- **Trusting an AI-generated chart without reading the axis.**
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Make a chart of sales.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		You get a pie or a 3D bar chart with a default title, no units, and no clear
+		message.
+	</Fragment>
+	<Fragment slot="good">
+		I want to show the owner whether weekly sales are falling. My data is four
+		weekly totals in colones, from 4 January to 28 January 2024. Recommend one
+		chart type and say why. Then list the settings that would make it honest or
+		misleading, such as the axis start and the time range. Do not draw it yet.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It starts from the **question** and the **data** (context and input), and
+		asks for the risks before any code, which is the **verification** step.
+	</Fragment>
+	<Fragment slot="check">
+		Check that the answer says bars need a zero baseline. Then ask yourself
+		whether four points are enough to say "falling".
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Why must a bar chart's axis start at zero?">
+	Bars encode value by length, so a cut axis exaggerates differences.
+</Checkpoint>
+
+<Checkpoint question="Which chart suits a change over time?">
+	A line chart.
+</Checkpoint>
+
+<Checkpoint question="Name two other ways a chart can mislead.">
+	A cherry-picked time range, dual axes, 3D effects, unlabelled units, or a pie
+	with many slices.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 7.2 builds an honest static chart step by step.

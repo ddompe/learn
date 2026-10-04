@@ -1,0 +1,3 @@
+Saved: 04_weekly_sales.html
+Lines in the chart: 5
+Points per line: 5

@@ -1,0 +1,132 @@
+---
+title: Plotly
+description: Build interactive charts that readers can hover, zoom, and filter.
+sidebar:
+  order: 4
+lessonId: '7.4'
+estimatedMinutes: 20
+prerequisites: ['7.2']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Build an interactive line chart with Plotly. - Save it as a standalone web
+	page. - Explain when an interactive chart helps and when a static one is
+	better.
+</LessonGoals>
+
+## Why this matters
+
+A static image answers one question. An **interactive** chart lets the reader hover to see
+exact values, zoom into a period, and click legend entries to hide lines. That helps when a
+chart has many lines or many details, and the reader wants to explore.
+
+<CaseStudy>
+	The owner wants to compare categories week by week, and look up the exact
+	value of a point.
+</CaseStudy>
+
+## A chart as a web page
+
+**Plotly** draws charts in a browser with JavaScript. From Python, you describe the chart,
+and Plotly writes an HTML file that opens in any browser.
+
+<Example file="part07/04_plotly.py" />
+
+`plotly.express` (imported as `px`) makes a chart from a tidy table in one call: `x`, `y`,
+and `color` pick the columns, and `markers=True` marks each week.
+
+Try it yourself below. Hover over a point, double-click to reset the zoom, and click a name in the
+legend to hide that line.
+
+<iframe
+	src="/charts/automation-ai/part07/04_weekly_sales.html"
+	title="Interactive line chart of weekly sales by category"
+	width="100%"
+	height="480"
+	loading="lazy"
+></iframe>
+
+## Things to know
+
+- The page loads the Plotly library from the internet (`include_plotlyjs="cdn"`), which keeps
+  the file small. It needs a connection. For an offline file, use `include_plotlyjs=True`, and expect a file of several megabytes.
+- The file is a program that runs in the reader's browser. Only share charts built from data
+  you are allowed to share (lesson 2.8). The data is inside the file.
+- Interactive charts are harder to put in a printed report or a Word file. For those, use a static image (lesson 7.2).
+
+<Mermaid
+	diagram={`flowchart TD
+  A["Who reads it, and where?"] --> B{"On a screen, wants to explore?"}
+  B -- Yes --> C["Interactive: Plotly HTML"]
+  B -- No --> D["Static: PNG from matplotlib"]`}
+/>
+
+## Hands-on
+
+### Your turn
+
+Open the chart above. Which category had its highest week in the first week of January?
+
+<Checkpoint question="Show the answer">
+	Juice (jugo), with about 33,200 colones in the week ending 7 January,
+	according to the pivot of lesson 6.5. Hover to confirm the number.
+</Checkpoint>
+
+## Common mistakes
+
+- **Sharing an interactive file that holds private data.**
+- **Forgetting that the CDN version needs internet.**
+- **Using it for printed output.**
+- **Too many lines.** Interaction helps, but ten lines are still hard to read.
+- **Relying on hover for the key message.** Put it in the title.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Make it interactive.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant adds a heavy dashboard framework, or rewrites your chart in
+		another library.
+	</Fragment>
+	<Fragment slot="good">
+		I have a tidy pandas table "weekly" with columns fecha (week end date),
+		categoria, and monto. Using only plotly.express, write code for a line chart
+		with one line per categoria, markers, a title, and readable axis labels.
+		Save it as a standalone HTML file that loads Plotly from a CDN. Tell me what
+		happens if the reader is offline.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It names the **library** and the **schema**, and the **constraints** (one
+		file, CDN), and asks about the trade-off.
+	</Fragment>
+	<Fragment slot="check">
+		Open the file in a browser, and hover over three points to compare them with
+		the table.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What does an interactive chart offer?">
+	Hovering for exact values, zooming, and hiding or showing lines.
+</Checkpoint>
+
+<Checkpoint question="Why can an offline reader not see a CDN-based chart?">
+	The page loads the Plotly library from the internet when it opens.
+</Checkpoint>
+
+<Checkpoint question="When is a static image better?">
+	For printed documents, Word files, and anywhere interaction is impossible.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 7.5 puts charts and filters in a small app.

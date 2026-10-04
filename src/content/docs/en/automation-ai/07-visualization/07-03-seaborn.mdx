@@ -1,0 +1,135 @@
+---
+title: seaborn
+description: Build statistical charts quickly from DataFrames.
+sidebar:
+  order: 3
+lessonId: '7.3'
+estimatedMinutes: 20
+prerequisites: ['7.2']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain what seaborn adds to matplotlib. - Draw a box plot and a heatmap
+	from a DataFrame. - Read both charts correctly.
+</LessonGoals>
+
+## Why this matters
+
+Some questions are about the **shape** of the data, not just totals: how spread out are the
+amounts, and where are the busy and quiet spots? **seaborn** builds on matplotlib to
+answer these in a line or two, directly from a DataFrame.
+
+<CaseStudy>
+	Daniela wants to know whether sandwiches are consistently expensive or just
+	have a few big sales, and which category was busy in which week.
+</CaseStudy>
+
+## What seaborn adds
+
+You still use matplotlib for the figure, titles, and saving. seaborn adds:
+
+- Charts built from column names: `sns.boxplot(data=sales, x="categoria", y="monto")`.
+- Good-looking default styles (`set_theme`).
+- Statistical summaries, like a box plot, drawn for you.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["DataFrame in tidy form"] --> B["seaborn: pick columns"]
+  B --> C["matplotlib: figure, title, save"]`}
+/>
+
+seaborn works best with **tidy data** (lesson 6.7): one row per observation, one column per variable.
+
+## Two charts
+
+<Example file="part07/03_seaborn.py" />
+
+![Box plots of sale amounts for each category. Sandwich amounts are highest and widest. Tea and cake are lowest.](/charts/automation-ai/part07/03_boxplot.png)
+
+A **box plot** shows the spread. The box covers the middle half of the values, the line inside is
+the **median** (the middle value), and the whiskers extend to the usual range. Points beyond are unusual
+values. Sandwich amounts sit highest, with the median at 3,200 colones, and tea sales are the lowest.
+
+![Heatmap of sales by category and ISO week. Sandwiches in weeks 2 and 3 and juice in week 1 are the darkest cells. Cake in week 5 is the lightest.](/charts/automation-ai/part07/03_heatmap.png)
+
+A **heatmap** colours a table by value. Darker means more. It comes from the pivot table of
+lesson 6.5, with the numbers written in each cell, so nothing relies on colour alone. Week 5 is
+short, because the file ends on 31 January, which explains its light cells.
+
+## Reading carefully
+
+- A box plot hides the number of points. Check the counts.
+- In a heatmap, a light cell can mean "little" or "incomplete period". Know which.
+- Don't use a colour scale in which both ends look alike. Use one hue from light to dark.
+
+## Hands-on
+
+### Your turn
+
+In the box plot, which category has the narrowest box, and what does that tell you?
+
+<Checkpoint question="Show a sample answer">
+	Pastel (cake) has only two prices in the menu, so its amounts hardly vary. A
+	narrow box means consistent amounts.
+</Checkpoint>
+
+## Common mistakes
+
+- **Using wide data.** Reshape to tidy rows first.
+- **Rainbow palettes.** They have no order. Use one hue.
+- **Over-reading small groups.** Few points make unstable boxes.
+- **Forgetting incomplete periods,** like the short last week.
+- **Letting `set_theme` change all later charts** without noticing.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Make it look nicer.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant adds gradients, a rainbow palette, and a legend with no
+		purpose.
+	</Fragment>
+	<Fragment slot="good">
+		I have a tidy pandas table "sales" with columns categoria and monto (float).
+		Write seaborn code for a box plot of monto by categoria in a single muted
+		blue, with the y-axis labelled "Colones" and no x-axis label. Save it as
+		boxplot.png. Then tell me how to read a box plot in three bullet points, and
+		what it hides.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It names the **schema**, the **design constraints** (one colour, labels),
+		and asks for an explanation and a limitation as **verification**.
+	</Fragment>
+	<Fragment slot="check">
+		Group the table by category, take the median of the amounts, and check that
+		the values match the line inside each box.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What does a box plot show?">
+	The spread of values: the middle half in the box, the median as a line, and
+	unusual values as points.
+</Checkpoint>
+
+<Checkpoint question="What data shape works best with seaborn?">
+	Tidy data, with one row per observation and one column per variable.
+</Checkpoint>
+
+<Checkpoint question="Why write the numbers in a heatmap's cells?">
+	So the chart does not rely on colour alone, and readers can see the exact
+	values.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 7.4 makes a chart that readers can explore.

@@ -1,0 +1,4 @@
+Misleading chart: y axis starts at 86144
+Honest chart: y axis starts at 0
+Week totals: [109212, 109214, 109412, 87014]
+Largest week over smallest: 1.2574

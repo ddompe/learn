@@ -1,0 +1,162 @@
+---
+title: Streamlit
+description: Share a small interactive app with a colleague.
+sidebar:
+  order: 5
+lessonId: '7.5'
+estimatedMinutes: 25
+prerequisites: ['7.4', '4.14']
+lastVerified: 2026-10-03
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Run a small Streamlit app on your computer. - Read how widgets and charts
+	are written. - Decide how to share an app safely.
+</LessonGoals>
+
+## Why this matters
+
+Sometimes a colleague does not want a report. They want to change a filter and see the answer.
+**Streamlit** turns a Python script into a small web app, with filters and charts, with no
+web development. It is a good step between a static report and a full dashboard system.
+
+<CaseStudy>
+	The owner wants to look at sales for one category at a time, without asking
+	Daniela to rerun anything.
+</CaseStudy>
+
+## An app is a script that reruns
+
+A Streamlit app is a Python file. Each time the user changes a widget, Streamlit **runs the
+script again from the top** and redraws the page. That is the whole model.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["User changes a filter"] --> B["Streamlit reruns the script"]
+  B --> C["Script reads the filter value"]
+  C --> D["Table, numbers and chart redraw"]
+  D --> A`}
+/>
+
+## The app
+
+<Example file="part07/05_app.py" />
+
+- `st.title`, `st.metric`, `st.bar_chart`, and `st.dataframe` draw things on the page.
+- `st.multiselect` shows a widget and returns what the user picked. The script filters
+  the data with it, exactly as in lesson 6.3.
+- The data comes from the same cleaning function as before. The app reuses your work.
+
+## Run it
+
+From the project folder:
+
+```text
+uv run streamlit run part07/05_app.py
+```
+
+Your browser opens at an address like `http://localhost:8501`. Change the category filter,
+and the numbers and chart change. Stop the app with **Ctrl+C** in the terminal.
+
+Because the app has a test (Streamlit can run an app headlessly and check what it shows),
+you can be sure that it still works after you change it.
+
+## Sharing an app
+
+Options, from safest to most open:
+
+1. **Run it yourself** and show it on your screen.
+2. **Run it on your computer for colleagues on the same network.** The address is shown in the terminal. Only do this if company policy permits it.
+3. **Host it** on a service or a company server. Hosting services and their free tiers change.
+   Check the official Streamlit documentation. Last verified on 2026-10-03.
+
+Before sharing, ask: what data does the app contain, and who will see it? An app is a window
+into your data. Do not publish customer information (lesson 2.8). Never put keys in the app's
+code (lesson 3.7).
+
+## Hands-on
+
+### Worked example
+
+1. Run the app, and select only `jugo`. The number of sales should be 55.
+2. Add a second metric that shows the largest sale. Save the file, and see how the page
+   offers to rerun.
+
+### Your turn
+
+Which part of the script would you change to add a date filter?
+
+<Checkpoint question="Show the answer">
+	Add a date widget, such as a date range input, and filter the table with the
+	chosen dates in the same way as the category filter, before computing the
+	metrics and the chart.
+</Checkpoint>
+
+## Common mistakes
+
+- **Reading the data inside the loop of every rerun** when it is slow. Streamlit has caching; ask your assistant about it once the app feels slow.
+- **Sharing an app with private data.**
+- **Putting secrets in the code.**
+- **Forgetting that the script reruns from the top,** so variables do not persist by themselves.
+- **Building a big app first.** Start with one filter and one chart.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Build me an app.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		You get hundreds of lines with invented data, absolute paths, and many
+		features you did not ask for.
+	</Fragment>
+	<Fragment slot="good">
+		I have a function clean_sales() that returns a pandas table with columns
+		fecha, cliente, monto (float), and categoria. Write a Streamlit app of under
+		40 lines that has a multiselect for categoria, shows the total monto and the
+		number of sales for the selection, and a bar chart of weekly totals. Reuse
+		clean_sales(). Tell me the command to run it with uv, and one test idea
+		using Streamlit's AppTest.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It states the **schema**, a small **scope**, the **constraint** (reuse,
+		under 40 lines), and a **verification** (a test idea).
+	</Fragment>
+	<Fragment slot="check">
+		Run it and compare the total for one category with your pivot table from
+		lesson 6.5.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What does Streamlit do when a widget changes?">
+	It reruns the whole script from the top and redraws the page.
+</Checkpoint>
+
+<Checkpoint question="Which command starts the app?">
+	`uv run streamlit run` followed by the file path.
+</Checkpoint>
+
+<Checkpoint question="What should you ask before sharing an app?">
+	What data it contains and who will see it.
+</Checkpoint>
+
+## End-of-part checklist
+
+You have finished Part 7 when you can tick every item:
+
+- [ ] I can say what is wrong with the truncated chart.
+- [ ] I saved a labelled bar chart as a PNG.
+- [ ] I opened the interactive chart and hovered a point.
+- [ ] I ran the app and changed a filter.
+
+## Going deeper
+
+- Part 8 puts charts and text together in a report.
