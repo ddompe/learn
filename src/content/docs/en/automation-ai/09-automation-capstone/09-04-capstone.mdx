@@ -88,9 +88,20 @@ Your pipeline is done when it meets every item. They are written so that you can
 3. Removes exact duplicate rows, merges the category spelling variants, and keeps rows with no customer, marked.
 4. Amounts are exact decimals. The cleaned January data has 240 rows and a grand total of 474,061.00 colones.
 
-**Behaviour** 5. Settings come from a config file; the month and output folder can be overridden on the command line. 6. Writes a log file and prints progress. A wrong or missing file stops the run with a clear message and exit code 2. 7. Writes the category totals as CSV and as a formatted Excel file. 8. Produces the report, with a captioned weekly chart that starts at zero, a category table, and numbers in the text that come from the data, in HTML, Word, and PDF. 9. The report can be rendered for a single category with a parameter.
+### Behaviour
 
-**Quality** 10. Tests cover the parsers, the cleaning (including the 240-row result), and each failure. 11. A README says what it does, how to run it, and which decisions were made. 12. The project is in Git with clear commits, in a private repository, with no secrets or private data. 13. It runs on a schedule, on your computer or in GitHub Actions, and you have seen it run at least once from the schedule.
+1. Settings come from a config file; the month and output folder can be overridden on the command line.
+2. Writes a log file and prints progress. A wrong or missing file stops the run with a clear message and exit code 2.
+3. Writes the category totals as CSV and as a formatted Excel file.
+4. Produces the report, with a captioned weekly chart that starts at zero, a category table, and numbers in the text that come from the data, in HTML, Word, and PDF.
+5. The report can be rendered for a single category with a parameter.
+
+### Quality
+
+1. Tests cover the parsers, the cleaning (including the 240-row result), and each failure.
+2. A README says what it does, how to run it, and which decisions were made.
+3. The project is in Git with clear commits, in a private repository, with no secrets or private data.
+4. It runs on a schedule, on your computer or in GitHub Actions, and you have seen it run at least once from the schedule.
 
 ## How to build it with an assistant
 

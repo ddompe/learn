@@ -169,7 +169,7 @@ Next actions, in order:
    preview, needs a Copilot account and CLI to run, and its API could not be verified. Decide
    between (a) writing it against a thin adapter with a fake client for tests, (b) waiting until
    the SDK can be tried, or (c) a direct vendor SDK. Every Part 10 page is ⏱.
-4. **Spanish** (Stage 7): Parts 3-9 are not translated. Use `scripts/check_translations.py`;
+4. **Spanish** (Stage 7): Parts 0-9 are machine-translated (2026-10-03); native review pending. Use `scripts/check_translations.py`;
    Parts 0-2, course home and About are done (machine).
 5. **Infrastructure**: render `lastVerified` on ⏱ pages (2.4, 2.9, 3.3, 5.8, 7.5, 8.2, 8.5, 9.3) and the
    machine-translation notice; Mermaid/component browser check; weekly link job first run.
@@ -194,7 +194,7 @@ Next actions, in order:
 
 ## Stage 6 — Parts 3–9 (M3–M9) — drafted (all of Parts 3-9), pending review
 
-## Stage 7 — Spanish translation (M10) — started (Parts 0-2 machine-translated)
+## Stage 7 — Spanish translation (M10) — started (Parts 0-9 machine-translated)
 
 Runs alongside Stage 6 from M3 onward.
 

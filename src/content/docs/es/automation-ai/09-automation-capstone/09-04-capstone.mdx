@@ -7,7 +7,7 @@ lessonId: '9.4'
 estimatedMinutes: 120
 prerequisites: ['9.1', '9.2', '8.3']
 translationStatus: machine
-sourceHash: e8c3b8816f6b
+sourceHash: f252de43d779
 ---
 
 import LessonGoals from '@components/LessonGoals.astro';
@@ -97,9 +97,20 @@ comprobar cada uno.
 4. Los montos son decimales exactos. Los datos limpios de enero tienen 240 filas y un
    total general de 474,061.00 colones.
 
-**Comportamiento** 5. Los ajustes vienen de un archivo de configuración; el mes y la carpeta de salida se pueden anular en la línea de comandos. 6. Escribe un archivo de registro e imprime el progreso. Un archivo equivocado o ausente detiene la ejecución con un mensaje claro y el código de salida 2. 7. Escribe los totales por categoría como CSV y como un archivo de Excel con formato. 8. Produce el informe, con un gráfico semanal con título que empieza en cero, una tabla por categoría y cifras en el texto que provienen de los datos, en HTML, Word y PDF. 9. El informe se puede generar para una sola categoría con un parámetro.
+### Comportamiento
 
-**Calidad** 10. Las pruebas cubren los intérpretes de formatos, la limpieza (incluido el resultado de 240 filas) y cada fallo. 11. Un README dice qué hace, cómo ejecutarlo y qué decisiones se tomaron. 12. El proyecto está en Git con commits claros, en un repositorio privado, sin secretos ni datos privados. 13. Se ejecuta de forma programada, en tu computadora o en GitHub Actions, y lo has visto ejecutarse al menos una vez desde el horario.
+1. Los ajustes vienen de un archivo de configuración; el mes y la carpeta de salida se pueden anular en la línea de comandos.
+2. Escribe un archivo de registro e imprime el progreso. Un archivo equivocado o ausente detiene la ejecución con un mensaje claro y el código de salida 2.
+3. Escribe los totales por categoría como CSV y como un archivo de Excel con formato.
+4. Produce el informe, con un gráfico semanal con título que empieza en cero, una tabla por categoría y cifras en el texto que provienen de los datos, en HTML, Word y PDF.
+5. El informe se puede generar para una sola categoría con un parámetro.
+
+### Calidad
+
+1. Las pruebas cubren los intérpretes de formatos, la limpieza (incluido el resultado de 240 filas) y cada fallo.
+2. Un README dice qué hace, cómo ejecutarlo y qué decisiones se tomaron.
+3. El proyecto está en Git con commits claros, en un repositorio privado, sin secretos ni datos privados.
+4. Se ejecuta de forma programada, en tu computadora o en GitHub Actions, y lo has visto ejecutarse al menos una vez desde el horario.
 
 ## Cómo construirlo con un asistente
 

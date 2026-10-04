@@ -124,6 +124,25 @@ All Spanish pages for Parts 0 to 2, the course home and About are `translationSt
 - [ ] Thousands separators in prose use a space (20 000) and plain digits below 10 000 (2500). Check this matches the intended style. Code outputs and decimals in prompts keep the dot (0.30, 12345.67).
 - [ ] Rendered pages: language picker, sidebar labels, and links between `/es/` pages work in a browser.
 
+## Spanish translation, Parts 3 to 9
+
+Machine-translated on 2026-10-03 (`translationStatus: machine`). Nothing here was reviewed by a native speaker.
+
+- [ ] Native-speaker review of Parts 3 to 9 (3.x, 4.x, 5.x, 6.x, 7.x, 8.x, 9.x and their indexes), including the Spanish prompts. None were tried with an AI assistant.
+- [ ] New terms to review: despivotar, "ingenua / con zona horaria", "datos ordenados (tidy)", cifra de control, archivo de bloqueo, mapa de calor, diagrama de caja, instantánea, historial, punto de interrupción, "informe parametrizado".
+- [ ] 3.2 Spanish VS Code labels: "Archivo > Abrir carpeta", "Sí, confío en los autores", "Nueva terminal", "Instalar". The Windows installer text stays English; check it matches the current installer.
+- [ ] 3.3 Copilot sign-in label ("Iniciar sesión") and chat icon location in the Spanish UI.
+- [ ] 3.5 and 3.6: "Control de código fuente", "Inicializar repositorio", "Publicar rama", GitHub "New repository" and "Private/Privado"; macOS command line developer tools prompt; Git "not found" message in a Spanish terminal.
+- [ ] 4.2 Spanish PowerShell and zsh error texts, the execution-policy block message, and how the Windows terminal looks in Spanish locales.
+- [ ] 4.4 and 4.5 Spanish VS Code labels ("Seleccionar kernel", "Ejecutar celda", "Crear: nuevo Jupyter Notebook") and the Python and Jupyter extension names.
+- [ ] 5.2 claim that Excel in Spanish locales saves CSV with `;` (decimal comma). Same claim as English; not checked on a real Spanish-locale Excel.
+- [ ] 6.5 and 6.6 Spanish Excel names BUSCARV and BUSCARX, the `#N/D` error, and the pivot box names (Filas, Columnas, Valores, Filtros). 4.11 uses `SI` for `IF`.
+- [ ] Text inside the Part 7 chart images and the Plotly iframe (7.4) stays English; only alt text and iframe title were translated.
+- [ ] Number format in prose (474,061.00 with a decimal point) kept from English. Decide on a Spanish style.
+- [ ] 8.2 Quarto VS Code extension and installer names; 9.2 Spanish Windows Task Scheduler names ("Programador de tareas", "Crear tarea básica", "Mensualmente") and macOS Documentos/Escritorio wording; 9.3 GitHub `Actions`, `Run workflow`, "secretos" labels in the Spanish UI.
+- [ ] Prettier reflowed some tables and the 9.4 requirements list; check them in a browser.
+- [ ] Tilde characters in the built HTML and pagefind search.
+
 ## Not built yet
 
 - [ ] Display of `lastVerified` on ⏱ pages (2.4, 2.9).

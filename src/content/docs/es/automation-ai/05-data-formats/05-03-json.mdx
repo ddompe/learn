@@ -7,7 +7,7 @@ lessonId: '5.3'
 estimatedMinutes: 20
 prerequisites: ['5.1']
 translationStatus: machine
-sourceHash: 1bd3ec966dd5
+sourceHash: 787778fb0a97
 ---
 
 import LessonGoals from '@components/LessonGoals.astro';
@@ -77,7 +77,7 @@ comentario y luego lee 8 clientes. Algunos tienen el nombre o el correo vacío, 
 script lo informa. En el ejemplo escrito, un correo faltante es `null`.
 
 Fíjate en `ensure_ascii=False` en las dos últimas líneas. Sin él, `json.dumps` escribe
-`é` como `é`. Ambos son JSON válido, pero el primero es más fácil de leer.
+`é` como `\u00e9`. Ambos son JSON válido, pero el primero es más fácil de leer.
 
 ## Valores faltantes
 

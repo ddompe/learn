@@ -70,7 +70,7 @@ customers. Some have an empty name or email, which the script reports. In the wr
 example, a missing email is `null`.
 
 Notice `ensure_ascii=False` in the last two lines. Without it, `json.dumps` writes `é` as
-`é`. Both are valid JSON, but the first is easier to read.
+`\u00e9`. Both are valid JSON, but the first is easier to read.
 
 ## Missing values
 
