@@ -1,0 +1,171 @@
+---
+title: Anatomy of a good prompt
+description: Learn the six elements of a good prompt and use them to turn a vague request into a useful one.
+sidebar:
+  order: 7
+lessonId: '2.7'
+estimatedMinutes: 20
+prerequisites: ['2.1', '2.6']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Name the six elements of a good prompt. - Rewrite a vague prompt using all
+	six. - Know which element to add when an answer disappoints you.
+</LessonGoals>
+
+## Why this matters
+
+Every lesson so far ended with a lousy prompt and a good one. Now you learn why the good
+one worked. A **prompt** is the text you give an assistant. The assistant can only use
+what is in that text. If a detail is not there, it will guess, and guesses are where
+errors come from.
+
+<CaseStudy>
+	Daniela wants a summary of January sales. Her first prompt is "Summarise this
+	CSV". The answer is generic. After she rewrites it with the six elements, the
+	summary is useful and she can check it.
+</CaseStudy>
+
+## The six elements
+
+| Element           | Question it answers                | Example                                            |
+| ----------------- | ---------------------------------- | -------------------------------------------------- |
+| **Context**       | What situation am I in?            | "I am an analyst at a coffee company, on Windows." |
+| **Task**          | What exactly do I want?            | "Summarise sales by category."                     |
+| **Input**         | What does my data look like?       | "Here are the first 10 lines: ..."                 |
+| **Constraints**   | What must it respect?              | "The separator is `;`. Do not delete duplicates."  |
+| **Output format** | What shape should the answer have? | "A table, then three bullet points."               |
+| **Verification**  | How will I know it is right?       | "Show the rows you used for each total."           |
+
+You do not need all six every time. A quick question needs two. A task that affects
+money or decisions should use all six.
+
+## Why each element helps
+
+- **Context** rules out wrong answers that fit another situation, such as Mac advice for a
+  Windows user.
+- **Task** prevents the assistant from guessing what you want. One clear task beats a
+  list of five.
+- **Input** gives it real material. Without it, the assistant invents plausible data.
+- **Constraints** carry the facts that are obvious to you and invisible to it.
+- **Output format** saves editing time and makes comparison easy.
+- **Verification** makes errors visible, and gives you a checklist.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Vague prompt"] --> B["Add context and input"]
+  B --> C["State task and constraints"]
+  C --> D["Choose format and verification"]
+  D --> E["Better, checkable answer"]`}
+/>
+
+## Diagnosing a bad answer
+
+When an answer disappoints, ask which element was missing:
+
+| Symptom                             | Likely missing element |
+| ----------------------------------- | ---------------------- |
+| Generic advice                      | Context                |
+| It did something else               | Task                   |
+| Invented details                    | Input                  |
+| Ignored a rule you had in mind      | Constraints            |
+| Hard to use, too long               | Output format          |
+| You cannot tell whether it is right | Verification           |
+
+## Hands-on
+
+### Worked example
+
+**Lousy:** "Summarise this CSV."
+
+**Good:**
+
+> I am an analyst at a coffee company. (context)
+> Summarise total sales by category. (task)
+> Here are the first 20 lines of the file: ... (input)
+> The separator is a semicolon. Amounts are in colones. Do not remove duplicate rows,
+> but list them. (constraints)
+> Give a table with category, number of sales, and total, then three bullet points of
+> observations. (output format)
+> For each total, show the IDs of the rows you used, and say "unsure" if you cannot. (verification)
+
+Notice that every line answers a question the assistant would otherwise have guessed.
+
+### Your turn
+
+Rewrite this prompt using all six elements. Use your own work in the answer.
+
+> Write me a formula.
+
+<Checkpoint question="Show a sample rewrite">
+	I use Excel on Windows (context). Write a formula that returns the total of
+	column D where column E equals "café" (task). Column D has amounts and column
+	E has category names, rows 2 to 241 (input). Ignore blank cells, and do not
+	use macros (constraints). Give the formula, then one sentence explaining each
+	part (output format). Tell me how to test it against three rows I can check by
+	hand (verification).
+</Checkpoint>
+
+## Common mistakes
+
+- **Writing a wall of text.** Organise it. Short labelled lines work well.
+- **Leaving out the input.** The assistant will invent it.
+- **Asking for five things at once.** Split big jobs into steps.
+- **Skipping verification because the task looks easy.** Easy tasks fail too.
+- **Pasting secrets as "context".** Never paste passwords or keys (lessons 1.12 and 2.8).
+- **Treating the prompt as magic words.** What works is clear information, not tricks.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Make my prompt better: summarise this CSV.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant produces a longer prompt full of generic phrases, such as "act
+		as an expert analyst", which add words but no facts. It cannot add what only
+		you know.
+	</Fragment>
+	<Fragment slot="good">
+		I will give you a draft prompt. Check it against six elements: context,
+		task, input, constraints, output format, verification. For each element, say
+		"present", "weak", or "missing", and quote the words that justify it. Then
+		ask me up to three questions to fill the gaps. Do not rewrite the prompt
+		yet. Draft: "Summarise this CSV."
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It turns the assistant into a reviewer using the **task** and the **output
+		format**, and the **constraint** "do not rewrite yet" keeps you in charge of
+		the facts. The questions extract the information only you have.
+	</Fragment>
+	<Fragment slot="check">
+		Check that each quote really appears in your draft. Answer the questions
+		honestly, then ask for the rewritten prompt and compare it with the six
+		elements again.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Name the six elements of a prompt.">
+	Context, task, input, constraints, output format, and verification.
+</Checkpoint>
+
+<Checkpoint question="The assistant invented column names that are not in your file. Which element was missing?">
+	Input. Paste the header and a few real rows.
+</Checkpoint>
+
+<Checkpoint question="Why include verification in the prompt?">
+	It makes the assistant show its basis, so mistakes become visible and you know
+	what to check.
+</Checkpoint>
+
+## Going deeper
+
+- Every remaining lesson in the course uses this anatomy in its prompt section.

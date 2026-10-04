@@ -1,0 +1,5 @@
+Window size: 12 words
+Messages kept (8 words):
+  Please summarise January sales
+  Now compare with February
+Forgotten: 2 message(s)

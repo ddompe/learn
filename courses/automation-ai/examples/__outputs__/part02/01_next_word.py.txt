@@ -1,0 +1,2 @@
+After 'the': {'cafe': 3, 'shop': 1} -> predict 'cafe' (3 of 4)
+After 'sells': {'coffee': 3, 'cake': 1} -> predict 'coffee' (3 of 4)

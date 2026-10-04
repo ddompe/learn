@@ -1,0 +1,139 @@
+---
+title: Context windows and memory
+description: Understand why a model forgets earlier parts of a conversation and what products do about it.
+sidebar:
+  order: 3
+lessonId: '2.3'
+estimatedMinutes: 15
+prerequisites: ['2.1']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain what a context window is. - Explain why the model "forgets" in long
+	conversations. - Describe what products do to simulate memory.
+</LessonGoals>
+
+## Why this matters
+
+You work with an assistant for an hour. Then it contradicts something you told it at
+the start. Or you paste a big file and it ignores half of it. These are not random
+failures. They come from a fixed limit on how much the model can see at once.
+
+<CaseStudy>
+	Daniela spends a long chat explaining Café Central's rules, then pastes the
+	sales data. Later, the assistant ignores a rule she gave at the beginning.
+</CaseStudy>
+
+## The context window
+
+The **context window** is the maximum amount of text, counted in tokens, that the model
+can read in one go. It includes everything: your instructions, the whole conversation so
+far, any pasted files, and the answer being written.
+
+The model has no memory between requests. Each time you send a message, the product
+sends the model the whole conversation again, as one long text, and the model predicts
+the next tokens. If the text exceeds the window, something must be left out.
+
+<Example file="part02/03_context.py" />
+
+Here the window holds twelve words (real windows are thousands of times larger, counted
+in tokens). The two oldest messages no longer fit, so they fall out. The assistant now
+has no way to know the user's name, because that message is gone.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Old messages"] -.->|"fall out when full"| X["Not seen by the model"]
+  B["Recent messages"] --> C["Inside the window: seen"]
+  D["Your new message"] --> C`}
+/>
+
+## Even inside the window, attention is not equal
+
+A very long input can dilute the model's focus. Details in the middle of a huge paste
+are more easily missed than those at the start or end. Bigger windows help, but they do
+not make the model read perfectly.
+
+## How products simulate memory
+
+- **Trimming.** Drop or summarise the oldest messages.
+- **Summaries.** Replace old messages with a short summary written by the model.
+- **Saved notes.** Some products store facts about you and insert them into later
+  conversations. This is text added to the prompt, not learning.
+- **Files and projects.** You attach documents, and the product inserts relevant parts.
+
+Each approach loses detail. If something is important, say it again near the end of
+your message.
+
+## Hands-on
+
+### Your turn
+
+Daniela has a chat with 50 messages. The assistant starts to ignore the rule from
+message 3. Which two actions would help?
+
+<Checkpoint question="Show the answers">
+	Restate the rule in the new message, or start a fresh conversation with a
+	short summary of the rules and the data. Both put the rule back inside the
+	window.
+</Checkpoint>
+
+## Common mistakes
+
+- **Thinking the model remembers yesterday's chat.** Unless the product has a saved-notes
+  feature, a new chat starts empty.
+- **Pasting a huge file and trusting a summary of all of it.** Ask questions on parts, and
+  check.
+- **Putting key instructions only at the very start of a long chat.** Repeat them.
+- **Ignoring the cost.** Every message resends the whole conversation (lesson 2.9).
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">You forgot what I told you. Do it again.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant apologises and guesses what you said, or repeats the same
+		mistake. If the rule has left the window, it cannot recover it.
+	</Fragment>
+	<Fragment slot="good">
+		Here are the rules for this task, restated: dates are DD/MM/YYYY, amounts
+		are in colones, and duplicate transaction IDs must be listed, not deleted.
+		Using only these rules, summarise the sales table below in five bullet
+		points. After the summary, list which rules you applied.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It restates the **context** instead of relying on memory, adds a
+		**constraint** (use only these rules), and requires a **verification** step:
+		list the rules applied.
+	</Fragment>
+	<Fragment slot="check">
+		Check that every restated rule appears in the "rules applied" list. A
+		missing rule means it was ignored.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What is a context window?">
+	The maximum amount of text, in tokens, that the model can read in one request.
+</Checkpoint>
+
+<Checkpoint question="Why does a model forget early parts of a long chat?">
+	The conversation is resent each time, and when it exceeds the window, the
+	oldest text is dropped or summarised.
+</Checkpoint>
+
+<Checkpoint question="Is a product's saved-notes feature the model learning about you?">
+	No. It stores text and adds it to later prompts.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 2.9 shows how conversation length affects cost.

@@ -1,0 +1,152 @@
+---
+title: What an LLM actually is
+description: Understand tokens and next-token prediction, the one idea behind every chat assistant.
+sidebar:
+  order: 1
+lessonId: '2.1'
+estimatedMinutes: 15
+prerequisites: ['0.1']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain what a token is. - Explain next-token prediction with a small
+	example. - Describe what an LLM is good at, and what follows from how it
+	works.
+</LessonGoals>
+
+## Why this matters
+
+An AI assistant seems to understand you. If you believe it does, you will trust it too
+much. If you think it is magic, you cannot predict when it will fail. A correct mental
+model lets you use it well and notice trouble early.
+
+<CaseStudy>
+	Daniela asks an assistant to describe Café Central's January sales. The answer
+	reads smoothly and confidently. To judge it, she needs to know what the
+	assistant did to produce those sentences.
+</CaseStudy>
+
+## Tokens
+
+A **large language model** (LLM) is a program trained on a vast amount of text to
+predict what text comes next. ChatGPT, Copilot, and Claude are products built on LLMs.
+
+An LLM does not read letters or whole words. It reads **tokens**: small pieces of text.
+A token can be a short word, part of a longer word, or a punctuation mark. In English,
+one token is about four characters, or three quarters of a word. Spanish text usually
+needs more tokens for the same meaning.
+
+For example, "Café Central sells coffee" may split into pieces such as "Caf", "é",
+" Central", " sells", " coffee". The exact split depends on the model.
+
+## Next-token prediction
+
+An LLM does one thing: given the tokens so far, it chooses a likely next token. Then it
+adds that token to the text and repeats.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Text so far"] --> B["Predict the next token"]
+  B --> C["Add it to the text"]
+  C --> A`}
+/>
+
+To see the idea, here is a toy model. It "reads" a tiny text and counts which word
+follows which. Then it predicts the most common follower.
+
+<Example file="part02/01_next_word.py" />
+
+After "the", the word "cafe" followed three times and "shop" once, so the toy model
+predicts "cafe". It has no idea what a cafe is. It only counts.
+
+A real LLM does something similar in spirit, but at an enormous scale. It has learned
+patterns from billions of pages, and it looks at much more than the last word. That is
+why it can write fluent paragraphs, translate, and follow instructions.
+
+## What follows from this
+
+- **It produces plausible text, not checked facts.** Plausible and true are different.
+  Lesson 2.6 returns to this.
+- **It does not "look up" things by itself.** What it knows comes from its training, unless
+  the product adds a search step (lesson 2.2).
+- **The same prompt can give different answers.** The choice of next token has some
+  randomness.
+- **Wording matters.** A different prompt changes the starting text, so it changes the
+  prediction. This is why prompting is a skill (lesson 2.7).
+
+Do not conclude that LLMs are useless. Predicting text well turns out to be very useful
+for drafting, summarising, explaining, and writing code. The limits just need to be known.
+
+## Hands-on
+
+### Your turn
+
+Change the toy text in your head. Suppose the text were: "the cafe sells coffee and the
+cafe sells coffee and the cafe sells tea".
+
+1. What would the toy model predict after "sells"?
+2. Is that prediction a fact about the world?
+
+<Checkpoint question="Show the answers">
+	1. "coffee", because it followed "sells" twice and "tea" once. 2. No. It
+	reflects only the text the model saw. A real model is the same on a larger
+	scale: it reflects its training text.
+</Checkpoint>
+
+## Common mistakes
+
+- **Believing the model understands like a person.** It predicts text. Understanding is a
+  useful way to talk, but a poor way to predict failures.
+- **Assuming the answer was looked up.** Unless the product searches, it was generated.
+- **Expecting the same answer twice.** Variation is normal.
+- **Judging by fluency.** Smooth writing says nothing about accuracy.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Explain how you work.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant gives a polished but vague account, possibly with claims about
+		"understanding" or "thinking" that sound reassuring and teach little.
+	</Fragment>
+	<Fragment slot="good">
+		I am an Excel user with no programming background. Explain in under 150
+		words what a token is and how you choose the next one. Use one analogy from
+		spreadsheets. Then tell me one thing this way of working makes you bad at.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It gives the **context** (audience), a **constraint** (length, one analogy),
+		and asks for a limitation, which a lousy prompt would never surface.
+	</Fragment>
+	<Fragment slot="check">
+		Check that the answer talks about predicting pieces of text, not "knowing"
+		or "thinking". Compare its limitation with the list in this lesson.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What is a token?">
+	A small piece of text, such as a short word or part of a word, that an LLM
+	reads and writes.
+</Checkpoint>
+
+<Checkpoint question="What does an LLM do at each step?">
+	It predicts a likely next token given the tokens so far, adds it, and repeats.
+</Checkpoint>
+
+<Checkpoint question="Why can a fluent answer still be wrong?">
+	The model is optimised to produce plausible text, not to check facts.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 2.2 explains where the model's knowledge comes from, and why it has a cutoff.

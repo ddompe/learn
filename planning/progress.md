@@ -90,7 +90,7 @@ Exit criteria met: `https://learn.dompe.space/en/` is live.
 Exit ✓: Sample lesson validates the entire content pipeline; components/scripts proven
 end to end; ready for piloting Parts 0–2 in Stage 5.
 
-## Stage 5 — Pilot content: Parts 0–2, English (M2) — in progress
+## Stage 5 — Pilot content: Parts 0–2, English (M2) — drafting complete, pilot pending
 
 Work happens directly on `main` (no per-part branches for now).
 
@@ -115,7 +115,9 @@ Part 0:
 Part 1: brief agreed (`briefs/part-01.md`), examples in `examples/part01/` (6 scripts, tests, outputs),
 lessons 1.1-1.12 drafted (2026-10-03).
 
-Part 2: not started.
+Part 2: brief agreed (`briefs/part-02.md`), examples in `examples/part02/` (3 scripts, tests,
+outputs), lessons 2.1-2.9 drafted (2.4 and 2.9 carry `lastVerified: 2026-10-03`; no model names or
+real prices in the body, only official-page links).
 
 ### How to resume (read this first)
 
@@ -125,8 +127,9 @@ Repo state: all work is committed and pushed on `main`; the site is live at
 
 Next actions, in order:
 
-1. Part 2: brief, examples (if any), lessons 2.1-2.9 (use Parts 0-1 as style reference).
-2. Then the pilot with 3-5 learners (M2 exit), before Stage 6.
+1. Part 0-2 read-through for flow (author review), then the pilot with 3-5 learners (M2 exit).
+   Before Stage 6, rebuild the `lastVerified` renderer (2.4 and 2.9 need it).
+2. Stage 6: Part 3 brief and lessons.
 
 ### Known gaps and decisions
 

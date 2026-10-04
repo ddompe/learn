@@ -1,0 +1,157 @@
+---
+title: Hallucinations and verification
+description: Understand why assistants make things up and build habits for checking their answers.
+sidebar:
+  order: 6
+lessonId: '2.6'
+estimatedMinutes: 20
+prerequisites: ['2.1', '2.2']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain what a hallucination is and why it happens. - Recognise situations
+	where the risk is highest. - Apply a simple verification routine.
+</LessonGoals>
+
+## Why this matters
+
+An assistant that sometimes invents facts, and sounds just as sure when it does, is
+dangerous to trust blindly. It is also very useful when checked. The skill is not
+avoiding the tool. The skill is to verify the right things cheaply.
+
+<CaseStudy>
+	Daniela asks an assistant to total the January sales. It returns a clean table
+	with a grand total and says it checked for duplicates. The total is wrong by a
+	few thousand colones, because the assistant never really added the numbers,
+	and the duplicates were not removed.
+</CaseStudy>
+
+## What a hallucination is
+
+A **hallucination** is a statement from an AI that sounds right but is false or not
+supported: an invented quotation, a made-up web link, a function that does not exist,
+a number that is not in the data.
+
+It happens for the reason you saw in lesson 2.1. The model predicts plausible text. When
+it lacks the facts, plausible text still comes out. It has no built-in alarm that says
+"I do not know". Newer models do this less, but not never.
+
+## When the risk is highest
+
+- **Exact facts:** names, dates, numbers, citations, legal and tax details.
+- **Arithmetic and counting** over many items. A model predicts digits, it does not
+  calculate. Code or a spreadsheet does.
+- **Obscure or recent topics,** outside its training (lesson 2.2).
+- **Long inputs,** where parts are missed (lesson 2.3).
+- **Requests that assume something false.** "Summarise the clause about X" when no such
+  clause exists often yields an invented clause.
+
+## A verification routine
+
+<Mermaid
+	diagram={`flowchart TD
+  A["Get the answer"] --> B["Is it a fact, a number, or code?"]
+  B --> C["Find the checkable claims"]
+  C --> D["Check them against a source you trust"]
+  D --> E{"All correct?"}
+  E -- Yes --> F["Use it"]
+  E -- No --> G["Correct it, or ask again with the right input"]`}
+/>
+
+1. **Mark the checkable claims.** Numbers, names, links, and quotes.
+2. **Check a sample.** For a table of 240 rows, check five by hand.
+3. **Check against the source.** Open the link, the file, or the documentation.
+4. **Recalculate.** Have a spreadsheet or code do the arithmetic.
+5. **Ask for the basis.** "Which rows did you use? Quote them."
+6. **Match effort to risk.** A draft email needs a read. A tax figure needs a professional.
+
+## Hands-on
+
+### Worked example
+
+Paste these three sales rows into an assistant and ask for their total, then compute it
+yourself in a spreadsheet:
+
+```text
+T001;01/01/2024;C004;2200.00;jugo
+T002;2024-01-01;C002;1500;pastel
+T003;2024-01-01;C004;1400.00;té
+```
+
+The correct total is 5100. Did the assistant get it right? Did it show its work?
+
+### Your turn
+
+Which of these claims would you check first, and how?
+
+1. "The best-selling category is coffee, with 38% of sales."
+2. "The email's tone is friendly."
+3. "See the guide on the example.com website, under coffee-tax-guide."
+
+<Checkpoint question="Show the answers">
+	Check 1 first: recompute the share from the data. Check 3 next: open the link,
+	since it may not exist. The tone in 2 is a judgement you can read yourself.
+</Checkpoint>
+
+## Common mistakes
+
+- **Trusting confidence.** The tone is the same when the answer is wrong.
+- **Asking "are you sure?".** The assistant may just agree or reverse. Check the source.
+- **Checking only the final answer.** Also check the inputs the assistant says it used.
+- **Letting it do arithmetic.** Ask it to write a formula or a script, and run that.
+- **Checking nothing because the first answers were right.** Errors are occasional, not
+  predictable.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Summarise this CSV.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant produces a smooth summary with specific totals and trends,
+		some of which are not in the file. You cannot tell which are real.
+	</Fragment>
+	<Fragment slot="good">
+		Below are 20 rows from a sales file (ID; date; customer; amount; category).
+		Describe the columns, then give the total amount and the count of rows. For
+		each number, show the rows you used. If you are not sure of a value, say
+		"unsure" instead of estimating. Finish with a list of three things I should
+		verify by hand.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It provides the **input** and limits the **task**. Showing rows used makes
+		mistakes visible, "unsure" removes pressure to guess, and the closing list
+		is a built-in **verification** step.
+	</Fragment>
+	<Fragment slot="check">
+		Recompute the total in a spreadsheet and compare it. Check three of the
+		cited rows against the file.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What is a hallucination?">
+	A confident statement from an AI that is false or unsupported, such as an
+	invented number or link.
+</Checkpoint>
+
+<Checkpoint question="Why should you not rely on an assistant for arithmetic over many rows?">
+	It predicts digits instead of calculating. Use a formula or code and run it.
+</Checkpoint>
+
+<Checkpoint question="Name two quick ways to verify an answer.">
+	Check a sample against the source, and recompute with a spreadsheet or code.
+	Opening cited links also works.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 2.7 shows how to write prompts that make verification easier.

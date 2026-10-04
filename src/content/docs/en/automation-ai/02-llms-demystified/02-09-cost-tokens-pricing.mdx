@@ -1,0 +1,157 @@
+---
+title: 'Cost: tokens and pricing'
+description: Estimate what a task costs and understand why AI services charge per token.
+sidebar:
+  order: 9
+lessonId: '2.9'
+estimatedMinutes: 15
+prerequisites: ['2.1', '2.3']
+lastVerified: 2026-10-03
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain why AI services charge per token. - Estimate the tokens and cost of
+	a task. - Name the main things that make a task cost more.
+</LessonGoals>
+
+## Why this matters
+
+Many assistants feel free, and a free plan can be enough to learn with. But when a
+company automates work with AI, or when you use paid plans, costs appear, and they can
+surprise you. A small estimate before a big job avoids a nasty bill. The prices
+themselves change often, so this lesson teaches the method and shows you where to find
+current numbers.
+
+<CaseStudy>
+	Café Central wants to summarise every month's sales file automatically.
+	Daniela is asked how much that might cost per year.
+</CaseStudy>
+
+## Why per token
+
+Remember that the model reads and writes tokens (lesson 2.1). The work it does,
+and the computers it needs, grow with the number of tokens. So services charge by tokens
+processed, usually per million. They charge differently for:
+
+- **Input tokens:** everything you send, including the conversation so far and pasted files.
+- **Output tokens:** what the model writes. These usually cost more per token.
+
+Some services add cheaper rates for repeated input, or for work that can wait. Check the
+vendor's page for details.
+
+Also, subscriptions such as monthly plans hide token prices behind a fixed fee and
+usage limits.
+
+## A simple estimate
+
+1. Estimate the **input** size in tokens. A rough rule for English: characters divided by 4.
+   Spanish often needs more.
+2. Estimate the **output** size.
+3. Multiply each by its price per million tokens, divided by one million.
+4. Multiply by how many times you will do it.
+
+<Example file="part02/09_cost.py" />
+
+The prices in this script are made-up examples, not real ones. The sales file has about
+8,400 characters, so about 2,100 tokens. With the example rates, one summary costs
+about one and a half cents. Run it every month for a year and the cost is still small.
+
+The estimate is rough. Real token counts differ by model, and the same job could be
+cheaper or more expensive.
+
+## What makes a task more expensive
+
+- **A longer input:** big files, long chats resent every time (lesson 2.3).
+- **A longer output:** a short answer costs less than a long report.
+- **A more capable model:** large models cost more per token than small ones.
+- **Repetition:** a job run on thousands of files multiplies everything.
+- **Retries and testing:** while building an automation, you will run the job many times.
+
+## Check these yourself
+
+Prices change often. Last verified on 2026-10-03. Look up the current numbers on the
+vendor's official pricing page, such as those listed in lesson 2.4, and replace the
+example rates when you do your own estimate.
+
+## Hands-on
+
+### Your turn
+
+Using the example rates in the script ($3 per million input tokens and $15 per million
+output tokens), estimate the cost of a job with 100,000 input tokens and 2,000 output tokens.
+
+<Checkpoint question="Show the answer">
+	Input: 100,000 times 3 divided by 1,000,000 is 0.30 dollars. Output: 2,000
+	times 15 divided by 1,000,000 is 0.03 dollars. The total is 0.33 dollars.
+</Checkpoint>
+
+## Common mistakes
+
+- **Forgetting that input includes the whole conversation.** Long chats get costly.
+- **Using today's price for next year's plan.** Prices and models change.
+- **Comparing prices without comparing quality.** A cheaper model that needs retries may cost more.
+- **Ignoring limits on subscription plans.** "Unlimited" often has fair-use limits.
+- **Testing on the whole data set.** Test on a few rows first.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">How much will this cost?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant names a price from memory, likely out of date, and does not
+		show how it got it.
+	</Fragment>
+	<Fragment slot="good">
+		I plan to summarise one CSV file of about 8,000 characters each month, with
+		an output of about 500 tokens. I will give you the input and output prices
+		per million tokens from my vendor's pricing page: input 3.00 dollars, output
+		15.00 dollars. Show the calculation step by step in a table, for one run and
+		for twelve runs. Do not use any price I have not given you.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It supplies the **input** (sizes and prices) and a **constraint** that
+		forbids remembered prices. The step-by-step **output format** doubles as
+		**verification**.
+	</Fragment>
+	<Fragment slot="check">
+		Redo the arithmetic with a calculator or spreadsheet. Confirm that the
+		prices in the answer are the ones you supplied, and that the token estimate
+		uses about four characters per token.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Why do AI services charge per token?">
+	The computing work grows with the number of tokens processed, so tokens are
+	the natural unit of cost.
+</Checkpoint>
+
+<Checkpoint question="Why are long chats more expensive than they look?">
+	The whole conversation is sent as input with every new message.
+</Checkpoint>
+
+<Checkpoint question="Which usually costs more per token, input or output?">
+	Output.
+</Checkpoint>
+
+## End-of-part checklist
+
+You have finished Part 2 when you can tick every item:
+
+- [ ] I can explain next-token prediction in two sentences.
+- [ ] I rewrote one real prompt of mine with the six elements.
+- [ ] I classified my own work data as safe or not safe to paste.
+- [ ] I estimated the cost of one task in tokens.
+
+## Going deeper
+
+- Part 3 sets up the tools you will use with an AI assistant for the rest of the course.

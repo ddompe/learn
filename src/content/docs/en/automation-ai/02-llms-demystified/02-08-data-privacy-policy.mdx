@@ -1,0 +1,163 @@
+---
+title: Data privacy and company policy
+description: Decide what you may share with an AI tool, and how consumer and enterprise plans differ.
+sidebar:
+  order: 8
+lessonId: '2.8'
+estimatedMinutes: 20
+prerequisites: ['2.4', '2.5']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Classify data as safe or not safe to paste into an AI tool. - Explain how
+	consumer and enterprise plans can differ. - Know what to do before using a new
+	tool at work.
+</LessonGoals>
+
+## Why this matters
+
+Pasting data into a chat is easy and feels private. It is not always. The text goes to
+servers run by another company. Depending on the plan and the settings, it may be
+stored, reviewed by people, or used to train future models. Sharing the wrong data can
+break privacy law, a contract, or your employer's rules, and it cannot be undone.
+
+<CaseStudy>
+	Daniela wants help with the customer file, which contains names, cities, and
+	emails. Before pasting anything, she has to decide what is safe.
+</CaseStudy>
+
+## Kinds of data
+
+| Kind                     | Examples at Café Central                  | Risk                            |
+| ------------------------ | ----------------------------------------- | ------------------------------- |
+| Public                   | The menu, opening hours                   | Low                             |
+| Internal                 | Monthly sales totals, internal procedures | Medium. Check the policy.       |
+| Personal data            | Customer names, emails, phone numbers     | High. Laws and contracts apply. |
+| Secrets                  | Passwords, API keys, bank details         | Never share                     |
+| Confidential by contract | A supplier's price list under NDA         | High. The contract decides.     |
+
+**Personal data** is information that identifies a person. Many countries regulate it.
+
+## Consumer versus enterprise plans
+
+The same vendor often sells different plans with different promises.
+
+- **Consumer plans** (free or personal) are for individuals. By default, your
+  conversations may be kept, and may be used to improve models, unless you turn that
+  off. Settings and terms differ between vendors and change over time.
+- **Business and enterprise plans** usually include written commitments: data is not used
+  to train models, access is controlled, and retention is limited. Your company signs a
+  contract for these.
+
+You cannot tell from the product name which plan applies. Check the account.
+
+## Practical rules
+
+1. **Find your company's AI policy.** If there is none, ask your manager or IT.
+2. **Use the company-approved tool** for work data.
+3. **Share the minimum.** Replace names with codes (C001), and remove emails you do not
+   need. This is called **anonymising**. Be careful: a few details together can still
+   identify a person.
+4. **Never paste secrets,** whatever the plan.
+5. **Check the settings** for chat history and training on your data.
+6. **When unsure, do not paste.** Describe the structure of your data instead.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["I want to paste data"] --> B{"Does it contain a secret?"}
+  B -- Yes --> X["Never paste it"]
+  B -- No --> C{"Personal or confidential data?"}
+  C -- No --> D["Fine, within company policy"]
+  C -- Yes --> E{"Is the tool company-approved for this data?"}
+  E -- Yes --> F["Share the minimum"]
+  E -- No --> G["Anonymise it or do not paste"]`}
+/>
+
+## Hands-on
+
+### Worked example
+
+Compare these two inputs about the same customer.
+
+- Not safe: `María García, maria@example.com, Heredia, bought 12 coffees`
+- Safer: `C003, Heredia, bought 12 coffees`
+
+The second keeps what the analysis needs and removes who it is about.
+
+### Your turn
+
+Classify each item as safe, anonymise first, or never:
+
+1. The total sales per category for January.
+2. The customer file with names and emails.
+3. The password to the sales database.
+
+<Checkpoint question="Show the answers">
+	1. Likely safe, inside an approved tool and following policy. 2. Anonymise
+	first, or use only a tool approved for personal data. 3. Never.
+</Checkpoint>
+
+## Common mistakes
+
+- **Assuming "private mode" means private.** It usually only affects your history.
+- **Using a personal account for work data.** Your company's protections do not apply.
+- **Anonymising by deleting names only.** Emails, cities, and rare details can still identify people.
+- **Pasting a whole file when five rows would do.**
+- **Assuming the policy will not change.** Terms of services are updated.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Is it OK to paste customer data into you?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant gives a general reassurance or a vague warning. It cannot see
+		your plan, your company's contract, or the law that applies to you.
+	</Fragment>
+	<Fragment slot="good">
+		I work in Costa Rica for a small company and want to ask an AI tool to clean
+		a customer list with names, emails, and cities. Without seeing my data, list
+		the questions I should answer before pasting it: about my company policy, my
+		plan type, and the settings. Then show how to turn this sample row into an
+		anonymised one: "María García, maria@example.com, Heredia". Do not tell me
+		whether it is legal for me.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It states the **context** and the **task** as a checklist, and the
+		**constraint** stops the assistant from giving a legal verdict it cannot
+		know. It gives a concrete **input** to practise on.
+	</Fragment>
+	<Fragment slot="check">
+		Answer each question for real, using your company's policy and your account
+		settings, not the assistant's assumptions. When in doubt, ask IT or your
+		legal contact.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Name two kinds of data you must never or rarely paste into a consumer chat.">
+	Secrets, such as passwords and keys, and personal or contract-confidential
+	data.
+</Checkpoint>
+
+<Checkpoint question="Why can the same vendor's consumer and enterprise plans differ?">
+	Enterprise plans come with a contract that often limits retention and forbids
+	training on your data. Consumer plans follow default terms.
+</Checkpoint>
+
+<Checkpoint question="What does anonymising mean?">
+	Removing or replacing details that identify a person, such as swapping a name
+	for a code.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 3.7 shows how to keep secrets out of your projects.

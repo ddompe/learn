@@ -2,8 +2,8 @@
 
 from pathlib import PurePosixPath, PureWindowsPath
 
-windows = PureWindowsPath(r"C:\Users\Lucia\Documents\cafe-central\cafe_central_sales.csv")
-mac = PurePosixPath("/Users/lucia/Documents/cafe-central/cafe_central_sales.csv")
+windows = PureWindowsPath(r"C:\Users\Daniela\Documents\cafe-central\cafe_central_sales.csv")
+mac = PurePosixPath("/Users/daniela/Documents/cafe-central/cafe_central_sales.csv")
 
 print("Windows absolute:", windows)
 print("Windows is absolute:", windows.is_absolute())

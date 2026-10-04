@@ -1,0 +1,150 @@
+---
+title: Open-weight vs closed, local vs cloud
+description: Compare ways of running a model and the trade-offs in privacy, cost, and capability.
+sidebar:
+  order: 5
+lessonId: '2.5'
+estimatedMinutes: 15
+prerequisites: ['2.4']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain the difference between closed and open-weight models. - Explain the
+	difference between running a model in the cloud and on your own computer. -
+	Weigh the trade-offs of privacy, cost, and capability.
+</LessonGoals>
+
+## Why this matters
+
+Two questions come up in every company: "Is our data safe?" and "What will this cost?".
+The answers depend on where the model runs and who controls it. Knowing the options lets
+you take part in that conversation and choose with your eyes open.
+
+<CaseStudy>
+	The owner of Café Central wants to analyse customer comments, but the comments
+	contain names and email addresses. Daniela must find out where such data may
+	go.
+</CaseStudy>
+
+## Two separate choices
+
+These two choices are often mixed up.
+
+1. **Who controls the model?** Closed or open-weight.
+2. **Where does it run?** In the cloud, or on your own computer.
+
+| Choice      | Meaning                                                                                     |
+| ----------- | ------------------------------------------------------------------------------------------- |
+| Closed      | You use the model only through the vendor's service.                                        |
+| Open-weight | The vendor publishes the model files. Anyone may download and run them, within the license. |
+| Cloud       | The model runs on the vendor's or a host's servers. Your prompt travels there.              |
+| Local       | The model runs on your own machine. Your prompt stays there.                                |
+
+Open-weight does not mean you must run it locally. Many hosting services offer
+open-weight models in the cloud. And a closed model cannot be run locally, because
+you do not have its files.
+
+The four combinations look like this:
+
+|                 | Cloud                                         | Local                                |
+| --------------- | --------------------------------------------- | ------------------------------------ |
+| **Closed**      | Typical chat apps and vendor services         | Not possible                         |
+| **Open-weight** | Hosting services that run open models for you | Running a model on your own computer |
+
+## The trade-offs
+
+**Privacy.** A local model keeps your data on your machine. A cloud service sends it
+away, so you depend on the vendor's terms (lesson 2.8). Company plans often include
+stronger promises than free plans.
+
+**Cost.** Cloud services charge per use or per month. Local models have no per-use fee,
+but you need a capable computer, and your time to set it up.
+
+**Capability.** The strongest models tend to be large and closed, and run in the cloud.
+Models small enough to run on a laptop are improving, but are usually less capable. For
+many everyday tasks, a smaller model is enough.
+
+**Effort.** A cloud product works in minutes. A local setup takes more skill, and on a
+locked-down company laptop may not be allowed.
+
+## Hands-on
+
+### Your turn
+
+Café Central wants to summarise 200 customer comments that include real names. Choose
+an option, and give one reason.
+
+1. A free consumer chat site.
+2. A company-approved cloud plan with a data-protection agreement.
+3. A small open-weight model running on the office laptop.
+
+<Checkpoint question="Show a sample answer">
+	Option 1 is the weakest, because the data leaves the company under consumer
+	terms. Options 2 and 3 can both be acceptable. Option 2 is more capable and
+	easy. Option 3 keeps data on the laptop, but may give weaker summaries and
+	needs setup. The company's policy decides.
+</Checkpoint>
+
+## Common mistakes
+
+- **Equating "open" with "private".** An open-weight model hosted by someone else still
+  sends your data away.
+- **Equating "cloud" with "unsafe".** A contract can make a cloud service safer than an
+  unmanaged laptop.
+- **Installing local tools without permission.** Check company policy first.
+- **Expecting a laptop model to match the largest cloud models.**
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Should I run AI locally?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant lists generic pros and cons, and does not ask about your data,
+		your computer, or your company's rules.
+	</Fragment>
+	<Fragment slot="good">
+		I work in finance at a small company. We want to summarise internal reports
+		containing customer names. My laptop is a company-managed Windows machine
+		with 16 GB of memory and no dedicated graphics card. I cannot install
+		software without IT approval. Compare three options: a company-approved
+		cloud plan, a free consumer chat, and a local open-weight model. Use a table
+		with privacy, cost, quality, and effort. Say what you are assuming.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It provides the **context** that matters (data type, hardware,
+		restrictions), asks for a fixed **output format** (a table), and requires
+		**assumptions** to be stated.
+	</Fragment>
+	<Fragment slot="check">
+		Check the assumptions against your reality, such as whether the consumer
+		chat would really be allowed. Ask IT or your policy before acting on the
+		table.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What does open-weight mean?">
+	The vendor publishes the model's files, so anyone may download and run it
+	within the license.
+</Checkpoint>
+
+<Checkpoint question="Does a local model send your prompts to a vendor?">
+	No. The prompt stays on your machine.
+</Checkpoint>
+
+<Checkpoint question="Name one reason to prefer a cloud model.">
+	It is usually more capable and needs no setup or powerful hardware.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 2.8 covers what you may share with which tool.

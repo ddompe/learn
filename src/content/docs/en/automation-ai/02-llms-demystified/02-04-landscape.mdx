@@ -1,0 +1,170 @@
+---
+title: 'The landscape: vendors, models, and products'
+description: Tell apart vendors, model families, and the apps built on them, and know where to check current facts.
+sidebar:
+  order: 4
+lessonId: '2.4'
+estimatedMinutes: 15
+prerequisites: ['2.1']
+lastVerified: 2026-10-03
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Distinguish a vendor, a model, and a product. - Explain why the same model
+	can appear in different products. - Know where to check current facts
+	yourself.
+</LessonGoals>
+
+## Why this matters
+
+People say "ChatGPT", "Copilot", and "Claude" as if they were the same kind of thing.
+They are not, and the confusion causes bad decisions: choosing the wrong tool, pasting
+data into the wrong place, or reading a comparison that mixes categories. This lesson
+gives you three words that keep them apart. Names, features, and prices in this
+market change quickly, so the lesson teaches the structure and tells you where to look
+up the details.
+
+<CaseStudy>
+	Café Central's owner asks Daniela: "Should we use ChatGPT or Copilot for our
+	reports?" The question mixes a product with another product, and each may run
+	on several models. Daniela needs to sort the pieces before she can answer.
+</CaseStudy>
+
+## Three layers
+
+<Mermaid
+	diagram={`flowchart TB
+  A["Product: the app you use, such as a chat site or an editor extension"]
+  B["Model: the trained LLM that writes the answers"]
+  C["Vendor: the company that built and runs the model"]
+  A --> B --> C`}
+/>
+
+- A **vendor** is a company that trains models. Examples include OpenAI, Anthropic, and
+  Google.
+- A **model** is a specific trained LLM, usually part of a **family** that has small,
+  fast versions and large, capable ones. Models are updated and retired often.
+- A **product** is an app that you use, which calls a model behind the scenes. Products
+  add features: a chat window, search, file upload, saved notes, and integration with
+  other tools.
+
+Two facts follow:
+
+1. **One product can offer several models,** and may change which one it uses without
+   much notice.
+2. **One model can power several products.** A vendor's own chat app and a third party's
+   tool may both call the same model. Their rules for your data may differ.
+
+For this course, the AI assistant is GitHub Copilot in VS Code (Part 3). Copilot is a
+product. The models inside it come from several vendors and can change.
+
+## Closed and open models
+
+Most well-known models are **closed**: you use them through the vendor's service. Some
+are **open-weight**, meaning the vendor publishes the files so you can run them yourself.
+Lesson 2.5 compares them.
+
+## How to compare tools sensibly
+
+Ask these questions, in this order:
+
+1. Which product am I using, and which model is it calling?
+2. Which plan am I on? Free, personal paid, and company plans can treat data differently.
+3. Can it search the web, read my files, or use other tools?
+4. What are the limits and costs?
+5. What does the vendor do with my data? (Lesson 2.8.)
+
+## Check these yourself
+
+Everything in this section changes often. Last verified on 2026-10-03. Do not rely on
+this page for current names or prices.
+
+- Vendor pricing pages: [Anthropic](https://www.anthropic.com/pricing),
+  [OpenAI](https://openai.com/api/pricing/), and
+  [Google](https://ai.google.dev/gemini-api/docs/pricing).
+- The documentation of the product you use, for its current plans and limits.
+- Your company's AI policy, if one exists.
+
+## Hands-on
+
+### Worked example
+
+Open the AI tool you use most. Write down: its product name, the vendor behind it, the
+model name if it shows one, and the plan you are on.
+
+### Your turn
+
+Sort these into vendor, model, or product. Use the definitions above.
+
+1. A chat website made by a model's vendor.
+2. A file of trained parameters called, for example, "something-large".
+3. The company that trains the models.
+
+<Checkpoint question="Show the answers">
+	1. Product. 2. Model. 3. Vendor.
+</Checkpoint>
+
+## Common mistakes
+
+- **Comparing a product with a model.** "Copilot versus a model family" is not a fair
+  comparison.
+- **Assuming the free and paid versions behave alike.** Features, limits, and privacy can
+  differ.
+- **Trusting old comparison articles.** In this field, last year's ranking is often out of date.
+- **Believing the model name answers everything.** Behaviour also depends on the product's
+  instructions and tools.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Which AI is the best?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant picks something, often its own vendor's product. It mixes
+		products and models, and cannot know what is current.
+	</Fragment>
+	<Fragment slot="good">
+		I am a finance analyst deciding which AI chat tool my team can use for
+		summarising internal reports. I will give you three product names. For each
+		one, tell me the vendor, whether you are sure which models it uses, and
+		which plan type would keep our data out of model training. Mark anything you
+		are unsure of or that may be out of date, and tell me which official page I
+		should check for each.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It uses the vendor, model, and product split, asks for a data-handling
+		comparison, and requires the assistant to **flag uncertainty** and to point
+		to official pages.
+	</Fragment>
+	<Fragment slot="check">
+		Open each official page it names and confirm the claim. Treat anything the
+		assistant marks as uncertain as unknown.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What is the difference between a vendor, a model, and a product?">
+	A vendor is the company, a model is a trained LLM it makes, and a product is
+	the app that uses models.
+</Checkpoint>
+
+<Checkpoint question="Can one model appear in several products?">
+	Yes, and the products may handle your data differently.
+</Checkpoint>
+
+<Checkpoint question="Where should you look for current prices and limits?">
+	On the vendor's and product's official pages, not in an old article or a chat
+	answer.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 2.5 compares closed and open models, and local and cloud use.

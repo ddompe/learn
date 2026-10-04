@@ -1,0 +1,4 @@
+Characters in the sales file: 8448
+Estimated input tokens: 2112
+Estimated output tokens: 500
+Estimated cost: $0.0138

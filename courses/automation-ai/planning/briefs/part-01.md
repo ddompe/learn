@@ -49,7 +49,7 @@ After Part 1 the learner can:
 
 | Lesson | Task                                                                 |
 | ------ | -------------------------------------------------------------------- |
-| 1.1    | Name the layers involved when Lucía opens the CSV.                   |
+| 1.1    | Name the layers involved when Daniela opens the CSV.                 |
 | 1.3    | Work out how many sales files fit in a 1 GB mailbox.                 |
 | 1.4    | Write the path of `cafe_central_sales.csv` on the learner's machine. |
 | 1.5    | Inspect the zip and CSV bytes; see that the CSV has no magic number. |

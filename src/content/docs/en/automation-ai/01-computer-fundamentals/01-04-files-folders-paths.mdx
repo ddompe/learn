@@ -56,10 +56,10 @@ An **absolute path** starts from the very top of the disk. It works from anywher
 **relative path** starts from where you are now. It is shorter, but means different
 things in different places.
 
-| Kind     | Windows                                           | macOS                                           |
-| -------- | ------------------------------------------------- | ----------------------------------------------- |
-| Absolute | `C:\Users\Lucia\Documents\cafe-central\sales.csv` | `/Users/lucia/Documents/cafe-central/sales.csv` |
-| Relative | `cafe-central\sales.csv` (from `Documents`)       | `cafe-central/sales.csv` (from `Documents`)     |
+| Kind     | Windows                                             | macOS                                             |
+| -------- | --------------------------------------------------- | ------------------------------------------------- |
+| Absolute | `C:\Users\Daniela\Documents\cafe-central\sales.csv` | `/Users/daniela/Documents/cafe-central/sales.csv` |
+| Relative | `cafe-central\sales.csv` (from `Documents`)         | `cafe-central/sales.csv` (from `Documents`)       |
 
 Notice three things:
 
@@ -103,15 +103,15 @@ the relative path from your Documents folder.
 
 ### Your turn
 
-Given the absolute path `/Users/lucia/Documents/cafe-central/sales.csv`, answer:
+Given the absolute path `/Users/daniela/Documents/cafe-central/sales.csv`, answer:
 
 1. What is the file name?
 2. What is the folder that holds it?
-3. If you are standing in `/Users/lucia/Documents`, what is the relative path?
-4. If you are standing in `/Users/lucia/Documents/cafe-central`, what does `..` mean?
+3. If you are standing in `/Users/daniela/Documents`, what is the relative path?
+4. If you are standing in `/Users/daniela/Documents/cafe-central`, what does `..` mean?
 
 <Checkpoint question="Show the answers">
-	1. `sales.csv`. 2. `/Users/lucia/Documents/cafe-central`. 3.
+	1. `sales.csv`. 2. `/Users/daniela/Documents/cafe-central`. 3.
 	`cafe-central/sales.csv`. 4. The `Documents` folder, one level up.
 </Checkpoint>
 
@@ -137,8 +137,8 @@ Given the absolute path `/Users/lucia/Documents/cafe-central/sales.csv`, answer:
 	</Fragment>
 	<Fragment slot="good">
 		My program says "file not found" for the path
-		C:\Users\Lucia\Documents\cafe-central\sales.csv. In File Explorer, the file
-		is named cafe_central_sales.csv, and it is in the same folder. I am on
+		C:\Users\Daniela\Documents\cafe-central\sales.csv. In File Explorer, the
+		file is named cafe_central_sales.csv, and it is in the same folder. I am on
 		Windows. Compare the path in the error with the real file name, and tell me
 		exactly which characters differ. Explain in one sentence why this causes the
 		error.

@@ -1,6 +1,6 @@
-Windows absolute: C:\Users\Lucia\Documents\cafe-central\cafe_central_sales.csv
+Windows absolute: C:\Users\Daniela\Documents\cafe-central\cafe_central_sales.csv
 Windows is absolute: True
-Windows folder: C:\Users\Lucia\Documents\cafe-central
+Windows folder: C:\Users\Daniela\Documents\cafe-central
 macOS file name: cafe_central_sales.csv
 macOS extension: .csv
 macOS is absolute: True

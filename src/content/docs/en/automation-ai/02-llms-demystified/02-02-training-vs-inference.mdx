@@ -1,0 +1,157 @@
+---
+title: Training vs inference
+description: Understand where a model's knowledge comes from, why it has a cutoff date, and how search is added.
+sidebar:
+  order: 2
+lessonId: '2.2'
+estimatedMinutes: 15
+prerequisites: ['2.1']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain the difference between training and inference. - Explain why models
+	have a knowledge cutoff. - Describe how products add search to get current
+	information.
+</LessonGoals>
+
+## Why this matters
+
+You ask an assistant about a recent event, a new law, or a software version, and get a
+confident answer that is out of date. It was not lying. It answered from what it learned
+before a certain date. Knowing this helps you decide when to trust an answer and when to
+ask for sources.
+
+<CaseStudy>
+	Daniela asks an assistant about this year's tax rules for coffee imports. The
+	answer describes last year's rules, in the present tense.
+</CaseStudy>
+
+## Two phases
+
+**Training** is the phase in which the model learns. It reads a huge amount of text and
+adjusts its internal numbers, called **parameters**, until it predicts text well.
+Training takes weeks on thousands of specialised computers and costs a great deal. It
+happens once per model version.
+
+**Inference** is the phase in which you use the model. You send a prompt, and the model
+generates a reply using its fixed parameters. Nothing you type changes the model.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Training data collected up to a date"] --> B["Training: months, very costly"]
+  B --> C["Finished model: parameters are fixed"]
+  C --> D["Inference: your prompts, every day"]`}
+/>
+
+## The knowledge cutoff
+
+The training data stops at some date, the **knowledge cutoff**. The model knows nothing
+about events after that date. A model released today may have a cutoff many months
+earlier, and people keep using it for a long time after release. So the gap between its
+knowledge and today grows.
+
+Two consequences:
+
+- Questions about recent events get stale or invented answers.
+- The model may not know about the newest versions of tools, which matters for code.
+
+Your conversation does not train the model. When you correct it, it adjusts within the
+conversation only (lesson 2.3).
+
+## How products get current information
+
+Many products wrap the model in extra steps:
+
+1. They take your question and search the web or a document collection.
+2. They paste the relevant results into the prompt.
+3. The model writes the answer using that text.
+
+This is often called **search** or **retrieval**. It reduces stale answers, but it adds
+new risks: the search may fetch poor pages, and the model may misread them. Look for
+links to sources and open them.
+
+## Hands-on
+
+### Worked example
+
+Ask your assistant: "What is your knowledge cutoff, and can you search the web in this
+conversation?" Note whether it says it can search, and whether it shows sources when it
+does.
+
+### Your turn
+
+Decide whether training or inference is involved:
+
+1. You paste a sales table into the chat.
+2. A company spends months preparing a new model version.
+3. The model writes a summary of your table.
+
+<Checkpoint question="Show the answers">
+	1. Inference. You are using the model. 2. Training. 3. Inference.
+</Checkpoint>
+
+## Common mistakes
+
+- **Assuming the model knows today's date or news.** It may not, unless the product tells it.
+- **Thinking your chat teaches the model.** It does not, unless the vendor says otherwise
+  in its policy (lesson 2.8).
+- **Trusting search-based answers without opening the sources.**
+- **Asking about brand-new library versions without giving the documentation.** Paste the
+  relevant part of the docs into the prompt.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">
+		What are the latest tax rules for coffee imports?
+	</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant answers from training data, stating old rules as if they were
+		current, and often without any warning.
+	</Fragment>
+	<Fragment slot="good">
+		I need the current Costa Rican rules on coffee import taxes. If you cannot
+		search the web in this conversation, say so first and describe only what you
+		knew as of your training, with the approximate date. If you can search, give
+		me links to the official sources you used. End with a list of what I should
+		verify with an accountant.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It sets the **constraint** that the assistant must state its limits first,
+		requests **sources**, and ends with a **verification** list.
+	</Fragment>
+	<Fragment slot="check">
+		Open each link. Check that the page is an official source and that it
+		supports the claim. For anything that affects money or law, confirm with a
+		professional.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What is the difference between training and inference?">
+	Training is when the model learns from data, once and at great cost. Inference
+	is when you use the finished model.
+</Checkpoint>
+
+<Checkpoint question="Why does a model have a knowledge cutoff?">
+	Its training data ends at a certain date, so it knows nothing about later
+	events.
+</Checkpoint>
+
+<Checkpoint question="How do products give models current information?">
+	They search for relevant pages or documents and paste the results into the
+	prompt.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 2.3 explains how much text the model can see at once.
