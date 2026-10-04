@@ -107,10 +107,9 @@ Part 0:
 - [x] Dataset generator rewritten (240 sales rows, duplicates, mixed dates and amounts,
       accents), `scripts/package_datasets.py`, pytest in `examples/part00/`, zip committed
       under `public/downloads/automation-ai/`.
-- [ ] Lessons 0.1-0.4 drafted (one per session). **None written yet.** The 0.1 research is
-      done: template, curriculum, about-author blurb and ADR-0005 were read; no content file
-      exists, and `00-orientation/index.mdx` is still the "coming soon" stub (replace its
-      description when lessons land).
+- [x] Lesson 0.1 drafted (2026-10-03).
+- [ ] Lessons 0.2-0.4 drafted (one per session). 0.1 is done; the Part 0 index page now
+      says 0.1 is ready and 0.2-0.4 are coming (update it as each lands).
 - [ ] Brief open question 4 (real learner pitfalls) still unanswered; pitfalls are hypotheses.
 - [ ] Unverified in a real browser: Mermaid rendering, new components.
 
@@ -124,22 +123,10 @@ Repo state: all work is committed and pushed on `main`; the site is live at
 
 Next actions, in order:
 
-1. Draft lesson 0.1 at `src/content/docs/en/automation-ai/00-orientation/00-01-why-this-course.mdx`
-   following `planning/templates/lesson-template.mdx` and the brief
-   (`courses/automation-ai/planning/briefs/part-00.md`). Notes for 0.1:
-   - Frontmatter: `sidebar.order: 1`, `lessonId: '0.1'`, no `lastVerified` needed.
-   - No code, so no `<Example>`; "Hands-on" is a path-choosing exercise (all template
-     sections stay).
-   - Do not link to lessons that do not exist yet (the links validator fails); name Parts
-     in plain text.
-   - Paths from `02-curriculum.md`: AI-literate = 0.1-0.4, 1.1, 1.3-1.5, 1.7, 1.11-1.12,
-     2.1-2.9, 5.6-5.7; core = Parts 0-9; advanced = Part 10.
-   - Include the short author blurb from `planning/about-author.md`, a Mermaid diagram of
-     the nested paths, a `<PromptExample>` ("Should I learn Python?", see brief), and a
-     `<Checkpoint>`.
-   - Bold new terms and add them to `planning/glossary.md` (e.g. learning path, AI
-     assistant; prompt is already there).
-2. Then 0.2, 0.3, 0.4 (one per session), then the end-of-part checklist in 0.4.
+1. Draft lesson 0.2 (`00-02-what-automation-is.mdx`), using 0.1 as the style reference and
+   the brief's 0.2 rows (five Café Central chores, decision-flow Mermaid diagram,
+   "Automate my monthly report." prompt). Do not link to unwritten lessons.
+2. Then 0.3, 0.4 (one per session), then the end-of-part checklist in 0.4.
 3. Part 1 and Part 2 briefs and lessons (Stage 5 continues).
 
 ### Known gaps and decisions

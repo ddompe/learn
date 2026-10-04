@@ -1,0 +1,181 @@
+---
+title: Why this course
+description: Find the learning path that fits you and see what you will be able to do at the end.
+sidebar:
+  order: 1
+lessonId: '0.1'
+estimatedMinutes: 10
+prerequisites: []
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Identify which learning path fits you. - Describe what you will be able to
+	do at the end of the course. - Explain why the course teaches one fixed set of
+	tools.
+</LessonGoals>
+
+## Why this matters
+
+You already work with data every day. You build spreadsheets, refresh reports, and copy
+numbers from one place to another. Some of that work is repetitive, and you have
+probably wondered whether a computer could do it for you.
+
+Today it often can. An **AI assistant** is a chat tool that can write and explain
+programs for you. But an assistant is only as useful as your ability to judge what it
+gives you. If you do not know what a file path is, why accents turn into strange
+characters, or what a terminal does, you cannot tell a good answer from a plausible
+wrong one.
+
+This course teaches those fundamentals first, in plain language. Then it uses them to
+automate real work.
+
+<CaseStudy>
+	Throughout the course you will help Café Central, a small coffee-shop chain.
+	Every month, someone there copies sales files into a spreadsheet, fixes dates
+	by hand, and builds the same report. By the end, that whole process runs with
+	one command. You will meet the company properly in lesson 0.3.
+</CaseStudy>
+
+## Who built this and why
+
+Hi, I'm Diego Dompe, a Distinguished Technologist at an international technology
+company with more than 20 years of engineering experience. I built this course to give
+professionals the fundamentals engineers take for granted, and an opinionated setup
+that avoids the problems I've seen people hit again and again. [Read more](/en/about/).
+
+## Why the tools are fixed
+
+Most tutorials show three ways to do everything and leave you to choose. That is
+confusing when you are new. This course is **opinionated**: it picks one set of tools
+and teaches only that set.
+
+- **One AI assistant.** From Part 3 on, you use GitHub Copilot inside VS Code. It has a
+  free tier, so you need no paid account to follow the core course.
+- **One way to run Python.** You install it with a tool called uv, which works without
+  administrator rights on a company laptop.
+- **One case study.** Every example uses Café Central, so you spend your effort on the
+  new idea, not on understanding a new dataset.
+
+Once you know the fundamentals, you can switch tools easily. A fixed stack just keeps
+you from getting lost on the way.
+
+## Choose your learning path
+
+A **learning path** is a list of lessons for a specific goal. You do not have to take
+the whole course. The three paths are nested: each one contains the one before it.
+
+<Mermaid
+	diagram={`flowchart TB
+  subgraph adv["Advanced: Part 10, calling AI models from code"]
+    subgraph core["Business automator (core): Parts 0 to 9"]
+      subgraph lit["AI-literate professional: a short path, no code"]
+        L["Computer fundamentals and how AI models work"]
+      end
+      C["Python, business data, charts, reports, and a capstone"]
+    end
+    A["Advanced topics"]
+  end`}
+/>
+
+| Path                      | Choose it if you want to...                                               | Lessons                                                     |
+| ------------------------- | ------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| AI-literate professional  | Use AI tools well and safely at work, without writing code yourself.      | 0.1 to 0.4, selected lessons in Parts 1 and 2, and 5.6, 5.7 |
+| Business automator (core) | Automate your own reports and data tasks with Python and an AI assistant. | Parts 0 to 9                                                |
+| Advanced                  | Call AI models from your own programs. Requires the core path first.      | Part 10                                                     |
+
+If you are unsure, start with the core path. You can switch to a shorter path at any
+time.
+
+## What you will be able to do at the end
+
+On the core path, you will be able to:
+
+- Explain how files, folders, text encodings, and the terminal work.
+- Explain what an AI model does, where it fails, and how to check its answers.
+- Use an AI assistant to write Python, then read, test, and fix what it wrote.
+- Clean and combine messy business files, such as CSV and Excel.
+- Produce charts and reports that update themselves.
+- Run a complete monthly report with a single command.
+
+## Hands-on
+
+### Pick your path
+
+This lesson has no code. Instead, choose your path now.
+
+1. Write down one task from your own job that you repeat every week or month.
+2. Write down how long it takes you each time.
+3. Decide which row of the table above matches what you want to do with it.
+4. Write the path name on a sticky note or in a file you will find again.
+
+You will come back to this task in lesson 0.2.
+
+## Common mistakes
+
+- **Skipping the fundamentals to get to Python faster.** It feels slower, but most
+  stuck moments later come from a gap in Parts 1 and 2, such as a wrong file path or
+  garbled accents. Take the shorter path instead of skipping content.
+- **Picking the advanced path first.** Part 10 builds on everything before it. Without
+  the core path, it will not make sense.
+- **Treating the AI assistant as an authority.** It writes confident text whether it is
+  right or wrong. Every lesson ends with a way to check its answer.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Should I learn Python?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant lists generic pros and cons of Python, mentions data science
+		and web development, and ends with "it depends on your goals". Nothing in
+		the answer connects to your job, so you learn nothing you could not find in
+		a general article.
+	</Fragment>
+	<Fragment slot="good">
+		I work as a finance analyst. I use Excel and Power Query every day, and I
+		have never written code. Every month I spend about three hours combining
+		five CSV files and fixing the date columns by hand. Should I learn Python
+		for this, or is there a better way? Give me a recommendation in one short
+		paragraph, then list the two things that would change your recommendation.
+		Tell me which parts of your answer you are unsure about.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		The good prompt gives **context** (your role and tools), a specific **task**
+		(combining files and fixing dates), the amount of time at stake, and an
+		**output format** (a short recommendation plus two conditions). It also asks
+		the assistant to say what it is unsure about. Lesson 2.7 covers these
+		elements in full.
+	</Fragment>
+	<Fragment slot="check">
+		Check that the recommendation mentions your actual task, not just "data".
+		Then ask yourself whether the "two things that would change the
+		recommendation" are true for you. If the assistant suggests Power Query or a
+		formula, test that first.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="You only want to use AI tools more safely at work and never write code. Which path fits?">
+	The AI-literate professional path. It covers computer fundamentals and how AI
+	models work, but does not require you to program.
+</Checkpoint>
+
+<Checkpoint question="Why does this course teach one set of tools instead of comparing several?">
+	Choosing between tools is hard when you are new. A fixed set lets you spend
+	your effort on the ideas, and the ideas carry over to other tools later.
+</Checkpoint>
+
+<Checkpoint question="Can you start with the Advanced path (Part 10) if you already know some Python?">
+	Not recommended. Part 10 assumes you completed the core path, including the
+	safety and verification habits taught there.
+</Checkpoint>
+
+## Going deeper
+
+- Read the full [About page](/en/about/) for more on the author and the reasons behind this course.
