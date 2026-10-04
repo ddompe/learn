@@ -29,15 +29,16 @@ npm run build    # outputs to dist/
 npm run preview  # serve the production build locally
 ```
 
-### Required starting at milestone M1 (not yet set up)
+### Python tooling (examples and build scripts)
 
 | Tool                             | Why                                                            | Install (macOS, Homebrew) |
 | -------------------------------- | -------------------------------------------------------------- | ------------------------- |
 | [uv](https://docs.astral.sh/uv/) | Runs and tests the Python examples under `courses/*/examples/` | `brew install uv`         |
 
-This repo has no Python examples project yet (`courses/automation-ai/examples/`
-is created in milestone M1 — see `planning/06-implementation-plan.md`). Once it
-exists, `uv run pytest` runs inside that directory.
+Run the tests from `courses/automation-ai/examples/` with `uv run pytest`. Regenerate
+example outputs with `uv run python scripts/run_examples.py` (run from the repo root, or
+inside the examples directory with the path adjusted), and rebuild the dataset and its
+download zip with `scripts/generate_dataset.py` and `scripts/package_datasets.py`.
 
 ## Code structure
 
@@ -51,24 +52,26 @@ exists, `uv run pytest` runs inside that directory.
 ├── LICENSE-CONTENT         # CC BY-SA 4.0 — lesson content
 ├── astro.config.mjs        # Starlight config: locales (en/es), site title, sidebar
 ├── package.json
+├── scripts/                # run_examples.py, generate_dataset.py, package_datasets.py, check_translations.py
 ├── courses/
 │   └── automation-ai/
-│       └── course.yml      # catalog metadata (title, subtitle, slug, status)
+│       ├── course.yml      # catalog metadata (title, subtitle, slug, status)
+│       ├── examples/       # uv project: partPP/ examples + tests, data/, __outputs__/
+│       └── planning/briefs/ # chapter briefs (one per Part)
 ├── public/                 # static assets served as-is (favicon, CNAME, downloads)
 ├── src/
 │   ├── assets/              # images used by content via Astro's image pipeline
-│   ├── components/          # custom components shared by all courses (catalog, footer)
-│   ├── content.config.ts    # Starlight docs content collection
+│   ├── components/          # lesson components (import via the @components alias), catalog, footer
+│   ├── content.config.ts    # Starlight docs collection + lesson frontmatter schema
 │   ├── content/docs/        # lesson content; one tree per locale (en/, es/)
-│   ├── lib/                 # course.yml loader used by the catalog
+│   ├── i18n/                # UI strings for components (en.json, es.json)
+│   ├── lib/                 # course.yml loader, label lookup
 │   └── pages/               # custom routes outside the docs collection (root redirect)
 └── planning/                # design docs, ADRs, templates — see planning/README.md
 ```
 
-This mirrors the target layout in `planning/03-architecture.md`, which also
-documents pieces not built yet: Python examples under `courses/*/examples/`,
-and the `scripts/` directory (example runner, dataset generator, translation
-checker) — both arrive in milestone M1.
+This mirrors the target layout in `planning/03-architecture.md`. For what is built
+and what is still pending, see `planning/progress.md`.
 
 ## Status and planning
 

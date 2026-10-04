@@ -49,6 +49,8 @@ Read this file fully before making changes.
 - Run before every commit: `npm run check` (lint, format, spell, links) and
   `uv run pytest` inside each changed `courses/<course>/examples/`.
 - Do not add dependencies without noting them in the PR description.
+- Work directly on `main` (no per-part branches for now). Read `planning/progress.md`
+  ("How to resume") before starting; update it when you finish a task.
 
 ## Definition of done
 

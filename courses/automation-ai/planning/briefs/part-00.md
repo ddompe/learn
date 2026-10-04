@@ -1,6 +1,6 @@
 # Chapter brief: Part 00 - Orientation
 
-Status: draft
+Status: approved (2026-10-03). Open questions 1-3 resolved (see below); 4 and 5 still open.
 
 ## Lessons in scope
 
@@ -120,7 +120,16 @@ A checklist the learner can verify themselves:
 
 ## Open questions
 
-1. **Template and components disagree.** `planning/templates/lesson-template.mdx` and
+Resolutions so far (the original questions follow):
+
+1. Resolved: components were rewritten to match the template (commit `11aaad9`).
+2. Resolved: ship CSV and JSON now (with duplicates); Excel and PDF later.
+3. Resolved: `examples/part00/` layout is in place.
+4. Open: no real learner stories supplied. Pitfalls stay hypotheses; present them as
+   advice, not as observed statistics.
+5. Assumed: keep the three paths from `02-curriculum.md` unless told otherwise.
+
+6. **Template and components disagree.** `planning/templates/lesson-template.mdx` and
    ADR-0009 define `PromptExample` with five parts (lousy, what goes wrong, good, why it
    works, check) using slots. The Stage 4 component has three props (good, bad,
    explanation) and no "what goes wrong" or "check". The template also uses
@@ -128,12 +137,12 @@ A checklist the learner can verify themselves:
    none of which match what Stage 4 built. Proposal: fix the components to match the
    template (the template is authoritative per AGENTS.md) before drafting any lesson, and
    rewrite the sample lesson against them.
-2. **Dataset completeness for 0.3.** The pedagogy doc promises duplicate rows, a merged-header
+7. **Dataset completeness for 0.3.** The pedagogy doc promises duplicate rows, a merged-header
    Excel file, and a PDF invoice. Stage 4 generated only the CSV and JSON. Proposal: ship
    the CSV and JSON in 0.3 with duplicates added, and add the Excel and PDF files when
    Parts 5 and 6 need them, with the zip rebuilt then.
-3. **Examples layout.** `content-guide` says `examples/partPP/LL_slug.py`; Stage 4 put a flat
+8. **Examples layout.** `content-guide` says `examples/partPP/LL_slug.py`; Stage 4 put a flat
    `part00_example.py` there. Proposal: follow the content guide (`examples/part00/`).
-4. **Real pitfalls.** The pitfalls above are guesses. Do you have real learner stories
+9. **Real pitfalls.** The pitfalls above are guesses. Do you have real learner stories
    (from colleagues or teaching) to replace them?
-5. **0.1 learning paths.** Keep the three paths from `02-curriculum.md` as they stand?
+10. **0.1 learning paths.** Keep the three paths from `02-curriculum.md` as they stand?

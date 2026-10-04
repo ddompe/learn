@@ -96,14 +96,15 @@ The repository is the whole learning site, not a single course, so name it gener
 │       ├── examples/           # uv project for this course
 │       │   ├── pyproject.toml
 │       │   ├── uv.lock
-│       │   ├── data/           # Café Central datasets
-│       │   ├── part04/ ...
-│       │   ├── tests/
-│       │   └── __outputs__/    # generated expected outputs
+│       │   ├── repo_scripts.py # lets tests import the repo's scripts/
+│       │   ├── data/           # Café Central datasets (generated, committed)
+│       │   ├── part00/ ...     # partPP/LL_slug.py examples with test_*.py next to them
+│       │   └── __outputs__/    # generated expected outputs (committed)
 │       └── planning/           # course-specific briefs (planning/briefs/ moves here)
 ├── scripts/
-│   ├── run_examples.py         # regenerate outputs, for all courses
-│   ├── generate_dataset.py     # builds the messy Café Central data
+│   ├── run_examples.py         # regenerate outputs, for all courses (--check for CI)
+│   ├── generate_dataset.py     # builds the messy Café Central data (seeded)
+│   ├── package_datasets.py     # zips data/ into public/downloads/<course>/
 │   └── check_translations.py   # translation staleness checker
 └── planning/                   # site-wide design docs and ADRs
 ```
@@ -176,16 +177,24 @@ Notes:
 | Component         | Purpose                                                                                               |
 | ----------------- | ----------------------------------------------------------------------------------------------------- |
 | `<LessonGoals>`   | Renders the learning objectives box at the top of the lesson.                                         |
-| `<PromptExample>` | Good vs lousy prompt comparison with "what goes wrong", "why it works", and "check the answer" slots. |
+| `<PromptExample>` | Five named slots: `lousy`, `whatGoesWrong`, `good`, `whyItWorks`, `check` (see ADR-0009).             |
 | `<Checkpoint>`    | Self-check question with collapsible answer (built on `<details>`).                                   |
 | `<CaseStudy>`     | Styled callout connecting the lesson to Café Central.                                                 |
 | `<OsTabs>`        | Windows / macOS / Linux tabs with synced selection (built on Starlight `<Tabs syncKey>`).             |
-| `<Example>`       | Shows a file from `examples/` with its generated output.                                              |
-| `<LastVerified>`  | Shows the verification date for fast-changing pages.                                                  |
+| `<Example>`       | `file="partPP/LL_slug.py"`: shows the file from `examples/` plus `__outputs__/<file>.txt` if present. |
+| `<Mermaid>`       | `diagram={...}`: client-side Mermaid rendering (not yet verified in a browser).                       |
 | `<TryPython>`     | (Optional, M-later) In-browser Python via Pyodide, loaded lazily.                                     |
 
 All component UI strings ("Good prompt", "Show answer") come from `src/i18n/*.json`
-so components are translated once.
+(read with `getLabels()` in `src/lib/labels.ts`) so components are translated once.
+
+Lessons import components with the `@components` alias, for example
+`import PromptExample from '@components/PromptExample.astro'`.
+
+Planned but not built yet: a visible `lastVerified` date on fast-changing pages
+(frontmatter field exists; no renderer yet) and the machine-translation notice
+(see `05-i18n.md`). The earlier `<LastVerified>` and `<TranslationNotice>` components were
+removed because nothing used them; rebuild them as Starlight overrides when first needed.
 
 ## Code examples pipeline
 
@@ -193,9 +202,12 @@ so components are translated once.
 2. Each example has a pytest test, or a documented reason why it cannot be tested.
 3. `scripts/run_examples.py` runs each example against the fixture data and writes
    stdout to `examples/__outputs__/<path>.txt`.
-4. Lessons import code and output with Vite's `?raw` suffix through a per-course alias
-   (e.g. `@examples/automation-ai`) and render them with Starlight's `<Code>` component (wrapped in `<Example>`).
-5. CI runs pytest, regenerates outputs, and fails if `git diff --exit-code` shows changes.
+4. Lessons use `<Example file="partPP/LL_slug.py" />`, which reads the file (and its
+   generated output) at build time and renders it with Starlight's `<Code>`. The
+   `@examples/automation-ai` Vite alias still exists for `?raw` imports but is not the
+   default path.
+5. CI runs pytest and `scripts/run_examples.py --check`, which fails if committed outputs
+   differ from a fresh run. (Not yet wired into `check.yml`; see `progress.md`.)
 
 Result: documented code and output can never drift from what actually runs.
 

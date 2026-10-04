@@ -82,12 +82,10 @@ unchecked items above, which need the user's GitHub/DNS access.
 
 - [x] `courses/automation-ai/examples/`: uv project with Python 3.12+, pytest configured, `uv.lock`.
 - [x] `@examples/automation-ai` Vite alias for `?raw` imports.
-- [x] Components: `LessonGoals`, `PromptExample`, `Checkpoint`, `CaseStudy`, `Example`,
-      `LastVerified`, `TranslationNotice`, `Mermaid`. UI strings in `src/content/i18n/{en,es}.json`.
-      (Reworked in Stage 5: see below.)
+- [x] Components (first version; reworked at the start of Stage 5, see below).
 - [x] `scripts/run_examples.py`, `scripts/generate_dataset.py`, `scripts/check_translations.py`.
 - [x] Café Central case-study dataset (messy CSV, JSON, generated reproducibly).
-- [x] Sample lesson (Part 0 / "Reading data from files") using every component, EN + ES.
+- [x] Sample lesson using every component, EN + ES (removed in Stage 5 once real lessons began).
 - [x] Verified: all `npm run check` tasks pass; pytest passes; 32 pages build; all internal
       links valid.
 
@@ -111,11 +109,59 @@ Part 0:
 - [x] Dataset generator rewritten (240 sales rows, duplicates, mixed dates and amounts,
       accents), `scripts/package_datasets.py`, pytest in `examples/part00/`, zip committed
       under `public/downloads/automation-ai/`.
-- [ ] Lessons 0.1-0.4 drafted (one per session).
+- [ ] Lessons 0.1-0.4 drafted (one per session). **None written yet.** The 0.1 research is
+      done: template, curriculum, about-author blurb and ADR-0005 were read; no content file
+      exists, and `00-orientation/index.mdx` is still the "coming soon" stub (replace its
+      description when lessons land).
 - [ ] Brief open question 4 (real learner pitfalls) still unanswered; pitfalls are hypotheses.
 - [ ] Unverified in a real browser: Mermaid rendering, new components.
 
 Parts 1 and 2: not started.
+
+### How to resume (read this first)
+
+Repo state: all work is committed on `main`, 4 commits ahead of `origin/main` (not pushed;
+push only with the user's go-ahead). `npm run check` passes (30 pages) and
+`uv run pytest` in `courses/automation-ai/examples/` passes (11 tests).
+
+Next actions, in order:
+
+1. Draft lesson 0.1 at `src/content/docs/en/automation-ai/00-orientation/00-01-why-this-course.mdx`
+   following `planning/templates/lesson-template.mdx` and the brief
+   (`courses/automation-ai/planning/briefs/part-00.md`). Notes for 0.1:
+   - Frontmatter: `sidebar.order: 1`, `lessonId: '0.1'`, no `lastVerified` needed.
+   - No code, so no `<Example>`; "Hands-on" is a path-choosing exercise (all template
+     sections stay).
+   - Do not link to lessons that do not exist yet (the links validator fails); name Parts
+     in plain text.
+   - Paths from `02-curriculum.md`: AI-literate = 0.1-0.4, 1.1, 1.3-1.5, 1.7, 1.11-1.12,
+     2.1-2.9, 5.6-5.7; core = Parts 0-9; advanced = Part 10.
+   - Include the short author blurb from `planning/about-author.md`, a Mermaid diagram of
+     the nested paths, a `<PromptExample>` ("Should I learn Python?", see brief), and a
+     `<Checkpoint>`.
+   - Bold new terms and add them to `planning/glossary.md` (e.g. learning path, AI
+     assistant; prompt is already there).
+2. Then 0.2, 0.3, 0.4 (one per session), then the end-of-part checklist in 0.4.
+3. Part 1 and Part 2 briefs and lessons (Stage 5 continues).
+
+### Known gaps and decisions
+
+- CI (`.github/workflows/check.yml`) runs only `npm run check`. Still to add: a uv job
+  running `uv run pytest` and `uv run python scripts/run_examples.py --check`.
+- No `.python-version` in `courses/automation-ai/examples/` (ADR-0004 says to pin); the
+  local venv currently resolves to Python 3.14 while `requires-python` is `>=3.12`.
+- No renderer for `lastVerified` and no machine-translation notice (components removed;
+  rebuild as Starlight overrides when needed, Stage 7 for the notice).
+- `.github/workflows/links-weekly.yml` (external link check) from the architecture doc is
+  not built.
+- Dataset: Excel (merged headers) and PDF invoice not generated; deferred to Parts 5-6.
+- Mermaid and the new lesson components were checked only at HTML level. The browser tool
+  hung; eyeball them in `npm run dev` once the first lesson exists.
+- Build warning "collection 'i18n' does not exist or is empty" is harmless but unexplained.
+- Generated data (`examples/data/`) is excluded from Prettier and cspell on purpose. After
+  changing `scripts/generate_dataset.py`, rerun it and `scripts/package_datasets.py`,
+  commit both outputs (a test checks the committed zip).
+- Workflow decision (2026-10-03): work directly on `main`, no per-part branches for now.
 
 ## Stage 6 — Parts 3–9 (M3–M9) — not started
 

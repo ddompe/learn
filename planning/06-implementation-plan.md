@@ -32,17 +32,21 @@ Exit: `https://learn.dompe.space/en/` shows the catalog, `/en/automation-ai/` sh
 
 Goal: everything a lesson needs exists and is demonstrated on one sample lesson.
 
-- [ ] `courses/automation-ai/examples/` uv project with pinned Python and `uv.lock`; pytest configured.
-- [ ] `@examples` Vite alias.
-- [ ] Components: `LessonGoals`, `PromptExample`, `Checkpoint`, `CaseStudy`, `OsTabs`,
-      `Example`, `LastVerified`, `TranslationNotice`, with strings in `src/content/i18n/{en,es}.json`.
-- [ ] `scripts/run_examples.py` and output-freshness CI check.
-- [ ] `scripts/generate_dataset.py` producing the messy Café Central data (CSV with `;`,
-      Excel with merged headers, JSON customer comments, a PDF invoice). Seeded and reproducible.
-- [ ] `scripts/check_translations.py`.
-- [ ] Mermaid integration chosen and working.
-- [ ] One sample lesson using every component, in English and Spanish, to validate the
-      pipeline end to end.
+Status: done in Stages 4 and 5 (see `progress.md`). Deviations from this list:
+
+- [x] `courses/automation-ai/examples/` uv project, `uv.lock`, pytest. (Python version
+      not yet pinned with `.python-version`, ADR-0004.)
+- [x] `@examples` Vite alias (kept) and `@components` alias.
+- [x] Components: `LessonGoals`, `PromptExample`, `Checkpoint`, `CaseStudy`, `OsTabs`,
+      `Example`, `Mermaid`; strings in `src/i18n/{en,es}.json`. `LastVerified` and
+      `TranslationNotice` were dropped until needed (see `03-architecture.md`).
+- [x] `scripts/run_examples.py` written. **Not done:** the output-freshness CI check.
+- [~] `scripts/generate_dataset.py`: CSV (`;`) and JSON customer file done. Excel with
+  merged headers and the PDF invoice are deferred to Parts 5 and 6 (decided in the
+  Part 0 brief).
+- [x] `scripts/check_translations.py` (written; not run in CI).
+- [~] Mermaid: bundled and builds; browser rendering not yet verified.
+- [x] Sample lesson validated the pipeline, then was removed when real Part 0 lessons began.
 
 Exit: sample lesson passes every CI check; the Spanish version shows translated UI strings.
 
@@ -107,7 +111,7 @@ Each part (or a large chapter within a part) follows this loop:
 
 ### Working with the coding agent in VS Code
 
-- Work on a branch per part: `content/part-PP`.
+- Work directly on `main` for now (decided 2026-10-03; one person, no review gate). Revisit branches per part when a second contributor or the pilot reviewers join.
 - Give the agent `AGENTS.md`, the chapter brief, the template, and one approved lesson
   from a previous part as a style reference.
 - One lesson per agent session for drafts; batch only mechanical tasks (frontmatter,
