@@ -48,8 +48,9 @@ You type a **command**, press Enter, and the computer prints the **output**.
 The program that reads your commands is the **shell**. On Windows it is usually
 **PowerShell**. On macOS it is **zsh**. They look different, but the basics match.
 
-In this course, commands are shown with a symbol at the start of the line. `PS>` marks
-PowerShell and `$` marks macOS. You type everything after the symbol, not the symbol.
+In this course, the commands in the boxes are exactly what you type. Use the copy button
+and paste. In other tutorials you may see a symbol at the start of a line, such as `$`
+or `PS>`. That symbol is the terminal's own prompt. Do not type it.
 
 ## Open a terminal
 
@@ -71,20 +72,24 @@ you met in lesson 1.4.
 
 <OsTabs>
   <Fragment slot="windows">
+
 ```text
-PS> pwd
-PS> ls
-PS> cd Documents
-PS> cd ..
+pwd
+ls
+cd Documents
+cd ..
 ```
+
   </Fragment>
   <Fragment slot="macos">
+
 ```text
-$ pwd
-$ ls
-$ cd Documents
-$ cd ..
+pwd
+ls
+cd Documents
+cd ..
 ```
+
   </Fragment>
 </OsTabs>
 
@@ -102,14 +107,18 @@ To print the first lines of a text file:
 
 <OsTabs>
   <Fragment slot="windows">
+
 ```text
-PS> Get-Content cafe_central_sales.csv -TotalCount 5
+Get-Content cafe_central_sales.csv -TotalCount 5
 ```
+
   </Fragment>
   <Fragment slot="macos">
+
 ```text
-$ head -n 5 cafe_central_sales.csv
+head -n 5 cafe_central_sales.csv
 ```
+
   </Fragment>
 </OsTabs>
 
@@ -146,7 +155,7 @@ What would each command do? Predict first.
 ## Common mistakes
 
 - **Expecting a message on success.** Many commands print nothing when they work.
-- **Typing the prompt symbol.** Type only what follows `PS>` or `$`.
+- **Typing the prompt symbol.** If another tutorial shows `$` or `PS>` before a command, do not type it.
 - **Being in the wrong folder.** Check with `pwd` before running anything.
 - **Copying commands you do not understand.** Ask what a command does, and whether it
   changes or deletes anything, before running it.

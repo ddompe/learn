@@ -7,7 +7,7 @@ lessonId: '1.9'
 estimatedMinutes: 25
 prerequisites: ['1.4']
 translationStatus: machine
-sourceHash: '501fa561fe7e'
+sourceHash: '7d9f04d82cd5'
 ---
 
 import LessonGoals from '@components/LessonGoals.astro';
@@ -51,9 +51,9 @@ esperando. Escribes un **comando**, presionas Enter y la computadora imprime la
 El programa que lee tus comandos es el **shell** (o intérprete de comandos). En Windows
 suele ser **PowerShell**. En macOS es **zsh**. Se ven distintos, pero lo básico coincide.
 
-En este curso, los comandos se muestran con un símbolo al inicio de la línea. `PS>`
-marca PowerShell y `$` marca macOS. Escribes todo lo que va después del símbolo, no el
-símbolo.
+En este curso, los comandos de los recuadros son exactamente lo que escribes. Usa el
+botón de copiar y pega. En otros tutoriales puedes ver un símbolo al inicio de la línea,
+como `$` o `PS>`. Ese símbolo es el prompt de la propia terminal. No lo escribas.
 
 ## Abre una terminal
 
@@ -75,20 +75,24 @@ conociste en la lección 1.4.
 
 <OsTabs>
   <Fragment slot="windows">
+
 ```text
-PS> pwd
-PS> ls
-PS> cd Documents
-PS> cd ..
+pwd
+ls
+cd Documents
+cd ..
 ```
+
   </Fragment>
   <Fragment slot="macos">
+
 ```text
-$ pwd
-$ ls
-$ cd Documents
-$ cd ..
+pwd
+ls
+cd Documents
+cd ..
 ```
+
   </Fragment>
 </OsTabs>
 
@@ -106,14 +110,18 @@ Para imprimir las primeras líneas de un archivo de texto:
 
 <OsTabs>
   <Fragment slot="windows">
+
 ```text
-PS> Get-Content cafe_central_sales.csv -TotalCount 5
+Get-Content cafe_central_sales.csv -TotalCount 5
 ```
+
   </Fragment>
   <Fragment slot="macos">
+
 ```text
-$ head -n 5 cafe_central_sales.csv
+head -n 5 cafe_central_sales.csv
 ```
+
   </Fragment>
 </OsTabs>
 
@@ -152,7 +160,7 @@ lección 1.7.
 ## Errores comunes
 
 - **Esperar un mensaje cuando funciona.** Muchos comandos no imprimen nada cuando funcionan.
-- **Escribir el símbolo del prompt.** Escribe solo lo que sigue a `PS>` o `$`.
+- **Escribir el símbolo del prompt.** Si otro tutorial muestra `$` o `PS>` antes de un comando, no lo escribas.
 - **Estar en la carpeta equivocada.** Comprueba con `pwd` antes de ejecutar algo.
 - **Copiar comandos que no entiendes.** Pregunta qué hace un comando, y si cambia o
   borra algo, antes de ejecutarlo.

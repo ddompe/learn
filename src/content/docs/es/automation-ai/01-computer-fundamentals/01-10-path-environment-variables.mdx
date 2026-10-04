@@ -7,7 +7,7 @@ lessonId: '1.10'
 estimatedMinutes: 20
 prerequisites: ['1.9']
 translationStatus: machine
-sourceHash: '66355fa38ada'
+sourceHash: '8f63028d14b7'
 ---
 
 import LessonGoals from '@components/LessonGoals.astro';
@@ -75,16 +75,20 @@ claves de API, fuera de tus archivos. La lección 1.12 y la Parte 3 vuelven sobr
 
 <OsTabs>
   <Fragment slot="windows">
+
 ```text
-PS> $env:USERNAME
-PS> $env:PATH -split ';'
+$env:USERNAME
+$env:PATH -split ';'
 ```
+
   </Fragment>
   <Fragment slot="macos">
+
 ```text
-$ echo $USER
-$ echo $PATH | tr ':' '\n'
+echo $USER
+echo $PATH | tr ':' '\n'
 ```
+
   </Fragment>
 </OsTabs>
 
@@ -95,16 +99,20 @@ carpeta por línea. El orden importa: el shell usa la primera coincidencia.
 
 <OsTabs>
   <Fragment slot="windows">
+
 ```text
-PS> $env:CAFE_REPORT_NAME = "2024-01"
-PS> $env:CAFE_REPORT_NAME
+$env:CAFE_REPORT_NAME = "2024-01"
+$env:CAFE_REPORT_NAME
 ```
+
   </Fragment>
   <Fragment slot="macos">
+
 ```text
-$ export CAFE_REPORT_NAME=2024-01
-$ echo $CAFE_REPORT_NAME
+export CAFE_REPORT_NAME=2024-01
+echo $CAFE_REPORT_NAME
 ```
+
   </Fragment>
 </OsTabs>
 

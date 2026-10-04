@@ -7,7 +7,7 @@ lessonId: '4.2'
 estimatedMinutes: 25
 prerequisites: ['3.2', '1.10']
 translationStatus: machine
-sourceHash: '15ac8f96c7ae'
+sourceHash: '539ddc32f556'
 ---
 
 import LessonGoals from '@components/LessonGoals.astro';
@@ -63,14 +63,18 @@ documentación oficial de uv en [docs.astral.sh/uv](https://docs.astral.sh/uv/).
 
 <OsTabs>
   <Fragment slot="windows">
+
 ```text
-PS> powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
+
   </Fragment>
   <Fragment slot="macos">
+
 ```text
-$ curl -LsSf https://astral.sh/uv/install.sh | sh
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
+
   </Fragment>
 </OsTabs>
 

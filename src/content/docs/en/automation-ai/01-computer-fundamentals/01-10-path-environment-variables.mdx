@@ -71,16 +71,20 @@ outside of your files. Lesson 1.12 and Part 3 return to that.
 
 <OsTabs>
   <Fragment slot="windows">
+
 ```text
-PS> $env:USERNAME
-PS> $env:PATH -split ';'
+$env:USERNAME
+$env:PATH -split ';'
 ```
+
   </Fragment>
   <Fragment slot="macos">
+
 ```text
-$ echo $USER
-$ echo $PATH | tr ':' '\n'
+echo $USER
+echo $PATH | tr ':' '\n'
 ```
+
   </Fragment>
 </OsTabs>
 
@@ -91,16 +95,20 @@ folder per line. The order matters: the shell uses the first match.
 
 <OsTabs>
   <Fragment slot="windows">
+
 ```text
-PS> $env:CAFE_REPORT_NAME = "2024-01"
-PS> $env:CAFE_REPORT_NAME
+$env:CAFE_REPORT_NAME = "2024-01"
+$env:CAFE_REPORT_NAME
 ```
+
   </Fragment>
   <Fragment slot="macos">
+
 ```text
-$ export CAFE_REPORT_NAME=2024-01
-$ echo $CAFE_REPORT_NAME
+export CAFE_REPORT_NAME=2024-01
+echo $CAFE_REPORT_NAME
 ```
+
   </Fragment>
 </OsTabs>
 
