@@ -1,0 +1,28 @@
+name: External links
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Check links
+        id: lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --no-progress --scheme https --scheme http --max-concurrency 4 --accept '200..=299,403,429' 'src/content/docs/**/*.mdx' 'planning/**/*.md' README.md
+          fail: false
+      - name: Open an issue for broken links
+        if: steps.lychee.outputs.exit_code != 0
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: Broken external links
+          content-filepath: ./lychee/out.md
+          labels: maintenance

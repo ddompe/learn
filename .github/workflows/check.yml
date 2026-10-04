@@ -21,5 +21,20 @@ jobs:
       - name: Run checks
         run: npm run check
 
-  # Python example checks (pytest, output freshness) are added per-course once
-  # courses/<course>/examples/ exists (M1).
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: courses/*/examples/uv.lock
+      - name: Run example tests
+        working-directory: courses/automation-ai/examples
+        run: uv run pytest
+      - name: Check example outputs are fresh
+        run: uv run --project courses/automation-ai/examples python scripts/run_examples.py --check
+      - name: Translation status (report only)
+        run: python3 scripts/check_translations.py

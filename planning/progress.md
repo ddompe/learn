@@ -71,12 +71,10 @@ alongside the PR-check workflow, analytics, and funding — closing out M0.
 - [x] GoatCounter analytics wired (`ddompe.goatcounter.com`); confirmed the script tag
       renders in the built output on both `/en/` and `/es/`.
 - [x] Remote added (`git@github.com:ddompe/learn.git`) and pushed to `main`.
-- [ ] GitHub Pages source set to "GitHub Actions" (repo settings).
-- [ ] DNS: CNAME record `learn` → `ddompe.github.io`.
-- [ ] Enforce HTTPS in Pages settings once the certificate issues.
+- [x] GitHub Pages source set to "GitHub Actions"; DNS CNAME `learn` → `ddompe.github.io`
+      resolves; `https://learn.dompe.space/en/` returns 200. (HTTPS enforcement not checked.)
 
-Exit criteria (`https://learn.dompe.space/en/` live, CI green on a PR) depend on the
-unchecked items above, which need the user's GitHub/DNS access.
+Exit criteria met: `https://learn.dompe.space/en/` is live.
 
 ## Stage 4 — Content infrastructure (M1) — done, 2026-10-03
 
@@ -105,7 +103,7 @@ Part 0:
       `src/i18n/`. `LastVerified`, `TranslationNotice`, the barrel file and the sample
       lesson were removed. Frontmatter schema extended (`lessonId`, `lastVerified`, ...).
 - [x] `scripts/run_examples.py` rewritten (writes `examples/__outputs__/`, `--check` for CI;
-      not yet wired into CI).
+      wired into CI 2026-10-03).
 - [x] Dataset generator rewritten (240 sales rows, duplicates, mixed dates and amounts,
       accents), `scripts/package_datasets.py`, pytest in `examples/part00/`, zip committed
       under `public/downloads/automation-ai/`.
@@ -120,8 +118,8 @@ Parts 1 and 2: not started.
 
 ### How to resume (read this first)
 
-Repo state: all work is committed on `main`, 4 commits ahead of `origin/main` (not pushed;
-push only with the user's go-ahead). `npm run check` passes (30 pages) and
+Repo state: all work is committed and pushed on `main`; the site is live at
+<https://learn.dompe.space> (Pages and DNS confirmed 2026-10-03). `npm run check` passes (30 pages) and
 `uv run pytest` in `courses/automation-ai/examples/` passes (11 tests).
 
 Next actions, in order:
@@ -146,18 +144,15 @@ Next actions, in order:
 
 ### Known gaps and decisions
 
-- CI (`.github/workflows/check.yml`) runs only `npm run check`. Still to add: a uv job
-  running `uv run pytest` and `uv run python scripts/run_examples.py --check`.
-- No `.python-version` in `courses/automation-ai/examples/` (ADR-0004 says to pin); the
-  local venv currently resolves to Python 3.14 while `requires-python` is `>=3.12`.
-- No renderer for `lastVerified` and no machine-translation notice (components removed;
-  rebuild as Starlight overrides when needed, Stage 7 for the notice).
-- `.github/workflows/links-weekly.yml` (external link check) from the architecture doc is
-  not built.
+- Closed 2026-10-03: CI `python` job (pytest, `run_examples.py --check`, translation report);
+  `.python-version` pinned to 3.12; weekly external link check (`links-weekly.yml`,
+  lychee, opens an issue; first run untested); "i18n collection" warning fixed (empty
+  `src/content/i18n/{en,es}.json` plus the collection in `content.config.ts`).
+- Still open: no renderer for `lastVerified` and no machine-translation notice (components
+  removed; rebuild as Starlight overrides when the first ⏱ lesson or Stage 7 needs them).
 - Dataset: Excel (merged headers) and PDF invoice not generated; deferred to Parts 5-6.
 - Mermaid and the new lesson components were checked only at HTML level. The browser tool
   hung; eyeball them in `npm run dev` once the first lesson exists.
-- Build warning "collection 'i18n' does not exist or is empty" is harmless but unexplained.
 - Generated data (`examples/data/`) is excluded from Prettier and cspell on purpose. After
   changing `scripts/generate_dataset.py`, rerun it and `scripts/package_datasets.py`,
   commit both outputs (a test checks the committed zip).
