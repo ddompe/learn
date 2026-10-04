@@ -1,0 +1,146 @@
+---
+title: Text vs binary formats
+description: Understand why plain-text formats are easy to read, compare, and version, and binary formats are not.
+sidebar:
+  order: 1
+lessonId: '5.1'
+estimatedMinutes: 15
+prerequisites: ['1.5', '3.4']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain the difference between text and binary formats. - Say why text
+	formats are easy to compare, version, and process. - Choose a format by asking
+	what the file is for.
+</LessonGoals>
+
+## Why this matters
+
+Data arrives in many formats, and each one asks something different of you. Before you
+open a file, you should know what kind it is: can you read it with your eyes, compare two
+versions, give it to an AI assistant, or put it under Git? The answer depends on one
+split: text or binary.
+
+<CaseStudy>
+	Daniela receives Café Central's sales as a CSV, the customer list as JSON, a
+	monthly summary as an Excel workbook, and a supplier invoice as a PDF. Four
+	files, and four very different ways of working with them.
+</CaseStudy>
+
+## Text and binary
+
+Lesson 1.5 introduced the idea. A **text format** stores characters, so a text editor can
+show it. CSV, JSON, YAML, TOML, and Markdown are text formats. A **binary format**
+stores bytes that only the right program can interpret. Excel `.xlsx`, Word `.docx`, PDF,
+and Parquet are binary.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Plain text: CSV, JSON, YAML, TOML, Markdown"] --> B["Easy to read, compare, version, feed to an AI"]
+  C["Binary: xlsx, docx, PDF, Parquet"] --> D["Needs the right program, harder to compare"]`}
+/>
+
+## What text gives you
+
+1. **You can read it.** Open it in any editor and see what is there.
+2. **You can compare versions.** A change shows as the exact lines that changed.
+3. **Git works well.** History and review are meaningful (lesson 3.4).
+4. **Almost any tool reads it.** Python, Excel, databases, and AI assistants.
+5. **It is robust.** If part of a text file is damaged, the rest is usually readable.
+
+<Example file="part05/01_text_vs_binary.py" />
+
+The first part shows the benefit. Changing one amount changes exactly one line, and the
+difference is visible at a glance. The second part shows the cost: the Excel file starts
+with `PK` (a zip, lesson 1.5), and cannot be decoded as text.
+
+## What binary gives you
+
+Binary formats are not bad. They can be **smaller**, **faster**, and carry **richer
+content**: formatting, charts, and types. Excel keeps formulas and colours. Parquet
+(lesson 5.9) stores large tables compactly. The trade-off is that you need a program,
+or a library, to open them.
+
+## Choosing a format
+
+Ask what the file is for.
+
+| If the file is...                     | Prefer       |
+| ------------------------------------- | ------------ |
+| A table to exchange between tools     | CSV          |
+| Nested records, or data for a program | JSON         |
+| Settings a person edits               | YAML or TOML |
+| Text for people and AI to read        | Markdown     |
+| A report for people to read and print | PDF or Word  |
+| A very large table for analysis       | Parquet      |
+
+## Hands-on
+
+### Your turn
+
+Café Central keeps its price list in an Excel file. The team edits it each month and wants
+to see who changed what. What would you suggest?
+
+<Checkpoint question="Show a sample answer">
+	Keep the price list as a CSV, which is text, and store it in Git. Each change
+	then shows as a line, with an author and a message. Excel can still open and
+	edit the CSV (carefully, see lesson 5.2).
+</Checkpoint>
+
+## Common mistakes
+
+- **Storing data in a "pretty" binary format by default.** Ask who will use it and how.
+- **Assuming text means simple.** Text formats have rules and traps too.
+- **Putting large binary files in Git.** History grows, and changes are opaque.
+- **Opening a binary file in a text editor and saving.** It destroys the file.
+- **Choosing a format because it is familiar.** Choose it because it fits the use.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Which file format is best?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		You get "it depends", with a list of formats and no decision.
+	</Fragment>
+	<Fragment slot="good">
+		I keep a price list with about 40 rows and 5 columns. A colleague and I edit
+		it monthly, I want to see who changed what, and a Python script reads it. We
+		use Excel. Recommend one format and explain why in three sentences. Mention
+		the main drawback of your choice and how to reduce it.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It gives **context** (size, people, tools), asks for one **decision**, and
+		an honest drawback, which is a built-in **verification**.
+	</Fragment>
+	<Fragment slot="check">
+		Check that the reasoning mentions comparing versions and who reads the file.
+		Ask what happens if the file grows tenfold.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Is a CSV file a text or a binary format?">
+	Text.
+</Checkpoint>
+
+<Checkpoint question="Give two benefits of text formats.">
+	They can be read in any editor and compared line by line. They also work well
+	with Git and with AI assistants.
+</Checkpoint>
+
+<Checkpoint question="Name one advantage of a binary format.">
+	Smaller size, faster reading, or richer content such as formatting and types.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 5.2 looks at the most common text format, CSV, in depth.

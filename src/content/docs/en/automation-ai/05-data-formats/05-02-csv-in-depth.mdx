@@ -1,0 +1,159 @@
+---
+title: CSV in depth
+description: Handle delimiters, quoting, encodings, and decimal commas, and understand why Excel in Spanish uses a semicolon.
+sidebar:
+  order: 2
+lessonId: '5.2'
+estimatedMinutes: 25
+prerequisites: ['1.7', '5.1']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Identify the delimiter and the encoding of a CSV file. - Explain why Excel
+	in Spanish locales uses `;` as the separator. - Write a CSV that other tools
+	can read safely.
+</LessonGoals>
+
+## Why this matters
+
+CSV looks too simple to go wrong, yet it causes more data problems than any other
+format. There is no official standard that everyone follows. The delimiter, the
+encoding, the quotes, and the way numbers and dates are written all vary. The Café Central
+file has its own choices: `;` separators, UTF-8, mixed amounts. You must check them
+instead of assuming.
+
+<CaseStudy>
+	Daniela opens the sales file in a comma-based tool and sees one big column.
+	Then amounts like `$1500,50` break her totals. The file is not broken. It
+	follows the Spanish-locale conventions.
+</CaseStudy>
+
+## What a CSV is
+
+A **CSV** (comma-separated values) file is a text file where each line is a row, and a
+**delimiter** character separates the columns. The first line is often a header with
+column names. That is the whole format, and everything else is a convention.
+
+## The delimiter and the decimal comma
+
+In English-speaking locales, numbers use a decimal point (`1500.50`), so the comma is free
+to separate columns. In many Spanish-speaking and European locales, the decimal
+separator is a comma (`1500,50`). A comma-delimited file would then be ambiguous, so the
+spreadsheet program defaults to a **semicolon** as the list separator in those locales.
+That is why a CSV saved from Excel in Spanish has `;`.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["Locale uses a decimal point"] --> B["Comma separates columns"]
+  C["Locale uses a decimal comma"] --> D["Semicolon separates columns"]`}
+/>
+
+When you receive a CSV, look at the first lines in a text editor and see which delimiter
+appears. Python's `csv.Sniffer` can guess, but you should confirm.
+
+<Example file="part05/02_csv.py" />
+
+## Quoting
+
+If a field contains the delimiter, a quote, or a newline, the writer wraps it in double
+quotes, and doubles any quote inside it: `"dijo ""hola"""`. The `csv` module does this for
+you. Never build CSV lines by joining text yourself.
+
+## Encoding
+
+A CSV is plain text, so it has an encoding (lesson 1.7). Three cases appear:
+
+- **UTF-8** is the best default.
+- **UTF-8 with BOM** starts with three invisible bytes. Excel uses them as a hint that the
+  file is UTF-8. Some tools then show a stray character at the start of the first header.
+- **Latin-1 or Windows-1252** appears in files from older systems.
+
+If accents look wrong, the encoding is the first suspect. Tell the reading tool which one to use.
+
+## Dates and numbers
+
+CSV has no types. Everything is text until you convert it. The Café Central file mixes
+`2024-01-01`, `01/01/2024`, and `2024/01/01` for dates, and `1500`, `1400.50`, and
+`$1500,50` for amounts. Part 6 covers cleaning. For now: never trust a column's type
+from its look.
+
+## Hands-on
+
+### Worked example
+
+1. Open `cafe_central_sales.csv` in VS Code. What is the delimiter?
+2. Find a field with a decimal comma.
+3. Run the example above, and compare what happens when the same row is split with `;`
+   and with `,`.
+
+### Your turn
+
+You receive a file with this first line: `Nombre,Ciudad,Monto` and a row
+`Ana,San José,"1500,50"`. What is the delimiter, and why are there quotes?
+
+<Checkpoint question="Show the answer">
+	The delimiter is a comma. The amount `1500,50` contains a comma, which is the
+	delimiter, so the field is wrapped in quotes to stop it splitting into two
+	columns.
+</Checkpoint>
+
+## Common mistakes
+
+- **Assuming the comma.** Look at the file first.
+- **Splitting lines by hand.** Use the `csv` module so that quotes work.
+- **Opening and saving in Excel.** It may change dates, drop zeros, and change the encoding.
+- **Ignoring the BOM.** A stray character in the first header name is the sign.
+- **Writing a CSV with the system's default encoding.** Pass `encoding="utf-8"`.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Read this CSV.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant assumes a comma and UTF-8, and writes code that returns a
+		single column or garbled accents.
+	</Fragment>
+	<Fragment slot="good">
+		I have a CSV exported from Excel in a Spanish-language Windows. The first
+		lines are: "ID;Fecha;Monto" and "T001;01/01/2024;1500,50". Write Python with
+		the csv module that reads it, treating ';' as the delimiter, and tell me
+		which encoding to try first and how to recognise a wrong choice. Do not
+		convert the amounts yet. Show the first three rows as output.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It gives the **input** (real lines), names the **constraints** (delimiter,
+		module), and asks for a recognisable **verification** (wrong choice signs).
+	</Fragment>
+	<Fragment slot="check">
+		Run it on the real file. Check the accents in the output, and confirm there
+		are five columns, not one.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Why does Excel in a Spanish locale save CSV with semicolons?">
+	The decimal separator is a comma there, so the comma cannot also separate
+	columns.
+</Checkpoint>
+
+<Checkpoint question="What happens when a field contains the delimiter?">
+	The field is wrapped in quotes so the delimiter inside it is not treated as a
+	separator.
+</Checkpoint>
+
+<Checkpoint question="What is the best default encoding for a CSV?">
+	UTF-8.
+</Checkpoint>
+
+## Going deeper
+
+- Part 6 reads CSV into a table with pandas and cleans the mixed amounts and dates.

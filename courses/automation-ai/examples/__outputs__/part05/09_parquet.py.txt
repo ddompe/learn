@@ -1,0 +1,5 @@
+Rows: 49200
+Parquet is smaller than CSV: True
+Columns read from Parquet: ['ID', 'Monto']
+Column types after reading back: {'ID': 'str', 'Fecha': 'str', 'Cliente': 'str', 'Monto': 'str', 'Categoría': 'str'}
+Parquet keeps the types you give it: Monto is still text, because the CSV was messy.

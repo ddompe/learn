@@ -1,0 +1,146 @@
+---
+title: Parquet, briefly
+description: Understand when a columnar binary format beats CSV.
+sidebar:
+  order: 9
+lessonId: '5.9'
+estimatedMinutes: 15
+prerequisites: ['5.1', '5.2']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain what Parquet is. - Explain why a columnar format reads faster. -
+	Decide when to use Parquet instead of CSV.
+</LessonGoals>
+
+## Why this matters
+
+CSV is perfect for small tables and for exchange. But a table with millions of rows
+becomes slow to read and big to store, and every program has to guess the types again.
+**Parquet** is a binary format made for analysis of large tables. You will meet it as
+soon as you work with big data, or with tools like DuckDB (lesson 6.9).
+
+<CaseStudy>
+	Café Central's sales file has 246 rows. Next year's file for all shops may
+	have hundreds of thousands. Daniela wants to know whether CSV will keep
+	working.
+</CaseStudy>
+
+## Rows and columns
+
+A CSV stores data **row by row**: all the fields of the first sale, then the second.
+Parquet stores **column by column**: all the IDs together, then all the amounts.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["CSV: row 1, row 2, row 3"] --> B["To read one column you must read everything"]
+  C["Parquet: column ID, column Monto, column Fecha"] --> D["Read only the columns you need"]`}
+/>
+
+Benefits of the columnar layout:
+
+- **Faster reads of a few columns.** An analysis of amounts does not touch names.
+- **Smaller files.** Values in a column are alike, so they compress well.
+- **Types are stored.** Dates and numbers are not guessed again.
+
+<Example file="part05/09_parquet.py" />
+
+The example repeats the sales data to make a larger table, then writes it both ways. The
+Parquet file is smaller. It then reads back only two of the five columns. The last lines
+make an honest point: Parquet keeps the types you give it. The `Monto` column here is still text,
+because the CSV was messy. Cleaning comes first (Part 6).
+
+## When to use it
+
+| Situation                                 | Use     |
+| ----------------------------------------- | ------- |
+| Small table, or sharing with anyone       | CSV     |
+| A person needs to open and read it        | CSV     |
+| Large table, analysed repeatedly          | Parquet |
+| You want types to survive between steps   | Parquet |
+| You need to see the data in a text editor | CSV     |
+
+A common pattern: receive messy CSV, clean it once, save the clean version as Parquet,
+and use that for later analysis.
+
+## Hands-on
+
+### Your turn
+
+A 3-million-row sales table is analysed every day, always using only `Fecha` and `Monto`.
+Which format fits best, and why?
+
+<Checkpoint question="Show the answer">
+	Parquet. Reading two columns skips the rest, the file is smaller, and the
+	dates and amounts keep their types.
+</Checkpoint>
+
+## Common mistakes
+
+- **Using Parquet for a 50-row table.** CSV is simpler.
+- **Writing Parquet from untidy data.** Clean it first.
+- **Expecting to open it in a text editor.** It is binary.
+- **Sending Parquet to someone without the tools.** Check first.
+- **Forgetting the extra dependency.** pandas needs a Parquet engine such as pyarrow.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Should I use Parquet?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		You get a generic list of pros and cons with no recommendation for your
+		situation.
+	</Fragment>
+	<Fragment slot="good">
+		My sales table has about 400,000 rows and 12 columns, stored as a semicolon
+		CSV. I read it every day in pandas but use only 3 columns. My colleagues use
+		Excel and open the file directly. Recommend CSV or Parquet, or a
+		combination, in one paragraph. Say what I would need to install, and what my
+		colleagues would lose.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It gives **context** (size, usage, colleagues), asks for a **decision**, and
+		requires the **costs** to be stated.
+	</Fragment>
+	<Fragment slot="check">
+		Test it: time reading the 3 columns from both formats on a copy of your
+		data.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What does columnar mean?">
+	The data is stored column by column rather than row by row.
+</Checkpoint>
+
+<Checkpoint question="Name two benefits of Parquet over CSV.">
+	Faster reads of a few columns, smaller files, and stored types.
+</Checkpoint>
+
+<Checkpoint question="When is CSV still the better choice?">
+	For small tables and for sharing with people or tools that need to open it
+	easily.
+</Checkpoint>
+
+## End-of-part checklist
+
+You have finished Part 5 when you can tick every item:
+
+- [ ] I read the sales CSV with the right delimiter and encoding.
+- [ ] I read the customers JSON despite its comment lines.
+- [ ] I opened the xlsx as a zip and found the sheet XML.
+- [ ] I rebuilt invoice rows from the PDF's text positions.
+- [ ] I can say when I would pick CSV, JSON, YAML, TOML, Markdown, or Parquet.
+
+## Going deeper
+
+- Part 6 uses pandas to clean and analyse the Café Central data.

@@ -1,0 +1,11 @@
+# Settings for the monthly report
+report:
+  title: Café Central - Resumen mensual
+  month: '2024-01'
+  currency: CRC
+  shops:
+    - San José
+    - Heredia
+    - Alajuela
+  include_charts: true
+  top_categories: 3

@@ -1,0 +1,166 @@
+---
+title: Converting documents to Markdown
+description: Convert Office and PDF documents to Markdown and judge how good the conversion is.
+sidebar:
+  order: 8
+lessonId: '5.8'
+estimatedMinutes: 20
+prerequisites: ['5.6', '5.7']
+lastVerified: 2026-10-03
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain why you convert documents to Markdown for AI use. - Name tools that
+	convert Office files and PDFs. - Judge the quality of a conversion with a
+	checklist.
+</LessonGoals>
+
+## Why this matters
+
+You cannot hand an assistant a PDF or a workbook and be sure it understands the layout.
+Converting a document to Markdown first gives you plain text that you can read, fix,
+and send. The conversion is never perfect, so you need to know where it goes wrong and
+how to check.
+
+<CaseStudy>
+	Daniela wants an assistant to answer questions about the supplier invoice and
+	the monthly summary. She converts both to Markdown and reviews the result
+	before sending it.
+</CaseStudy>
+
+## What conversion does
+
+A converter reads the structure that a file has, and writes the closest Markdown. For a
+Word file, that structure is explicit (headings, lists, tables), so conversion is
+usually good. For a PDF, the structure is missing, so the tool must guess from positions.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["docx"] --> D["Converter"]
+  B["xlsx"] --> D
+  C["PDF"] --> D
+  D --> E["Markdown"]
+  E --> F["You check it"]
+  F --> G["Send to an assistant, or save"]`}
+/>
+
+## See it by hand
+
+<Example file="part05/08_to_markdown.py" />
+
+Two lessons from this small experiment.
+
+1. **Merged cells lose meaning.** The workbook's month headers (`Diciembre 2023`,
+   `Enero 2024`) sit in merged cells above `Ventas` and `Monto`. The converted table has
+   two `Ventas` and two `Monto` columns with no month. A person can no longer tell
+   which is which.
+2. **PDF tables must be rebuilt.** By grouping words with the same `y` position, the
+   script recovers each invoice row. This works on a clean, simple PDF. Real invoices
+   have wrapped lines, columns of varying width, and footers, and break such simple rules.
+
+## Tools
+
+Several tools convert documents to Markdown. They differ in strengths and change fast.
+Last verified on 2026-10-03.
+
+- **pandoc** is a long-established command-line converter between many document formats.
+  It is strong for Word and similar structured documents.
+- **MarkItDown** is an open source Python tool that converts Office files, PDFs, and
+  other files to Markdown for use with language models.
+- **Docling** is an open source toolkit that analyses document layout, and handles
+  tables and scanned pages more ambitiously.
+
+Check each project's page for what it supports today: [pandoc](https://pandoc.org),
+[MarkItDown](https://github.com/microsoft/markitdown), and
+[Docling](https://github.com/docling-project/docling). Follow lesson 3.8's habits before installing: check the name,
+the maintainers, and the release history.
+
+## A quality checklist
+
+Whatever the tool, compare the output with the original:
+
+1. **Count** the rows, columns, and sections.
+2. **Check numbers** in three places: first, middle, last.
+3. **Check headings** and their levels.
+4. **Look for lost content:** footnotes, headers, merged cells, text in images.
+5. **Look for scrambled order,** especially in multi-column pages.
+6. **Check special characters:** accents and currency signs.
+
+## Hands-on
+
+### Worked example
+
+Open the PDF invoice and the rebuilt rows from the example. Check that quantity times unit
+price equals the total for each of the three lines.
+
+### Your turn
+
+A converter turns a three-column PDF page into text where the right column appears
+before the left. What check would have caught this?
+
+<Checkpoint question="Show the answer">
+	Reading the output in order and comparing it with the page (check 5 of the
+	list). Scrambled order shows up as sentences that jump between topics.
+</Checkpoint>
+
+## Common mistakes
+
+- **Trusting the output without a check.**
+- **Using one tool for everything.** Try another when a document converts badly.
+- **Converting scanned pages without OCR.** You get nothing.
+- **Sending confidential documents to an online converter.** Lesson 2.8 applies.
+- **Forgetting the original.** Keep it, and note the tool that you used.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Convert this to Markdown.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant retypes the text and "improves" it, drops a table row, or
+		invents a missing figure, with no way to tell.
+	</Fragment>
+	<Fragment slot="good">
+		I converted a supplier invoice PDF to Markdown with an automatic tool. I
+		will paste the Markdown and the text of the original. Compare them and list
+		any difference: missing lines, changed numbers, merged columns, or lost
+		headings. Do not rewrite the document. Say "no differences found" only if
+		you checked every line.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It gives the assistant a **checking** task with both **inputs**, and the
+		**constraint** not to rewrite, so differences stay visible.
+	</Fragment>
+	<Fragment slot="check">
+		Spot-check three of the differences it lists, and also three lines it says
+		are fine. An assistant checking an assistant is only a first pass.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Why is converting a Word file easier than converting a PDF?">
+	Word stores real structure, such as headings and tables. A PDF stores only
+	positions of words.
+</Checkpoint>
+
+<Checkpoint question="What was lost when the workbook was converted?">
+	The month headers in merged cells, so the columns were no longer labelled by
+	month.
+</Checkpoint>
+
+<Checkpoint question="Name two items from the quality checklist.">
+	For example: count rows and columns, check numbers, check heading levels, or
+	look for scrambled order.
+</Checkpoint>
+
+## Going deeper
+
+- Part 6 reads Excel with pandas and handles merged headers for analysis.

@@ -1,0 +1,13 @@
+Merged headers: ['A1:E1', 'B2:C2', 'D2:E2']
+| Sucursal | Ventas | Monto | Ventas | Monto |
+| --- | --- | --- | --- | --- |
+| San José | 62 | 118400 | 58 | 109900 |
+| Heredia | 41 | 76250 | 44 | 80100 |
+| Alajuela | 37 | 69300 | 35 | 64850 |
+| Total | 140 | 263950 | 137 | 254850 |
+(The two 'Ventas' and two 'Monto' headers lost their month: it sat in merged cells.)
+
+Invoice rows rebuilt by grouping text with the same height:
+Grano de cafe, saco 10 kg | 12 | 45 000 | 540 000
+Leche entera, caja | 20 | 11 500 | 230 000
+Azucar, bolsa 5 kg | 8 | 4 800 | 38 400

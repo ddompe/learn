@@ -1,0 +1,131 @@
+---
+title: TOML
+description: Read and edit TOML, the format of pyproject.toml.
+sidebar:
+  order: 5
+lessonId: '5.5'
+estimatedMinutes: 15
+prerequisites: ['4.3', '5.4']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Read a TOML file. - Compare TOML with JSON and YAML. - Edit a TOML file
+	without breaking it.
+</LessonGoals>
+
+## Why this matters
+
+You already use TOML: your project's `pyproject.toml` is written in it (lessons 3.8 and
+4.3). **TOML** (Tom's Obvious Minimal Language) is a settings format designed to be
+unambiguous. It avoids most of the traps of YAML, and it supports comments, which JSON does not.
+
+<CaseStudy>
+	Daniela opens the `pyproject.toml` of her report project and wants to read the
+	Python version and the dependencies. She does not have to guess what each line
+	means.
+</CaseStudy>
+
+## The shape of TOML
+
+<Example file="part03/08_pyproject_example.toml" />
+
+- `[project]` is a **table**, a named group of settings.
+- `name = "cafe-central-report"` is a key and a value. Strings use quotes.
+- `dependencies = [ ... ]` is an **array**. Items are separated by commas.
+- Comments start with `#`.
+- Numbers, booleans (`true`, `false`), and dates have their own, unquoted forms.
+
+Because strings must be quoted, `no` is just a word with quotes around it. Unquoted words
+that are not numbers or booleans are errors, not surprises.
+
+## Reading it in Python
+
+<Example file="part05/05_toml.py" />
+
+Python's standard library includes `tomllib` for reading TOML, so no package is needed.
+It reads the file into dictionaries and lists. It cannot write TOML. To change a file, edit
+it as text, or use `uv add` for dependencies, which edits it safely.
+
+## Comparing the three
+
+| Feature        | JSON                  | YAML             | TOML            |
+| -------------- | --------------------- | ---------------- | --------------- |
+| Comments       | No                    | Yes              | Yes             |
+| Indentation    | Not significant       | Significant      | Not significant |
+| Type surprises | Few                   | Many             | Few             |
+| Best for       | Data between programs | Complex settings | Simple settings |
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Data exchanged between programs"] --> B["JSON"]
+  C["Rich, nested settings"] --> D["YAML"]
+  E["Simple, clear settings"] --> F["TOML"]`}
+/>
+
+## Hands-on
+
+### Your turn
+
+Add a dependency to the sample by hand: `matplotlib`. What must you watch for?
+
+<Checkpoint question="Show the answer">
+Add `"matplotlib>=3.8.0",` as a new quoted item in the array, with a comma after the previous item. A missing comma or quote makes the file invalid. In a real project, prefer `uv add matplotlib`, which also updates the lock file.
+</Checkpoint>
+
+## Common mistakes
+
+- **Missing quotes on strings.**
+- **Missing commas in arrays.**
+- **Editing dependencies by hand without updating the lock file.** Use `uv add`.
+- **Confusing a table with an array.** `[project]` is a table, and `[...]` after `=` is an array.
+- **Expecting to write TOML with the standard library.** It only reads.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Edit my pyproject.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant rewrites the whole file and changes other settings, or invents
+		new sections.
+	</Fragment>
+	<Fragment slot="good">
+		Here is my pyproject.toml. Add matplotlib as a dependency with version 3.8.0
+		or newer. Make the smallest possible change, and show me a diff, not the
+		whole file. Tell me the uv command that would do this safely, and why it is
+		better than editing by hand.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It supplies the **input**, a **constraint** (smallest change), an **output
+		format** (diff), and asks for the safer alternative.
+	</Fragment>
+	<Fragment slot="check">
+		Compare the diff to your file. Run the uv command in a copy, and check that
+		the lock file updates.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Name one advantage of TOML over JSON.">
+	It allows comments.
+</Checkpoint>
+
+<Checkpoint question="Which standard module reads TOML in Python?">
+	`tomllib`.
+</Checkpoint>
+
+<Checkpoint question="What does [project] mean in TOML?">
+	It starts a table named `project`, a group of related settings.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 5.6 moves from settings to text for people and AI: Markdown.

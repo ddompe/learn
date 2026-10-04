@@ -50,7 +50,7 @@ def test_blank_customer_and_inconsistent_categories():
 
 
 def test_files_are_utf8_without_bom():
-    for path in DATA.iterdir():
+    for path in [*DATA.glob("*.csv"), *DATA.glob("*.json")]:
         raw = path.read_bytes()
         assert not raw.startswith(b"\xef\xbb\xbf")
         raw.decode("utf-8")
@@ -64,3 +64,25 @@ def test_customers_have_comments_and_accents():
     assert any(c["name"] == "" for c in customers)
     assert any(c["email"] == "" for c in customers)
     assert any("ó" in c["name"] or "í" in c["name"] for c in customers)
+
+
+def test_office_files_are_reproducible(tmp_path):
+    generate_dataset.generate(tmp_path)
+    for name in ("cafe_central_monthly_summary.xlsx", "cafe_central_invoice.pdf"):
+        assert (tmp_path / name).read_bytes() == (DATA / name).read_bytes()
+
+
+def test_summary_has_merged_headers_and_two_sheets():
+    from openpyxl import load_workbook
+
+    workbook = load_workbook(DATA / "cafe_central_monthly_summary.xlsx")
+    assert workbook.sheetnames == ["Resumen", "Notas"]
+    merged = {str(r) for r in workbook["Resumen"].merged_cells.ranges}
+    assert {"A1:E1", "B2:C2", "D2:E2"} <= merged
+
+
+def test_invoice_is_a_pdf_with_text_but_no_table_structure():
+    raw = (DATA / "cafe_central_invoice.pdf").read_bytes()
+    assert raw.startswith(b"%PDF-")
+    assert b"FACTURA No. 2024-0042" in raw
+    assert b"/Table" not in raw

@@ -50,6 +50,15 @@ leaves something unverified. Updated 2026-10-03.
 - [ ] 4.9: `unicodedata.normalize("NFKD", ...)` behaviour is as described, including text typed on a Mac that may arrive pre-decomposed.
 - [ ] 4.16: the script's numbers (category totals) agree with a manual spreadsheet total of one category.
 
+## Part 5 (data formats)
+
+- [ ] 5.2: in Spanish-locale Excel, the default CSV list separator is `;` because the decimal separator is a comma (claim stated for "many Spanish-speaking and European locales"); check on a real Spanish Excel, and the "UTF-8 with BOM as a hint to Excel" statement.
+- [ ] 5.7: download link `/downloads/automation-ai/cafe-central-documents.zip` works; the xlsx opens in Excel with the merged headers as described; the hand-written PDF opens in Acrobat, Preview, and a browser (it was checked only with pypdf).
+- [ ] 5.7: unzipping a copy renamed to `.zip` works on Windows (Explorer) and macOS.
+- [ ] 5.8: tool descriptions and URLs (pandoc, MarkItDown, Docling; the Docling repository path `docling-project/docling`) are still accurate. `lastVerified: 2026-10-03`.
+- [ ] 5.9: pyarrow installs cleanly with `uv add pyarrow` on Windows and macOS, and the claim that pandas needs a Parquet engine.
+- [ ] Dataset: the xlsx is byte-reproducible only with the pinned openpyxl version in `uv.lock`; if the generator output changes after an openpyxl upgrade, regenerate and recommit the xlsx and zip.
+
 ## Pedagogy and voice (author review)
 
 - [ ] Read Parts 0 to 2 end to end for flow, repetition, and tone. Intro repetition was reduced on 2026-10-03; re-check.

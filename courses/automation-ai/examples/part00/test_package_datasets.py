@@ -27,3 +27,23 @@ def test_committed_zip_is_up_to_date(tmp_path):
     assert COMMITTED.read_bytes() == fresh.read_bytes(), (
         "Run: uv run python scripts/package_datasets.py"
     )
+
+
+DOCUMENTS = REPO / "public" / "downloads" / "automation-ai" / "cafe-central-documents.zip"
+
+
+def test_documents_zip_contains_expected_files(tmp_path):
+    out = package_datasets.build_documents_zip(output=tmp_path / "docs.zip")
+    with zipfile.ZipFile(out) as archive:
+        assert sorted(archive.namelist()) == [
+            "README.txt",
+            "cafe_central_invoice.pdf",
+            "cafe_central_monthly_summary.xlsx",
+        ]
+
+
+def test_committed_documents_zip_is_up_to_date(tmp_path):
+    fresh = package_datasets.build_documents_zip(output=tmp_path / "fresh.zip")
+    assert DOCUMENTS.read_bytes() == fresh.read_bytes(), (
+        "Run: uv run python scripts/package_datasets.py"
+    )

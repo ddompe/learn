@@ -14,6 +14,9 @@
 	],
 	"words": [
 		"mojibake",
+		"josé",
+		"pyarrow",
+		"pyyaml",
 		"NFKD",
 		"unicodedata",
 		"jupyter",

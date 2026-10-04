@@ -8,12 +8,17 @@ Writes two files into courses/automation-ai/examples/data/:
   spelling, duplicate rows, a few blank customers).
 - cafe_central_customers.json: customer list with comment lines (not valid JSON) and
   missing values.
+- cafe_central_monthly_summary.xlsx: a "pretty" summary with merged headers (Parts 5 and 6).
+- cafe_central_invoice.pdf: a supplier invoice whose table has no structure (Part 5).
 
 Seeded, so a second run produces byte-identical files.
 """
 
+import io
 import json
 import random
+import re
+import zipfile
 from datetime import date
 from pathlib import Path
 
@@ -112,10 +117,165 @@ def write_customers(data_dir: Path) -> Path:
     return path
 
 
+# Monthly summary by shop, laid out the way people build them in Excel: a merged title,
+# merged group headers, and a totals row. Deliberately not a tidy dataset.
+SUMMARY_SHOPS = [
+    ("San José", 62, 118400, 58, 109900),
+    ("Heredia", 41, 76250, 44, 80100),
+    ("Alajuela", 37, 69300, 35, 64850),
+]
+FIXED_ZIP_TIME = (2024, 1, 31, 0, 0, 0)
+
+
+def build_summary_xlsx() -> bytes:
+    from datetime import datetime
+
+    from openpyxl import Workbook
+    from openpyxl.styles import Alignment, Font
+
+    workbook = Workbook()
+    workbook.properties.creator = "Café Central"
+    workbook.properties.created = datetime(2024, 1, 31)
+    workbook.properties.modified = datetime(2024, 1, 31)
+    sheet = workbook.active
+    sheet.title = "Resumen"
+
+    sheet["A1"] = "Café Central - Resumen mensual por sucursal"
+    sheet.merge_cells("A1:E1")
+    sheet["B2"] = "Diciembre 2023"
+    sheet.merge_cells("B2:C2")
+    sheet["D2"] = "Enero 2024"
+    sheet.merge_cells("D2:E2")
+    for column, text in zip("ABCDE", ["Sucursal", "Ventas", "Monto", "Ventas", "Monto"]):
+        sheet[f"{column}3"] = text
+    for row, (shop, dec_n, dec_amount, jan_n, jan_amount) in enumerate(SUMMARY_SHOPS, 4):
+        sheet.append([shop, dec_n, dec_amount, jan_n, jan_amount])
+    last = 3 + len(SUMMARY_SHOPS)
+    sheet.append(
+        [
+            "Total",
+            sum(s[1] for s in SUMMARY_SHOPS),
+            sum(s[2] for s in SUMMARY_SHOPS),
+            sum(s[3] for s in SUMMARY_SHOPS),
+            sum(s[4] for s in SUMMARY_SHOPS),
+        ]
+    )
+    for cell in ("A1", "B2", "D2"):
+        sheet[cell].font = Font(bold=True)
+        sheet[cell].alignment = Alignment(horizontal="center")
+    for cell in sheet[last + 1]:
+        cell.font = Font(bold=True)
+
+    notes = workbook.create_sheet("Notas")
+    notes["A1"] = "Los montos están en colones. Los totales se calcularon a mano."
+
+    buffer = io.BytesIO()
+    workbook.save(buffer)
+
+    # Re-zip with fixed timestamps so the file is byte-identical on every run.
+    source = zipfile.ZipFile(io.BytesIO(buffer.getvalue()))
+    out = io.BytesIO()
+    with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as target:
+        for name in sorted(source.namelist()):
+            info = zipfile.ZipInfo(name, date_time=FIXED_ZIP_TIME)
+            info.compress_type = zipfile.ZIP_DEFLATED
+            content = source.read(name)
+            if name == "docProps/core.xml":
+                # openpyxl stamps the save time; pin it so the file is reproducible.
+                content = re.sub(
+                    rb"(<dcterms:modified[^>]*>)[^<]*",
+                    rb"\g<1>2024-01-31T00:00:00Z",
+                    content,
+                )
+            target.writestr(info, content)
+    return out.getvalue()
+
+
+INVOICE_LINES = [
+    (60, 770, 16, "Distribuidora Aroma S.A."),
+    (60, 752, 10, "Cedula juridica 3-101-000000  |  San Jose, Costa Rica"),
+    (60, 720, 12, "FACTURA No. 2024-0042"),
+    (60, 704, 10, "Fecha: 15/01/2024"),
+    (60, 688, 10, "Cliente: Cafe Central S.A."),
+    (60, 650, 10, "Descripcion"),
+    (300, 650, 10, "Cantidad"),
+    (380, 650, 10, "Precio"),
+    (470, 650, 10, "Total"),
+    (60, 630, 10, "Grano de cafe, saco 10 kg"),
+    (300, 630, 10, "12"),
+    (380, 630, 10, "45 000"),
+    (470, 630, 10, "540 000"),
+    (60, 614, 10, "Leche entera, caja"),
+    (300, 614, 10, "20"),
+    (380, 614, 10, "11 500"),
+    (470, 614, 10, "230 000"),
+    (60, 598, 10, "Azucar, bolsa 5 kg"),
+    (300, 598, 10, "8"),
+    (380, 598, 10, "4 800"),
+    (470, 598, 10, "38 400"),
+    (380, 560, 10, "Subtotal"),
+    (470, 560, 10, "808 400"),
+    (380, 544, 10, "IVA 13%"),
+    (470, 544, 10, "105 092"),
+    (380, 528, 12, "TOTAL CRC"),
+    (470, 528, 12, "913 492"),
+]
+
+
+def build_invoice_pdf() -> bytes:
+    """A tiny hand-written PDF. It stores where to draw each word, not a table."""
+    commands = ["BT"]
+    for x, y, size, text in INVOICE_LINES:
+        safe = text.replace("\\", "\\\\").replace("(", "\\(").replace(")", "\\)")
+        commands.append(f"/F1 {size} Tf 1 0 0 1 {x} {y} Tm ({safe}) Tj")
+    commands.append("ET")
+    stream = "\n".join(commands).encode("latin-1")
+
+    objects = [
+        b"<< /Type /Catalog /Pages 2 0 R >>",
+        b"<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+        b"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] "
+        b"/Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>",
+        b"<< /Length " + str(len(stream)).encode() + b" >>\nstream\n" + stream + b"\nendstream",
+        b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
+    ]
+    out = bytearray(b"%PDF-1.4\n")
+    offsets = []
+    for number, body in enumerate(objects, 1):
+        offsets.append(len(out))
+        out += f"{number} 0 obj\n".encode() + body + b"\nendobj\n"
+    xref = len(out)
+    out += f"xref\n0 {len(objects) + 1}\n".encode()
+    out += b"0000000000 65535 f \n"
+    for offset in offsets:
+        out += f"{offset:010d} 00000 n \n".encode()
+    out += (
+        f"trailer\n<< /Size {len(objects) + 1} /Root 1 0 R >>\nstartxref\n{xref}\n%%EOF\n"
+    ).encode()
+    return bytes(out)
+
+
+def write_summary(data_dir: Path) -> Path:
+    path = data_dir / "cafe_central_monthly_summary.xlsx"
+    path.write_bytes(build_summary_xlsx())
+    return path
+
+
+def write_invoice(data_dir: Path) -> Path:
+    path = data_dir / "cafe_central_invoice.pdf"
+    path.write_bytes(build_invoice_pdf())
+    return path
+
+
 def generate(data_dir: Path = DATA_DIR) -> list[Path]:
     data_dir.mkdir(parents=True, exist_ok=True)
     rng = random.Random(SEED)
-    return [write_sales(data_dir, rng), write_customers(data_dir)]
+    return [
+        write_sales(data_dir, rng),
+        write_customers(data_dir),
+        write_summary(data_dir),
+        write_invoice(data_dir),
+    ]
 
 
 if __name__ == "__main__":

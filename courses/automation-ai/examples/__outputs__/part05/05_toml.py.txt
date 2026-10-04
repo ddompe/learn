@@ -1,0 +1,4 @@
+Name: cafe-central-report
+Python: >=3.12
+Dependencies: ['pandas>=2.1.0', 'openpyxl>=3.1.0']
+Types: str list

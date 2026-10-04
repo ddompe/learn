@@ -1,0 +1,153 @@
+---
+title: Markdown, the lingua franca of LLMs
+description: Write Markdown, and understand why AI models read and write it so naturally.
+sidebar:
+  order: 6
+lessonId: '5.6'
+estimatedMinutes: 20
+prerequisites: ['5.1', '2.1']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Write headings, lists, links, code, and tables in Markdown. - Explain why
+	LLMs handle Markdown so well. - Choose Markdown, CSV, or JSON when giving data
+	to an assistant.
+</LessonGoals>
+
+## Why this matters
+
+This very course is written in a close relative of Markdown. So are the replies you get
+from AI assistants: the headings, bullet points, and tables in a chat answer are Markdown.
+It is the common language between people and language models. Knowing it lets you write
+better prompts, read AI output as intended, and write documents that tools can process.
+
+<CaseStudy>
+	Daniela wants to paste category totals into an AI assistant and ask for
+	commentary. A small Markdown table is clearer to the model than a screenshot
+	of a spreadsheet, and cheaper than the same data in JSON.
+</CaseStudy>
+
+## The essentials
+
+**Markdown** is plain text with a few light marks that mean structure.
+
+| You write                         | You get                |
+| --------------------------------- | ---------------------- |
+| `# Title`                         | A main heading         |
+| `## Section`                      | A second-level heading |
+| `- item`                          | A bullet               |
+| `1. step`                         | A numbered item        |
+| `**bold**`, `*italic*`            | Bold and italic        |
+| `[text](https://…)`               | A link                 |
+| `` `code` ``                      | Inline code            |
+| A fenced block of three backticks | A code block           |
+| `\| a \| b \|` rows               | A table                |
+
+Because it is just text, a Markdown file opens anywhere, can be versioned in Git, and
+looks reasonable even unrendered.
+
+## A table, by program
+
+<Example file="part05/06_markdown.py" />
+
+The program writes a Markdown table from rows of data. The line of `---` marks the
+header, and `---:` right-aligns a number column.
+
+## Why LLMs like Markdown
+
+1. **It is plain text,** so it is just tokens (lesson 2.1).
+2. **Its structure is light,** so it adds few extra tokens. Compare the sizes at the end of
+   the output: the same three rows take 130 characters as Markdown and 224 as JSON.
+   A CSV is the shortest (73), but it carries less structure, and has the delimiter
+   issues from lesson 5.2.
+3. **Models have seen vast amounts of it,** in documentation, forums, and code
+   repositories. They write it fluently.
+4. **It is easy to check,** because you can read it unrendered.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Your data"] --> B{"Who reads it?"}
+  B -- "A person or an AI chat" --> C["Markdown table"]
+  B -- "A program" --> D["CSV or JSON"]`}
+/>
+
+A practical rule: for **people and chat assistants**, use Markdown. For **programs**, use
+CSV or JSON. Do not send an assistant a very large table either way. Send the header and a
+few rows (lesson 2.3).
+
+## Hands-on
+
+### Worked example
+
+Write, in a file called `notes.md`, a heading, two bullets, and a two-column table of
+your own. Open VS Code's Markdown preview (the preview icon at the top right, or the command
+palette) and compare the raw and rendered views.
+
+### Your turn
+
+Write this as Markdown: a second-level heading "Totals", then a table with the columns
+Category and Total, and one row for `jugo` with 112613.50.
+
+<Checkpoint question="Show the answer">
+	`## Totals`, then a header row `| Category | Total |`, a separator row `| ---
+	| ---: |`, and `| jugo | 112613.50 |`.
+</Checkpoint>
+
+## Common mistakes
+
+- **Forgetting the separator row** in a table. Without it, the table does not render.
+- **Pipes inside cells.** Escape them as `\|`.
+- **Sending huge tables to a chat.** Send a sample.
+- **Assuming all tools render Markdown the same.** Details differ.
+- **Using Markdown for data a program must parse exactly.** Use CSV or JSON.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Make this a table.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant loses a column, merges two rows, or changes number formats
+		without telling you.
+	</Fragment>
+	<Fragment slot="good">
+		Convert the following CSV (separator ';') into a Markdown table with the
+		same columns, in the same order, and the same number of rows. Right-align
+		the numeric column. Do not change any value. After the table, state the
+		number of rows and columns in the input and in your output.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It gives **constraints** (no changes, same shape) and a **verification**
+		step: counts of rows and columns.
+	</Fragment>
+	<Fragment slot="check">
+		Compare the counts. Check the first and last rows against the source, and
+		look for changed numbers.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Why are LLMs good with Markdown?">
+	It is plain text with light structure, which models have seen in huge
+	quantities, and it is easy to read without rendering.
+</Checkpoint>
+
+<Checkpoint question="Which row makes a Markdown table render?">
+	The separator row under the header, made of dashes.
+</Checkpoint>
+
+<Checkpoint question="When would you pick CSV over Markdown?">
+	When a program will read the data, or when you want the most compact text.
+</Checkpoint>
+
+## Going deeper
+
+- Part 8 uses Markdown-based tools to write reports.

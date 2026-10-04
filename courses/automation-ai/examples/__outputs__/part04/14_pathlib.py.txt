@@ -1,5 +1,7 @@
 Files in the data folder:
   cafe_central_customers.json (.json)
+  cafe_central_invoice.pdf (.pdf)
+  cafe_central_monthly_summary.xlsx (.xlsx)
   cafe_central_sales.csv (.csv)
 Exists: True
 Written and read back: Rows: 246

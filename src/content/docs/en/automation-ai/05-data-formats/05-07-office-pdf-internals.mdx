@@ -1,0 +1,147 @@
+---
+title: Office files and PDF under the hood
+description: See that xlsx and docx are zipped XML, and that a PDF stores drawing instructions, not tables.
+sidebar:
+  order: 7
+lessonId: '5.7'
+estimatedMinutes: 25
+prerequisites: ['1.5', '5.1']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain that `.xlsx` and `.docx` are zip files of XML. - Explain the
+	difference between modern Office formats and the legacy ones. - Explain why
+	tables in PDFs are hard to extract.
+</LessonGoals>
+
+## Why this matters
+
+Business data lives in Excel workbooks, Word documents, and PDFs, far more than in tidy
+CSV files. To automate with them, it helps to know what is inside. Then you can see why
+an Excel file with merged cells is awkward, why a PDF table will not simply copy into a
+spreadsheet, and why an AI assistant sometimes garbles both.
+
+<CaseStudy>
+	Café Central's monthly summary is an Excel workbook with merged headers. The
+	supplier invoice is a PDF. Download the office documents for this part from
+	the link below, and unzip them next to your other data.
+</CaseStudy>
+
+[Download the Café Central office documents (zip)](/downloads/automation-ai/cafe-central-documents.zip)
+
+## Excel and Word: zipped XML
+
+Modern Office files (`.xlsx`, `.docx`, `.pptx`) are **zip archives** that hold several
+**XML** files. XML is a text format with tags, like `<mergeCell ref="A1:E1"/>`. You can open
+the archive, and read the parts.
+
+<Example file="part05/07_office_pdf.py" />
+
+The first block lists the files inside the workbook: one XML file per sheet, a file for
+styles, and one that describes the workbook. The merged cells are right there in the
+sheet's XML: `A1:E1` is the title, and `B2:C2` and `D2:E2` are the month headers.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["cafe_central_monthly_summary.xlsx (a zip)"] --> B["xl/workbook.xml: sheet list"]
+  A --> C["xl/worksheets/sheet1.xml: cells and merged ranges"]
+  A --> D["xl/styles.xml: fonts and colours"]
+  A --> E["docProps: author and dates"]`}
+/>
+
+The older formats `.xls` and `.doc` are **legacy binary formats**. They are harder to read
+and handled by fewer libraries. If you can, resave them as `.xlsx` or `.docx` (from a program, not by renaming).
+
+## PDF: drawing instructions
+
+A **PDF** is designed to look the same everywhere. It does not say "here is a table with 3
+columns". It says "draw this word at this position, with this font". The second block
+of the example shows the first drawing instructions of the invoice: each piece of text
+has `x` and `y` coordinates.
+
+So a "table" in a PDF is just words that happen to line up. There are no rows, no columns, no cells. To get a table out,
+a program has to guess by grouping words by position (lesson 5.8).
+
+Two further problems:
+
+- Text can be stored out of reading order.
+- A **scanned PDF** is only a picture. There is no text at all, so you need **OCR**
+  (optical character recognition), software that reads the picture. OCR makes errors.
+
+## Hands-on
+
+### Worked example
+
+Make a copy of the workbook, and change its extension from `.xlsx` to `.zip`. Open it with your
+system's unzip tool and find `xl/worksheets/sheet1.xml`. Search for `mergeCell`. Do not
+save anything back.
+
+### Your turn
+
+Why can you extract the text of `cafe_central_invoice.pdf` easily, but not its table?
+
+<Checkpoint question="Show the answer">
+	The words are stored as text with positions, so the text is available. The
+	table is not stored as a structure. Rows and columns exist only as a visual
+	alignment, and have to be reconstructed.
+</Checkpoint>
+
+## Common mistakes
+
+- **Renaming `.xls` to `.xlsx` to convert it.** It does not convert.
+- **Using a merged-cell workbook as a dataset.** Merged headers hide values (lesson 6.7).
+- **Copying a table from a PDF and trusting it.** Columns shift.
+- **Assuming a PDF has text.** A scan has none.
+- **Opening Office files with a text editor and saving.**
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Summarise this PDF table.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant merges two columns, drops a row, or invents a total, and
+		presents it with confidence.
+	</Fragment>
+	<Fragment slot="good">
+		Below is text extracted from a supplier invoice PDF. The columns were:
+		description, quantity, unit price, total. Rebuild the line items as a table
+		with those four columns. Do not calculate anything yourself. List any line
+		where you are unsure which column a number belongs to. At the end, state how
+		many line items you found.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It names the **expected structure**, forbids calculation (a **constraint**),
+		and asks for uncertainty and a count, which allows **verification**.
+	</Fragment>
+	<Fragment slot="check">
+		Open the PDF and count the lines yourself. Check that quantity times unit
+		price equals each total.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What is inside an .xlsx file?">
+	A zip archive of XML files: sheets, styles, and workbook information.
+</Checkpoint>
+
+<Checkpoint question="Why is a table in a PDF hard to extract?">
+	The PDF stores words at positions, not rows and columns, so the structure must
+	be guessed.
+</Checkpoint>
+
+<Checkpoint question="What is OCR needed for?">
+	Scanned PDFs, which contain only a picture of the text.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 5.8 shows how tools convert these documents to Markdown.

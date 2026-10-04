@@ -1,0 +1,137 @@
+---
+title: YAML
+description: Read YAML settings and recognise the indentation and type traps.
+sidebar:
+  order: 4
+lessonId: '5.4'
+estimatedMinutes: 20
+prerequisites: ['5.3']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Read a YAML file. - Explain why indentation matters in YAML. - Recognise the
+	type traps, such as `no` becoming `False`.
+</LessonGoals>
+
+## Why this matters
+
+**YAML** is a text format designed to be easy for people to write. Many tools use it for
+settings: reporting tools, automation systems, and software projects. Where JSON
+needs braces and quotes everywhere, YAML uses indentation and plain words. That makes it
+pleasant to read, and easy to get subtly wrong.
+
+<CaseStudy>
+	Daniela wants the monthly report to read its settings from a file: which
+	month, which shops, and how many top categories. A YAML file lets her change
+	them without touching the program.
+</CaseStudy>
+
+## The shape of YAML
+
+<Example file="part05/04_report_settings.yaml" />
+
+- `key: value` pairs. A key followed by indented lines holds nested values.
+- A line starting with a dash and a space is an item of a list.
+- `#` starts a comment, which JSON does not allow.
+- Indentation uses **spaces**, never tabs. Two spaces per level is the common habit.
+
+YAML is a superset of JSON in practice, but you will mostly write the readable style.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["report"] --> B["title"]
+  A --> C["month"]
+  A --> D["shops: a list of 3"]
+  A --> E["include_charts"]`}
+/>
+
+## Reading it in Python
+
+<Example file="part05/04_yaml.py" />
+
+The settings load into dictionaries and lists. Notice `Month: 2024-01 str`: the value is
+quoted in the file, so it stays text. Without the quotes, some YAML readers would
+guess a type. That guessing is the source of the traps.
+
+## The traps
+
+1. **Indentation is structure.** A line indented one space too few belongs to a different
+   parent, or breaks the file. A **tab** is an error.
+2. **Words become other types.** In common YAML readers, unquoted `yes`, `no`, `on`, and
+   `off` become booleans. A country code `no` (Norway) becomes `False`. Quote strings that might be mistaken.
+3. **Numbers lose digits.** `1.10` becomes `1.1`. A version should be quoted: `"1.10"`.
+4. **A colon inside a value** can confuse the reader. Quote it.
+
+The `safe_load` function is the safe way to read YAML in Python. Never use plain `load` on
+files you did not write, because it can run code.
+
+## Hands-on
+
+### Your turn
+
+What does `shops: [Heredia, Alajuela]` mean in YAML, and what does `active: no` become?
+
+<Checkpoint question="Show the answers">
+	The first is a list of two items, written in the compact style. The second
+	becomes a boolean `False` in many readers, so quote the value, `"no"`, if you
+	meant the text.
+</Checkpoint>
+
+## Common mistakes
+
+- **Using tabs for indentation.**
+- **Forgetting to quote values that look like other types.** Dates, versions, `yes`, `no`.
+- **Mixing indentation widths.**
+- **Using `yaml.load` on untrusted input.** Use `safe_load`.
+- **Editing in a tool that changes indentation.**
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Write a config file.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant picks a format and keys at random, and leaves values like
+		`2024-01` or `no` unquoted, so they read as the wrong type.
+	</Fragment>
+	<Fragment slot="good">
+		Write a YAML settings file for a monthly report with: month (as text
+		"2024-01"), a list of shops (San José, Heredia, Alajuela), a currency code
+		(CRC), and a true/false for charts. Use two spaces for indentation and no
+		tabs. Quote any value that YAML might read as a non-text type. Then show
+		Python that loads it with yaml.safe_load and prints the type of each value.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It states the fields (**input**), formatting **constraints**, and asks for a
+		**verification** through types.
+	</Fragment>
+	<Fragment slot="check">
+		Run the printed types and confirm that the month is text and charts is a
+		boolean.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What must YAML indentation use?">
+	Spaces, never tabs.
+</Checkpoint>
+
+<Checkpoint question="Why would the country code no cause trouble?">
+	Unquoted, it is read as the boolean `False`.
+</Checkpoint>
+
+<Checkpoint question="Which function reads YAML safely in Python?">
+	`yaml.safe_load`.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 5.5 covers TOML, a similar format with fewer traps.

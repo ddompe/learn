@@ -123,6 +123,11 @@ Part 3 (Stage 6 start): brief agreed (`briefs/part-03.md`), examples in `example
 outputs), lessons 3.1-3.10 drafted (3.3 carries `lastVerified`). `Example` now infers the code
 language from the file extension (py, toml, text).
 
+Part 5: brief agreed (`briefs/part-05.md`), examples in `examples/part05/` (9 scripts, tests, outputs),
+lessons 5.1-5.9 drafted (5.8 carries `lastVerified`). Dataset extended with
+`cafe_central_monthly_summary.xlsx` and `cafe_central_invoice.pdf` (generated, tested, shipped as
+`cafe-central-documents.zip`); new example dependencies: pyyaml, pyarrow.
+
 Part 4: brief agreed (`briefs/part-04.md`), examples in `examples/part04/` (tests and outputs),
 lessons 4.1-4.16 drafted.
 
@@ -153,7 +158,7 @@ Next actions, in order:
   `src/content/i18n/{en,es}.json` plus the collection in `content.config.ts`).
 - Still open: no renderer for `lastVerified` and no machine-translation notice (components
   removed; rebuild as Starlight overrides when the first ⏱ lesson or Stage 7 needs them).
-- Dataset: Excel (merged headers) and PDF invoice not generated; deferred to Parts 5-6.
+- Dataset: Excel (merged headers) and PDF invoice generated for Part 5 (done).
 - Mermaid and the new lesson components were checked only at HTML level. The browser tool
   hung; eyeball them in `npm run dev` once the first lesson exists.
 - Generated data (`examples/data/`) is excluded from Prettier and cspell on purpose. After

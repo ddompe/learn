@@ -1,0 +1,9 @@
+Detected delimiter: ';'
+Read with ';' : ['T001', '01/01/2024', 'C004', '2200.00', 'jugo']
+Read with ',' : ['T001;01/01/2024;C004;2200.00;jugo']
+Amount with decimal comma: 1500.50
+T900;"Café; con leche";1500,50
+T901;"dijo ""hola""";1200
+UTF-8 bytes   : b'Categor\xc3\xada'
+Latin-1 bytes : b'Categor\xeda'
+UTF-8 with BOM: b'\xef\xbb\xbf' + text

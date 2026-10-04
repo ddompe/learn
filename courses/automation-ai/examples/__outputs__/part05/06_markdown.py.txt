@@ -1,0 +1,9 @@
+| Categoría | Ventas | Monto |
+| --- | ---: | ---: |
+| café | 43 | 81111.50 |
+| jugo | 55 | 112613.50 |
+| pastel | 59 | 76815.00 |
+
+Characters in CSV     : 73
+Characters in Markdown: 130
+Characters in JSON    : 224

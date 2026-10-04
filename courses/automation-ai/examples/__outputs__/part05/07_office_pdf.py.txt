@@ -1,0 +1,20 @@
+Files inside the xlsx:
+  [Content_Types].xml
+  _rels/.rels
+  docProps/app.xml
+  docProps/core.xml
+  xl/_rels/workbook.xml.rels
+  xl/styles.xml
+  xl/theme/theme1.xml
+  xl/workbook.xml
+  xl/worksheets/sheet1.xml
+  xl/worksheets/sheet2.xml
+Merged cells: ['A1:E1', 'B2:C2', 'D2:E2']
+
+First drawing instructions in the PDF:
+  at x=60, y=770: Distribuidora Aroma S.A.
+  at x=60, y=752: Cedula juridica 3-101-000000  |  San Jose, Costa Rica
+  at x=60, y=720: FACTURA No. 2024-0042
+  at x=60, y=704: Fecha: 15/01/2024
+  at x=60, y=688: Cliente: Cafe Central S.A.
+  at x=60, y=650: Descripcion

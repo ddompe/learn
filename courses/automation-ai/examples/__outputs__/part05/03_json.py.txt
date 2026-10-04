@@ -1,0 +1,7 @@
+Strict JSON fails: Expecting value
+Customers: 8
+First customer: {'id': 'C001', 'name': 'Ana López', 'city': 'San José', 'email': 'ana@example.com'}
+Without a name: ['C004']
+Without an email: ['C002', 'C007']
+{"id": "C009", "name": "Daniela Mora", "email": null, "tags": ["frecuente", "san josé"]}
+{"id": "C009", "name": "Daniela Mora", "email": null, "tags": ["frecuente", "san jos\u00e9"]}

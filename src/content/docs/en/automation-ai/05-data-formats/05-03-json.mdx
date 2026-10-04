@@ -1,0 +1,144 @@
+---
+title: JSON
+description: Read and write JSON, and understand objects, arrays, nesting, and why a file with comments is not valid JSON.
+sidebar:
+  order: 3
+lessonId: '5.3'
+estimatedMinutes: 20
+prerequisites: ['5.1']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Read JSON objects, arrays, and nesting. - Load a JSON file in Python and
+	handle missing values. - Explain why a JSON file with comments fails.
+</LessonGoals>
+
+## Why this matters
+
+When data has structure, such as a customer with several phone numbers, a flat table is
+awkward. **JSON** (JavaScript Object Notation) handles nesting, and it is the standard way
+for programs and web services to exchange data. You will meet it in APIs (lesson 1.12),
+in settings, and in everything an AI service sends back.
+
+<CaseStudy>
+	Café Central's customer list is stored as JSON. Daniela finds that her tools
+	refuse to read it, because someone added comment lines at the top.
+</CaseStudy>
+
+## The pieces
+
+JSON has only a few building blocks.
+
+| Piece   | Written as              | Example                     |
+| ------- | ----------------------- | --------------------------- |
+| Object  | `{ "key": value, ... }` | `{"id": "C001"}`            |
+| Array   | `[ value, value ]`      | `["frecuente", "san josé"]` |
+| String  | Double quotes           | `"Ana López"`               |
+| Number  | Digits                  | `1500.5`                    |
+| Boolean | `true` or `false`       | `true`                      |
+| Null    | `null`                  | `null`                      |
+
+Objects and arrays can contain each other, to any depth. In Python, an object becomes a
+dictionary, an array becomes a list, and `null` becomes `None` (lessons 4.8 and 4.10).
+
+<Mermaid
+	diagram={`flowchart TD
+  A["Object: the file"] --> B["Key customers: an array"]
+  B --> C["Object: customer C001"]
+  B --> D["Object: customer C002"]
+  C --> E["Keys: id, name, city, email"]`}
+/>
+
+Rules that trip beginners: keys and strings must use **double** quotes, there is no
+trailing comma after the last item, and there are **no comments**.
+
+## Reading the customer file
+
+<Example file="part05/03_json.py" />
+
+The real file starts with two lines beginning `//`. Strict JSON does not allow comments,
+so `json.loads` fails. The script removes the comment lines first, and then reads 8
+customers. Some have an empty name or email, which the script reports. In the written
+example, a missing email is `null`.
+
+Notice `ensure_ascii=False` in the last two lines. Without it, `json.dumps` writes `é` as
+`é`. Both are valid JSON, but the first is easier to read.
+
+## Missing values
+
+JSON can say "no value" in three ways, and files mix them: `null`, an empty string `""`,
+or a missing key. Handle all of them. Test with `if not value` for empty and `None`, or
+use `.get("email")` for a missing key.
+
+## Hands-on
+
+### Your turn
+
+Which of these is valid JSON?
+
+1. `{"id": "C001", "name": "Ana"}`
+2. `{'id': 'C001'}`
+3. `{"id": "C001",}`
+
+<Checkpoint question="Show the answers">
+	Only 1. The second uses single quotes, and the third has a trailing comma.
+</Checkpoint>
+
+## Common mistakes
+
+- **Treating a file with comments as valid JSON.** Remove them first, or ask for a clean file.
+- **Single quotes or trailing commas.** Both are invalid.
+- **Assuming every key exists.** Use `.get()`.
+- **Forgetting `ensure_ascii=False`** when writing accents for people to read.
+- **Confusing `null`, empty, and missing.**
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Parse this JSON.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant calls `json.load` directly, which fails on the comment lines,
+		and does not handle empty names or emails.
+	</Fragment>
+	<Fragment slot="good">
+		My customers.json file has two comment lines starting with // before the
+		JSON, then an object with a "customers" array. Each customer has id, name,
+		city, and email, and some names and emails are empty strings. Write Python
+		that removes the comment lines, loads the data, and prints the ids of
+		customers with no name or no email. Keep the original file unchanged.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It provides the **input** structure and the quirk, a precise **task**, and a
+		**constraint** that protects the file.
+	</Fragment>
+	<Fragment slot="check">
+		Compare the printed ids with a search in the file for empty values. Confirm
+		the count of customers.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What do JSON objects and arrays become in Python?">
+	Dictionaries and lists.
+</Checkpoint>
+
+<Checkpoint question="Why does a JSON file with // comments fail to load?">
+	Strict JSON does not allow comments.
+</Checkpoint>
+
+<Checkpoint question="What are three ways a value can be missing?">
+	`null`, an empty string, or a missing key.
+</Checkpoint>
+
+## Going deeper
+
+- Part 10 shows AI services returning JSON that programs read.
