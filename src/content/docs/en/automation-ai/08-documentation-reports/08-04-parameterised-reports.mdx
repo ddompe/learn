@@ -1,0 +1,162 @@
+---
+title: Parameterised reports
+description: Generate the same report for each category or month from one source file.
+sidebar:
+  order: 4
+lessonId: '8.4'
+estimatedMinutes: 25
+prerequisites: ['8.3']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Add parameters to a Quarto report. - Render the report for one value from
+	the command line. - Render it for every value with a script.
+</LessonGoals>
+
+## Why this matters
+
+Daniela's boss does not want one report. The juice supplier wants the juice numbers, the
+bakery wants the cake numbers, and so on. Copying the report five times means five
+files to fix whenever something changes. A **parameterised report** has one source and a
+few inputs, and produces as many versions as you need.
+
+<CaseStudy>
+	Café Central wants one report per category, each with its own totals and
+	chart, all from the same `monthly_report.qmd`.
+</CaseStudy>
+
+## Parameters
+
+Mark one chunk as holding the parameters, with default values:
+
+```text
+#| tags: [parameters]
+category = "all"
+```
+
+That is the first chunk of the report in lesson 8.3. The later chunks read `category`, and filter the
+data if it is not `"all"`. The defaults make the report work with no parameters at all.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["monthly_report.qmd, one source"] --> B["category = jugo"]
+  A --> C["category = pastel"]
+  A --> D["category = te"]
+  B --> E["report-jugo.html"]
+  C --> F["report-pastel.html"]
+  D --> G["report-te.pdf"]`}
+/>
+
+## Set a parameter from the command line
+
+```text
+uv run quarto render monthly_report.qmd --to html -P category:jugo --output report-jugo.html
+```
+
+- `-P category:jugo` sets the parameter, written as `name:value`.
+- `--output` chooses the file name. Without it, each render would overwrite
+  `monthly_report.html`.
+- You can repeat `-P` for several parameters.
+
+Parameters need the **papermill** package in your project: `uv add papermill`. If it is
+missing, Quarto stops with the message "The papermill package is required for processing
+--execute-params".
+
+## Render all of them
+
+A short script builds the commands for every category and prints them. With `--run`, it runs them.
+
+<Example file="part08/render_reports.py" />
+
+Read the script first and run it without `--run`. It prints five commands, one per category,
+like the one above. Reading the plan before executing it is a good habit for any
+automation. Then:
+
+```text
+uv run python render_reports.py --run
+```
+
+This writes `report-cafe.html`, `report-jugo.html`, and so on. Part 9 shows how to run a
+script like this on a schedule.
+
+The same idea works for months: a `month` parameter and a loop over the months you need.
+
+## Hands-on
+
+### Worked example
+
+1. Add `uv add papermill` to your project.
+2. Render the report for `jugo`, and check that the summary says 55 sales and 112,614 colones.
+3. Render it for `te` with a different `--output` name. Compare the two files.
+
+### Your turn
+
+You add a parameter `month` with the default `"2024-01"`. What else in the report must change so that it actually uses it?
+
+<Checkpoint question="Show the answer">
+	The code that loads or filters the data must use `month`, and the text and
+	title that mention January should use it too, through inline code. A parameter
+	that nothing reads has no effect.
+</Checkpoint>
+
+## Common mistakes
+
+- **Forgetting the `parameters` tag.** The command-line value is ignored or an error appears.
+- **Missing `papermill`.**
+- **Stale `.quarto` cache** after installing it. Delete that folder and render again.
+- **Same `--output` for every render.** Each overwrites the previous.
+- **Parameters of the wrong type.** `-P` values arrive as numbers or text. Convert deliberately.
+- **Defaults that hide errors.** Test with a parameter and without.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Make one per region.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant copies the document into five files, one per region, which you
+		must now keep in sync.
+	</Fragment>
+	<Fragment slot="good">
+		I have a Quarto report monthly_report.qmd in a uv project. Add a parameter
+		"category" with the default "all", in a code chunk tagged "parameters", and
+		filter my pandas table "sales" when it is not "all". Then give me the exact
+		command to render the report to HTML for the category "jugo" with the output
+		file name report-jugo.html, and a Python script that loops over a list of
+		categories and prints the commands first, running them only with a --run
+		flag. List any package I must add.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It specifies the **parameter** and its **default**, the **commands**, and
+		the **safety constraint** (print before run). It also asks for requirements.
+	</Fragment>
+	<Fragment slot="check">
+		Run the command for one category and check the totals against your pivot
+		table. Then run the script without `--run`.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="How do you mark parameters in a Quarto report?">
+	In a code chunk with the option `tags: [parameters]`, holding default values.
+</Checkpoint>
+
+<Checkpoint question="Which flag sets a parameter on the command line?">
+	`-P name:value`.
+</Checkpoint>
+
+<Checkpoint question="Why use --output when rendering several versions?">
+	So each render gets its own file name and does not overwrite the others.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 8.5 exports each report as HTML, Word, and PDF.

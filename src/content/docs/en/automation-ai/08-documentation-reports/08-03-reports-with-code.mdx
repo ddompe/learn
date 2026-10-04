@@ -1,0 +1,167 @@
+---
+title: Reports with code
+description: Embed Python code, numbers, charts, and tables in a report that rebuilds itself.
+sidebar:
+  order: 3
+lessonId: '8.3'
+estimatedMinutes: 30
+prerequisites: ['8.2', '7.2', '6.5']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Write Python code chunks in a Quarto document. - Hide code and show only
+	results, with a captioned figure and a table. - Put computed numbers inside
+	sentences.
+</LessonGoals>
+
+## Why this matters
+
+The point of a report with code is that the numbers in the text, the chart, and the table
+all come from the data, in one place. Nobody types a figure. Change the data, rerun, and
+the whole report updates, and the text still agrees with the table.
+
+<CaseStudy>
+	Daniela's monthly report has a summary sentence, a weekly chart, a category
+	table, and a note on the data cleaning. All four come from the same cleaned
+	table.
+</CaseStudy>
+
+## The report
+
+<Example file="part08/monthly_report.qmd" />
+
+Walk through it.
+
+### The header
+
+The header sets the title and the date. `execute: echo: false` hides the code, so readers
+see results, and `warning: false` hides warning messages. `jupyter: python3` says which
+engine runs the code. The `format` section lists three outputs (lesson 8.5).
+
+### Code chunks
+
+A chunk starts with three backticks and `{python}`, and ends with three backticks.
+Lines that start with `#|` are **chunk options**. For example:
+
+| Option                   | Effect                                    |
+| ------------------------ | ----------------------------------------- |
+| `#\| echo: true`         | Show this chunk's code                    |
+| `#\| label: fig-weekly`  | Name the figure so text can refer to it   |
+| `#\| fig-cap: "..."`     | Caption for the figure                    |
+| `#\| tags: [parameters]` | Mark the chunk as parameters (lesson 8.4) |
+
+All the chunks share the same memory, in order from the top, like a notebook (lesson 4.5).
+They run once when the document renders.
+
+### Numbers inside sentences
+
+`{python} count` written between single backticks inside a sentence is **inline code**.
+Quarto runs it and writes the result into the sentence, so "55 sales for a total of
+112,614 colones" can never disagree with the data. The report formats numbers with an
+f-string: `f"{total:,.0f}"` adds thousands separators.
+
+### Figures, tables, and cross references
+
+The weekly chart is a normal matplotlib chart (lesson 7.2). Because the chunk has a label
+starting with `fig-` and a caption, Quarto numbers it, and the text can write `@fig-weekly` to say
+"Figure 1".
+
+The table is made as Markdown text, as in lesson 5.6, and shown with `Markdown(...)`.
+That works in HTML, Word, and PDF alike, with no extra packages.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["Cleaned table from lesson 6.4"] --> B["Inline numbers in sentences"]
+  A --> C["Chart with a caption"]
+  A --> D["Category table"]
+  A --> E["Cleaning log as a list"]`}
+/>
+
+## Test the code without rendering
+
+Rendering takes a few seconds, and an error in the middle of a chunk can be hard to see.
+It is useful to check that the code runs by itself. The example project includes a small
+helper that runs the report's Python chunks as a plain Python script, so that the tests (lesson 3.9)
+can check the numbers. If the code fails, you see an ordinary traceback (lesson 3.10).
+
+## Hands-on
+
+### Worked example
+
+1. Copy `monthly_report.qmd` into your project, next to the folder with `cafe_clean.py` (adjust the path in
+   the chunk if yours is elsewhere).
+2. Render it: `uv run quarto render monthly_report.qmd --to html`.
+3. Open `monthly_report.html`. Find the sentence with the totals, and check them against your pivot from lesson 6.5.
+
+### Your turn
+
+Show the code of the chart chunk in the report, for the reader who wants to see how it was made. Which option do you change?
+
+<Checkpoint question="Show the answer">
+	Add `#| echo: true` at the top of that chunk. It overrides the document-wide
+	`echo: false` for this chunk only.
+</Checkpoint>
+
+## Common mistakes
+
+- **Leaving the code visible in a management report.** Set `echo: false`.
+- **Pasting numbers into the text.** Use inline code.
+- **Paths that depend on where you render.** Quarto runs the code from the document's folder, so relative paths are measured from there.
+- **A chunk that fails halfway.** Run the code on its own first.
+- **Warnings in the output.** Fix the cause, or hide them knowingly.
+- **A stale cache after installing a package.** If Quarto still reports a missing package after you installed it, delete the hidden `.quarto` folder in your project and render again.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Put my analysis in a report.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		You get a report with all the code visible, numbers typed into the text, and
+		a chart with no caption.
+	</Fragment>
+	<Fragment slot="good">
+		Write a Quarto document (.qmd) for a monthly sales report. Use Python chunks
+		with echo false. Load a cleaned pandas table "sales" (columns fecha,
+		cliente, monto as float, categoria) from a function clean_sales() in a
+		module cafe_clean. Include: a summary sentence with the number of sales and
+		the total using inline Python code, a weekly bar chart with a caption and a
+		label so the text can refer to it, and a category table written as a
+		Markdown table. The y axis must start at zero. Do not type any number by
+		hand.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It names the **structure** (output format), the data **schema**, and
+		**constraints** (no code shown, no hand-typed numbers, honest axis).
+	</Fragment>
+	<Fragment slot="check">
+		Render it, and compare the total in the text with the sum of the table's
+		totals. Look at the axis of the chart.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What does echo: false do?">
+	It hides the code of the chunks, so the report shows only results.
+</Checkpoint>
+
+<Checkpoint question="How do you put a computed number in a sentence?">
+	With inline code: Python between single backticks, starting with `{python}`.
+</Checkpoint>
+
+<Checkpoint question="What makes Quarto number a figure and let text refer to it?">
+	A chunk label that starts with `fig-` and a caption, then `@fig-name` in the
+	text.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 8.4 renders the same report for each category.

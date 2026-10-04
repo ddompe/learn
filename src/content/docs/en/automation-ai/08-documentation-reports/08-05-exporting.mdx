@@ -1,0 +1,172 @@
+---
+title: Exporting to Word, PDF, and HTML
+description: Export reports in the formats colleagues expect.
+sidebar:
+  order: 5
+lessonId: '8.5'
+estimatedMinutes: 20
+prerequisites: ['8.3']
+lastVerified: 2026-10-03
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Render a report to HTML, Word, and PDF. - Choose the right format for the
+	reader. - Know what each format needs and where it falls short.
+</LessonGoals>
+
+## Why this matters
+
+Your colleagues will not all want a web page. The owner may want a PDF to print. The
+accountant may want a Word file to add comments. A web page is best on a screen and for
+sharing a link. With Quarto, the same source makes all of them, and each one stays
+consistent with the data.
+
+<CaseStudy>
+	The owner asks for the January report as a PDF, and the accountant wants Word
+	to add notes. Daniela renders both from the one `monthly_report.qmd`.
+</CaseStudy>
+
+## One command per format
+
+```text
+uv run quarto render monthly_report.qmd --to html
+uv run quarto render monthly_report.qmd --to docx
+uv run quarto render monthly_report.qmd --to typst
+```
+
+Quarto writes `monthly_report.html`, `monthly_report.docx`, and `monthly_report.pdf`. The
+`--to typst` format produces a PDF. The header of the report from lesson 8.3 already lists the three:
+
+```text
+format:
+  html: ...
+  docx: default
+  typst: default
+```
+
+Without `--to`, Quarto renders the first format in the list. With `--to all` it renders every one.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["monthly_report.qmd"] --> B["html: screen, link, interactive"]
+  A --> C["docx: colleagues edit and comment"]
+  A --> D["typst: PDF to print or archive"]`}
+/>
+
+## Choosing a format
+
+| Format | Best for                          | Watch out for                                |
+| ------ | --------------------------------- | -------------------------------------------- |
+| HTML   | Reading on screen, sharing a file | Interactive content is not in Word or PDF    |
+| Word   | Editing and comments by others    | Layout is basic. Edits are lost on re-render |
+| PDF    | Printing, archiving, fixed layout | Needs a PDF engine. Not editable             |
+
+## PDF engines
+
+Quarto has two ways to make a PDF:
+
+- `typst`: Quarto includes the Typst engine, so no extra installation is needed. This is the simplest. It is what the report uses.
+- `pdf`: uses LaTeX, a separate typesetting system. Quarto can install a small version
+  with `quarto install tinytex`. The result is the classic academic look, and it takes more setup.
+
+Last verified on 2026-10-03. Quarto's choices of engines change between versions. Check the
+[Quarto documentation on PDF output](https://quarto.org/docs/output-formats/pdf-basics.html)
+if something does not work.
+
+## Rendering the result
+
+For all three formats of the same report you saw, this means: the figure caption and
+numbering carry over, the table appears as a real table, and the inline numbers are the same
+in each. Open each file and compare them with the totals from your pivot.
+
+## The golden rule
+
+**Never edit the output.** If the accountant adds comments to the Word file, keep those
+comments as a separate document. The next render replaces the file. All fixes go into the
+`.qmd` source.
+
+## Hands-on
+
+### Worked example
+
+1. Render the three formats for the category `jugo`, using `-P category:jugo`.
+2. Open each. Check that the total is 112,614 colones in all three.
+3. Look at the chart. Does the axis start at zero in each?
+
+### Your turn
+
+The owner wants a PDF but your machine has no LaTeX. Which format do you render, and why does it work?
+
+<Checkpoint question="Show the answer">
+	`--to typst`. Quarto bundles the Typst engine, so it makes the PDF without any
+	further installation.
+</Checkpoint>
+
+## Common mistakes
+
+- **Choosing `pdf` without LaTeX installed.** Use `typst`, or install TinyTeX.
+- **Editing the Word output.** Edits are lost at the next render.
+- **Expecting interactive charts in Word or PDF.** Use static images for those.
+- **Sending HTML with external files.** Use `embed-resources: true`.
+- **Not opening the result.** Check each format once.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Export to PDF.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant tells you to run `quarto render --to pdf`, which fails because
+		LaTeX is not installed, and suggests installing a very large package.
+	</Fragment>
+	<Fragment slot="good">
+		I have a Quarto report monthly_report.qmd. I need a PDF and a Word file. I
+		have not installed LaTeX and I do not have administrator rights. Give me the
+		header settings and the render commands to produce both, using the PDF
+		engine that needs no extra installation. Tell me what I need to check in
+		each output before I send it.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It states the **context and limits**, asks for **settings and commands**,
+		and requires a **checklist** for verification.
+	</Fragment>
+	<Fragment slot="check">
+		Render both and compare the totals, the figure, and the table in each.
+		Confirm that the engine the assistant names is documented by Quarto.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Which Quarto format option makes a PDF without LaTeX?">
+	`typst`, used with `--to typst`.
+</Checkpoint>
+
+<Checkpoint question="Why not edit the Word file that Quarto produced?">
+	The next render overwrites it. Changes belong in the `.qmd` source.
+</Checkpoint>
+
+<Checkpoint question="Which format suits a colleague who wants to add comments?">
+	Word.
+</Checkpoint>
+
+## End-of-part checklist
+
+You have finished Part 8 when you can tick every item:
+
+- [ ] My project has a README that a stranger can follow.
+- [ ] `quarto --version` works and I rendered `hello.qmd`.
+- [ ] I rendered the monthly report to HTML.
+- [ ] I rendered it for one category with a parameter.
+- [ ] I exported Word and PDF versions.
+
+## Going deeper
+
+- Part 9 automates the whole process so that it runs by itself.

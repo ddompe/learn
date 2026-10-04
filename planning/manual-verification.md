@@ -76,6 +76,17 @@ leaves something unverified. Updated 2026-10-03.
 - [ ] The alt text of the charts reads well in a screen reader.
 - [ ] Chart PNG bytes stay reproducible with the pinned matplotlib/seaborn versions; if they change after an upgrade, rerun `scripts/run_examples.py` and recommit the images.
 
+## Part 8 (Quarto)
+
+Tested by the drafting agent on macOS with Quarto 1.10.18 (installed from the tarball into `~/.local/quarto`, because the Homebrew cask needs sudo): `quarto render` of `hello.qmd` and `monthly_report.qmd` to HTML, Word, and PDF (Typst), with and without `-P category:...` and `--output`; the PDF output was read and the totals matched. Not verified:
+
+- [ ] Windows: Quarto installer and `.zip` download without admin rights; adding `bin` to PATH; `uv run quarto render` on Windows; Word output opened in real Word.
+- [ ] `quarto check` output and the macOS/Windows installer page wording (`lastVerified: 2026-10-03` on 8.2 and 8.5).
+- [ ] VS Code Quarto extension name, preview button, and `quarto preview` behaviour.
+- [ ] The claim that Typst is bundled in the Quarto installer (true in 1.10.18 tarball) and that `--to typst` yields a `.pdf`.
+- [ ] The stale `.quarto` cache advice: a render failed with "papermill package is required" right after `uv add papermill` until `part08/.quarto` was deleted. Confirm this reproduces for a learner and that the advice fixes it.
+- [ ] The report's relative path to `../part06` works for the learner's project layout (the lesson says to adjust it).
+
 ## Pedagogy and voice (author review)
 
 - [ ] Read Parts 0 to 2 end to end for flow, repetition, and tone. Intro repetition was reduced on 2026-10-03; re-check.

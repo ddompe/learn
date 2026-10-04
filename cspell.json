@@ -15,6 +15,13 @@
 	],
 	"words": [
 		"mojibake",
+		"typst",
+		"tinytex",
+		"papermill",
+		"nbformat",
+		"nbclient",
+		"docstrings",
+		"Typst",
 		"xlim",
 		"streamlit",
 		"savefig",

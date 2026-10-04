@@ -1,0 +1,167 @@
+---
+title: Introduction to Quarto
+description: Install Quarto and render your first document.
+sidebar:
+  order: 2
+lessonId: '8.2'
+estimatedMinutes: 25
+prerequisites: ['8.1', '4.3']
+lastVerified: 2026-10-03
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain what Quarto is. - Install Quarto without administrator rights. -
+	Write and render a first document.
+</LessonGoals>
+
+## Why this matters
+
+A report that is pasted together by hand is out of date the day after you make it. **Quarto**
+is a tool that builds documents from text and code: you write the report once, and Quarto
+runs the code, inserts the results, and produces HTML, Word, or PDF. Next month you
+rerun it. This is how a monthly report becomes an automation.
+
+<CaseStudy>
+	Each month Daniela copies numbers into a Word file and pastes a chart. With
+	Quarto, the numbers and the chart are produced by the report itself.
+</CaseStudy>
+
+## How Quarto works
+
+A Quarto document is a text file ending in `.qmd`. It has three kinds of content:
+
+1. A **header** between `---` lines, with settings such as the title and output formats (YAML,
+   lesson 5.4).
+2. **Text** written in Markdown (lesson 5.6).
+3. **Code chunks** in Python (lesson 8.3), which Quarto runs.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["report.qmd: text and code"] --> B["Quarto runs the code"]
+  B --> C["Results are inserted"]
+  C --> D["HTML, Word, or PDF"]`}
+/>
+
+## Install it
+
+Quarto is a separate program from Python. Download it from the official site,
+[quarto.org](https://quarto.org/docs/get-started/). Its documentation lists the current installers.
+Last verified on 2026-10-03.
+
+- On a personal computer, the normal installer for your system works.
+- On a managed laptop, an installer may need administrator rights. If so, ask IT, or use
+  the download that is a compressed archive (`.tar.gz` on macOS and Linux, `.zip` on Windows). Unpack it into a
+  folder in your user directory, and add that folder's `bin` subfolder to your PATH (lesson 1.10).
+  Do this only if company policy allows it.
+
+Then check, in a new terminal:
+
+```text
+quarto --version
+quarto check
+```
+
+`quarto check` tests the installation, including whether it finds your project's Python.
+Quarto runs your code with the Python it finds first. Starting it through `uv run` makes it use the
+project's environment, so use it for every command:
+
+```text
+uv add ipykernel nbformat nbclient
+uv run quarto check
+```
+
+In VS Code, install the **Quarto** extension for syntax colours and a preview button.
+
+## A first document
+
+<Example file="part08/hello.qmd" />
+
+Render it:
+
+```text
+uv run quarto render hello.qmd
+```
+
+Quarto writes `hello.html` next to the source. The setting `embed-resources: true` packs the page, its styles, and its images into that one file, so you can email it. Without it, Quarto also writes a folder of support files that must travel with the page. Open it in a
+browser. For a live preview that refreshes as you save, use `uv run quarto preview hello.qmd`.
+
+Everything you see in the page comes from the file: the heading, the list, the link, and the
+table. There is no code yet. That comes next.
+
+## Hands-on
+
+### Worked example
+
+1. Install Quarto, and run `quarto --version`.
+2. Create `hello.qmd` from the example, and render it.
+3. Change the title and one table row, render again, and compare.
+
+### Your turn
+
+Where does the output of `quarto render hello.qmd` appear, and which file would you share with a colleague?
+
+<Checkpoint question="Show the answer">
+	`hello.html` appears next to `hello.qmd`. Because the document sets
+	`embed-resources: true`, that single file is complete and is the one to share.
+	The `.qmd` is the source.
+</Checkpoint>
+
+## Common mistakes
+
+- **Running `quarto` outside `uv run`.** It may use a different Python, without your packages.
+- **Installing Quarto in a folder not on PATH.**
+- **Editing the HTML.** It is rebuilt on the next render. Edit the `.qmd`.
+- **Committing the rendered output** by accident, if it is large. Ignore it in `.gitignore`, unless you want it in the repository.
+- **Forgetting the quotes in YAML values with colons.** The title `"Café: report"` needs them.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">How do I use Quarto?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		You get a tour of every feature, books, websites, and presentations, and no
+		clear first step.
+	</Fragment>
+	<Fragment slot="good">
+		I use VS Code on a company-managed Windows laptop without administrator
+		rights, and uv for Python. I want to render one Quarto document to HTML.
+		Give me the steps to install Quarto in my user folder, the commands to check
+		the installation, and the command to render hello.qmd. Say what I should do
+		if "quarto" is not found after installing. Use only the official Quarto
+		documentation as your source and tell me which page to check.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It states the **context and limits** (no admin), a single **goal**, the
+		**steps** to produce, and a **verification** (where to check).
+	</Fragment>
+	<Fragment slot="check">
+		Compare the steps with the official installation page, since versions and
+		installers change.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What are the three kinds of content in a .qmd file?">
+	A YAML header, Markdown text, and code chunks.
+</Checkpoint>
+
+<Checkpoint question="Why run Quarto through uv run?">
+	So that it uses the project's Python and packages.
+</Checkpoint>
+
+<Checkpoint question="What does quarto check do?">
+	It tests the installation and shows which Python and engines Quarto can use.
+</Checkpoint>
+
+## Going deeper
+
+- The Quarto documentation has a full guide to the document options.

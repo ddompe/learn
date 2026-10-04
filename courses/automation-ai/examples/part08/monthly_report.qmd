@@ -1,0 +1,77 @@
+---
+title: "Café Central: monthly sales report"
+subtitle: "January 2024"
+author: "Daniela Mora"
+date: 2024-01-31
+format:
+  html:
+    toc: true
+    embed-resources: true
+  docx: default
+  typst: default
+execute:
+  echo: false
+  warning: false
+jupyter: python3
+---
+
+```{python}
+#| tags: [parameters]
+category = "all"
+```
+
+```{python}
+import sys
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+from IPython.display import Markdown
+
+sys.path.insert(0, str(Path.cwd().parent / "part06"))
+from cafe_clean import clean_sales
+
+sales, log = clean_sales()
+sales = sales.assign(monto=sales["monto"].astype(float))
+if category != "all":
+    sales = sales[sales["categoria"] == category]
+
+total = sales["monto"].sum()
+count = len(sales)
+scope = "all categories" if category == "all" else f"the category {category}"
+```
+
+## Summary
+
+This report covers `{python} scope`. In January 2024 Café Central made
+`{python} f"{count:,}"` sales for a total of `{python} f"{total:,.0f}"` colones.
+
+## Sales by week
+
+```{python}
+#| label: fig-weekly
+#| fig-cap: "Weekly sales in colones."
+weekly = sales.set_index("fecha")["monto"].resample("W-SUN").sum()
+figure, axis = plt.subplots(figsize=(6, 3))
+axis.bar([d.strftime("%d %b") for d in weekly.index], weekly.values, color="#4F6D7A")
+axis.set_ylim(0, None)
+axis.set_ylabel("Colones")
+axis.spines[["top", "right"]].set_visible(False)
+plt.show()
+```
+
+@fig-weekly shows the weekly totals. The axis starts at zero.
+
+## Sales by category
+
+```{python}
+by_category = sales.groupby("categoria")["monto"].agg(["count", "sum"])
+lines = ["| Category | Sales | Total (colones) |", "| --- | ---: | ---: |"]
+lines += [f"| {name} | {row['count']:.0f} | {row['sum']:,.0f} |" for name, row in by_category.iterrows()]
+Markdown("\n".join(lines))
+```
+
+## Data notes
+
+```{python}
+Markdown("\n".join(f"- {line}" for line in log))
+```

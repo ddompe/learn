@@ -1,0 +1,163 @@
+---
+title: Documenting your project
+description: Write a README and project notes that a stranger, or you in six months, can follow.
+sidebar:
+  order: 1
+lessonId: '8.1'
+estimatedMinutes: 20
+prerequisites: ['3.5', '5.6']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain why a project needs a README. - Write a README with the sections a
+	reader needs. - Record decisions so that others understand your choices.
+</LessonGoals>
+
+## Why this matters
+
+Six months from now, you will open your own project and not remember how to run it. A
+colleague who takes it over will be even more lost. Documentation is not a
+formality. It is what turns a script that only you can run into a tool that a team can use.
+It is also the first thing an AI assistant reads to understand your project.
+
+<CaseStudy>
+	Daniela goes on holiday, and Mateo must produce the February report. All he
+	has is the project folder. A good README means he can do it without calling
+	her.
+</CaseStudy>
+
+## The README
+
+A **README** is a Markdown file (lesson 5.6) at the top of the project, named `README.md`.
+Git hosting sites like GitHub show it on the project's front page. It answers the
+questions a newcomer asks, in order:
+
+1. **What is this?** One or two sentences.
+2. **What does it do?** The main steps.
+3. **What do I need?** Tools and versions.
+4. **How do I run it?** The exact commands.
+5. **What goes in and what comes out?** Input files and results.
+6. **What should I know?** Decisions and traps.
+7. **How do I check it works?** The tests.
+8. **Who do I ask?** A contact.
+
+<Example file="part08/README_example.md" />
+
+Notice what this README does well:
+
+- The commands can be copied and run.
+- It states the decisions that are easy to forget: slash dates are read day first, amounts
+  are exact decimals, and rows with no customer are kept.
+- It says where the input comes from, and where the output goes.
+- It is short. A README that nobody finishes reading is not documentation.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["A newcomer opens the project"] --> B["README: what and why"]
+  B --> C["README: how to run"]
+  C --> D["Run it, check the tests"]
+  D --> E["Understands the decisions, and can change it"]`}
+/>
+
+## Project notes and decisions
+
+Not everything fits in the README. Keep a short `notes.md` or a `docs/` folder for:
+
+- **Decisions:** what you chose, what you rejected, and why. A short entry with a date is enough.
+- **Known problems:** things you know are wrong and have not fixed.
+- **Data notes:** where the data comes from and what its quirks are.
+
+Write these while you remember. They cost minutes now and save hours later. Commit them
+with the code (Part 3), so the history shows when each was written.
+
+## Comments and docstrings
+
+In the code itself, write a **docstring** at the top of each function (lesson 4.12) saying what it does,
+and a short comment only where the reason is not obvious. Comments that repeat the code
+("add one to count") only add noise.
+
+## Hands-on
+
+### Worked example
+
+1. Create `README.md` in your project, with the headings from the example.
+2. Fill in each one for your own project. Be specific about commands.
+3. Ask a colleague, or an AI assistant, to follow it step by step. Where do they get stuck?
+
+### Your turn
+
+Which of these belongs in the README, and which in the notes?
+
+1. The command that runs the report.
+2. Why amounts are not stored as floats.
+3. A known bug when the file has no data for a whole week.
+
+<Checkpoint question="Show a sample answer">
+	1 belongs in the README. 2 is a decision, which can be a line under
+	"Decisions" in the README or a longer entry in the notes. 3 is a known problem
+	for the notes, and perhaps a short warning in the README.
+</Checkpoint>
+
+## Common mistakes
+
+- **No instructions.** The README says what the project is but not how to run it.
+- **Commands that don't work.** Test them on a clean copy.
+- **Out of date.** Update the README in the same commit as the change.
+- **Writing for yourself.** Write for someone who has never seen the project.
+- **Too long.** Link to longer notes instead.
+- **Letting an AI invent features.** Check every claim.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Write a README.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		You get a generic template with invented features, fake badges, and commands
+		for tools you do not use.
+	</Fragment>
+	<Fragment slot="good">
+		Write a README.md for my project. It reads Café Central's
+		semicolon-separated sales CSV, cleans dates, amounts and categories, removes
+		exact duplicate rows, and renders a Quarto report. I use uv for Python 3.12
+		and Quarto for the report. The commands are: "uv sync", "uv run pytest", and
+		"quarto render monthly_report.qmd". Use these sections: What it does,
+		Requirements, How to run, Input and output, Decisions, Tests. Do not add
+		anything I have not told you. If you need more information, ask me.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It gives the **facts** (input), the exact **commands**, a fixed
+		**structure** (output format), and the **constraint** not to invent.
+	</Fragment>
+	<Fragment slot="check">
+		Run every command in the README on a fresh copy of the project. Remove any
+		claim you cannot confirm.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What questions should a README answer?">
+	What the project is and does, what is needed, how to run it, what goes in and
+	out, what to know, how to test it, and whom to ask.
+</Checkpoint>
+
+<Checkpoint question="Why record decisions?">
+	So that others, and you later, understand why choices were made and do not
+	undo them by accident.
+</Checkpoint>
+
+<Checkpoint question="How can you test a README?">
+	Ask someone to follow it on a clean copy and see where they get stuck.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 8.2 introduces Quarto, the tool for writing reports with code.

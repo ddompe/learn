@@ -28,3 +28,9 @@ __pycache__/
 
 # Claude Code local worktrees
 .claude/
+
+# Quarto render outputs from the Part 8 examples
+courses/*/examples/part08/*.html
+courses/*/examples/part08/*.docx
+courses/*/examples/part08/*.pdf
+courses/*/examples/part08/*_files/
