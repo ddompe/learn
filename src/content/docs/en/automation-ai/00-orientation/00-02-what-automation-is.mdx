@@ -1,0 +1,184 @@
+---
+title: What automation is and isn't
+description: Decide which tasks are worth automating, and whether a formula, Power Query, or a script is the right tool.
+sidebar:
+  order: 2
+lessonId: '0.2'
+estimatedMinutes: 15
+prerequisites: ['0.1']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Distinguish tasks worth automating from tasks that are not. - Apply the
+	"would a formula or Power Query do?" test. - Choose between a formula, Power
+	Query, a script, or doing nothing.
+</LessonGoals>
+
+## Why this matters
+
+**Automation** means making a computer do a task that you now do by hand, so that it
+runs the same way every time. It sounds like a good idea for every chore. It is not.
+
+Two mistakes are common. The first is writing a script for a job that a pivot table
+solves in five minutes. The second is spending a week automating a task that you do
+twice a year. In both cases, the automation costs more than the work it saves.
+
+This lesson gives you a short test to avoid both mistakes.
+
+<CaseStudy>
+	Every month, Lucía at Café Central receives the sales export from each shop.
+	She combines them, fixes the dates, removes duplicates, and builds a report
+	for the owner. It takes her most of a day. But not every chore she does is
+	worth automating. In this lesson, you will sort her chores into the right
+	tool.
+</CaseStudy>
+
+## Is it worth automating?
+
+Ask three questions before you choose a tool.
+
+1. **How often do I do it?** A task done daily or monthly pays back quickly. A task done
+   once a year rarely does.
+2. **How long does it take each time?** Five minutes is hard to beat. Three hours is a
+   strong candidate.
+3. **Are the steps always the same?** A computer follows steps exactly. If you need to
+   use judgement every time, such as deciding how to word a customer email, automation
+   helps less.
+
+A rough rule: if the time you would spend building the automation is larger than the
+time you would save in a year, do not automate it yet.
+
+## The tool test
+
+If a task is worth automating, pick the simplest tool that does the job. Tools you
+already know come first.
+
+- A **formula** calculates values inside a spreadsheet. Examples: `SUM`, `VLOOKUP`, `IF`.
+- **Power Query** is the Excel and PowerBI feature that imports, cleans, and reshapes
+  data, and remembers the steps so you can refresh them.
+- A **script** is a small program, a text file of instructions that a computer runs. You
+  need one when the other tools cannot reach the problem.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["A task I repeat"] --> B{"Often enough and long enough to be worth it?"}
+  B -- No --> Z["Do not automate it yet"]
+  B -- Yes --> C{"Can a formula or pivot table do it?"}
+  C -- Yes --> F["Use a formula or pivot table"]
+  C -- No --> D{"Can Power Query do it?"}
+  D -- Yes --> P["Use Power Query"]
+  D -- No --> S["Use a script"]`}
+/>
+
+When does a script win? Typically when the work involves many files, files outside Excel
+such as PDFs or web pages, steps that must run on a schedule without you, or logic
+that is awkward to express in Power Query. It also helps when you want your steps
+stored as plain text that can be tested and tracked, which is what Part 3 is about.
+
+Notice that most paths in the diagram do not end in a script. That is intentional. This
+course teaches scripts because the hard cases need them, not because they are always
+better.
+
+## Hands-on
+
+### Worked example
+
+Here are four chores, sorted with the test.
+
+| Chore                                                         | How often | Result                                                  |
+| ------------------------------------------------------------- | --------- | ------------------------------------------------------- |
+| Total sales per category in one sheet                         | Weekly    | Pivot table. Takes minutes and needs no code.           |
+| Add a "month" column based on a date column                   | Monthly   | Formula, or a Power Query step.                         |
+| Combine 12 CSV files from shops and remove duplicates         | Monthly   | Power Query can do it. A script is also reasonable.     |
+| Read prices from a supplier's PDF invoice and email a summary | Monthly   | Script. Formulas and Power Query cannot read PDFs well. |
+
+### Your turn
+
+Café Central has five more chores. Sort each one as formula, Power Query, script, or do
+not automate. Then open the answers.
+
+1. Mark the Christmas menu prices once a year.
+2. Convert 240 rows of text dates in many formats into real dates, every month.
+3. Highlight in red any sale above 5,000 colones.
+4. Download the same web report from a supplier portal every morning and file it.
+5. Write a personal thank-you note to the best customer each month.
+
+<Checkpoint question="Show the answers to the five chores">
+	1. Do not automate. It happens once a year and takes a few minutes. 2. Power
+	Query. It is built for cleaning columns and keeps the steps. A script also
+	works if you already have one. 3. Formula, using conditional formatting. 4.
+	Script. It repeats on a schedule and involves a web page. 5. Do not automate.
+	It needs personal judgement, which is the point of the note.
+</Checkpoint>
+
+Now repeat the test for the weekly or monthly task you wrote down in lesson 0.1. Which
+answer do you get?
+
+## Common mistakes
+
+- **Writing a script for everything.** A script feels more powerful, but a pivot table
+  you can change in seconds is often better. Check formulas and Power Query first.
+- **Automating a rare task.** If you do it twice a year, the build time rarely pays back.
+- **Forgetting that someone must maintain it.** Files change format and shops change
+  systems. An automation that nobody understands breaks silently. Part 3 teaches how to
+  keep automations understandable.
+- **Automating a broken process.** If the steps are unclear by hand, a computer will
+  repeat the confusion faster. Write the steps down first.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Automate my monthly report.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant writes a large script for a task a pivot table might solve. It
+		invents file names and column layouts that do not match yours, so the code
+		fails or, worse, runs and produces wrong numbers.
+	</Fragment>
+	<Fragment slot="good">
+		I am a finance analyst and I use Excel and Power Query. Every month I
+		receive 5 CSV sales files, each with the columns Date, Customer, Amount, and
+		Category. I combine them in one sheet, remove duplicate rows, and build a
+		pivot table of total amount by category. It takes about 2 hours. Before you
+		write any code, tell me whether a formula, a pivot table, or Power Query can
+		do this. Only suggest a script if they cannot. List the assumptions you are
+		making about my files.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		The good prompt gives **input** (what the files contain) and the real steps
+		with their frequency. It adds a **constraint**: say first whether no code is
+		needed. It also asks for the assistant's assumptions, which makes wrong
+		guesses easy to spot. Lesson 2.7 covers all the elements.
+	</Fragment>
+	<Fragment slot="check">
+		Compare the assumptions with your real files. If the assistant recommends
+		Power Query, try it for one month before building anything else. If it
+		recommends a script, ask why the simpler tools are not enough.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="You compile a report once a year that takes 20 minutes. Should you automate it?">
+	Probably not. The build time would exceed the time saved over many years.
+</Checkpoint>
+
+<Checkpoint question="What is Power Query, and when does it beat a script?">
+	It is the Excel and PowerBI tool for importing and cleaning data with
+	remembered, refreshable steps. It beats a script when the data is already in
+	Excel-friendly files and you or your team already know the tool.
+</Checkpoint>
+
+<Checkpoint question="Name two situations where a script is the better tool.">
+	Examples: reading PDFs or web pages, processing many files, running on a
+	schedule without you, or keeping steps in text that can be tested.
+</Checkpoint>
+
+## Going deeper
+
+- Part 3 explains why storing steps as text matters, and Part 9 shows how to schedule them.

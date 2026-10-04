@@ -1,0 +1,202 @@
+---
+title: Meet Café Central
+description: Get to know the case-study company, download its practice data, and spot two problems in it.
+sidebar:
+  order: 3
+lessonId: '0.3'
+estimatedMinutes: 20
+prerequisites: ['0.1']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import OsTabs from '@components/OsTabs.astro';
+import Mermaid from '@components/Mermaid.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Describe Café Central's monthly reporting problem in two sentences. -
+	Download and unzip the practice data into a folder you can find again. - Open
+	the sales file in a text editor and spot two oddities.
+</LessonGoals>
+
+## Why this matters
+
+Learning with made-up toy examples is dull, and the lessons rarely transfer to real
+work. Real data is messy. It has odd dates, repeated rows, and spelling that differs
+from row to row.
+
+This course uses one fictional company throughout, with deliberately messy data. You
+will meet the same problems in your own files.
+
+<CaseStudy>
+	Café Central S.A. is a made-up coffee company based in San José, Costa Rica,
+	with several shops. Each shop exports its sales as a file. Lucía, the
+	operations analyst, collects them every month, fixes them by hand, and builds
+	a report for the owner.
+</CaseStudy>
+
+## The monthly reporting story
+
+Here is what Lucía does today, and what the course helps her do by the end.
+
+<Mermaid
+	diagram={`flowchart LR
+  subgraph today["Today: manual, about one day"]
+    direction LR
+    A["Shops email sales files"] --> B["Copy into one Excel sheet"]
+    B --> C["Fix dates and amounts by hand"]
+    C --> D["Remove duplicates by eye"]
+    D --> E["Build the report"]
+  end`}
+/>
+
+<Mermaid
+	diagram={`flowchart LR
+  subgraph later["End of the course: one command"]
+    direction LR
+    A["Sales files in a folder"] --> B["A script reads and cleans them"]
+    B --> C["Charts and a report are produced"]
+    C --> D["Report ready for the owner"]
+  end`}
+/>
+
+The pain points map to the course like this:
+
+| Pain point                             | Where the course addresses it |
+| -------------------------------------- | ----------------------------- |
+| Files are hard to find and open        | Part 1                        |
+| Accents and symbols look wrong         | Part 1                        |
+| Hard to trust what an AI says about it | Part 2                        |
+| Changes are lost; no history           | Part 3                        |
+| Cleaning by hand                       | Parts 4 to 6                  |
+| Charts and reports built by hand       | Parts 7 and 8                 |
+| The whole process has to be repeated   | Part 9                        |
+
+## Download the data
+
+The practice data is a small zip file with three files: one month of sales, a customer
+list, and a short readme.
+
+1. [Download the Café Central data (zip)](/downloads/automation-ai/cafe-central-data.zip).
+2. Create a folder for the course in a place you can remember, such as `Documents`.
+   Avoid cloud-synced folders for now; Part 1 explains why.
+3. Move the zip file into that folder and unzip it.
+
+<OsTabs>
+	<Fragment slot="windows">
+		Right-click the zip file and choose **Extract All**, then **Extract**.
+	</Fragment>
+	<Fragment slot="macos">
+		Double-click the zip file. A folder with the same name appears next to it.
+	</Fragment>
+</OsTabs>
+
+Remember where you put the folder. Lesson 1.4 teaches how to describe a location
+precisely. For now, you only need to be able to find it again.
+
+## Hands-on
+
+### Look at the file without Excel
+
+Do not open the sales file by double-clicking it. Excel would try to be helpful. It can
+change dates and amounts, and if you save, it overwrites the original. Keep the files
+exactly as downloaded.
+
+Open `cafe_central_sales.csv` in a plain text editor instead. On Windows, use Notepad.
+On macOS, use TextEdit (choose **Format**, then **Make Plain Text**). A **CSV** file
+(comma-separated values) is plain text in which each line is a row and a separator
+splits the columns. You should see something like this at the top:
+
+```text
+ID;Fecha;Cliente;Monto;Categoría
+T001;01/01/2024;C004;2200.00;jugo
+T002;2024-01-01;C002;1500;pastel
+```
+
+### Your turn
+
+Scroll through the file and find **two** things that would confuse Excel or a script.
+Here are the kinds of things to look for:
+
+- Dates written in more than one style.
+- Amounts written in more than one style, for example with a `$` or a comma.
+- The same category spelled in several ways.
+- Two identical lines in a row.
+- The separator: this file uses `;` instead of `,`.
+
+<Checkpoint question="What did you find? Show some answers">
+	The file contains all of these. For example, the dates `01/01/2024`,
+	`2024-01-01`, and `2024/01/01` mean the same day. An amount appears as
+	`$1500,50`, mixing a currency symbol with a decimal comma. The category for
+	coffee appears as both `café` and `cafe`. The transaction `T050` appears twice
+	in a row. You do not need to fix any of this now. Parts 5 and 6 teach how.
+</Checkpoint>
+
+## Common mistakes
+
+- **Opening the CSV in Excel and saving.** Excel can reinterpret dates and numbers
+  silently, and saving overwrites the original. If you want to experiment, copy the file.
+- **Losing the folder.** If you cannot find the data in a week, put it in `Documents` and
+  write the location in a note.
+- **Assuming the data is clean.** Messy data is normal. Noticing the mess is the first
+  skill.
+- **Storing the zip in a synced folder.** Cloud-synced folders can change files or hide
+  them. Use a local folder for now.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Explain this CSV.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant guesses the separator and the date format. It may read
+		`$1500,50` as one thousand five hundred and fifty, or as 150,050, and it
+		sounds confident either way.
+	</Fragment>
+	<Fragment slot="good">
+		I am attaching the first 20 lines of a sales file for a coffee company.
+		Columns: ID, Fecha, Cliente, Monto, Categoría. The separator is a semicolon.
+		Tell me what each column probably means and list every assumption you make,
+		especially about date formats and about how amounts are written. Then list
+		any rows that look inconsistent.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		The prompt gives **input** (an excerpt) and a **task** (describe each
+		column). It requires the assistant to **list assumptions**, which turns
+		hidden guesses into statements you can check. It also gives **context**:
+		what kind of company and file this is.
+	</Fragment>
+	<Fragment slot="check">
+		Pick three rows and check them by hand against the assistant's claims. Does
+		the date mean what it says? Is the amount what you see in the file? Do not
+		trust a summary of a file until you have checked a few rows yourself.
+	</Fragment>
+</PromptExample>
+
+<Checkpoint question="Why avoid double-clicking the CSV to open it?">
+	Excel may change dates and amounts without warning, and saving would overwrite
+	the original file.
+</Checkpoint>
+
+## Check yourself
+
+<Checkpoint question="Describe Café Central's problem in two sentences.">
+	Each month, Lucía collects the shops' sales files, fixes dates and amounts by
+	hand, removes duplicates by eye, and builds a report, which takes most of a
+	day. The course teaches her to do this with one repeatable command.
+</Checkpoint>
+
+<Checkpoint question="What is a CSV file?">
+	A plain text file where each line is a row and a separator character splits
+	the columns.
+</Checkpoint>
+
+<Checkpoint question="Name two oddities in the sales file.">
+	Any of: mixed date formats, mixed amount styles, inconsistent category
+	spelling, duplicate rows, a `;` separator.
+</Checkpoint>
+
+## Going deeper
+
+- Part 1 explains paths, text encodings, and why accents break. Part 5 covers CSV in depth.

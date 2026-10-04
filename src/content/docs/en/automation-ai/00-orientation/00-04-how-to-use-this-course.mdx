@@ -1,0 +1,160 @@
+---
+title: How to use this course
+description: See how every lesson is laid out and why each one ends with an AI prompt comparison.
+sidebar:
+  order: 4
+lessonId: '0.4'
+estimatedMinutes: 10
+prerequisites: ['0.1']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Navigate the sections of a lesson. - Explain why each lesson has an AI
+	prompt comparison. - Name the habit you should never skip.
+</LessonGoals>
+
+## Why this matters
+
+If you know how lessons are laid out, you can study faster. You will also know which
+parts to skim and which parts to slow down for.
+
+<CaseStudy>
+	Every lesson in the course uses Café Central. When you see "Lucía" or "the
+	owner", it refers to the people in lesson 0.3.
+</CaseStudy>
+
+## How a lesson is built
+
+Every lesson has the same sections, in the same order.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Goals"] --> B["Why this matters"]
+  B --> C["Concepts"]
+  C --> D["Hands-on"]
+  D --> E["Common mistakes"]
+  E --> F["Ask your AI assistant"]
+  F --> G["Check yourself"]
+  G --> H["Going deeper"]`}
+/>
+
+| Section               | What it is for                               |
+| --------------------- | -------------------------------------------- |
+| Goals                 | What you will be able to do afterwards.      |
+| Why this matters      | The business problem, tied to Café Central.  |
+| Concepts              | The mental model. Read this slowly.          |
+| Hands-on              | A worked example, then an exercise for you.  |
+| Common mistakes       | Failures others hit, so you can skip them.   |
+| Ask your AI assistant | A lousy prompt and a good one, side by side. |
+| Check yourself        | A few questions with answers you can reveal. |
+| Going deeper          | Optional reading.                            |
+
+Try to answer before you reveal an answer. Guessing and being wrong teaches more than
+reading the answer.
+
+## Why every lesson ends with an AI prompt
+
+AI assistants are useful, but they write confidently even when they are wrong. The
+prompt section shows two things.
+
+1. A **prompt** is the text you type to an AI assistant. A vague prompt gets a vague
+   or invented answer. A specific prompt gets a better one.
+2. Whatever the answer, you must **check** it.
+
+So each prompt section has five parts: a lousy prompt, what goes wrong, a good prompt,
+why it works, and how to check the answer. You see about 80 examples over the course,
+and by the end, writing good prompts becomes a habit.
+
+If you only keep one habit from this course, keep the last one: **check the answer**.
+The assistants change often, but this habit stays useful.
+
+## Hands-on
+
+### Practise on a prompt section
+
+Look at the prompt section of lesson 0.3. Answer these in your own words:
+
+1. What was missing from the lousy prompt?
+2. What did the good prompt add?
+3. What would you check in the answer?
+
+<Checkpoint question="Show a sample answer">
+	The lousy prompt gave no file excerpt and no instructions about assumptions.
+	The good prompt added the excerpt, the separator, and a request to list
+	assumptions. You would check three rows by hand against what the assistant
+	claimed.
+</Checkpoint>
+
+## Common mistakes
+
+- **Skipping "Check the answer".** It is the most valuable part. An unchecked answer is a
+  guess.
+- **Reading without doing.** The exercises are where the learning happens.
+- **Copying prompts word for word.** Use them as models, then change the details to
+  match your own work.
+- **Racing ahead.** Short lessons are meant to be done one at a time.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">How do I use this course?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant has never seen this course, so it invents a plausible
+		structure with modules and quizzes that may not exist.
+	</Fragment>
+	<Fragment slot="good">
+		I am starting a free online course for business professionals. Each lesson
+		has these sections: Goals, Why this matters, Concepts, Hands-on, Common
+		mistakes, Ask your AI assistant, Check yourself, Going deeper. I use Excel
+		daily and have never coded. Suggest a 20-minute study routine for one
+		lesson, in 5 bullet points. Say which sections I could skim if I am short on
+		time.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		The good prompt supplies **context** (who you are and what the course
+		contains), since the assistant cannot see the course. It states a
+		**constraint** (20 minutes) and an **output format** (5 bullets).
+	</Fragment>
+	<Fragment slot="check">
+		Compare the suggested routine with the real lesson page. Does it skip
+		Hands-on or Check yourself? If so, it is not a good routine, because those
+		are the sections that teach.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What are the five parts of a prompt section?">
+	Lousy prompt, what goes wrong, good prompt, why it works, and check the
+	answer.
+</Checkpoint>
+
+<Checkpoint question="Which section would you never skip, and why?">
+	"Check the answer" in the prompt section, because assistants can be
+	confidently wrong.
+</Checkpoint>
+
+<Checkpoint question="What should you do before revealing an answer in Check yourself?">
+	Try to answer in your own words first.
+</Checkpoint>
+
+## End-of-part checklist
+
+You have finished Part 0 when you can tick every item:
+
+- [ ] I can say in one sentence which learning path I am on.
+- [ ] I picked one task from my own job and ran it through the test from lesson 0.2.
+- [ ] The Café Central zip is unzipped in a folder I can name from memory.
+- [ ] I opened `cafe_central_sales.csv` in a text editor and found two things that would
+      confuse Excel or a script.
+- [ ] I can name the prompt sections and say which one I would never skip.
+
+## Going deeper
+
+- Next is Part 1, which explains how computers store files, text, and numbers.

@@ -108,8 +108,7 @@ Part 0:
       accents), `scripts/package_datasets.py`, pytest in `examples/part00/`, zip committed
       under `public/downloads/automation-ai/`.
 - [x] Lesson 0.1 drafted (2026-10-03).
-- [ ] Lessons 0.2-0.4 drafted (one per session). 0.1 is done; the Part 0 index page now
-      says 0.1 is ready and 0.2-0.4 are coming (update it as each lands).
+- [x] Lessons 0.1-0.4 drafted (2026-10-03). Part 0 is complete; Part 0 index updated.
 - [ ] Brief open question 4 (real learner pitfalls) still unanswered; pitfalls are hypotheses.
 - [ ] Unverified in a real browser: Mermaid rendering, new components.
 
@@ -123,11 +122,9 @@ Repo state: all work is committed and pushed on `main`; the site is live at
 
 Next actions, in order:
 
-1. Draft lesson 0.2 (`00-02-what-automation-is.mdx`), using 0.1 as the style reference and
-   the brief's 0.2 rows (five Café Central chores, decision-flow Mermaid diagram,
-   "Automate my monthly report." prompt). Do not link to unwritten lessons.
-2. Then 0.3, 0.4 (one per session), then the end-of-part checklist in 0.4.
-3. Part 1 and Part 2 briefs and lessons (Stage 5 continues).
+1. Write the Part 1 chapter brief (copy `planning/templates/chapter-brief.md`), get it
+   approved, then examples/tests, then lessons 1.1-1.12 (use Part 0 lessons as style reference).
+2. Same for Part 2.
 
 ### Known gaps and decisions
 
