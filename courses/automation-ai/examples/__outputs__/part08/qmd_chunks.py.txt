@@ -1,0 +1,4 @@
+all: 240 sales, total 474,061
+  inline values: ['all categories', '240', '474,061']
+jugo: 55 sales, total 112,614
+  inline values: ['the category jugo', '55', '112,614']

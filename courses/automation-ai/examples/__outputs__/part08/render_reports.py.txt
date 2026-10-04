@@ -1,0 +1,5 @@
+quarto render monthly_report.qmd --to html -P category:cafe --output report-cafe.html
+quarto render monthly_report.qmd --to html -P category:jugo --output report-jugo.html
+quarto render monthly_report.qmd --to html -P category:pastel --output report-pastel.html
+quarto render monthly_report.qmd --to html -P category:sandwich --output report-sandwich.html
+quarto render monthly_report.qmd --to html -P category:te --output report-te.html
