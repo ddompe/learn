@@ -1,0 +1,153 @@
+---
+title: Text and encodings
+description: Understand how text becomes bytes, and diagnose accents that turn into strange symbols.
+sidebar:
+  order: 7
+lessonId: '1.7'
+estimatedMinutes: 20
+prerequisites: ['1.3', '1.5']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain ASCII, Unicode, and UTF-8 in plain terms. - Diagnose mangled accents
+	such as `Año` turning into `AÃ±o`. - Know which encoding to try to repair the
+	text.
+</LessonGoals>
+
+## Why this matters
+
+A computer stores only numbers. For text, it needs a rule that says which number stands
+for which letter. That rule is an **encoding**. If the program that writes a file and
+the program that reads it use different rules, letters become nonsense. For anyone
+working with Spanish names and accents, this is a daily problem.
+
+<CaseStudy>
+	Café Central's customers include `María García` and `José`. When Lucía opens
+	an export made by an older system, the names appear as `MarÃ­a GarcÃ­a`. The
+	names are not wrong in the file. The program is reading them with the wrong
+	rule.
+</CaseStudy>
+
+## From letters to bytes
+
+An encoding is a table that maps characters to numbers, and numbers to bytes.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Text: Categoría"] -->|"encode with a rule"| B["Bytes"]
+  B -->|"decode with a rule"| C["Text again"]`}
+/>
+
+Three names matter:
+
+- **ASCII** is the oldest rule. It covers 128 characters: English letters, digits, and
+  punctuation. It has no accented letters.
+- **Unicode** is a huge catalogue that gives a number to nearly every character in every
+  language, plus emoji. It is the list, not the byte format.
+- **UTF-8** is the most common way to write Unicode as bytes. English letters take one
+  byte. Accented letters like `í` take two. Other symbols take up to four.
+
+Older systems used other rules. **Latin-1** (and its Windows cousin, cp1252) uses one
+byte per character and covers Western European accents. When a file written in UTF-8 is
+read as Latin-1, each two-byte letter becomes two wrong characters. This garbling is
+called **mojibake**, a Japanese word for "character change".
+
+The classic sign: `ñ` becomes `Ã±` and `í` becomes `Ã` followed by an invisible
+character.
+
+## Hands-on
+
+### Worked example
+
+<Example file="part01/07_encodings.py" />
+
+The word `Categoría` encodes to bytes in which the letter `í` is the two bytes `\xc3\xad`.
+When those bytes are decoded using Latin-1, each byte becomes its own character, which
+gives `CategorÃ­a`. The second character after `Ã` is invisible, which is why it looks
+like a soft hyphen or nothing. Encoding back with Latin-1 and decoding with UTF-8
+repairs the text, because the original bytes were never lost.
+
+The key idea: **the bytes were fine. Only the reading rule was wrong.**
+
+### Your turn
+
+A column header in an export reads `CategorÃ­a`. Your tool has an option called
+"File origin" or "Encoding".
+
+1. Which encoding was the file most likely written in?
+2. Which one is the tool reading it with?
+3. What would you change?
+
+<Checkpoint question="Show the answers">
+	1. UTF-8. 2. Latin-1 or a similar single-byte encoding. 3. Set the file
+	encoding to UTF-8 when opening the file. Do not edit the letters by hand.
+</Checkpoint>
+
+## Common mistakes
+
+- **Saving after the damage.** If you open a UTF-8 file with the wrong encoding and save
+  it, the mangled text is written into the file. Always keep the original.
+- **Fixing characters one by one.** The pattern is systematic. Change the encoding
+  instead.
+- **Assuming UTF-8 everywhere.** Files from older systems or some Excel exports use
+  other encodings.
+- **Confusing the font with the encoding.** A missing-glyph square is a font problem.
+  Strange extra letters are an encoding problem.
+- **Ignoring the BOM.** Some tools add a hidden mark at the start of a UTF-8 file. If the
+  first column header looks odd, this may be why. Part 5 returns to it.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Fix the weird characters.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant suggests replacing each strange character by hand or with
+		find-and-replace. That may fix this file and break the next one. It does not
+		explain the cause.
+	</Fragment>
+	<Fragment slot="good">
+		A CSV file from our old system shows "CategorÃ­a" and "SÃ¡ndwich" where I
+		expect "Categoría" and "Sándwich". I am opening it in Excel on Windows.
+		Which encoding was the file most likely saved in, and which encoding is
+		Excel using to read it? Explain the cause in two sentences, then give the
+		steps to open the file with the right encoding without changing the
+		original.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It provides **input** (real examples of the damage), the **context** (the
+		program), and a **task** that asks for the cause before the fix. The
+		**constraint** protects the original file.
+	</Fragment>
+	<Fragment slot="check">
+		Check that it names UTF-8 and Latin-1 or cp1252, and that its steps use an
+		import option rather than editing the file. Test on a copy first.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What is an encoding?">
+	A rule that maps characters to numbers and bytes, and back.
+</Checkpoint>
+
+<Checkpoint question="Why does `í` turn into `Ã` plus another character?">
+	The file is UTF-8 and stores `í` as two bytes. A program reading it as Latin-1
+	turns each byte into its own character.
+</Checkpoint>
+
+<Checkpoint question="What is the difference between Unicode and UTF-8?">
+	Unicode is the catalogue of characters and their numbers. UTF-8 is one way to
+	store those numbers as bytes.
+</Checkpoint>
+
+## Going deeper
+
+- Part 5 shows how to choose the encoding and the separator when reading a CSV.

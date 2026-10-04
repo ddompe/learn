@@ -1,0 +1,139 @@
+---
+title: Cloud-synced folders
+description: Understand how OneDrive and similar tools differ from local folders, and why they can break projects.
+sidebar:
+  order: 6
+lessonId: '1.6'
+estimatedMinutes: 15
+prerequisites: ['1.4']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain how a cloud-synced folder differs from a local folder. - Name three
+	ways synced folders cause problems for projects. - Choose a safe place for
+	course files.
+</LessonGoals>
+
+## Why this matters
+
+Many company laptops store Desktop and Documents inside OneDrive, Dropbox, or iCloud
+without telling you. These folders behave like normal folders, but they are not. A
+program that works in a local folder can fail in a synced one, and the error messages
+rarely mention syncing.
+
+<CaseStudy>
+	Lucía keeps her Café Central files in `Documents`, which her company syncs to
+	the cloud. After a script ran, some files changed back to older versions. The
+	sync service had restored its own copies in the middle of the work.
+</CaseStudy>
+
+## How a synced folder works
+
+A **cloud-synced folder** is a normal-looking folder watched by a background program.
+When a file changes, the program uploads it. When the cloud copy changes, the program
+downloads it. This is useful for backups and for sharing documents.
+
+But the background program is another actor working on your files at the same time.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Your program"] --> B["Folder on disk"]
+  C["Sync program"] <--> B
+  C <--> D["Cloud copy"]`}
+/>
+
+## Three ways it breaks projects
+
+1. **Placeholders.** To save space, the sync program may keep only a small stand-in for a
+   file. The real content is downloaded when you open it. A program that reads the
+   folder may see an empty file or an error.
+2. **Locks and conflicts.** The sync program may hold a file briefly while uploading it.
+   If your program tries to write at that moment, it fails or creates copies named like
+   `sales (conflicted copy).csv`.
+3. **Too many small files.** Projects with thousands of small files, which you meet in
+   Parts 3 and 4, make the sync program slow and sometimes confused.
+
+Paths also change. A folder that you think of as `Documents` may actually live at a
+longer path that includes the name of the sync service.
+
+## Hands-on
+
+### Worked example
+
+Look at the path of your Documents folder, using the method from lesson 1.4. If the
+path includes `OneDrive`, `Dropbox`, `iCloud`, or `Google Drive`, your Documents folder
+is synced.
+
+### Your turn
+
+Pick a local folder for the course. Good choices are a new folder called `projects` in
+your user folder, such as `C:\Users\<you>\projects` on Windows or `/Users/<you>/projects`
+on macOS. Move the Café Central folder there, and check that the path does not
+include the name of a sync service.
+
+<Checkpoint question="Why is a short, simple location a good choice?">
+	It is easy to type, has no spaces or accents, and no sync program is watching
+	it.
+</Checkpoint>
+
+## Common mistakes
+
+- **Not knowing the folder is synced.** Check the path.
+- **Moving files into a synced folder while a script is using them.** Close programs first.
+- **Disabling sync on a company laptop without asking.** Company policy may require it.
+  Choose another folder instead.
+- **Treating sync as version control.** Sync keeps the latest copy. Part 3 teaches real
+  history.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">OneDrive is broken.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant lists generic steps: sign out, reinstall, reset. Some of these
+		can delete local data or break your company setup.
+	</Fragment>
+	<Fragment slot="good">
+		I am on a company Windows laptop. My Documents folder is inside OneDrive.
+		When my program writes sales_summary.csv into it, I sometimes see a second
+		file named "sales_summary-DESKTOP.csv". I do not have administrator rights.
+		Explain why this happens in two sentences. Then suggest a fix that does not
+		involve reinstalling or disabling OneDrive.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It gives the **context** (company laptop, no admin rights), the **input**
+		(the exact symptom), and a **constraint** that rules out risky advice.
+	</Fragment>
+	<Fragment slot="check">
+		Make sure the suggested fix does not delete anything. Try it on a copy of
+		the data first.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Name one way a synced folder differs from a local one.">
+	A background program uploads and downloads files, which can leave
+	placeholders, lock files, or create conflicting copies.
+</Checkpoint>
+
+<Checkpoint question="How can you tell whether a folder is synced?">
+	Look at its full path, which often includes the name of the sync service.
+</Checkpoint>
+
+<Checkpoint question="Is sync the same as version control?">
+	No. Sync mirrors the latest state. Version control keeps a history you can
+	return to.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 1.7 moves from where files live to what is inside them.

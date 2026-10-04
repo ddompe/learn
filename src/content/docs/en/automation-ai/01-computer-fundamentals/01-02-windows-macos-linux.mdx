@@ -1,0 +1,151 @@
+---
+title: Windows, macOS, and Linux
+description: Know the differences between operating systems that cause real problems when sharing files and code.
+sidebar:
+  order: 2
+lessonId: '1.2'
+estimatedMinutes: 15
+prerequisites: ['1.1']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Name the three main operating systems and where each is used. - Explain four
+	differences that cause problems: path separators, line endings, case
+	sensitivity, and permissions. - Recognise these problems when a file works on
+	one machine but not another.
+</LessonGoals>
+
+## Why this matters
+
+You may work in a team where one person uses Windows, another uses a Mac, and the
+servers run Linux. A file or a script that works on your machine can fail on a
+colleague's for reasons that have nothing to do with its content. The reasons are small
+differences between operating systems. Knowing them saves hours.
+
+<CaseStudy>
+	Lucía uses Windows. The owner's analyst, Mateo, uses a Mac. When Lucía sends
+	Mateo a script that opens `C:\Users\Lucia\Documents\sales.csv`, it fails. The
+	path is valid on her laptop and meaningless on his.
+</CaseStudy>
+
+## The three families
+
+- **Windows** is the most common on business desktops.
+- **macOS** runs on Apple computers.
+- **Linux** is free and open source. You rarely use it on a desktop at work, but most
+  servers and cloud services run on it. Many tools you will meet were built there first.
+
+macOS and Linux share a common ancestry, so they behave alike in many ways. Windows
+is the odd one out.
+
+## Four differences that bite
+
+### 1. Path separators and drive letters
+
+Windows writes paths with a backslash and starts with a drive letter, as in
+`C:\Users\Lucia`. macOS and Linux use a forward slash and no drive letters, as in
+`/Users/lucia`. Lesson 1.4 covers paths in detail.
+
+### 2. Line endings
+
+A text file marks the end of each line with invisible characters. Windows uses two
+(carriage return plus line feed). macOS and Linux use one (line feed). Most modern tools
+handle both, but old tools or strict checks sometimes show strange symbols or extra
+blank lines.
+
+### 3. Case sensitivity
+
+On Linux, `Sales.csv` and `sales.csv` are two different files. On Windows, and by default
+on macOS, they are the same file. A script that works on your laptop can fail on a Linux
+server because of a capital letter.
+
+### 4. Permissions
+
+Operating systems control who may read, change, or run each file. Company laptops often
+block installing software without administrator rights. Part 4 teaches tools that work
+within that limit.
+
+## Hands-on
+
+### Worked example
+
+<Example file="part01/04_paths.py" />
+
+The same file location is written differently on each system. Notice that the Windows
+path has a drive letter and backslashes, while the macOS path begins with a slash.
+Lesson 1.4 explains what each line means.
+
+### Your turn
+
+Predict whether each statement is true, then reveal the answers.
+
+1. A script saved on Windows as `Report.py` can be started on Linux as `report.py`.
+2. A path with `C:` at the start works on macOS.
+3. Two people can edit the same file on Windows and macOS, as long as they use the same program.
+
+<Checkpoint question="Show the answers">
+	1. False on Linux, because the names differ by a capital letter. 2. False.
+	Drive letters exist only on Windows. 3. Usually true, but line endings can
+	differ. Most modern tools handle that.
+</Checkpoint>
+
+## Common mistakes
+
+- **Writing a path with a drive letter in code you share.** It only works on your machine.
+- **Assuming capital letters do not matter.** They matter on Linux, so be consistent.
+- **Believing the OS is the only difference.** Installed software and its versions differ too.
+- **Trying to work around company restrictions.** If you cannot install something, ask IT
+  or use the approach in Part 4 that does not need administrator rights.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Make this work on Mac.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant rewrites the whole thing without knowing what failed. It may
+		change things that were fine and miss the actual cause, such as the Windows
+		path.
+	</Fragment>
+	<Fragment slot="good">
+		This script runs on my Windows laptop but fails on my colleague's Mac with
+		the error "No such file or directory: C:\Users\Lucia\Documents\sales.csv".
+		The script is below. List every place where the code depends on Windows, and
+		explain each in one sentence. Do not change anything yet.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It gives **input** (the exact error and where each person works) and a
+		**constraint** (list, do not rewrite). Asking for causes before changes lets
+		you judge the diagnosis.
+	</Fragment>
+	<Fragment slot="check">
+		Check that the list includes the drive letter and the backslashes. If it
+		blames something unrelated, ask the assistant to point to the exact line.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Which operating system has drive letters?">
+	Windows.
+</Checkpoint>
+
+<Checkpoint question="Why can a script fail on Linux but not on Windows because of a capital letter?">
+	Linux treats `Sales.csv` and `sales.csv` as different files. Windows treats
+	them as the same.
+</Checkpoint>
+
+<Checkpoint question="Name two other differences between operating systems.">
+	Line endings and permissions. Path separators also differ.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 1.9 introduces the terminal, which looks different on Windows and macOS.

@@ -1,0 +1,157 @@
+---
+title: Networks and the web in 15 minutes
+description: Understand clients, servers, URLs, and the request and response behind every web page.
+sidebar:
+  order: 11
+lessonId: '1.11'
+estimatedMinutes: 15
+prerequisites: ['1.1']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain client and server. - Break a URL into its parts. - Describe an HTTP
+	request and response.
+</LessonGoals>
+
+## Why this matters
+
+AI assistants, cloud storage, and most business tools work over the internet. When one
+fails, the error says things like "404", "timeout", or "403 Forbidden". Knowing the basic
+conversation behind a web page lets you read these messages instead of fearing them.
+It also prepares you for lesson 1.12.
+
+<CaseStudy>
+	Café Central's owner wants a daily sales number to appear on a web page.
+	Behind the scenes, a browser asks a server for data, and the server answers.
+	That exchange is what this lesson explains.
+</CaseStudy>
+
+## Clients and servers
+
+A **client** asks for something. A **server** answers. Your browser is a client. The
+computer that holds a web page is a server. A server is simply a computer that waits for
+requests. Most are in data centres, but a laptop can be a server too.
+
+## Anatomy of a URL
+
+A **URL** is the address of something on the web.
+
+<Example file="part01/11_urls.py" />
+
+Each part answers a question:
+
+- The **scheme** (`https`) says how to talk. HTTPS is the secure version of HTTP.
+- The **host** (`learn.dompe.space`) says which computer to ask.
+- The **path** (`/en/automation-ai/`) says what you want from it.
+- The **query** (`lang=en`) adds extra details to the request.
+- The **fragment** (`top`) is only for your browser, to jump to a spot on the page.
+
+The host is turned into a numeric address by the **DNS**, a directory service for names.
+
+## Request and response
+
+The conversation uses a protocol, or agreed set of rules, called **HTTP**.
+
+<Mermaid
+	diagram={`sequenceDiagram
+  participant B as Browser (client)
+  participant S as Server
+  B->>S: Request: GET /en/automation-ai/
+  S-->>B: Response: 200 OK plus the page`}
+/>
+
+A **request** has a method (such as GET to fetch, POST to send data), a path, and
+headers with extra details. A **response** has a **status code**, headers, and usually
+a body, such as the page or some data.
+
+Status codes are grouped by their first digit:
+
+| Code | Meaning                            |
+| ---- | ---------------------------------- |
+| 200  | OK, here is what you asked for     |
+| 301  | Moved to another address           |
+| 401  | You need to identify yourself      |
+| 403  | You are identified but not allowed |
+| 404  | Not found                          |
+| 429  | Too many requests, slow down       |
+| 500  | The server had a problem           |
+
+## Hands-on
+
+### Worked example
+
+In your browser, open `https://learn.dompe.space/en/` and read its URL. Name its scheme,
+host, and path. Then change the end of the address to `/en/no-such-page/` and press
+Enter. Which status code does that situation correspond to?
+
+### Your turn
+
+Match each situation with a status code:
+
+1. You typed a page address with a typo.
+2. The server crashed while answering.
+3. You are logged in, but the file belongs to someone else.
+
+<Checkpoint question="Show the answers">
+	1. 404, not found. 2. 500, a server problem. 3. 403, forbidden.
+</Checkpoint>
+
+## Common mistakes
+
+- **Treating an error code as your fault.** A 5xx code means the server has the problem,
+  not you.
+- **Confusing 401 and 403.** 401 means "who are you?" and 403 means "I know you, but no."
+- **Using HTTP for private data.** Always use HTTPS.
+- **Ignoring the query.** Everything after `?` can change the answer.
+- **Believing a page looks the same to everyone.** Servers can answer differently.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Explain the internet.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		You get a long, unfocused tour of cables, routers, and history, and little
+		you can use.
+	</Fragment>
+	<Fragment slot="good">
+		Explain in exactly five numbered steps what happens between typing
+		https://learn.dompe.space/en/ in my browser and seeing the page. Use the
+		words client, server, DNS, request, and response, and define each in one
+		sentence the first time it appears. I have no technical background.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It sets the **output format** (five steps), the **audience** (no technical
+		background), and requires specific terms, so the answer fits the lesson.
+	</Fragment>
+	<Fragment slot="check">
+		Check that the order is plausible: the name is resolved first by DNS, then
+		the request is sent, then the response comes back. If steps are missing or
+		out of order, ask again.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What is the difference between a client and a server?">
+	A client asks for something. A server waits for requests and answers them.
+</Checkpoint>
+
+<Checkpoint question="What does a 404 mean?">
+	The server could not find what was asked for.
+</Checkpoint>
+
+<Checkpoint question="Name the parts of https://example.com/a?b=1.">
+	Scheme `https`, host `example.com`, path `/a`, and query `b=1`.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 1.12 builds on this to explain what an API is.

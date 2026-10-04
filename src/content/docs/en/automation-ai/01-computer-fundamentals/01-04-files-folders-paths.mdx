@@ -1,0 +1,175 @@
+---
+title: Files, folders, and paths
+description: Describe where a file lives using absolute and relative paths on Windows and macOS.
+sidebar:
+  order: 4
+lessonId: '1.4'
+estimatedMinutes: 20
+prerequisites: ['1.1', '1.2']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain what a file, a folder, and a path are. - Read and write absolute and
+	relative paths on Windows and macOS. - Find the path of a file on your own
+	computer.
+</LessonGoals>
+
+## Why this matters
+
+Every program that reads a file needs to be told where the file is. That description is
+a **path**. Most "file not found" errors come from a path that is slightly wrong. If you
+can read paths, you can fix those errors in seconds.
+
+<CaseStudy>
+	In lesson 0.3 you unzipped the Café Central data into a folder. A script that
+	wants to read `cafe_central_sales.csv` needs the path to that file. Without
+	it, even a perfect script fails.
+</CaseStudy>
+
+## Files and folders
+
+A **file** holds information under a name. A **folder** (also called a directory)
+holds files and other folders. Folders inside folders form a tree.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["Documents"] --> B["cafe-central"]
+  A --> C["taxes"]
+  B --> D["cafe_central_sales.csv"]
+  B --> E["cafe_central_customers.json"]`}
+/>
+
+A **path** lists the folders you pass through to reach a file, ending with its name.
+For the sales file above, the steps are: Documents, then cafe-central, then the file.
+
+## Absolute and relative paths
+
+An **absolute path** starts from the very top of the disk. It works from anywhere. A
+**relative path** starts from where you are now. It is shorter, but means different
+things in different places.
+
+| Kind     | Windows                                           | macOS                                           |
+| -------- | ------------------------------------------------- | ----------------------------------------------- |
+| Absolute | `C:\Users\Lucia\Documents\cafe-central\sales.csv` | `/Users/lucia/Documents/cafe-central/sales.csv` |
+| Relative | `cafe-central\sales.csv` (from `Documents`)       | `cafe-central/sales.csv` (from `Documents`)     |
+
+Notice three things:
+
+- Windows uses a backslash `\` between folders and starts with a drive letter such as `C:`.
+- macOS uses a forward slash `/` and starts with a single `/`, the top of the disk.
+- The place you are "standing in" is called the **current folder** or working folder.
+  Relative paths are measured from there.
+
+Two shortcuts are useful. A single dot `.` means "this folder". Two dots `..` mean "the
+folder above this one".
+
+## Hands-on
+
+### Worked example
+
+<Example file="part01/04_paths.py" />
+
+The first four lines show the Windows path. The program tells us it is absolute, and
+reports its folder. For macOS it extracts the file name and the extension, the part
+after the last dot. The relative path is not absolute, and its parts are the folder and
+the file.
+
+### Find a path on your computer
+
+<OsTabs>
+	<Fragment slot="windows">
+		Open File Explorer and go to the Café Central folder. Click the address bar
+		at the top once. The path becomes text you can read and copy. Hold
+		**Shift**, right-click the CSV file, and choose **Copy as path** to copy its
+		full path.
+	</Fragment>
+	<Fragment slot="macos">
+		Open Finder and select the CSV file. Press **Option+Command+C** to copy its
+		full path. Alternatively, right-click the file, hold **Option**, and choose
+		**Copy as Pathname**.
+	</Fragment>
+</OsTabs>
+
+Paste it into a text file and read it from left to right. Count the folders. Then write
+the relative path from your Documents folder.
+
+### Your turn
+
+Given the absolute path `/Users/lucia/Documents/cafe-central/sales.csv`, answer:
+
+1. What is the file name?
+2. What is the folder that holds it?
+3. If you are standing in `/Users/lucia/Documents`, what is the relative path?
+4. If you are standing in `/Users/lucia/Documents/cafe-central`, what does `..` mean?
+
+<Checkpoint question="Show the answers">
+	1. `sales.csv`. 2. `/Users/lucia/Documents/cafe-central`. 3.
+	`cafe-central/sales.csv`. 4. The `Documents` folder, one level up.
+</Checkpoint>
+
+## Common mistakes
+
+- **Confusing a folder's display name with its path.** Finder and Explorer show friendly
+  names such as "Desktop". The real path is longer.
+- **Using a relative path from the wrong place.** The same relative path points to
+  different files depending on the current folder. If in doubt, use an absolute path.
+- **Spaces and accents in names.** They are allowed, but some tools need quotes around
+  the path. Prefer simple names such as `cafe-central`.
+- **Copying a Windows path into a Mac script.** The separators and the drive letter will
+  not work.
+- **Editing the file name by hand.** A single typo makes the path wrong.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Fix my file path.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant has nothing to work with, so it invents a plausible path that
+		does not exist on your machine and may send you looking in the wrong place.
+	</Fragment>
+	<Fragment slot="good">
+		My program says "file not found" for the path
+		C:\Users\Lucia\Documents\cafe-central\sales.csv. In File Explorer, the file
+		is named cafe_central_sales.csv, and it is in the same folder. I am on
+		Windows. Compare the path in the error with the real file name, and tell me
+		exactly which characters differ. Explain in one sentence why this causes the
+		error.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		The prompt gives **input** (the exact error and the real name), the
+		**context** (Windows), and a specific **task** (compare and name the
+		difference). The assistant has little room to guess.
+	</Fragment>
+	<Fragment slot="check">
+		Look at the file name yourself and confirm the difference is the one it
+		names. Then test the corrected path before accepting the explanation.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What is the difference between an absolute and a relative path?">
+	An absolute path starts at the top of the disk and works from anywhere. A
+	relative path starts from the current folder.
+</Checkpoint>
+
+<Checkpoint question="What does `..` mean in a path?">
+	The folder one level above the current one.
+</Checkpoint>
+
+<Checkpoint question="Why does a Windows path not work on a Mac?">
+	Windows uses drive letters and backslashes. macOS has no drive letters and
+	uses forward slashes.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 1.6 explains why cloud-synced folders make paths less reliable.

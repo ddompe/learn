@@ -1,0 +1,139 @@
+---
+title: Bits, bytes, and units
+description: Understand how computers measure data, and why a 1 TB disk shows up as 931 GB.
+sidebar:
+  order: 3
+lessonId: '1.3'
+estimatedMinutes: 15
+prerequisites: ['1.1']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Convert between bytes, kilobytes, megabytes, and gigabytes. - Explain the
+	difference between KB and KiB. - Explain why a 1 TB disk shows about 931 GB.
+</LessonGoals>
+
+## Why this matters
+
+File sizes appear everywhere: email limits, upload limits, disk space, and the cost of
+AI tools. If you do not know the units, you cannot judge whether a number is big or
+small. You will also meet a confusing fact: the disk you bought does not show the size
+printed on the box.
+
+<CaseStudy>
+	Each month, a shop's sales export is about 8 KB. The owner's mailbox allows
+	attachments up to 20 MB. Lucía wonders how many shops' files fit in one email.
+</CaseStudy>
+
+## Bits and bytes
+
+A **bit** is the smallest piece of information. It has two possible values, 0 or 1.
+Computers store everything as bits: numbers, text, pictures, and programs.
+
+A **byte** is a group of eight bits. One byte can hold 256 different values. A single
+English letter takes one byte. An accented letter such as `í` takes two in the most
+common encoding. Lesson 1.7 explains why.
+
+## Kilo, mega, giga
+
+Bigger units come in steps.
+
+| Unit | Meaning (maker's way) | Rough sense of size            |
+| ---- | --------------------- | ------------------------------ |
+| 1 KB | 1,000 bytes           | A short email                  |
+| 1 MB | 1,000 KB              | A photo or a large spreadsheet |
+| 1 GB | 1,000 MB              | A film at moderate quality     |
+| 1 TB | 1,000 GB              | A very large disk              |
+
+That is the decimal way, based on powers of ten. Computers prefer powers of two, so
+there is a second set of units, the binary way. Their names include "bi": kibibyte
+(KiB), mebibyte (MiB), gibibyte (GiB), and tebibyte (TiB).
+
+| Binary unit | Size in bytes |
+| ----------- | ------------- |
+| 1 KiB       | 1,024         |
+| 1 MiB       | 1,024 KiB     |
+| 1 GiB       | 1,024 MiB     |
+
+Disk makers use the decimal units because they give bigger numbers. Many operating
+systems report sizes with the binary count, but may still call it "GB". The sizes are
+therefore not wrong. They are measured in different units with the same name.
+
+## Hands-on
+
+### Worked example
+
+<Example file="part01/03_units.py" />
+
+A disk sold as 1 TB holds exactly 1,000,000,000,000 bytes. Dividing by 1,024 three
+times gives about 931. The operating system reports 931 "GB", which is really GiB.
+Nothing is missing. It is the same space counted with a different ruler.
+
+### Your turn
+
+Using the 8 KB size of a shop file and a 20 MB limit (use the decimal units), how many
+shop files fit in one email?
+
+<Checkpoint question="Show the answer">
+	20 MB is 20,000 KB. Divided by 8 KB per file, that is 2,500 files. A mailbox
+	limit is never the problem for this data.
+</Checkpoint>
+
+## Common mistakes
+
+- **Mixing up bits and bytes.** Network speeds are often quoted in bits (Mbps), file
+  sizes in bytes (MB). Divide by eight to compare them.
+- **Thinking the missing space is lost.** A 1 TB disk shows less because of the unit
+  difference, plus a small amount used by the system.
+- **Treating KB and KiB as the same in code.** Be explicit about which you mean.
+- **Forgetting the unit.** "The file is 20" means nothing. Always write the unit.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">How big is 1 TB?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant gives one number, often 1,000 GB, or 1,024 GB, without saying
+		that two definitions exist. You cannot tell which one applies to your
+		situation.
+	</Fragment>
+	<Fragment slot="good">
+		My new 1 TB disk shows 931 GB in Windows. Explain in under 100 words whether
+		anything is missing. Show both definitions of a terabyte and the calculation
+		that leads from one to the other, with the numbers.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It states the **context** (the 931 GB observation), sets a **constraint**
+		(under 100 words), and asks for a **verification** step: the calculation
+		with the numbers.
+	</Fragment>
+	<Fragment slot="check">
+		Redo the calculation yourself: 1,000,000,000,000 divided by 1,024 three
+		times. If your number does not match, the answer is wrong.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="How many bits are in a byte?">Eight.</Checkpoint>
+
+<Checkpoint question="Why does a 1 TB disk show about 931 GB?">
+	The maker counts a terabyte as 10^12 bytes. The operating system counts in
+	units of 1,024, so the same space is about 931 GiB.
+</Checkpoint>
+
+<Checkpoint question="What is the difference between MB and MiB?">
+	MB is 1,000,000 bytes. MiB is 1,048,576 bytes.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 1.7 shows how text is turned into bytes, and why accents take more than one.

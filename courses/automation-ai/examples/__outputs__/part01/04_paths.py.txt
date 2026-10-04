@@ -1,0 +1,8 @@
+Windows absolute: C:\Users\Lucia\Documents\cafe-central\cafe_central_sales.csv
+Windows is absolute: True
+Windows folder: C:\Users\Lucia\Documents\cafe-central
+macOS file name: cafe_central_sales.csv
+macOS extension: .csv
+macOS is absolute: True
+Relative path is absolute: False
+Relative path parts: ('cafe-central', 'cafe_central_sales.csv')

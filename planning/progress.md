@@ -112,7 +112,10 @@ Part 0:
 - [ ] Brief open question 4 (real learner pitfalls) still unanswered; pitfalls are hypotheses.
 - [ ] Unverified in a real browser: Mermaid rendering, new components.
 
-Parts 1 and 2: not started.
+Part 1: brief agreed (`briefs/part-01.md`), examples in `examples/part01/` (6 scripts, tests, outputs),
+lessons 1.1-1.12 drafted (2026-10-03).
+
+Part 2: not started.
 
 ### How to resume (read this first)
 
@@ -122,9 +125,8 @@ Repo state: all work is committed and pushed on `main`; the site is live at
 
 Next actions, in order:
 
-1. Write the Part 1 chapter brief (copy `planning/templates/chapter-brief.md`), get it
-   approved, then examples/tests, then lessons 1.1-1.12 (use Part 0 lessons as style reference).
-2. Same for Part 2.
+1. Part 2: brief, examples (if any), lessons 2.1-2.9 (use Parts 0-1 as style reference).
+2. Then the pilot with 3-5 learners (M2 exit), before Stage 6.
 
 ### Known gaps and decisions
 

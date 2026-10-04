@@ -1,0 +1,5 @@
+Scheme: https
+Host: learn.dompe.space
+Path: /en/automation-ai/
+Query: lang=en
+Fragment: top

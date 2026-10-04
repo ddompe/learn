@@ -1,0 +1,2 @@
+cafe-central-data.zip: b'PK\x03\x04\x14\x00\x00\x00\x08\x00\x00\x00'
+cafe_central_sales.csv: b'ID;Fecha;Cli'

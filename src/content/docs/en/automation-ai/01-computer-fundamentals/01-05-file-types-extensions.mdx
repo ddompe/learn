@@ -1,0 +1,139 @@
+---
+title: File types and extensions
+description: Learn that an extension is a label, not a guarantee, and how to tell what a file really contains.
+sidebar:
+  order: 5
+lessonId: '1.5'
+estimatedMinutes: 15
+prerequisites: ['1.4']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain that a file extension is a convention, not a guarantee. - Tell the
+	difference between text files and binary files. - Show the real contents of a
+	file by looking at its first bytes.
+</LessonGoals>
+
+## Why this matters
+
+You trust that `sales.csv` is a CSV file and `report.xlsx` is an Excel file. Usually,
+that is true. But the name is just a label that anyone can change. When a file will not
+open, or opens as nonsense, knowing what is really inside is the first step.
+
+<CaseStudy>
+	A supplier emails Lucía a file called `invoice.pdf`. It will not open. The
+	file is actually a zipped archive someone renamed. Knowing how to look inside
+	saves her an afternoon.
+</CaseStudy>
+
+## What an extension is
+
+The **extension** is the part of a file name after the last dot, such as `.csv` or `.xlsx`.
+The operating system uses it to guess which program should open the file. That is all.
+Renaming `notes.txt` to `notes.xlsx` does not turn it into a spreadsheet. It only
+makes Excel try to open something it cannot read.
+
+Windows hides extensions by default. A file called `sales.csv.xlsx` then appears as
+`sales.csv`, and you cannot tell the real type. You can show them in File Explorer
+(**View**, then **Show**, then **File name extensions**) and in Finder (**Finder**,
+**Settings**, **Advanced**, then **Show all filename extensions**).
+
+## Text files and binary files
+
+Every file is a sequence of bytes. The question is how to read them.
+
+- A **text file** holds readable characters. CSV, JSON, and plain `.txt` are text
+  files. You can open them in a text editor.
+- A **binary file** holds bytes that are not meant to be read as characters. Images,
+  PDFs, zip archives, and Excel `.xlsx` files are binary. A text editor shows nonsense.
+
+Note that `.xlsx` and `.docx` files are actually zip archives of several small text files.
+That is why you may see `PK` in a damaged one.
+
+Many binary formats start with a few fixed bytes called a **magic number**. It tells
+programs what the file really is. A zip archive starts with the two letters `PK`.
+A text file such as CSV has no magic number. It just begins with its first character.
+
+## Hands-on
+
+### Worked example
+
+<Example file="part01/05_file_types.py" />
+
+The zip file begins with `PK`, as expected. The CSV begins with `ID;Fecha`, which is
+just its header row. The `b'...'` notation means "bytes", and `\x03\x04` shows bytes that
+are not printable characters.
+
+You do not need to run this yet. Python arrives in Part 4. The point is the idea: look
+at what the file contains, not what it is called.
+
+### Your turn
+
+Predict what you would see in the first bytes of each file:
+
+1. A `.docx` file.
+2. A text file you renamed to `.pdf`.
+
+<Checkpoint question="Show the answers">
+	1. It starts with `PK`, because a `.docx` is a zip archive. 2. It starts with
+	your first text characters, not with the `%PDF` that a real PDF begins with.
+</Checkpoint>
+
+## Common mistakes
+
+- **Trusting the extension.** It is a hint, not proof.
+- **Renaming to convert.** Changing `.csv` to `.xlsx` does not convert anything. To convert,
+  open the file in a program and save it in the new format.
+- **Hidden extensions.** Turn them on, so you see what you really have.
+- **Opening a binary file in a text editor and saving.** This destroys it.
+- **Assuming CSV is one format.** Separators and encodings vary. See Part 5.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">What is this file?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant cannot see your file. It guesses from the name, so a
+		mislabelled file gets a confident and wrong answer.
+	</Fragment>
+	<Fragment slot="good">
+		I received a file called invoice.pdf that will not open. Its first bytes,
+		shown as text, are: PK followed by unreadable characters. I am on Windows
+		with Excel and Word installed. Based on those bytes only, what kind of file
+		is it most likely to be? Give me the most likely type, one alternative, and
+		a safe way to check without running anything.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		The prompt gives **input** (the actual bytes) and tells the assistant to
+		rely on them only. It asks for a **verification** step that is safe.
+	</Fragment>
+	<Fragment slot="check">
+		Confirm that it mentions zip archives or Office files, because `PK` is their
+		signature. Do not open or run a suspicious file, even if the assistant says
+		it is safe.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Does renaming a file change what is inside it?">
+	No. It only changes the label.
+</Checkpoint>
+
+<Checkpoint question="What is a magic number?">
+	A few fixed bytes at the start of a binary file that identify its real type.
+</Checkpoint>
+
+<Checkpoint question="Is a CSV file text or binary?">Text.</Checkpoint>
+
+## Going deeper
+
+- Lesson 1.7 explains how the bytes of a text file turn into letters.

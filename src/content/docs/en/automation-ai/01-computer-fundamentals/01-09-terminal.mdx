@@ -1,0 +1,195 @@
+---
+title: The terminal
+description: Open a terminal, move between folders, list files, and read what the computer answers.
+sidebar:
+  order: 9
+lessonId: '1.9'
+estimatedMinutes: 25
+prerequisites: ['1.4']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Open a terminal on Windows or macOS. - Move between folders and list their
+	contents. - Run a command and read its output.
+</LessonGoals>
+
+## Why this matters
+
+A **terminal** is a window where you type instructions to the computer instead of
+clicking. It looks old-fashioned, but nearly every professional tool in the rest of the
+course is run from it. It is also precise: a command you type can be pasted into an
+email, repeated tomorrow, or run by a script.
+
+The terminal is not dangerous when you know what you type. In this lesson you only look
+around. You will not change or delete anything.
+
+<CaseStudy>
+	Lucía wants to check the Café Central folder without opening any program. In
+	the terminal she lists the files, then prints the first lines of the sales
+	file. It takes seconds.
+</CaseStudy>
+
+## What a terminal is
+
+A terminal shows a **prompt**: a short text that says the computer is waiting for you.
+You type a **command**, press Enter, and the computer prints the **output**.
+
+The program that reads your commands is the **shell**. On Windows it is usually
+**PowerShell**. On macOS it is **zsh**. They look different, but the basics match.
+
+In this course, commands are shown with a symbol at the start of the line. `PS>` marks
+PowerShell and `$` marks macOS. You type everything after the symbol, not the symbol.
+
+## Open a terminal
+
+<OsTabs>
+  <Fragment slot="windows">
+Press the **Windows** key, type `PowerShell`, and press Enter. A blue or black window
+opens with a prompt such as `PS C:\Users\Lucia>`.
+  </Fragment>
+  <Fragment slot="macos">
+Press **Command+Space**, type `Terminal`, and press Enter. A window opens with a prompt
+ending in `%`.
+  </Fragment>
+</OsTabs>
+
+The text before the symbol shows where you are. That is your **current folder**, which
+you met in lesson 1.4.
+
+## Four commands to look around
+
+<OsTabs>
+  <Fragment slot="windows">
+```text
+PS> pwd
+PS> ls
+PS> cd Documents
+PS> cd ..
+```
+  </Fragment>
+  <Fragment slot="macos">
+```text
+$ pwd
+$ ls
+$ cd Documents
+$ cd ..
+```
+  </Fragment>
+</OsTabs>
+
+- `pwd` prints the current folder.
+- `ls` lists the files and folders in it.
+- `cd Documents` moves into the folder `Documents`.
+- `cd ..` moves up one folder.
+
+None of these change a file. If you get lost, `cd ~` takes you to your home folder on
+macOS. On PowerShell, `cd ~` works too.
+
+## Read a file
+
+To print the first lines of a text file:
+
+<OsTabs>
+  <Fragment slot="windows">
+```text
+PS> Get-Content cafe_central_sales.csv -TotalCount 5
+```
+  </Fragment>
+  <Fragment slot="macos">
+```text
+$ head -n 5 cafe_central_sales.csv
+```
+  </Fragment>
+</OsTabs>
+
+Both print the header and the first four sales. On Windows, accents may look odd in
+older terminals. This is the encoding issue from lesson 1.7.
+
+## Hands-on
+
+### Worked example
+
+1. Open a terminal.
+2. Run `pwd` to see where you are.
+3. Use `cd` to move to the folder where you unzipped the Café Central data. Type the
+   first letters of a folder name and press **Tab**. The shell completes the name.
+4. Run `ls` and check that you see the three files from the zip.
+5. Print the first five lines of the sales file with the command above.
+
+### Your turn
+
+What would each command do? Predict first.
+
+1. `ls` in an empty folder.
+2. `cd cafe-central` when no folder with that name exists.
+3. `cd ..` twice.
+
+<Checkpoint question="Show the answers">
+	1. It prints nothing. No output does not mean failure. 2. It prints an error
+	that the path cannot be found. You stay where you are. 3. It moves up two
+	folders.
+</Checkpoint>
+
+## Common mistakes
+
+- **Expecting a message on success.** Many commands print nothing when they work.
+- **Typing the prompt symbol.** Type only what follows `PS>` or `$`.
+- **Being in the wrong folder.** Check with `pwd` before running anything.
+- **Copying commands you do not understand.** Ask what a command does, and whether it
+  changes or deletes anything, before running it.
+- **Spaces in folder names.** Put quotes around the name: `cd "my folder"`.
+- **Pasting into a terminal blindly.** A pasted command can contain hidden extra lines.
+
+## Ask your AI assistant
+
+<PromptExample>
+  <Fragment slot="lousy">
+What does this command do?
+  </Fragment>
+  <Fragment slot="whatGoesWrong">
+There is no command in the question. When you do paste one, a lousy request gets an
+explanation that may skip the part that matters most: whether it changes or deletes
+files.
+  </Fragment>
+  <Fragment slot="good">
+I am a beginner on macOS and found this command online: `ls -la ~/Documents`. Explain
+what each part does, in one line each. Say clearly whether the command only reads
+information, or whether it can change or delete anything. Tell me what the output will
+look like.
+  </Fragment>
+  <Fragment slot="whyItWorks">
+The prompt supplies the **input** (the command), the **context** (beginner, macOS), and a
+**constraint** that forces a safety statement. The **output format** is one line per part.
+  </Fragment>
+  <Fragment slot="check">
+Check the safety statement. Commands containing `rm`, `del`, `>`, `sudo`, or `format`
+can change things. When in doubt, do not run it on real data.
+  </Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What do `pwd` and `ls` do?">
+	`pwd` prints the current folder. `ls` lists its contents.
+</Checkpoint>
+
+<Checkpoint question="A command prints nothing. Did it fail?">
+	Not necessarily. Many commands print nothing when they succeed. Errors are
+	printed.
+</Checkpoint>
+
+<Checkpoint question="What is the shell?">
+	The program that reads the commands you type and runs them.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 1.10 explains how the shell finds the programs it runs.

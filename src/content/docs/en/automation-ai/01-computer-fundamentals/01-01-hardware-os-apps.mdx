@@ -1,0 +1,163 @@
+---
+title: Hardware, operating systems, and applications
+description: Learn the three layers every computer is built from and what each one is responsible for.
+sidebar:
+  order: 1
+lessonId: '1.1'
+estimatedMinutes: 15
+prerequisites: ['0.1']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Name the three layers of a computer: hardware, operating system, and
+	applications. - Explain what each layer is responsible for. - Use the layers
+	to locate where a problem comes from.
+</LessonGoals>
+
+## Why this matters
+
+When something goes wrong on a computer, the first question is: where is the problem?
+Is the machine too slow, is Windows or macOS misbehaving, or is the program itself at
+fault? People who can answer that question solve problems faster and ask better
+questions of an AI assistant.
+
+<CaseStudy>
+	When Lucía double-clicks `cafe_central_sales.csv`, three layers cooperate. The
+	disk holds the file, the operating system finds it and decides which program
+	opens it, and Excel shows the rows on screen. If the file does not open, the
+	cause sits in one of those layers.
+</CaseStudy>
+
+## The three layers
+
+<Mermaid
+	diagram={`flowchart TB
+  A["Applications: Excel, a browser, VS Code"]
+  B["Operating system: Windows, macOS, Linux"]
+  C["Hardware: processor, memory, disk, screen"]
+  A --> B --> C`}
+/>
+
+**Hardware** is the physical machine. Four parts matter for this course:
+
+- The **processor** (CPU) carries out instructions, one tiny step at a time, very fast.
+- **Memory** (RAM) is the short-term workspace. It is fast, but it is emptied when the
+  power goes off.
+- **Storage** (a disk, or SSD) is the long-term shelf. It is slower, but it keeps files
+  when the power is off.
+- The **screen, keyboard, and network card** connect the machine to you and to the world.
+
+An **operating system** (OS) is the program that manages the hardware and shares it
+between other programs. It keeps track of files, starts and stops programs, controls
+who may do what, and talks to devices. Windows, macOS, and Linux are operating systems.
+
+An **application** is a program that does a job for you, such as a spreadsheet, a
+browser, or a code editor. Applications never touch the hardware directly. They ask the
+operating system, for example, "please read this file".
+
+A useful analogy: the hardware is a building, the operating system is the building
+manager, and applications are the tenants. Tenants ask the manager for keys and
+electricity. They do not rewire the building. Like every analogy, it has limits: a
+tenant that misbehaves can still slow down the whole building.
+
+## Memory versus storage
+
+Many people confuse these two, and the confusion causes real losses.
+
+When you open a spreadsheet, the OS copies the file from storage into memory. Your
+changes live in memory until you save. If the power fails before you save, the changes
+are gone. Saving writes memory back to storage.
+
+## Hands-on
+
+### Worked example: where is the problem?
+
+Match each symptom with the layer most likely at fault.
+
+| Symptom                                               | Likely layer                        |
+| ----------------------------------------------------- | ----------------------------------- |
+| Everything is slow when many programs are open        | Hardware (not enough memory)        |
+| A file opens with the wrong program                   | Operating system (file association) |
+| A formula works in one spreadsheet but not in another | Application                         |
+| A message says "disk is full"                         | Hardware (storage)                  |
+
+### Your turn
+
+For each Café Central problem, name the layer. Then reveal the answers.
+
+1. Lucía's laptop freezes when she opens twelve large files at once.
+2. Double-clicking a `.csv` file opens Notepad instead of Excel.
+3. A macro that worked last year stops working after Excel updates.
+
+<Checkpoint question="Show the answers">
+	1. Hardware: memory runs out. 2. Operating system: it holds the setting that
+	links file types to programs. 3. Application: the new version of Excel changed
+	behaviour.
+</Checkpoint>
+
+## Common mistakes
+
+- **Mixing up memory and storage.** "My computer has 16 GB" can mean either. Always ask
+  which one.
+- **Blaming the application for everything.** Sometimes the cause is the OS or the disk.
+- **Not saving.** Unsaved changes live only in memory.
+- **Assuming a new computer fixes slow work.** If a program is badly designed, faster
+  hardware helps only a little.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Why is my computer slow?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant gives a generic list: restart, close tabs, delete files, scan
+		for viruses. It cannot know which of these applies, so you waste time on the
+		wrong ones.
+	</Fragment>
+	<Fragment slot="good">
+		I have a Windows laptop with 8 GB of memory and an SSD. It becomes slow only
+		when I open Excel files of about 50 MB and have a browser with many tabs
+		open. Which layer is most likely the cause: hardware, operating system, or
+		application? Give me the single most likely cause first, then two cheaper
+		things I can test to confirm it.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		The prompt gives **context** (the machine and when the slowness appears) and
+		asks the assistant to pick among the three layers from this lesson. The
+		**output format** (one likely cause plus two tests) turns advice into
+		experiments.
+	</Fragment>
+	<Fragment slot="check">
+		Run the tests it suggests. For example, close the browser and see if Excel
+		speeds up. If the symptom does not change, the first guess was wrong and you
+		should say so in a follow-up.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What is the difference between memory and storage?">
+	Memory is fast and temporary, and is emptied when the power goes off. Storage
+	is slower and keeps files permanently.
+</Checkpoint>
+
+<Checkpoint question="What does the operating system do?">
+	It manages the hardware and shares it between programs: files, starting
+	programs, devices, and permissions.
+</Checkpoint>
+
+<Checkpoint question="Why do applications ask the operating system to read a file instead of reading the disk directly?">
+	The OS keeps files organised and protects them, so many programs can share the
+	disk safely.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 1.2 shows how Windows, macOS, and Linux differ in ways that cause real problems.

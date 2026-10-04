@@ -1,0 +1,4 @@
+1 KB  = 1000 bytes
+1 KiB = 1024 bytes
+A 1 TB disk holds 1000000000000 bytes
+The operating system shows it as 931 GiB

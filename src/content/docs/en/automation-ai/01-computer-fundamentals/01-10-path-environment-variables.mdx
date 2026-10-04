@@ -1,0 +1,175 @@
+---
+title: PATH and environment variables
+description: Understand how the shell finds programs, and how to read and set an environment variable.
+sidebar:
+  order: 10
+lessonId: '1.10'
+estimatedMinutes: 20
+prerequisites: ['1.9']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain how the shell finds the program you ask for. - Read an environment
+	variable. - Set an environment variable for one session.
+</LessonGoals>
+
+## Why this matters
+
+You type a command, and the computer answers "command not found". The program is
+installed, so why can't the shell see it? The answer is almost always PATH. This is the
+most common beginner error when installing developer tools, and you will meet it again
+in Parts 3 and 4.
+
+<CaseStudy>
+	Lucía installs a tool for the Café Central project. In a new terminal, she
+	types its name and gets "not found". The tool is on her disk. The shell just
+	doesn't know where to look.
+</CaseStudy>
+
+## How the shell finds programs
+
+When you type a command such as `git`, the shell does not search the whole disk. That
+would be slow. Instead it checks a short list of folders, in order, and runs the first
+match. That list is called **PATH**.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["You type: git"] --> B["Shell reads PATH, a list of folders"]
+  B --> C{"Is git in the first folder?"}
+  C -- Yes --> D["Run it"]
+  C -- No --> E{"Next folder?"}
+  E -- Yes --> C
+  E -- "List ended" --> F["Error: command not found"]`}
+/>
+
+So "command not found" means "not in any folder on PATH". The fix is either to add the
+program's folder to PATH, or to use the installer's option that does it for you.
+
+## Environment variables
+
+PATH is one example of an **environment variable**: a named piece of text that the
+system keeps for programs to read. Others hold your user name, your home folder, or
+settings for a tool. Programs read them when they start.
+
+Environment variables are also a common place to keep secrets, such as API keys,
+outside of your files. Lesson 1.12 and Part 3 return to that.
+
+## Hands-on
+
+### Worked example: read a variable
+
+<OsTabs>
+  <Fragment slot="windows">
+```text
+PS> $env:USERNAME
+PS> $env:PATH -split ';'
+```
+  </Fragment>
+  <Fragment slot="macos">
+```text
+$ echo $USER
+$ echo $PATH | tr ':' '\n'
+```
+  </Fragment>
+</OsTabs>
+
+The first command prints your user name. The second prints the PATH, split into one
+folder per line. The order matters: the shell uses the first match.
+
+### Set a variable for this session
+
+<OsTabs>
+  <Fragment slot="windows">
+```text
+PS> $env:CAFE_REPORT_NAME = "2024-01"
+PS> $env:CAFE_REPORT_NAME
+```
+  </Fragment>
+  <Fragment slot="macos">
+```text
+$ export CAFE_REPORT_NAME=2024-01
+$ echo $CAFE_REPORT_NAME
+```
+  </Fragment>
+</OsTabs>
+
+This variable lives only in the current terminal window. Close the window, and it is
+gone. That is a safe way to experiment. Making a variable permanent depends on the
+system, so we leave it for when you need it.
+
+### Your turn
+
+1. Print your PATH, one folder per line.
+2. Count the folders.
+3. Set a variable called `CAFE_REPORT_NAME`, print it, then close the terminal, open a
+   new one, and print it again. What happens?
+
+<Checkpoint question="Show the answer to step 3">
+	The first terminal prints `2024-01`. The new terminal prints nothing, because
+	the variable only lived in the first session.
+</Checkpoint>
+
+## Common mistakes
+
+- **Installing a tool and using the old terminal.** PATH is read when the terminal
+  starts. Open a new window after installing.
+- **Editing PATH without understanding it.** A wrong edit can hide other programs.
+  Prefer installers that offer to do it.
+- **Having two versions of a program.** The one earlier in PATH wins, which can confuse.
+- **Typing `$` or `$env:` in the wrong shell.** The syntax differs between systems.
+- **Putting secrets in files you share.** Keep them in environment variables or ignored
+  files. See Part 3.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Python not found.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant says to reinstall Python or edit system settings, which may
+		need administrator rights and can break other programs.
+	</Fragment>
+	<Fragment slot="good">
+		I am on Windows 11 with PowerShell, without administrator rights. I
+		installed a tool called uv and closed the installer. When I type `uv` in a
+		terminal, I get "The term 'uv' is not recognized". I did not open a new
+		terminal after installing. Explain what PATH has to do with this, in three
+		sentences, then give me the least risky steps to check it, beginning with
+		the simplest.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It provides the exact **input** (the message), the **context** (OS, rights),
+		and a **constraint** (least risky first). That lets the assistant start with
+		"open a new terminal".
+	</Fragment>
+	<Fragment slot="check">
+		Run the steps in order and stop when the problem is solved. Be careful with
+		any step that edits system settings. Ask what it changes first.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What does PATH contain?">
+	An ordered list of folders where the shell looks for programs.
+</Checkpoint>
+
+<Checkpoint question="Why might a tool work in one terminal and not in another?">
+	PATH is read when the terminal starts. A terminal opened before the install
+	has the old list.
+</Checkpoint>
+
+<Checkpoint question="What is an environment variable?">
+	A named piece of text kept by the system that programs can read.
+</Checkpoint>
+
+## Going deeper
+
+- Part 4 shows an installer for Python that handles PATH for you.

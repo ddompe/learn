@@ -1,0 +1,173 @@
+---
+title: APIs and API keys
+description: Understand what an API is and why an API key must be treated like a password.
+sidebar:
+  order: 12
+lessonId: '1.12'
+estimatedMinutes: 15
+prerequisites: ['1.11']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain what an API is. - Explain what an API key is and what it is used
+	for. - Describe safe habits for keeping keys secret.
+</LessonGoals>
+
+## Why this matters
+
+Many services you will use, including AI tools, offer a way for programs to talk to them
+directly. You need to understand the concept of an API, because one costly mistake is
+easy to make: sharing a key that anyone can use to spend your money.
+
+This lesson is concept only. You will not create or use a key here.
+
+<CaseStudy>
+	Café Central uses a service that sends the shops' daily weather. A script asks
+	the service for the forecast. The service needs to know who is asking, so that
+	it can limit use and bill the right company. That identity is the API key.
+</CaseStudy>
+
+## What an API is
+
+An **API** (application programming interface) is a doorway that lets one program
+talk to another. A web page is made for people. An API is made for programs: it answers
+with data, not a styled page.
+
+Think of a restaurant. You do not walk into the kitchen. You read the menu, order
+through the waiter, and get a dish. The menu is the API. The waiter takes your request
+to the kitchen and brings the answer back. Unlike a restaurant, the "waiter" is a web
+request, as you saw in lesson 1.11.
+
+## What an API key is
+
+An **API key** is a long string of letters and digits that identifies who is calling.
+The service uses it to:
+
+- Know which account to charge.
+- Limit how much each customer can use.
+- Block abuse.
+
+<Mermaid
+	diagram={`sequenceDiagram
+  participant P as Your program
+  participant S as Service
+  P->>S: Request plus API key
+  S->>S: Check the key and the account
+  S-->>P: Response with data`}
+/>
+
+## Why a key is a secret
+
+Anyone who has your key can act as you. They can run up costs on your account or read
+data that belongs to you. Keys often leak by accident:
+
+- Pasted into a chat, an email, or an AI assistant.
+- Saved in a file that is shared or uploaded to a public site.
+- Included in a screenshot.
+
+Good habits:
+
+1. Treat a key like a password. Never share it.
+2. Do not put it in files you share or upload. Part 3 teaches how to keep it out.
+3. Use a separate key for each purpose, so that you can cancel one without breaking the rest.
+4. If a key leaks, **revoke it** at once on the service's website and create a new one.
+
+## Hands-on
+
+### Worked example
+
+Read this fictional request. The key is made up.
+
+```text
+GET /forecast?city=San+Jose
+Host: weather.example.com
+Authorization: Bearer cafe-demo-1234567890
+```
+
+The first line asks for a forecast for San José. The `Authorization` line carries the
+key. If this request were sent in an email, the key would travel with it.
+
+### Your turn
+
+Which of these is safe?
+
+1. Pasting a key into a chat with an AI assistant to ask why it fails.
+2. Describing the error message to the assistant without the key.
+3. Putting the key in a spreadsheet you email to a colleague.
+
+<Checkpoint question="Show the answers">
+	Only 2 is safe. Describe the problem and hide the key, because chats and
+	emails can be stored or forwarded.
+</Checkpoint>
+
+## Common mistakes
+
+- **Pasting a key into a chat.** Remove it before you paste anything.
+- **Committing a key to a shared project.** Part 3 explains how to avoid this.
+- **Taking a screenshot with the key visible.**
+- **Sharing a single key between many people.** Create one key for each person or purpose.
+- **Ignoring a leak.** Revoke the key immediately, even if you think no one noticed.
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">
+		Here is my key sk-live-12345, why does it fail?
+	</Fragment>
+	<Fragment slot="whatGoesWrong">
+		You have just shared a secret with a third party. Even if the assistant
+		gives good advice, the key may now be stored and should be treated as
+		leaked.
+	</Fragment>
+	<Fragment slot="good">
+		My program calls a weather API and gets the error "401 Unauthorized". I am
+		sending the key in an Authorization header. I will not share the key. List
+		the three most likely causes of this error in order of probability, and a
+		way to check each one without exposing the key.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It states the **constraint** up front (no key shared), gives the **input**
+		(the error), and asks for ordered causes with safe checks.
+	</Fragment>
+	<Fragment slot="check">
+		Make sure no suggested check asks you to paste the key. Verify claims about
+		the header format in the service's own documentation.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="What is an API?">
+	A doorway that lets one program talk to another and get data back.
+</Checkpoint>
+
+<Checkpoint question="Why must an API key stay secret?">
+	Anyone with it can act as you, spending your money or reading your data.
+</Checkpoint>
+
+<Checkpoint question="What do you do if a key leaks?">
+	Revoke it on the service's site immediately and create a new one.
+</Checkpoint>
+
+## End-of-part checklist
+
+You have finished Part 1 when you can tick every item:
+
+- [ ] I wrote the absolute path of the Café Central folder.
+- [ ] I opened a terminal in that folder and listed its files.
+- [ ] I printed the first lines of the sales file in the terminal.
+- [ ] I can explain why `Categoría` can turn into `CategorÃ­a`.
+- [ ] I can explain why money is not stored as floats.
+- [ ] I can explain why an API key must be kept secret.
+
+## Going deeper
+
+- Part 2 explains what an AI model is, and why you should check what it says.

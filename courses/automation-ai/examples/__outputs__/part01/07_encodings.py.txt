@@ -1,0 +1,3 @@
+UTF-8 bytes: b'Categor\xc3\xada'
+Read as Latin-1: CategorÃ­a
+Repaired: Categoría
