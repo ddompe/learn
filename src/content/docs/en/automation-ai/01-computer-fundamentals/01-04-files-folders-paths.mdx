@@ -17,7 +17,8 @@ import PromptExample from '@components/PromptExample.astro';
 import Checkpoint from '@components/Checkpoint.astro';
 
 <LessonGoals>
-	- Explain what a file, a folder, and a path are. - Read and write absolute and
+	- Explain what a filesystem is and why a program needs paths as text. -
+	Explain what a file, a folder, and a path are. - Read and write absolute and
 	relative paths on Windows and macOS. - Find the path of a file on your own
 	computer.
 </LessonGoals>
@@ -34,6 +35,38 @@ can read paths, you can fix those errors in seconds.
 	it, even a perfect script fails.
 </CaseStudy>
 
+## The filesystem
+
+Your computer stores information on a **disk**. The main one is inside the computer
+(the internal disk). You can also plug in others: a USB stick, an external hard drive,
+or a memory card. A disk on its own is just a very long row of storage space. Nothing
+in it says "this part is the sales report".
+
+The **filesystem** is the system that adds that order. It keeps a table of names and
+records which part of the disk belongs to each one. It lets you group things into
+folders, and it remembers details such as when a file was last changed. Every disk has
+one, and the operating system (lesson 1.1) reads it for you. Different disks may use
+different kinds of filesystem, which is why a drive from a Windows PC sometimes needs
+help to work on a Mac. You do not need to know the kinds. You only need to know that
+each disk arrives organized as folders and files.
+
+You have used a filesystem for years, through a program that draws it for you: **File
+Explorer** on Windows or **Finder** on macOS. When you double-click a folder, drag a
+file into another, or plug in a USB stick and see it appear in the sidebar, you are
+using the filesystem.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["You: File Explorer or Finder"] --> B["Operating system"]
+  B --> C["Filesystem on the internal disk"]
+  B --> D["Filesystem on a USB stick"]`}
+/>
+
+On Windows, each disk gets a letter (`C:` is usually the internal one, and a USB stick
+might become `E:`). On macOS, all disks hang from one top folder, and an external disk
+appears inside the folder `/Volumes`. Both systems end up with the same idea, which
+comes next.
+
 ## Files and folders
 
 A **file** holds information under a name. A **folder** (also called a directory)
@@ -49,6 +82,25 @@ holds files and other folders. Folders inside folders form a tree.
 
 A **path** lists the folders you pass through to reach a file, ending with its name.
 For the sales file above, the steps are: Documents, then cafe-central, then the file.
+
+## Why automation needs paths as text
+
+When you use File Explorer or Finder, you point and click. You see the tree, you open
+folders with the mouse, and you recognize the file by its icon. A program has no mouse
+and no eyes. It cannot "open the cafe-central folder". The only way to tell it which
+file to use is with **text** that describes the way to the file. That text is the path.
+
+This matters for automation in three ways.
+
+- **A script needs it written down.** Reading `cafe_central_sales.csv` in a script
+  means putting its path in the code, as a piece of text.
+- **A path can be reused.** The same text works every month, with no clicking. That is
+  what lets a task run without you.
+- **A path can be changed by a program.** A script can build `sales_2026-03.csv` from
+  a month name, or loop over every file in a folder. You cannot do that with a mouse.
+
+So the habit to learn is this: when you look at a folder in Explorer or Finder, also
+learn to read it as a line of text.
 
 ## Absolute and relative paths
 

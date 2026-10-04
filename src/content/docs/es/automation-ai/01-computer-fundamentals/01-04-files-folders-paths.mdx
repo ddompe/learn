@@ -7,7 +7,7 @@ lessonId: '1.4'
 estimatedMinutes: 20
 prerequisites: ['1.1', '1.2']
 translationStatus: machine
-sourceHash: a9cebaa28723
+sourceHash: d0eaec740a46
 ---
 
 import LessonGoals from '@components/LessonGoals.astro';
@@ -19,9 +19,10 @@ import PromptExample from '@components/PromptExample.astro';
 import Checkpoint from '@components/Checkpoint.astro';
 
 <LessonGoals>
-	- Explicar qué son un archivo, una carpeta y una ruta. - Leer y escribir rutas
-	absolutas y relativas en Windows y macOS. - Encontrar la ruta de un archivo en
-	tu propia computadora.
+	- Explicar qué es un sistema de archivos y por qué un programa necesita rutas
+	como texto. - Explicar qué son un archivo, una carpeta y una ruta. - Leer y
+	escribir rutas absolutas y relativas en Windows y macOS. - Encontrar la ruta
+	de un archivo en tu propia computadora.
 </LessonGoals>
 
 ## Por qué importa
@@ -35,6 +36,40 @@ ligeramente equivocada. Si sabes leer rutas, puedes corregir esos errores en seg
 	script que quiere leer `cafe_central_sales.csv` necesita la ruta de ese
 	archivo. Sin ella, hasta un script perfecto falla.
 </CaseStudy>
+
+## El sistema de archivos
+
+Tu computadora guarda la información en un **disco**. El principal está dentro de la
+computadora (el disco interno). También puedes conectar otros: una memoria USB, un
+disco duro externo o una tarjeta de memoria. Un disco por sí solo es solo una fila muy
+larga de espacio de almacenamiento. Nada en él dice "esta parte es el informe de
+ventas".
+
+El **sistema de archivos** (en inglés, _filesystem_) es el sistema que añade ese orden.
+Mantiene una tabla de nombres y registra qué parte del disco pertenece a cada uno.
+Permite agrupar cosas en carpetas y recuerda datos como cuándo se cambió un archivo por
+última vez. Cada disco tiene uno, y el sistema operativo (lección 1.1) lo lee por ti.
+Distintos discos pueden usar distintos tipos de sistema de archivos, y por eso un disco
+de un PC con Windows a veces necesita ayuda para funcionar en una Mac. No necesitas
+conocer los tipos. Solo necesitas saber que cada disco llega organizado en carpetas y
+archivos.
+
+Llevas años usando un sistema de archivos, a través de un programa que lo dibuja por
+ti: el **Explorador de archivos** en Windows o el **Finder** en macOS. Cuando haces doble
+clic en una carpeta, arrastras un archivo a otra, o conectas una memoria USB y la ves
+aparecer en la barra lateral, estás usando el sistema de archivos.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Tú: Explorador de archivos o Finder"] --> B["Sistema operativo"]
+  B --> C["Sistema de archivos del disco interno"]
+  B --> D["Sistema de archivos de una memoria USB"]`}
+/>
+
+En Windows, cada disco recibe una letra (`C:` suele ser el interno, y una memoria USB
+podría pasar a ser `E:`). En macOS, todos los discos cuelgan de una sola carpeta
+superior, y un disco externo aparece dentro de la carpeta `/Volumes`. Ambos sistemas
+terminan con la misma idea, que viene a continuación.
 
 ## Archivos y carpetas
 
@@ -53,6 +88,27 @@ directorio) guarda archivos y otras carpetas. Las carpetas dentro de carpetas fo
 Una **ruta** enumera las carpetas por las que pasas para llegar a un archivo y termina
 con su nombre. Para el archivo de ventas de arriba, los pasos son: Documents, luego
 cafe-central, luego el archivo.
+
+## Por qué la automatización necesita rutas como texto
+
+Cuando usas el Explorador de archivos o el Finder, señalas y haces clic. Ves el árbol,
+abres carpetas con el ratón y reconoces el archivo por su ícono. Un programa no tiene
+ratón ni ojos. No puede "abrir la carpeta cafe-central". La única forma de decirle qué
+archivo usar es con **texto** que describa el camino hasta el archivo. Ese texto es la
+ruta.
+
+Esto importa para la automatización de tres maneras.
+
+- **Un script la necesita escrita.** Leer `cafe_central_sales.csv` en un script
+  significa poner su ruta en el código, como un fragmento de texto.
+- **Una ruta se puede reutilizar.** El mismo texto sirve todos los meses, sin hacer
+  clic. Eso es lo que permite que una tarea se ejecute sin ti.
+- **Un programa puede modificar una ruta.** Un script puede construir
+  `sales_2026-03.csv` a partir del nombre de un mes, o recorrer todos los archivos de
+  una carpeta. Eso no se puede hacer con el ratón.
+
+Así que el hábito que hay que aprender es este: cuando mires una carpeta en el
+Explorador o el Finder, aprende también a leerla como una línea de texto.
 
 ## Rutas absolutas y relativas
 
