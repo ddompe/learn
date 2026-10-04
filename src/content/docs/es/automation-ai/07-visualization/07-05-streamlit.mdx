@@ -1,0 +1,170 @@
+---
+title: Streamlit
+description: Comparte una pequeña aplicación interactiva con un colega.
+sidebar:
+  order: 5
+lessonId: '7.5'
+estimatedMinutes: 25
+prerequisites: ['7.4', '4.14']
+lastVerified: 2026-10-03
+translationStatus: machine
+sourceHash: 62b5ed78687f
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Ejecutar una pequeña aplicación de Streamlit en tu computadora. - Leer cómo
+	se escriben los widgets y los gráficos. - Decidir cómo compartir una
+	aplicación de forma segura.
+</LessonGoals>
+
+## Por qué importa
+
+A veces un colega no quiere un informe. Quiere cambiar un filtro y ver la respuesta.
+**Streamlit** convierte un script de Python en una pequeña aplicación web, con filtros y
+gráficos, sin desarrollo web. Es un buen paso intermedio entre un informe estático y un
+sistema completo de paneles.
+
+<CaseStudy>
+	El dueño quiere ver las ventas de una categoría a la vez, sin pedirle a
+	Daniela que vuelva a ejecutar nada.
+</CaseStudy>
+
+## Una aplicación es un script que se vuelve a ejecutar
+
+Una aplicación de Streamlit es un archivo de Python. Cada vez que el usuario cambia un
+widget, Streamlit **ejecuta el script de nuevo desde el principio** y vuelve a dibujar la
+página. Ese es todo el modelo.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["El usuario cambia un filtro"] --> B["Streamlit vuelve a ejecutar el script"]
+  B --> C["El script lee el valor del filtro"]
+  C --> D["La tabla, los números y el gráfico se redibujan"]
+  D --> A`}
+/>
+
+## La aplicación
+
+<Example file="part07/05_app.py" />
+
+- `st.title`, `st.metric`, `st.bar_chart` y `st.dataframe` dibujan elementos en la página.
+- `st.multiselect` muestra un widget y devuelve lo que eligió el usuario. El script filtra
+  los datos con él, exactamente como en la lección 6.3.
+- Los datos provienen de la misma función de limpieza de antes. La aplicación reutiliza tu trabajo.
+
+## Ejecútala
+
+Desde la carpeta del proyecto:
+
+```text
+uv run streamlit run part07/05_app.py
+```
+
+Tu navegador se abre en una dirección como `http://localhost:8501`. Cambia el filtro de
+categoría y los números y el gráfico cambian. Detén la aplicación con **Ctrl+C** en la
+terminal.
+
+Como la aplicación tiene una prueba (Streamlit puede ejecutar una aplicación sin interfaz
+y comprobar lo que muestra), puedes estar seguro de que sigue funcionando después de
+cambiarla.
+
+## Compartir una aplicación
+
+Opciones, de la más segura a la más abierta:
+
+1. **Ejecútala tú mismo** y muéstrala en tu pantalla.
+2. **Ejecútala en tu computadora para colegas de la misma red.** La dirección aparece en la terminal. Hazlo solo si la política de la empresa lo permite.
+3. **Alójala** en un servicio o en un servidor de la empresa. Los servicios de alojamiento y sus niveles gratuitos cambian.
+   Consulta la documentación oficial de Streamlit. Verificado por última vez el 2026-10-03.
+
+Antes de compartir, pregunta: ¿qué datos contiene la aplicación y quién los verá? Una
+aplicación es una ventana a tus datos. No publiques información de clientes (lección 2.8).
+Nunca pongas claves en el código de la aplicación (lección 3.7).
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+1. Ejecuta la aplicación y selecciona solo `jugo`. El número de ventas debe ser 55.
+2. Añade una segunda métrica que muestre la venta más grande. Guarda el archivo y observa cómo la página
+   ofrece volver a ejecutarse.
+
+### Ahora tú
+
+¿Qué parte del script cambiarías para añadir un filtro de fechas?
+
+<Checkpoint question="Muestra la respuesta">
+	Añade un widget de fecha, como un selector de rango de fechas, y filtra la
+	tabla con las fechas elegidas de la misma manera que el filtro de categoría,
+	antes de calcular las métricas y el gráfico.
+</Checkpoint>
+
+## Errores comunes
+
+- **Leer los datos dentro de cada nueva ejecución** cuando es lento. Streamlit tiene caché; pregúntale a tu asistente sobre ella cuando la aplicación se sienta lenta.
+- **Compartir una aplicación con datos privados.**
+- **Poner secretos en el código.**
+- **Olvidar que el script se vuelve a ejecutar desde el principio,** así que las variables no persisten por sí solas.
+- **Construir primero una aplicación grande.** Empieza con un filtro y un gráfico.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Constrúyeme una aplicación.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		Obtienes cientos de líneas con datos inventados, rutas absolutas y muchas
+		funciones que no pediste.
+	</Fragment>
+	<Fragment slot="good">
+		Tengo una función clean_sales() que devuelve una tabla de pandas con las
+		columnas fecha, cliente, monto (float) y categoria. Escribe una aplicación
+		de Streamlit de menos de 40 líneas que tenga un multiselect para categoria,
+		muestre el monto total y el número de ventas de la selección, y un gráfico
+		de barras de los totales semanales. Reutiliza clean_sales(). Dime el comando
+		para ejecutarla con uv y una idea de prueba usando AppTest de Streamlit.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Indica el **esquema**, un **alcance** pequeño, la **restricción**
+		(reutilizar, menos de 40 líneas) y una **verificación** (una idea de
+		prueba).
+	</Fragment>
+	<Fragment slot="check">
+		Ejecútala y compara el total de una categoría con tu tabla dinámica de la
+		lección 6.5.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué hace Streamlit cuando cambia un widget?">
+	Vuelve a ejecutar todo el script desde el principio y redibuja la página.
+</Checkpoint>
+
+<Checkpoint question="¿Qué comando inicia la aplicación?">
+	`uv run streamlit run` seguido de la ruta del archivo.
+</Checkpoint>
+
+<Checkpoint question="¿Qué debes preguntar antes de compartir una aplicación?">
+	Qué datos contiene y quién los verá.
+</Checkpoint>
+
+## Lista de comprobación del final de la parte
+
+Terminaste la Parte 7 cuando puedas marcar cada elemento:
+
+- [ ] Puedo decir qué está mal en el gráfico truncado.
+- [ ] Guardé un gráfico de barras con rótulos como PNG.
+- [ ] Abrí el gráfico interactivo y pasé el cursor sobre un punto.
+- [ ] Ejecuté la aplicación y cambié un filtro.
+
+## Para profundizar
+
+- La Parte 8 reúne gráficos y texto en un informe.

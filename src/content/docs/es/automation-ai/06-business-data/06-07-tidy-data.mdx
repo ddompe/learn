@@ -1,0 +1,141 @@
+---
+title: Datos ordenados (tidy data)
+description: Explica por qué una hoja de cálculo bonita es un mal conjunto de datos y reorganízala con melt.
+sidebar:
+  order: 7
+lessonId: '6.7'
+estimatedMinutes: 20
+prerequisites: ['6.1', '6.5']
+translationStatus: machine
+sourceHash: 54f2e158a860
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar qué son los datos ordenados (tidy). - Reconocer una tabla ancha,
+	pensada para personas. - Reorganizar una tabla ancha en filas ordenadas.
+</LessonGoals>
+
+## Por qué importa
+
+Las personas construyen hojas de cálculo para **leerlas**: meses en la parte superior,
+tiendas a un lado, totales abajo. Los programas necesitan que los datos se puedan
+**procesar**: una fila por observación, una columna por variable. Una tabla fácil de leer
+suele ser difícil de agrupar, filtrar o graficar. Conocer la diferencia ahorra mucho
+trabajo repetido.
+
+<CaseStudy>
+	El libro de resumen mensual tiene una columna por cada mes y medida. El mes
+	siguiente, alguien añade columnas nuevas. Las fórmulas de Daniela se rompen.
+	Con filas ordenadas, el mes siguiente serían simplemente filas nuevas.
+</CaseStudy>
+
+## Qué significa ordenado
+
+Los datos están **ordenados** (en inglés, **tidy**) cuando:
+
+1. Cada **variable** es una columna.
+2. Cada **observación** es una fila.
+3. Cada tipo de observación está en su propia tabla.
+
+En el libro de resumen, "mes" no es una columna. Está escondido en los encabezados
+`Diciembre 2023` y `Enero 2024`, y lo mismo ocurre con las medidas `Ventas` y `Monto`. La
+tienda es una columna, pero los números de varios meses y medidas viven uno al lado del
+otro.
+
+| Ancha (para leer)                      | Ordenada (para procesar)            |
+| -------------------------------------- | ----------------------------------- |
+| Una fila por tienda                    | Una fila por tienda, mes y medida   |
+| Un mes nuevo significa columnas nuevas | Un mes nuevo significa filas nuevas |
+| Difícil de agrupar por mes             | `groupby("mes")`                    |
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Ancha: tienda, Dic Ventas, Dic Monto, Ene Ventas, Ene Monto"] -->|"melt: despivotar"| B["Larga: tienda, mes, medida, valor"]`}
+/>
+
+## Reorganizar
+
+Pasar de ancha a larga se llama **despivotar** (unpivot), y pandas ofrece `melt` para eso.
+El ejemplo siguiente lo hace con un bucle explícito, para que cada paso sea visible.
+
+<Example file="part06/07_tidy.py" />
+
+Las 3 tiendas, 2 meses y 2 medidas dan 12 filas, y cada una dice una sola cosa: esta tienda, en este mes, tuvo este valor para esta medida. Ahora agrupar por mes es una línea, y un mes nuevo no necesita código nuevo.
+
+Fíjate en que quitamos la fila `Total`. Los totales son un cálculo a partir de los datos y no pertenecen a ellos. Siempre puedes recalcularlos.
+
+## Manos a la obra
+
+### Ahora tú
+
+¿Cuál de estas es ordenada?
+
+1. Columnas: `fecha`, `categoria`, `monto`.
+2. Columnas: `categoria`, `enero`, `febrero`, `marzo`.
+
+<Checkpoint question="Muestra la respuesta">
+	La primera. La segunda tiene el mes repartido entre los nombres de las
+	columnas, que es la forma ancha. Como filas ordenadas sería `categoria`,
+	`mes`, `monto`.
+</Checkpoint>
+
+## Errores comunes
+
+- **Tratar el informe "bonito" como el conjunto de datos.**
+- **Mantener los totales dentro de los datos.**
+- **Poner valores en los nombres de las columnas.**
+- **Reorganizar antes de limpiar.** Limpia primero.
+- **Perder las etiquetas al despivotar.** Conserva la tienda y el mes en cada fila.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Reorganiza esto.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente aplica melt a todas las columnas, incluidas las etiquetas, y
+		pierde a qué mes pertenece cada valor.
+	</Fragment>
+	<Fragment slot="good">
+		Mi tabla tiene una columna "sucursal" y las columnas "Diciembre 2023
+		Ventas", "Diciembre 2023 Monto", "Enero 2024 Ventas" y "Enero 2024 Monto".
+		Escribe código de pandas que la convierta en filas ordenadas con las
+		columnas sucursal, mes, medida (ventas o monto) y valor. Conserva la tienda
+		en cada fila. Imprime el número de filas y muestra que la suma de monto por
+		mes coincide con las columnas originales.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Indica con exactitud los nombres de las columnas de **entrada** y de
+		**salida**, y pide una **verificación** contra el original.
+	</Fragment>
+	<Fragment slot="check">
+		Compara las sumas mensuales con la fila Total del libro: 263,950 y 254,850.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué son los datos ordenados?">
+	Cada variable es una columna, cada observación es una fila y cada tipo de
+	observación tiene su propia tabla.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué los totales no pertenecen a los datos?">
+	Se calculan a partir de ellos, y mantenerlos arriesga contarlos dos veces.
+</Checkpoint>
+
+<Checkpoint question="¿Qué hace melt?">
+	Convierte una tabla ancha en una larga, con los antiguos nombres de columna
+	convertidos en valores.
+</Checkpoint>
+
+## Para profundizar
+
+- Los gráficos de la Parte 7 dependen de datos ordenados.

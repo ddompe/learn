@@ -1,0 +1,152 @@
+---
+title: DataFrames, una hoja que tú controlas
+description: Entiende los DataFrames, las columnas, el índice y los dtypes en términos de Excel.
+sidebar:
+  order: 2
+lessonId: '6.2'
+estimatedMinutes: 20
+prerequisites: ['6.1']
+translationStatus: machine
+sourceHash: a828a2474e28
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar un DataFrame con términos de Excel. - Leer su forma (shape), sus
+	columnas, su índice y sus dtypes. - Decir dónde ayuda la analogía con Excel y
+	dónde se rompe.
+</LessonGoals>
+
+## Por qué importa
+
+pandas es la herramienta principal para datos tabulares en Python, y el **DataFrame** es
+su objeto central. Si lo piensas como una hoja de Excel que controlas con código, tienes
+parte de razón. Las partes en que te equivocas te costarán horas, así que esta lección
+cubre ambas.
+
+<CaseStudy>
+	Daniela carga el CSV de ventas en un DataFrame y quiere saber: ¿qué tamaño
+	tiene, cuáles son las columnas y de qué tipo es cada una?
+</CaseStudy>
+
+## La analogía
+
+| Excel                                      | pandas                                         |
+| ------------------------------------------ | ---------------------------------------------- |
+| Una hoja                                   | Un DataFrame                                   |
+| El encabezado de una columna               | El nombre de una columna                       |
+| Una columna de celdas                      | Una **Series** (una columna con nombre y tipo) |
+| Un número de fila                          | El **índice** (etiquetas de las filas)         |
+| Un formato de celda (número, texto, fecha) | Un **dtype** (el tipo de datos de la columna)  |
+| Una fórmula en una celda                   | Una operación sobre una columna completa       |
+
+## Dónde se rompe la analogía
+
+1. **Cada columna tiene un solo tipo.** En Excel, una columna puede mezclar números y
+   texto. En pandas, una columna que los mezcla se convierte en texto (u "object").
+2. **Trabajas con columnas completas,** no con celdas una por una. `sales["Monto"] * 2`
+   duplica todas las filas a la vez.
+3. **No hay estado oculto.** No hay colores, celdas combinadas ni fórmulas que lleven
+   significado. Lo que ves en la tabla es todo lo que hay.
+4. **Las operaciones devuelven tablas nuevas.** Tu original no cambia a menos que asignes
+   el resultado.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["DataFrame"] --> B["Índice: etiquetas de las filas"]
+  A --> C["Columna ID: Series, texto"]
+  A --> D["Columna Fecha: Series, texto"]
+  A --> E["Columna Monto: Series, texto"]`}
+/>
+
+## Primer vistazo
+
+<Example file="part06/02_dataframe.py" />
+
+- `shape` es `(246, 5)`: 246 filas y 5 columnas.
+- `dtypes` lista el tipo de cada columna. Aquí todas son `str` (texto), incluidas `Monto`
+  y `Fecha`. Un CSV no tiene tipos, y los formatos desordenados impiden que pandas adivine
+  números o fechas. Por eso la lección 6.4 las convierte.
+- `head(3)` muestra las tres primeras filas. Los números de la izquierda son el índice.
+- `sales["Monto"]` selecciona una columna. `sales.iloc[0]` selecciona la primera fila por posición.
+
+Este curso usa pandas 3, donde las columnas de texto tienen el dtype `str`. En versiones
+anteriores verás `object`, que aquí significa lo mismo.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+1. Carga las ventas como en el ejemplo.
+2. Imprime `sales.info()` y `sales.describe()`. ¿Qué te dice cada uno? El resultado de
+   `describe()` tiene pocas columnas. ¿Por qué?
+
+### Ahora tú
+
+¿Cuál es el tipo de `sales["Monto"]` después de leer el archivo, y por qué todavía no
+puedes sumar los montos?
+
+<Checkpoint question="Muestra la respuesta">
+	Es texto (`str`), porque el archivo tiene formatos mezclados como `$1500,50`.
+	Sumar texto lo concatena en lugar de sumar números (lección 4.8). Primero hay
+	que convertir los montos.
+</Checkpoint>
+
+## Errores comunes
+
+- **Esperar números de un CSV.** Revisa `dtypes`.
+- **Recorrer filas con un bucle para hacer aritmética.** Trabaja con columnas completas.
+- **Confundir índice con posición.** `iloc` es por posición; `loc` es por etiqueta.
+- **Modificar una copia.** Asigna el resultado a un nombre.
+- **Imprimir una tabla enorme.** Usa `head()`.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Explica los DataFrames.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		Obtienes una definición abstracta con términos como "estructura
+		bidimensional etiquetada" y sin relación con lo que ya sabes.
+	</Fragment>
+	<Fragment slot="good">
+		Conozco bien Excel y nunca he usado pandas. Explica qué es un DataFrame en
+		150 palabras usando lo que sé de Excel: hoja, columna, número de fila,
+		formato de celda. Luego enumera tres cosas que se comportan distinto que en
+		Excel. Usa el ejemplo de una tabla de ventas con las columnas ID, Fecha,
+		Monto.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Da **contexto** y una **restricción** (150 palabras, términos de Excel), y
+		pide las diferencias, lo que evita una analogía engañosa.
+	</Fragment>
+	<Fragment slot="check">
+		Compara las diferencias que enumera con las cuatro de esta lección,
+		especialmente la de un tipo por columna.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué es un dtype?">
+	El tipo de datos de una columna, como texto, entero o fecha.
+</Checkpoint>
+
+<Checkpoint question="¿Qué te dice shape?">
+	El número de filas y de columnas.
+</Checkpoint>
+
+<Checkpoint question="Menciona una forma en que un DataFrame difiere de una hoja de Excel.">
+	Cada columna tiene un único tipo; trabajas con columnas completas; y no lleva
+	formato ni celdas combinadas.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 6.3 extrae columnas y filas de una tabla.

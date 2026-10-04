@@ -1,0 +1,147 @@
+---
+title: Unir conjuntos de datos
+description: Reproduce BUSCARV (VLOOKUP) y BUSCARX (XLOOKUP) con merge, y entiende los tipos de join.
+sidebar:
+  order: 6
+lessonId: '6.6'
+estimatedMinutes: 25
+prerequisites: ['6.4', '5.3']
+translationStatus: machine
+sourceHash: 1639802dced4
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Unir dos tablas por una clave compartida con `merge`. - Explicar los join
+	inner, left, right y outer. - Comprobar que un join no pierda ni multiplique
+	filas.
+</LessonGoals>
+
+## Por qué importa
+
+Los datos de un negocio están repartidos en varias tablas: las ventas en una, los
+clientes en otra. En Excel las reúnes con `VLOOKUP` o `XLOOKUP` (en Excel en español,
+`BUSCARV` y `BUSCARX`). En pandas usas `merge`, que es más potente y puede mostrar lo que
+**no** coincidió, la parte que Excel esconde detrás de `#N/A`.
+
+<CaseStudy>
+	La tabla de ventas tiene un ID de cliente, pero no el nombre ni la ciudad. La
+	lista de clientes sí los tiene. Daniela quiere las ventas por ciudad y una
+	lista de las ventas cuyo cliente no se encuentra.
+</CaseStudy>
+
+## Claves y tipos de join
+
+Una **clave** es una columna que identifica una fila, como el ID del cliente. Un **join**
+(unión) combina las filas de dos tablas donde las claves coinciden. El tipo de join decide
+qué pasa con las filas sin coincidencia.
+
+| Join    | Conserva                                                                 | Analogía en Excel                       |
+| ------- | ------------------------------------------------------------------------ | --------------------------------------- |
+| `inner` | Solo las filas con coincidencia en ambas tablas                          | Filtrar todos los `#N/A`                |
+| `left`  | Todas las filas de la tabla izquierda, con vacíos si no hay coincidencia | `XLOOKUP` con un valor de no encontrado |
+| `right` | Todas las filas de la tabla derecha                                      | Lo contrario de `left`                  |
+| `outer` | Todas las filas de ambas                                                 | Sin equivalente directo                 |
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Ventas (izquierda): 240 filas"] --> C["merge sobre cliente, how=left"]
+  B["Clientes (derecha): 8 filas"] --> C
+  C --> D["240 filas más nombre y ciudad"]`}
+/>
+
+## En acción
+
+<Example file="part06/06_merge.py" />
+
+Cómo leer la salida:
+
+- Los ID de cliente son únicos, que es lo que necesita una tabla de búsqueda.
+- Un join `left` conserva las 240 ventas. La cantidad de filas antes y después es la
+  misma, que es la primera comprobación de cualquier join.
+- Siete ventas no tienen registro de cliente. Llevan `SIN-CLIENTE`, que no coincide con
+  nadie, así que el nombre falta. `isna()` las encuentra.
+- El cliente `C004` existe, pero su nombre está vacío en el origen. Es un problema
+  distinto, un hueco en los datos de clientes, y la cadena vacía lo muestra.
+- Agrupar la tabla unida por ciudad da los totales por ciudad.
+
+## Los dos fallos clásicos
+
+1. **Las filas se multiplican.** Si la clave **no es única** en la tabla derecha, cada
+   venta coincide con varias filas y el total crece. Revisa primero `is_unique` y compara
+   las cantidades de filas.
+2. **Las filas desaparecen.** Un join `inner` descarta en silencio las ventas sin cliente.
+   Usa `left` e inspecciona las que no coinciden.
+
+## Manos a la obra
+
+### Ahora tú
+
+La lista de clientes contiene por accidente a `C002` dos veces. ¿Qué pasa con las ventas
+de `C002` en un join left y cómo lo notarías?
+
+<Checkpoint question="Muestra la respuesta">
+	Cada venta de C002 coincide con dos filas, así que las ventas aparecen dos
+	veces y los totales quedan demasiado altos. Lo notarías porque la cantidad de
+	filas después del join es mayor que antes, o porque `is_unique` es False.
+</Checkpoint>
+
+## Errores comunes
+
+- **No comprobar la cantidad de filas** después de un join.
+- **Usar inner cuando querías ver los vacíos.**
+- **Unir por texto que difiere en mayúsculas, espacios o acentos.** Limpia primero las claves.
+- **Claves duplicadas en la tabla de búsqueda.**
+- **Columnas con el mismo nombre en ambas tablas.** pandas añade sufijos; renombra a propósito.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Une estas tablas.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente elige un join inner, así que las ventas sin coincidencia
+		desaparecen, y nunca comprueba que la clave sea única.
+	</Fragment>
+	<Fragment slot="good">
+		Tengo una tabla de pandas "sales" (240 filas, columna clave cliente) y una
+		tabla "customers" (8 filas, columna clave cliente, más name y city). Escribe
+		código que haga un left join de customers sobre sales. Antes del join,
+		comprueba que la clave sea única en customers. Después del join, comprueba
+		que la cantidad de filas siga siendo 240 y enumera las ventas sin cliente
+		coincidente. No elimines ninguna fila.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Nombra el **tipo de join y la clave**, y exige **comprobaciones** antes y
+		después, que es donde se esconden los errores de los join.
+	</Fragment>
+	<Fragment slot="check">
+		Confirma los conteos y verifica una venta sin coincidencia buscando su ID de
+		cliente en el archivo de clientes.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué conserva un left join?">
+	Todas las filas de la tabla izquierda, con vacíos donde la tabla derecha no
+	tiene coincidencia.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué comprobar que la clave sea única?">
+	Una clave duplicada multiplica las filas coincidentes e infla los totales.
+</Checkpoint>
+
+<Checkpoint question="¿Cuál es la primera comprobación después de un join?">
+	Comparar la cantidad de filas antes y después.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 6.9 hace el mismo join en SQL.

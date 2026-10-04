@@ -1,0 +1,147 @@
+---
+title: matplotlib
+description: Construye y personaliza un gráfico estático con matplotlib y guárdalo como imagen.
+sidebar:
+  order: 2
+lessonId: '7.2'
+estimatedMinutes: 25
+prerequisites: ['7.1', '6.5']
+translationStatus: machine
+sourceHash: f4fa8e4860e5
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Dibujar un gráfico de barras con matplotlib. - Añadir un título, rótulos y
+	etiquetas de valor. - Guardar el gráfico como archivo de imagen.
+</LessonGoals>
+
+## Por qué importa
+
+**matplotlib** es la base de los gráficos en Python. Otras bibliotecas, como seaborn,
+están construidas sobre ella. Con matplotlib puedes producir exactamente el gráfico que
+necesita un informe y guardarlo como un archivo que puede ir en un documento (Parte 8) o
+en un correo.
+
+<CaseStudy>
+	Daniela necesita un gráfico claro de las ventas de enero por categoría para el
+	informe mensual del dueño.
+</CaseStudy>
+
+## Figura y ejes
+
+En matplotlib, una **figura** (_figure_) es la imagen completa y unos **ejes** (_axes_)
+son un gráfico dentro de ella. Creas ambos con una sola llamada, `plt.subplots()`, y
+luego dibujas sobre los ejes.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["Figura: el lienzo"] --> B["Ejes: un gráfico"]
+  B --> C["Barras o líneas"]
+  B --> D["Título, rótulos, marcas"]`}
+/>
+
+## Un primer gráfico
+
+<Example file="part07/02_matplotlib.py" />
+
+![Gráfico de barras horizontales de las ventas de enero de 2024 por categoría, ordenado de te abajo a sandwich arriba, con cada barra rotulada con su total en colones.](/charts/automation-ai/part07/02_category_totals.png)
+
+Qué hace cada parte:
+
+- Los totales provienen de la tabla limpia de la lección 6.4, como una suma con `groupby`. Se ordenan para que las barras aparezcan en orden.
+- `barh` dibuja barras horizontales. Los nombres largos de categoría caben mejor.
+- `bar_label` escribe cada valor al final de su barra, para que los lectores no tengan que estimarlo.
+- El título, el rótulo del eje con la unidad (colones) y un poco de espacio extra a la derecha para las etiquetas.
+- Las líneas superior y derecha del marco se ocultan, porque no aportan nada.
+- `savefig` escribe un archivo PNG. El script usa un modo que dibuja directamente en archivos, así que funciona en un servidor sin pantalla.
+
+Los montos se convierten en decimales ordinarios (floats) solo para dibujar. Los valores `Decimal` exactos se quedan en la tabla, y el gráfico es una imagen, no un cálculo.
+
+## Hábitos
+
+1. El **título** dice qué muestra el gráfico. Los **rótulos de los ejes** incluyen la unidad.
+2. **Guarda en un archivo** con un nombre claro, en lugar de depender de una ventana.
+3. **Cierra la figura** con `plt.close()` después de guardar, para que se libere memoria cuando hagas muchos gráficos.
+4. **Mantén el código del gráfico en una función** para poder reutilizarlo cada mes (Parte 9).
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+1. Ejecuta el script y abre el PNG.
+2. Cambia el color, luego ordena las barras de forma descendente y vuelve a ejecutarlo.
+3. Quita `set_xlim` y observa qué le pasa a la etiqueta más grande.
+
+### Ahora tú
+
+Añade al gráfico una línea que diga qué son los datos: "Fuente: ventas de Café Central, limpias (240 filas)". ¿Qué método buscarías?
+
+<Checkpoint question="Muestra una pista">
+	Usa el método de texto de la figura o de los ejes, por ejemplo `axis.annotate`
+	o `figure.text`, para poner un texto pequeño bajo el gráfico. Pídele a tu
+	asistente la llamada exacta y luego comprueba el resultado en la imagen
+	guardada.
+</Checkpoint>
+
+## Errores comunes
+
+- **Olvidar la unidad** en el eje.
+- **Usar `plt.show()` en un script que debe guardar un archivo.**
+- **Graficar valores `Decimal` directamente.** Convierte a float para dibujar.
+- **Muchos gráficos, sin `close`.** La memoria crece.
+- **Paletas azul-naranja por defecto sin significado.** Usa un solo color a menos que el color lleve información.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Grafica esto.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		Obtienes un gráfico predeterminado sin título ni unidades, una ventana que
+		intenta abrirse y un esquema de colores al azar.
+	</Fragment>
+	<Fragment slot="good">
+		Tengo una Series de pandas "totals" con el total de ventas en colones por
+		categoría, ordenada de menor a mayor. Escribe código de matplotlib que
+		dibuje un gráfico de barras horizontales, con un título, un rótulo del eje x
+		"Colones", el valor escrito al final de cada barra con separadores de miles,
+		un solo color y las líneas superior y derecha del marco ocultas. Guárdalo
+		como category_totals.png a 100 dpi y cierra la figura. No llames a
+		plt.show().
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Da la **entrada**, enumera cada **requisito de salida** y fija
+		**restricciones** (guardar, sin ventana).
+	</Fragment>
+	<Fragment slot="check">
+		Abre el PNG y compara las etiquetas con la tabla. Comprueba que el valor más
+		grande no quede cortado.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Cuál es la diferencia entre una figura y unos ejes?">
+	La figura es todo el lienzo, y los ejes son un gráfico dibujado en él.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué guardar en un archivo en lugar de mostrar una ventana?">
+	Un archivo funciona en scripts, en servidores y en informes, y se puede
+	regenerar cada mes.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué convertir Decimal a float para graficar?">
+	La biblioteca de dibujo trabaja con números ordinarios. Los valores exactos se
+	quedan en la tabla.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 7.3 usa seaborn para construir gráficos estadísticos más rápido.

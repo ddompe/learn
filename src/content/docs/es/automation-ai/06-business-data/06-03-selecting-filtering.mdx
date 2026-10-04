@@ -1,0 +1,137 @@
+---
+title: Seleccionar y filtrar
+description: Selecciona columnas y filtra filas con condiciones.
+sidebar:
+  order: 3
+lessonId: '6.3'
+estimatedMinutes: 20
+prerequisites: ['6.2', '4.11']
+translationStatus: machine
+sourceHash: 617cb4a32137
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Seleccionar una o varias columnas. - Filtrar filas con una o más
+	condiciones. - Evitar los errores clásicos con `and`, `&` y los paréntesis.
+</LessonGoals>
+
+## Por qué importa
+
+Casi toda pregunta sobre datos empieza con "solo los...": solo el jugo, solo la primera
+semana, solo las ventas sin cliente. En Excel usas filtros. En pandas escribes las
+condiciones, y pasan a ser parte de un script que se puede repetir. La sintaxis tiene
+algunas trampas que vale la pena conocer.
+
+<CaseStudy>
+	Daniela quiere las ventas de jugo, las ventas grandes de café y las ventas sin
+	cliente. La última es una pregunta de calidad de datos: alguien olvidó anotar
+	el cliente.
+</CaseStudy>
+
+## Seleccionar columnas
+
+Una columna: `sales["monto"]` (una Series). Varias columnas: pasa una **lista**, así que
+hay doble corchete: `sales[["ID", "monto"]]` (un DataFrame).
+
+## Filtrar filas
+
+Una condición sobre una columna da una columna de True y False, uno por fila. Si la pones
+dentro de corchetes, conserva solo las filas True.
+
+<Example file="part06/03_select_filter.py" />
+
+Este script usa la tabla limpia (la lección 6.4 la construye). Cómo leer la salida:
+
+- `sales["categoria"] == "jugo"` conserva las 55 ventas de jugo.
+- Para dos condiciones a la vez, usa `&` para Y y `|` para O, y pon **cada condición entre
+  paréntesis**: `(a) & (b)`. El `and` de Python no funciona con columnas.
+- Comparar fechas funciona con texto de fecha: `sales["fecha"] < "2024-01-08"` da la primera semana.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Tabla, 240 filas"] --> B["Condición: categoria es cafe"]
+  B --> C["Condición: monto al menos 2500"]
+  C --> D["Filas que cumplen ambas"]`}
+/>
+
+## Filtros útiles
+
+| Objetivo                    | Código                                    |
+| --------------------------- | ----------------------------------------- |
+| Uno de varios valores       | `sales["categoria"].isin(["cafe", "te"])` |
+| Distinto de                 | `sales["categoria"] != "te"`              |
+| No (invertir una condición) | `~(condition)`                            |
+| Valores faltantes           | `sales["cliente"].isna()`                 |
+| El texto contiene           | `sales["ID"].str.startswith("T0")`        |
+
+Filtrar da una tabla nueva. Para conservarla, asígnala: `juice = sales[...]`.
+
+## Manos a la obra
+
+### Ahora tú
+
+Escribe el filtro para "ventas de té superiores a 1500". Luego revela la respuesta.
+
+<Checkpoint question="Muestra la respuesta">
+`sales[(sales["categoria"] == "te") & (sales["monto"] > 1500)]`. Ambas condiciones van entre paréntesis y se unen con `&`.
+</Checkpoint>
+
+## Errores comunes
+
+- **Usar `and`/`or`.** Fallan con columnas. Usa `&` y `|`.
+- **Olvidar los paréntesis** alrededor de cada condición.
+- **Usar `=` en lugar de `==`.**
+- **Corchetes simples para varias columnas.** Usa una lista: `[["a", "b"]]`.
+- **Cambiar una tabla filtrada y esperar que cambie la original.**
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Filtra los datos.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente adivina las columnas y escribe `and` entre las condiciones, lo
+		que produce un error.
+	</Fragment>
+	<Fragment slot="good">
+		Mi tabla de pandas "sales" tiene las columnas ID, fecha (datetime), cliente
+		(texto), monto (Decimal) y categoria (texto). Escribe el código para obtener
+		las ventas donde categoria es "cafe" y monto es al menos 2500, y otro filtro
+		para las ventas donde cliente es igual a "SIN-CLIENTE". Imprime la cantidad
+		de filas de cada uno. Usa & y paréntesis, no "and".
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Indica el **esquema** (entrada), las **condiciones** exactas y la
+		**restricción** sobre la sintaxis. Los conteos ofrecen una **comprobación**.
+	</Fragment>
+	<Fragment slot="check">
+		Cuenta manualmente uno de los filtros en el CSV con una búsqueda de texto y
+		compáralo con el número impreso.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Por qué necesitas paréntesis alrededor de cada condición?">
+	`&` tiene mayor precedencia que las comparaciones, así que sin paréntesis
+	Python combina las partes equivocadas y produce un error.
+</Checkpoint>
+
+<Checkpoint question="¿Cómo seleccionas dos columnas?">
+	Pasa una lista de nombres: `sales[["ID", "monto"]]`.
+</Checkpoint>
+
+<Checkpoint question="¿Qué hace isin?">
+	Comprueba si cada valor está en una lista dada.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 6.4 limpia la tabla antes de que la filtres de verdad.

@@ -1,0 +1,141 @@
+---
+title: Agrupar y pivotar
+description: Reproduce las tablas dinámicas de Excel con groupby y pivot_table.
+sidebar:
+  order: 5
+lessonId: '6.5'
+estimatedMinutes: 20
+prerequisites: ['6.4']
+translationStatus: machine
+sourceHash: f5039ea4d61e
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Agrupar filas y resumirlas con `groupby`. - Construir una tabla dinámica con
+	`pivot_table`. - Comprobar que tu resumen cuadra con el total general.
+</LessonGoals>
+
+## Por qué importa
+
+La tabla dinámica es la herramienta de análisis más usada de Excel. Su lógica es: dividir
+las filas en grupos, calcular algo para cada grupo y combinar los resultados. pandas hace
+lo mismo, con código que se puede volver a ejecutar con el archivo del mes siguiente, sin
+que nadie arrastre campos de un lado a otro.
+
+<CaseStudy>
+	El dueño pregunta: ¿cuánto vendimos en cada categoría y cómo le fue a cada
+	categoría semana a semana?
+</CaseStudy>
+
+## Dividir, aplicar, combinar
+
+<Mermaid
+	diagram={`flowchart LR
+  A["240 filas"] --> B["Dividir por categoria"]
+  B --> C["Aplicar: contar y sumar en cada grupo"]
+  C --> D["Combinar: una fila por categoría"]`}
+/>
+
+`groupby("categoria")` divide la tabla. Luego eliges una columna y qué calcular:
+
+```text
+sales.groupby("categoria")["monto"].agg(["count", "sum"])
+```
+
+## En acción
+
+<Example file="part06/05_group_pivot.py" />
+
+La primera tabla da, para cada categoría, el número de ventas y su total. El total general
+es 474,061.00 colones. Esta es tu **cifra de control**: puedes compararla con la suma de
+los montos limpios y con el archivo original.
+
+La segunda tabla es una **tabla dinámica**: categorías como filas, números de semana ISO
+como columnas y la suma de los montos en las celdas. `pivot_table` recibe `index`
+(filas), `columns`, `values` y `aggfunc`. Son las mismas cuatro casillas del cuadro de
+diálogo de Excel.
+
+La última línea es una comprobación: la suma de toda la tabla dinámica es igual al total
+general. Si no lo fuera, se habría perdido una fila, por ejemplo por un valor faltante en
+una columna de agrupación.
+
+## De la tabla dinámica de Excel a pandas
+
+| Casilla de la tabla dinámica de Excel | Argumento de pandas     |
+| ------------------------------------- | ----------------------- |
+| Filas                                 | `index=`                |
+| Columnas                              | `columns=`              |
+| Valores                               | `values=` y `aggfunc=`  |
+| Filtros                               | Filtra la tabla primero |
+
+## Manos a la obra
+
+### Ahora tú
+
+¿Cómo obtendrías la venta promedio por categoría en lugar del total?
+
+<Checkpoint question="Muestra la respuesta">
+	Usa la agregación de media en lugar de la suma, llamando a `mean` sobre los
+	montos agrupados. Con decimales exactos, comprueba que el resultado sea el que
+	esperas, o divide la suma entre el conteo.
+</Checkpoint>
+
+## Errores comunes
+
+- **No comprobar el total.** Una tabla dinámica que no cuadra oculta filas perdidas.
+- **Agrupar por una columna con texto inconsistente.** `cafe` y `Café` se vuelven dos grupos. Limpia primero.
+- **Valores faltantes en las columnas de agrupación.** Por defecto, esas filas se descartan de los grupos.
+- **Promediar promedios.** Combina sumas y conteos en su lugar.
+- **Leer el número de semana como una fecha.** Es una etiqueta.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Haz una tabla dinámica.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente elige columnas al azar, o suma una columna que todavía es
+		texto.
+	</Fragment>
+	<Fragment slot="good">
+		Mi tabla de pandas "sales" tiene las columnas fecha (datetime), categoria
+		(texto) y monto (Decimal). Escribe código que dé, para cada categoria, el
+		número de ventas y el monto total, y una tabla dinámica de los totales con
+		categoria como filas y la semana ISO como columnas. Luego añade una
+		comprobación que demuestre que el total de la tabla dinámica es igual al
+		total general.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Da el **esquema**, una **tarea** precisa y pide una **verificación**
+		incorporada.
+	</Fragment>
+	<Fragment slot="check">
+		Ejecuta la comprobación. Además, elige una categoría y una semana, y suma a
+		mano sus montos de la tabla.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Cuáles son los tres pasos de un group-by?">
+	Dividir en grupos, aplicar un cálculo a cada uno y combinar los resultados.
+</Checkpoint>
+
+<Checkpoint question="¿Qué argumento de pivot_table contiene las etiquetas de las filas?">
+	`index`.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué comparar el total de la tabla dinámica con el total general?">
+	Muestra que no se perdieron filas en la agrupación.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 6.6 añade los nombres de los clientes con un merge, la versión de pandas de BUSCARV (VLOOKUP).

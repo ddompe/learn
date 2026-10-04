@@ -1,0 +1,149 @@
+---
+title: Salida de Excel presentable
+description: Escribe archivos de Excel con formato que tus colegas puedan abrir y usar.
+sidebar:
+  order: 10
+lessonId: '6.10'
+estimatedMinutes: 25
+prerequisites: ['6.1', '6.5']
+translationStatus: machine
+sourceHash: fde9999d580f
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Escribir un DataFrame en un archivo de Excel. - Dar formato a encabezados,
+	formatos numéricos, anchos de columna y filas inmovilizadas. - Comprobar el
+	archivo escrito leyéndolo de nuevo.
+</LessonGoals>
+
+## Por qué importa
+
+El último paso de casi todo análisis de negocio es entregarle un archivo a alguien. Lo
+abrirá en Excel, no en Python. Un archivo con nombres de columna en bruto, un índice
+suelto y una columna estrecha que muestra `####` hace que tu trabajo parezca descuidado e
+invita a errores. Unas pocas líneas de formato lo arreglan.
+
+<CaseStudy>
+	Daniela envía cada mes los totales por categoría al dueño. Quiere una hoja
+	limpia con encabezado en negrita, separadores de miles y la fila superior
+	inmovilizada.
+</CaseStudy>
+
+## Escribir y luego dar formato
+
+1. `DataFrame.to_excel(path, index=False)` escribe la tabla. `index=False` evita que los
+   números de fila aparezcan como una columna.
+2. Luego **openpyxl** abre el archivo para darle estilo (lección 6.1).
+
+<Example file="part06/10_excel_output.py" />
+
+Qué hace:
+
+- Texto blanco en negrita sobre un relleno de color para el encabezado.
+- `number_format = "#,##0.00"` muestra separadores de miles y dos decimales. La celda sigue
+  conteniendo un número, así que se puede sumar. Solo cambia la apariencia.
+- Los anchos de columna se fijan a partir del valor más largo de cada columna.
+- `freeze_panes = "A2"` mantiene visible el encabezado al desplazarte.
+- El script **vuelve a leer el archivo** e imprime lo que encuentra. Nunca supongas que un archivo está bien solo porque el código se ejecutó.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["DataFrame"] --> B["to_excel"]
+  B --> C["Estilos de openpyxl"]
+  C --> D["Guardar"]
+  D --> E["Leer de nuevo y comprobar"]`}
+/>
+
+## Reglas para compartir archivos
+
+1. **Números como números.** No escribas texto como "1,500.00".
+2. **Fechas como fechas,** con un formato de fecha.
+3. **Una sola fila de encabezado,** sin celdas combinadas. Quienes reciben los datos pueden querer usarlos.
+4. **Escribe un archivo nuevo.** No sobrescribas el libro de otra persona.
+5. **Pon las notas en una hoja aparte,** no en el área de datos.
+6. **Ábrelo en Excel antes de enviarlo.** Míralo una vez.
+
+## Manos a la obra
+
+### Ahora tú
+
+La columna `total` muestra `81111.5` y el dueño quiere `81,111.50`. ¿Qué configuración
+cambia eso y cambia el número almacenado?
+
+<Checkpoint question="Muestra la respuesta">
+	El formato numérico de las celdas: `#,##0.00`. Cambia solo cómo se ve el
+	número. El valor sigue siendo 81111.5, así que las fórmulas y las sumas siguen
+	funcionando.
+</Checkpoint>
+
+## Errores comunes
+
+- **Dejar la columna de índice.**
+- **Escribir números como texto con formato.**
+- **Combinar celdas por estética.**
+- **No revisar el archivo en Excel.**
+- **Sobrescribir el libro de origen.**
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Guárdalo en Excel.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		Obtienes lo predeterminado: una columna de índice, sin formato y columnas
+		estrechas.
+	</Fragment>
+	<Fragment slot="good">
+		Escribe Python que guarde un DataFrame de pandas con las columnas categoria,
+		ventas y total en un archivo de Excel con una hoja llamada "Totales". Sin
+		columna de índice. Pon el encabezado en negrita con un relleno de color, da
+		a total el formato #,##0.00, ajusta el ancho de cada columna a su contenido
+		e inmoviliza la fila del encabezado. Mantén los números como números. Luego
+		vuelve a leer el archivo e imprime el encabezado, el formato numérico del
+		primer total y la cantidad de filas.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Enumera cada **requisito de salida** y pide una **comprobación de
+		relectura**.
+	</Fragment>
+	<Fragment slot="check">
+		Abre el archivo en Excel. Asegúrate de que los totales sean números
+		(alineados a la derecha, sumables) y de que el encabezado siga visible al
+		desplazarte.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Por qué usar index=False?">
+	Evita que pandas escriba los números de fila como una columna adicional.
+</Checkpoint>
+
+<Checkpoint question="¿Un formato numérico cambia el valor de la celda?">
+	No. Cambia solo cómo se muestra el valor.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué volver a leer el archivo después de escribirlo?">
+	Para confirmar que el archivo tiene lo que querías, en lugar de suponerlo.
+</Checkpoint>
+
+## Lista de comprobación del final de la parte
+
+Terminaste la Parte 6 cuando puedas marcar cada elemento:
+
+- [ ] Cargué el resumen de Excel con los encabezados correctos.
+- [ ] Mi función de limpieza convierte las 246 filas en 240 filas limpias, con un registro.
+- [ ] Reproduje los totales por categoría con groupby, pivot_table y SQL, y coinciden.
+- [ ] Uní las ventas con los clientes y encontré las ventas sin cliente.
+- [ ] Escribí un libro con formato y lo abrí en Excel.
+
+## Para profundizar
+
+- La Parte 7 convierte estas tablas en gráficos.

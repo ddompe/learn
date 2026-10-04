@@ -1,0 +1,168 @@
+---
+title: CSV en profundidad
+description: Maneja delimitadores, comillas, codificaciones y comas decimales, y entiende por qué Excel en español usa punto y coma.
+sidebar:
+  order: 2
+lessonId: '5.2'
+estimatedMinutes: 25
+prerequisites: ['1.7', '5.1']
+translationStatus: machine
+sourceHash: 8cf33db271b3
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Identificar el delimitador y la codificación de un archivo CSV. - Explicar
+	por qué Excel en configuraciones regionales en español usa `;` como separador.
+	- Escribir un CSV que otras herramientas puedan leer sin riesgo.
+</LessonGoals>
+
+## Por qué importa
+
+El CSV parece demasiado simple para fallar, pero causa más problemas de datos que
+cualquier otro formato. No existe un estándar oficial que todos sigan. El delimitador, la
+codificación, las comillas y la manera de escribir números y fechas varían. El archivo de
+Café Central tiene sus propias decisiones: separadores `;`, UTF-8, montos mezclados.
+Debes comprobarlas en lugar de suponerlas.
+
+<CaseStudy>
+	Daniela abre el archivo de ventas en una herramienta basada en comas y ve una
+	sola columna enorme. Luego montos como `$1500,50` rompen sus totales. El
+	archivo no está dañado. Sigue las convenciones de la configuración regional en
+	español.
+</CaseStudy>
+
+## Qué es un CSV
+
+Un archivo **CSV** (valores separados por comas, de _comma-separated values_) es un
+archivo de texto donde cada línea es una fila y un carácter **delimitador** separa las
+columnas. La primera línea suele ser un encabezado con los nombres de las columnas. Ese
+es todo el formato, y lo demás son convenciones.
+
+## El delimitador y la coma decimal
+
+En configuraciones regionales de habla inglesa, los números usan punto decimal
+(`1500.50`), así que la coma queda libre para separar columnas. En muchas configuraciones
+regionales hispanohablantes y europeas, el separador decimal es una coma (`1500,50`). Un
+archivo delimitado por comas sería entonces ambiguo, así que el programa de hojas de
+cálculo usa por defecto un **punto y coma** como separador de listas en esas
+configuraciones. Por eso un CSV guardado desde Excel en español tiene `;`.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["La configuración regional usa punto decimal"] --> B["La coma separa columnas"]
+  C["La configuración regional usa coma decimal"] --> D["El punto y coma separa columnas"]`}
+/>
+
+Cuando recibas un CSV, mira las primeras líneas en un editor de texto y fíjate qué
+delimitador aparece. `csv.Sniffer` de Python puede adivinarlo, pero debes confirmarlo.
+
+<Example file="part05/02_csv.py" />
+
+## Comillas
+
+Si un campo contiene el delimitador, unas comillas o un salto de línea, quien escribe el
+archivo lo envuelve entre comillas dobles y duplica las comillas que haya dentro:
+`"dijo ""hola"""`. El módulo `csv` hace esto por ti. Nunca construyas líneas de CSV
+uniendo texto tú mismo.
+
+## Codificación
+
+Un CSV es texto plano, así que tiene una codificación (lección 1.7). Aparecen tres casos:
+
+- **UTF-8** es la mejor opción por defecto.
+- **UTF-8 con BOM** empieza con tres bytes invisibles. Excel los usa como pista de que el
+  archivo es UTF-8. Algunas herramientas muestran entonces un carácter extraño al inicio
+  del primer encabezado.
+- **Latin-1 o Windows-1252** aparece en archivos de sistemas más antiguos.
+
+Si los acentos se ven mal, la codificación es el primer sospechoso. Dile a la herramienta
+de lectura cuál usar.
+
+## Fechas y números
+
+El CSV no tiene tipos. Todo es texto hasta que lo conviertes. El archivo de Café Central
+mezcla `2024-01-01`, `01/01/2024` y `2024/01/01` para las fechas, y `1500`, `1400.50` y
+`$1500,50` para los montos. La Parte 6 cubre la limpieza. Por ahora: nunca confíes en el
+tipo de una columna por su apariencia.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+1. Abre `cafe_central_sales.csv` en VS Code. ¿Cuál es el delimitador?
+2. Busca un campo con coma decimal.
+3. Ejecuta el ejemplo anterior y compara qué ocurre cuando la misma fila se divide con
+   `;` y con `,`.
+
+### Ahora tú
+
+Recibes un archivo con esta primera línea: `Nombre,Ciudad,Monto` y una fila
+`Ana,San José,"1500,50"`. ¿Cuál es el delimitador y por qué hay comillas?
+
+<Checkpoint question="Muestra la respuesta">
+	El delimitador es una coma. El monto `1500,50` contiene una coma, que es el
+	delimitador, así que el campo se envuelve entre comillas para evitar que se
+	divida en dos columnas.
+</Checkpoint>
+
+## Errores comunes
+
+- **Suponer la coma.** Mira primero el archivo.
+- **Dividir las líneas a mano.** Usa el módulo `csv` para que las comillas funcionen.
+- **Abrir y guardar en Excel.** Puede cambiar fechas, quitar ceros y cambiar la codificación.
+- **Ignorar el BOM.** Un carácter extraño en el nombre del primer encabezado es la señal.
+- **Escribir un CSV con la codificación predeterminada del sistema.** Pasa `encoding="utf-8"`.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Lee este CSV.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente supone una coma y UTF-8, y escribe código que devuelve una sola
+		columna o acentos ilegibles.
+	</Fragment>
+	<Fragment slot="good">
+		Tengo un CSV exportado desde Excel en un Windows en español. Las primeras
+		líneas son: "ID;Fecha;Monto" y "T001;01/01/2024;1500,50". Escribe Python con
+		el módulo csv que lo lea, tratando ';' como delimitador, y dime qué
+		codificación probar primero y cómo reconocer una elección equivocada. No
+		conviertas los montos todavía. Muestra las primeras tres filas como salida.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Da la **entrada** (líneas reales), nombra las **restricciones**
+		(delimitador, módulo) y pide una **verificación** reconocible (señales de
+		una elección equivocada).
+	</Fragment>
+	<Fragment slot="check">
+		Ejecútalo con el archivo real. Comprueba los acentos en la salida y confirma
+		que hay cinco columnas, no una.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Por qué Excel en una configuración regional en español guarda el CSV con punto y coma?">
+	Allí el separador decimal es una coma, así que la coma no puede separar
+	también las columnas.
+</Checkpoint>
+
+<Checkpoint question="¿Qué ocurre cuando un campo contiene el delimitador?">
+	El campo se envuelve entre comillas para que el delimitador que contiene no se
+	trate como separador.
+</Checkpoint>
+
+<Checkpoint question="¿Cuál es la mejor codificación por defecto para un CSV?">
+	UTF-8.
+</Checkpoint>
+
+## Para profundizar
+
+- La Parte 6 lee el CSV en una tabla con pandas y limpia los montos y las fechas mezclados.
