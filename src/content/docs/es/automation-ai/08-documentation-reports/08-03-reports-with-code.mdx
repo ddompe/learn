@@ -1,0 +1,180 @@
+---
+title: Informes con código
+description: Incrusta código Python, cifras, gráficos y tablas en un informe que se reconstruye solo.
+sidebar:
+  order: 3
+lessonId: '8.3'
+estimatedMinutes: 30
+prerequisites: ['8.2', '7.2', '6.5']
+translationStatus: machine
+sourceHash: 70dd2a567f1e
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Escribir bloques de código Python en un documento de Quarto. - Ocultar el
+	código y mostrar solo los resultados, con una figura con título y una tabla. -
+	Poner cifras calculadas dentro de las oraciones.
+</LessonGoals>
+
+## Por qué importa
+
+El sentido de un informe con código es que las cifras del texto, el gráfico y la tabla
+salen todos de los datos, en un solo lugar. Nadie teclea una cifra. Cambias los datos,
+vuelves a ejecutar y todo el informe se actualiza, y el texto sigue coincidiendo con la
+tabla.
+
+<CaseStudy>
+	El informe mensual de Daniela tiene una oración de resumen, un gráfico
+	semanal, una tabla por categoría y una nota sobre la limpieza de datos. Las
+	cuatro salen de la misma tabla limpia.
+</CaseStudy>
+
+## El informe
+
+<Example file="part08/monthly_report.qmd" />
+
+Recorrámoslo.
+
+### El encabezado
+
+El encabezado define el título y la fecha. `execute: echo: false` oculta el código, de
+modo que los lectores ven resultados, y `warning: false` oculta los mensajes de
+advertencia. `jupyter: python3` indica qué motor ejecuta el código. La sección `format`
+lista tres salidas (lección 8.5).
+
+### Bloques de código
+
+Un bloque empieza con tres acentos graves y `{python}`, y termina con tres acentos
+graves. Las líneas que empiezan con `#|` son **opciones del bloque**. Por ejemplo:
+
+| Opción                   | Efecto                                         |
+| ------------------------ | ---------------------------------------------- |
+| `#\| echo: true`         | Muestra el código de este bloque               |
+| `#\| label: fig-weekly`  | Nombra la figura para que el texto la mencione |
+| `#\| fig-cap: "..."`     | Título de la figura                            |
+| `#\| tags: [parameters]` | Marca el bloque como parámetros (lección 8.4)  |
+
+Todos los bloques comparten la misma memoria, en orden desde arriba, como en un notebook
+(lección 4.5). Se ejecutan una vez cuando se genera el documento.
+
+### Cifras dentro de las oraciones
+
+`{python} count` escrito entre acentos graves simples dentro de una oración es **código
+en línea**. Quarto lo ejecuta y escribe el resultado en la oración, así que "55 ventas
+por un total de 112,614 colones" nunca puede contradecir los datos. El informe da formato
+a las cifras con una f-string: `f"{total:,.0f}"` añade separadores de miles.
+
+### Figuras, tablas y referencias cruzadas
+
+El gráfico semanal es un gráfico normal de matplotlib (lección 7.2). Como el bloque tiene
+una etiqueta que empieza con `fig-` y un título, Quarto lo numera, y el texto puede
+escribir `@fig-weekly` para decir "Figura 1".
+
+La tabla se construye como texto Markdown, como en la lección 5.6, y se muestra con
+`Markdown(...)`. Eso funciona igual en HTML, Word y PDF, sin paquetes adicionales.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["Tabla limpia de la lección 6.4"] --> B["Cifras en línea dentro de las oraciones"]
+  A --> C["Gráfico con título"]
+  A --> D["Tabla por categoría"]
+  A --> E["Registro de limpieza como lista"]`}
+/>
+
+## Prueba el código sin generar el informe
+
+Generar el informe toma unos segundos, y un error en medio de un bloque puede ser difícil
+de ver. Es útil comprobar que el código se ejecuta por sí solo. El proyecto de ejemplo
+incluye un pequeño ayudante que ejecuta los bloques de Python del informe como un script
+de Python normal, para que las pruebas (lección 3.9) puedan verificar las cifras. Si el
+código falla, ves un traceback común (lección 3.10).
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+1. Copia `monthly_report.qmd` en tu proyecto, junto a la carpeta con `cafe_clean.py`
+   (ajusta la ruta en el bloque si la tuya está en otro lugar).
+2. Genéralo: `uv run quarto render monthly_report.qmd --to html`.
+3. Abre `monthly_report.html`. Busca la oración con los totales y compárala con tu tabla
+   dinámica de la lección 6.5.
+
+### Ahora tú
+
+Muestra el código del bloque del gráfico en el informe, para el lector que quiera ver
+cómo se hizo. ¿Qué opción cambias?
+
+<Checkpoint question="Muestra la respuesta">
+	Añade `#| echo: true` al inicio de ese bloque. Anula el `echo: false` de todo
+	el documento solo para ese bloque.
+</Checkpoint>
+
+## Errores comunes
+
+- **Dejar el código visible en un informe para la gerencia.** Define `echo: false`.
+- **Pegar cifras en el texto.** Usa código en línea.
+- **Rutas que dependen de dónde generas el informe.** Quarto ejecuta el código desde la
+  carpeta del documento, así que las rutas relativas se miden desde ahí.
+- **Un bloque que falla a la mitad.** Ejecuta primero el código por separado.
+- **Advertencias en la salida.** Corrige la causa, o ocúltalas a propósito.
+- **Una caché desactualizada tras instalar un paquete.** Si Quarto sigue indicando que
+  falta un paquete que ya instalaste, elimina la carpeta oculta `.quarto` de tu proyecto
+  y vuelve a generar el informe.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Pon mi análisis en un informe.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		Obtienes un informe con todo el código visible, cifras escritas a mano en el
+		texto y un gráfico sin título.
+	</Fragment>
+	<Fragment slot="good">
+		Escribe un documento de Quarto (.qmd) para un informe mensual de ventas. Usa
+		bloques de Python con echo false. Carga una tabla limpia de pandas "sales"
+		(columnas fecha, cliente, monto como float, categoria) desde una función
+		clean_sales() de un módulo cafe_clean. Incluye: una oración de resumen con
+		la cantidad de ventas y el total usando código Python en línea, un gráfico
+		de barras semanal con título y etiqueta para que el texto pueda referirse a
+		él, y una tabla por categoría escrita como tabla Markdown. El eje y debe
+		empezar en cero. No escribas ninguna cifra a mano.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Nombra la **estructura** (formato de salida), el **esquema** de los datos y
+		las **restricciones** (sin código visible, sin cifras escritas a mano, eje
+		honesto).
+	</Fragment>
+	<Fragment slot="check">
+		Genera el informe y compara el total del texto con la suma de los totales de
+		la tabla. Observa el eje del gráfico.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué hace echo: false?">
+	Oculta el código de los bloques, de modo que el informe muestra solo
+	resultados.
+</Checkpoint>
+
+<Checkpoint question="¿Cómo pones una cifra calculada en una oración?">
+	Con código en línea: Python entre acentos graves simples, empezando con `
+	{python}`.
+</Checkpoint>
+
+<Checkpoint question="¿Qué hace que Quarto numere una figura y que el texto pueda referirse a ella?">
+	Una etiqueta de bloque que empieza con `fig-` y un título, y luego
+	`@fig-nombre` en el texto.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 8.4 genera el mismo informe para cada categoría.

@@ -1,0 +1,177 @@
+---
+title: Informes parametrizados
+description: Genera el mismo informe para cada categoría o mes a partir de un solo archivo fuente.
+sidebar:
+  order: 4
+lessonId: '8.4'
+estimatedMinutes: 25
+prerequisites: ['8.3']
+translationStatus: machine
+sourceHash: 65ed897725a1
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Añadir parámetros a un informe de Quarto. - Generar el informe para un valor
+	desde la línea de comandos. - Generarlo para todos los valores con un script.
+</LessonGoals>
+
+## Por qué importa
+
+El jefe de Daniela no quiere un solo informe. El proveedor de jugos quiere las cifras de
+jugos, la pastelería quiere las de pasteles, y así sucesivamente. Copiar el informe cinco
+veces significa cinco archivos que corregir cada vez que algo cambia. Un **informe
+parametrizado** tiene una sola fuente y unas pocas entradas, y produce tantas versiones
+como necesites.
+
+<CaseStudy>
+	Café Central quiere un informe por categoría, cada uno con sus propios totales
+	y su gráfico, todos a partir del mismo `monthly_report.qmd`.
+</CaseStudy>
+
+## Parámetros
+
+Marca un bloque como el que contiene los parámetros, con valores por defecto:
+
+```text
+#| tags: [parameters]
+category = "all"
+```
+
+Ese es el primer bloque del informe de la lección 8.3. Los bloques posteriores leen
+`category` y filtran los datos si no es `"all"`. Los valores por defecto hacen que el
+informe funcione sin ningún parámetro.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["monthly_report.qmd, una sola fuente"] --> B["category = jugo"]
+  A --> C["category = pastel"]
+  A --> D["category = te"]
+  B --> E["report-jugo.html"]
+  C --> F["report-pastel.html"]
+  D --> G["report-te.pdf"]`}
+/>
+
+## Define un parámetro desde la línea de comandos
+
+```text
+uv run quarto render monthly_report.qmd --to html -P category:jugo --output report-jugo.html
+```
+
+- `-P category:jugo` define el parámetro, escrito como `nombre:valor`.
+- `--output` elige el nombre del archivo. Sin él, cada generación sobrescribiría
+  `monthly_report.html`.
+- Puedes repetir `-P` para varios parámetros.
+
+Los parámetros necesitan el paquete **papermill** en tu proyecto: `uv add papermill`. Si
+falta, Quarto se detiene con el mensaje "The papermill package is required for processing
+--execute-params".
+
+## Genéralos todos
+
+Un script corto construye los comandos de cada categoría y los imprime. Con `--run`, los
+ejecuta.
+
+<Example file="part08/render_reports.py" />
+
+Lee primero el script y ejecútalo sin `--run`. Imprime cinco comandos, uno por categoría,
+como el de arriba. Leer el plan antes de ejecutarlo es un buen hábito para cualquier
+automatización. Después:
+
+```text
+uv run python render_reports.py --run
+```
+
+Esto escribe `report-cafe.html`, `report-jugo.html`, y así sucesivamente. La Parte 9
+muestra cómo ejecutar un script como este de forma programada.
+
+La misma idea funciona para los meses: un parámetro `month` y un bucle sobre los meses
+que necesites.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+1. Añade `uv add papermill` a tu proyecto.
+2. Genera el informe para `jugo` y comprueba que el resumen diga 55 ventas y 112,614
+   colones.
+3. Genéralo para `te` con otro nombre de `--output`. Compara los dos archivos.
+
+### Ahora tú
+
+Añades un parámetro `month` con el valor por defecto `"2024-01"`. ¿Qué más debe cambiar
+en el informe para que realmente lo use?
+
+<Checkpoint question="Muestra la respuesta">
+	El código que carga o filtra los datos debe usar `month`, y el texto y el
+	título que mencionan enero también deberían usarlo, mediante código en línea.
+	Un parámetro que nada lee no tiene ningún efecto.
+</Checkpoint>
+
+## Errores comunes
+
+- **Olvidar la etiqueta `parameters`.** El valor de la línea de comandos se ignora o
+  aparece un error.
+- **Falta `papermill`.**
+- **Caché `.quarto` desactualizada** después de instalarlo. Elimina esa carpeta y vuelve
+  a generar.
+- **El mismo `--output` en cada generación.** Cada una sobrescribe la anterior.
+- **Parámetros del tipo equivocado.** Los valores de `-P` llegan como números o texto.
+  Conviértelos a propósito.
+- **Valores por defecto que ocultan errores.** Prueba con un parámetro y sin él.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Haz uno por región.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente copia el documento en cinco archivos, uno por región, que ahora
+		debes mantener sincronizados.
+	</Fragment>
+	<Fragment slot="good">
+		Tengo un informe de Quarto monthly_report.qmd en un proyecto de uv. Añade un
+		parámetro "category" con el valor por defecto "all", en un bloque de código
+		con la etiqueta "parameters", y filtra mi tabla de pandas "sales" cuando no
+		sea "all". Luego dame el comando exacto para generar el informe en HTML para
+		la categoría "jugo" con el nombre de archivo de salida report-jugo.html, y
+		un script de Python que recorra una lista de categorías e imprima primero
+		los comandos, ejecutándolos solo con la opción --run. Enumera cualquier
+		paquete que deba añadir.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Especifica el **parámetro** y su **valor por defecto**, los **comandos** y
+		la **restricción de seguridad** (imprimir antes de ejecutar). También pide
+		los requisitos.
+	</Fragment>
+	<Fragment slot="check">
+		Ejecuta el comando para una categoría y compara los totales con tu tabla
+		dinámica. Luego ejecuta el script sin `--run`.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Cómo marcas los parámetros en un informe de Quarto?">
+	En un bloque de código con la opción `tags: [parameters]`, que contiene los
+	valores por defecto.
+</Checkpoint>
+
+<Checkpoint question="¿Qué opción define un parámetro en la línea de comandos?">
+	`-P nombre:valor`.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué usar --output al generar varias versiones?">
+	Para que cada generación tenga su propio nombre de archivo y no sobrescriba
+	las demás.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 8.5 exporta cada informe como HTML, Word y PDF.

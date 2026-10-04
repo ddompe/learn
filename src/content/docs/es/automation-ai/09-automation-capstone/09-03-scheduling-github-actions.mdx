@@ -1,0 +1,175 @@
+---
+title: Programar tareas con GitHub Actions
+description: Ejecuta un script de forma programada en la nube y conserva los resultados.
+sidebar:
+  order: 3
+lessonId: '9.3'
+estimatedMinutes: 25
+prerequisites: ['9.2', '3.6', '3.7']
+lastVerified: 2026-10-03
+translationStatus: machine
+sourceHash: fd83ba430517
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar qué es GitHub Actions. - Leer un flujo de trabajo (workflow) que
+	ejecuta pruebas y un pipeline de forma programada. - Decidir qué datos pueden
+	ejecutarse con seguridad en la nube.
+</LessonGoals>
+
+## Por qué importa
+
+Tu computadora debe estar encendida para que funcione un horario local. **GitHub
+Actions** ejecuta tareas en las computadoras de GitHub, que siempre están disponibles,
+cada vez que se activa un disparador. Este mismo sitio se construye y publica así. Para
+un proyecto que ya está en GitHub (lección 3.6), una tarea mensual necesita un solo
+archivo.
+
+Los detalles de GitHub Actions, como la cuota gratuita y las versiones de las acciones,
+cambian. La estructura de abajo es estable. Consulta los detalles en la documentación
+oficial. Última verificación: 2026-10-03.
+
+<CaseStudy>
+	La computadora de Daniela a veces está apagada el primero de cada mes. Quiere
+	que el pipeline se ejecute en la nube y conserve los resultados, para que
+	cualquier colega pueda descargarlos.
+</CaseStudy>
+
+## Un flujo de trabajo (workflow)
+
+Un **workflow** (flujo de trabajo) es un archivo YAML (lección 5.4) en la carpeta
+`.github/workflows/` del repositorio. Dice **cuándo** ejecutarse y qué **pasos** seguir.
+
+<Example file="part09/monthly_report.yml" />
+
+Léelo desde arriba:
+
+- `on` lista los disparadores. `schedule` usa la misma sintaxis de cron que la lección
+  9.2. GitHub lee la hora en **UTC**: las 13:00 UTC son las 07:00 en Costa Rica.
+  `workflow_dispatch` añade un botón para ejecutarlo a mano.
+- Un `job` (tarea) corre en una máquina virtual nueva, `ubuntu-latest`.
+- Los `steps` (pasos) descargan tu código, configuran uv, ejecutan las pruebas, ejecutan
+  el pipeline y suben la carpeta `output/` como un **artefacto**: un resultado descargable
+  adjunto a la ejecución.
+- Si un paso falla, la tarea se detiene y GitHub marca la ejecución como fallida. Por eso
+  importan los códigos de salida de la lección 9.1.
+
+Fíjate en que las pruebas se ejecutan **antes** que el pipeline. No se produce un informe
+con código que no pasa sus propias pruebas.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Disparador: horario o botón"] --> B["Máquina virtual nueva"]
+  B --> C["Descargar el código, configurar uv"]
+  C --> D["Ejecutar las pruebas"]
+  D --> E["Ejecutar el pipeline"]
+  E --> F["Subir los resultados como artefacto"]`}
+/>
+
+Para usarlo, copia el archivo en `.github/workflows/` de tu repositorio, haz commit y
+push. Luego abre la pestaña **Actions** en GitHub para ver las ejecuciones y descargar el
+artefacto. Usa el botón **Run workflow** para probarlo de inmediato en lugar de esperar a
+la fecha.
+
+## Límites y precauciones
+
+1. **¿De dónde vienen los datos?** La tarea corre en la nube, así que no puede leer
+   archivos de tu computadora. La entrada debe estar en el repositorio, o descargarse de
+   algún lugar al que la tarea tenga acceso.
+2. **Privacidad.** No pongas datos de clientes en un repositorio **público**, y piénsalo
+   dos veces antes de usar datos privados en la nube (lección 2.8). Los datos de práctica
+   de este curso son ficticios, así que son seguros.
+3. **Los secretos,** como las claves de API, van en la configuración del repositorio, en
+   la sección de secretos, y se usan en el flujo de trabajo como variables. Nunca los
+   escribas en el archivo (lección 3.7).
+4. **Tiempos.** Las ejecuciones programadas pueden empezar tarde cuando GitHub está
+   ocupado. Para un informe mensual, eso no importa.
+5. **Inactividad.** GitHub puede desactivar los flujos programados en repositorios sin
+   actividad reciente. Consulta la regla vigente en la documentación.
+6. **Costo.** Hay cuotas gratuitas, y son distintas para repositorios públicos y
+   privados.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+1. Copia el flujo de trabajo en `.github/workflows/monthly_report.yml` en un repositorio
+   de práctica (no uno con datos reales).
+2. Haz push, abre la pestaña Actions y ejecútalo con **Run workflow**.
+3. Cuando termine, descarga el artefacto y abre `category_totals.csv`.
+
+### Ahora tú
+
+El flujo de trabajo se ejecuta a las `0 13 1 * *`. ¿A qué hora local de Costa Rica
+empieza y por qué?
+
+<Checkpoint question="Muestra la respuesta">
+	A las 07:00. GitHub lee el horario en UTC, y Costa Rica está seis horas detrás
+	de UTC (lección 6.8).
+</Checkpoint>
+
+## Errores comunes
+
+- **Leer el horario en hora local.** Es UTC.
+- **Esperar que los archivos locales estén ahí.**
+- **Poner datos privados en un repositorio público.**
+- **Claves en el archivo del flujo de trabajo.**
+- **Un flujo de trabajo sin pruebas.** Un cambio defectuoso entra directo en un informe
+  mensual.
+- **No usar el disparador manual para probar.**
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Ejecútalo en GitHub cada mes.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente escribe un flujo de trabajo que espera tus archivos locales, e
+		incluso puede sugerirte hacer commit de tus datos reales.
+	</Fragment>
+	<Fragment slot="good">
+		Escribe un flujo de trabajo de GitHub Actions para un proyecto de uv. Debe
+		ejecutarse el primer día de cada mes a las 13:00 UTC, y también a demanda.
+		Pasos: descargar el código, configurar uv, ejecutar "uv run pytest",
+		ejecutar "uv run python pipeline.py" y subir la carpeta "output" como
+		artefacto. Los datos de entrada son un CSV que ya está en el repositorio.
+		Explica qué pasa si las pruebas fallan y enumera qué podría salir mal con
+		datos privados. No uses ningún secreto.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Indica exactamente los **disparadores y pasos**, el **contexto de los
+		datos** y la **restricción** (sin secretos), y pide el comportamiento ante
+		fallos y los riesgos.
+	</Fragment>
+	<Fragment slot="check">
+		Compara las versiones de las acciones con sus páginas en GitHub. Ejecútalo a
+		mano y lee el registro de cada paso.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿En qué zona horaria se ejecuta un horario de GitHub Actions?">
+	UTC.
+</Checkpoint>
+
+<Checkpoint question="¿Qué es un artefacto?">
+	Un archivo o carpeta producido por una ejecución y conservado para que puedas
+	descargarlo.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué ejecutar las pruebas antes que el pipeline?">
+	Para que nunca se produzca un informe con código que no pasa sus propias
+	comprobaciones.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 9.4 reúne todo en el proyecto final.

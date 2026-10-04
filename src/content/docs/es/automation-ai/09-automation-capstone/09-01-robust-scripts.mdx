@@ -1,0 +1,195 @@
+---
+title: Scripts robustos
+description: Añade registro (logging), un archivo de configuración y opciones de línea de comandos, y haz que los fallos sean ruidosos y claros.
+sidebar:
+  order: 1
+lessonId: '9.1'
+estimatedMinutes: 30
+prerequisites: ['4.15', '5.5', '6.4']
+translationStatus: machine
+sourceHash: 5ef3e4da76e9
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Leer ajustes desde un archivo de configuración y desde opciones de línea de
+	comandos. - Registrar lo que hace un script, con el nivel de detalle adecuado.
+	- Hacer que un script falle con un mensaje claro y un código de salida con
+	sentido.
+</LessonGoals>
+
+## Por qué importa
+
+Un script que ejecutas a mano, mirando la pantalla, puede ser descuidado. Un script que
+se ejecuta solo a las 7 de la mañana del primer día del mes no puede serlo. Nadie lo está
+mirando. Debe encontrar sus ajustes, registrar lo que hizo y, sobre todo, avisar a
+alguien cuando falla. La peor automatización es la que falla en silencio y deja un
+informe viejo en su lugar.
+
+<CaseStudy>
+	El flujo de trabajo de Daniela está listo para ejecutarse cada mes. Antes de
+	poder correr sin ella, necesita un archivo de ajustes en lugar de rutas
+	escritas en el código, un registro que ella pueda leer después y una
+	comprobación que lo detenga cuando la entrada sea claramente incorrecta.
+</CaseStudy>
+
+## El pipeline
+
+<Example file="part09/pipeline.py" />
+
+El script hace el mismo trabajo que las Partes 6 y 8: leer, limpiar y resumir las ventas.
+Lo nuevo es la estructura alrededor del trabajo.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["Leer la configuración y las opciones"] --> B["Configurar el registro"]
+  B --> C["Comprobar la entrada"]
+  C -->|"problema"| X["Registrar el error, código de salida 2"]
+  C --> D["Limpiar y resumir"]
+  D -->|"error inesperado"| Y["Registrar el traceback, código de salida 1"]
+  D --> E["Escribir los resultados"]
+  E --> F["Código de salida 0"]`}
+/>
+
+## Un archivo de configuración
+
+Los ajustes que cambian, como las ubicaciones de los archivos, el mes y los límites, viven
+en un archivo. El pipeline usa TOML (lección 5.5):
+
+<Example file="part09/pipeline_config.toml" />
+
+Las rutas son relativas al archivo de configuración, así que el proyecto funciona donde
+sea que se copie. Para cambiar de mes basta editar una línea, no el código.
+
+## Opciones de línea de comandos
+
+El módulo `argparse` de la biblioteca estándar lee opciones como `--month 2024-01`,
+`--output-dir` y `--verbose`. También escribe por ti el texto de `--help`. Las opciones
+**anulan** la configuración en una sola ejecución, así que puedes probar otro mes sin
+editar nada.
+
+Ejecuta `uv run python pipeline.py --help` para verlas.
+
+## Registro (logging)
+
+En lugar de `print`, el script usa el módulo `logging`. Da a cada mensaje un **nivel**:
+
+| Nivel   | Uso                                                      |
+| ------- | -------------------------------------------------------- |
+| DEBUG   | Detalle para encontrar problemas (cada paso de limpieza) |
+| INFO    | Progreso normal (filas leídas, total, archivos escritos) |
+| WARNING | Algo extraño, pero la ejecución continúa                 |
+| ERROR   | La ejecución no puede continuar                          |
+
+El registro va a dos lugares: la pantalla (INFO y superior, o todo con `--verbose`) y un
+archivo `pipeline.log` con marcas de tiempo. Cuando una ejecución programada falla de
+noche, el archivo es la forma de averiguar por qué.
+
+## Falla con ruido, falla temprano
+
+- **Valida primero la entrada.** El pipeline comprueba que el archivo exista y que el mes
+  tenga al menos `min_rows` filas. Un archivo del mes equivocado falla con "Only 0 rows
+  for 2023-12; expected at least 100. Is this the right file?" en lugar de producir un
+  informe vacío.
+- **Dos tipos de fallo,** dos códigos de salida. Un problema con la entrada, que una
+  persona puede corregir, devuelve **2** con un mensaje claro. Cualquier cosa inesperada
+  devuelve **1** y registra el traceback completo (lección 3.10).
+- **El éxito devuelve 0.** Los programadores de tareas y los flujos de trabajo usan el
+  código de salida para decidir si una tarea falló (lecciones 9.2 y 9.3).
+- **Nunca sobrescribas la entrada,** y escribe los resultados en una carpeta de salida
+  aparte.
+- **Hazlo seguro de repetir.** Ejecutarlo dos veces para el mismo mes da los mismos
+  archivos.
+
+## Pruebas
+
+Las pruebas de este script ejecutan todo el pipeline en una carpeta temporal, revisan el
+CSV que escribe y provocan cada fallo: un archivo ausente, un mes equivocado y un error
+inesperado. Comprueban los códigos de salida y los mensajes. Las rutas de fallo son las
+que nadie prueba a mano, así que son las que más necesitan una prueba.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+1. Ejecuta `uv run python pipeline.py` y lee las cuatro líneas que imprime.
+2. Ejecútalo con `--verbose` y compara. Abre `output/pipeline.log`.
+3. Ejecútalo con `--month 2023-12`. ¿Cuál es el código de salida? (En macOS y Linux,
+   `echo $?` justo después del comando lo muestra. En PowerShell, usa `$LASTEXITCODE`.)
+
+### Ahora tú
+
+Añade un nuevo ajuste `top_n` a la configuración con la cantidad de categorías a listar.
+¿Qué tres lugares cambian?
+
+<Checkpoint question="Muestra la respuesta">
+	El archivo de configuración (añade `top_n`), `run()` o lo que lo use (lee
+	`config["report"]["top_n"]`) y las pruebas (comprueban que el ajuste tiene
+	efecto). Opcionalmente, una opción de línea de comandos que lo anule.
+</Checkpoint>
+
+## Errores comunes
+
+- **Rutas escritas en el código.** Ponlas en la configuración, relativas a ella.
+- **`print` en lugar de registro.** No hay nivel ni archivo.
+- **Capturar todos los errores y seguir adelante.** Eso produce informes incorrectos en
+  silencio.
+- **Mensajes de registro con secretos o datos personales.**
+- **Sin código de salida.** El programador de tareas cree que un fallo fue un éxito.
+- **Probar solo el camino feliz.**
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Haz mi script robusto.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente envuelve todo en bloques try/except que imprimen "error" y
+		siguen adelante, lo que oculta los problemas.
+	</Fragment>
+	<Fragment slot="good">
+		Mi script de Python lee un CSV, lo limpia y escribe dos archivos. Añade:
+		ajustes desde un archivo TOML (ruta de entrada, carpeta de salida, mes),
+		opciones de línea de comandos con argparse que anulen el mes y la carpeta de
+		salida, y registro tanto en la consola como en un archivo de registro.
+		Valida la entrada antes de procesar: el archivo debe existir y tener al
+		menos 100 filas para el mes. Para problemas con la entrada, registra un
+		mensaje claro y termina con el código 2. Para cualquier otra cosa, registra
+		el traceback y termina con el código 1. No captures excepciones en ningún
+		otro lugar. Añade pruebas con pytest para el éxito y para cada fallo.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Enumera cada **requisito**, fija la **restricción** sobre el manejo de
+		errores y exige **pruebas** para los fallos.
+	</Fragment>
+	<Fragment slot="check">
+		Provoca tú mismo cada fallo, comprueba el código de salida y el mensaje, y
+		lee el archivo de registro.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Por qué registrar también en un archivo y no solo en la pantalla?">
+	Cuando el script se ejecuta sin supervisión, el archivo es el único registro
+	de lo que pasó.
+</Checkpoint>
+
+<Checkpoint question="¿Qué le dicen los códigos de salida a un programador de tareas?">
+	Cero significa éxito; cualquier otro valor significa fallo.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué validar la entrada antes de procesar?">
+	Un archivo equivocado debe detener la ejecución con un mensaje claro, en lugar
+	de producir un informe incorrecto o vacío.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 9.2 ejecuta este script de forma programada.
