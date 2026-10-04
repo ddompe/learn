@@ -1,0 +1,183 @@
+---
+title: Scheduling on your computer
+description: Schedule a script with Task Scheduler on Windows, or cron or launchd on macOS.
+sidebar:
+  order: 2
+lessonId: '9.2'
+estimatedMinutes: 30
+prerequisites: ['9.1', '1.10']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain how a scheduler runs a script. - Schedule the pipeline on your own
+	computer. - Avoid the common reasons why a scheduled job does nothing.
+</LessonGoals>
+
+## Why this matters
+
+An automation that you must remember to start is not automatic yet. A **scheduler** is a
+part of your operating system that starts programs at set times. Once you tell it
+"run the pipeline at 7 am on the first of every month", the report builds itself.
+
+<CaseStudy>
+	Daniela wants the January report to be waiting on the first of February. She
+	schedules the pipeline on her office computer.
+</CaseStudy>
+
+## What a scheduler does
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Clock reaches the set time"] --> B["Scheduler starts your command"]
+  B --> C["Script runs with its own, small environment"]
+  C --> D["Output goes to a log file"]
+  D --> E["Exit code says success or failure"]`}
+/>
+
+The three schedulers differ in syntax but share the same needs.
+
+1. A **command** to run, with **full paths** for everything.
+2. A **working folder**, so relative paths work.
+3. A **time rule.**
+4. A place for the **output**, so you can see what happened.
+
+## Why scheduled jobs fail quietly
+
+A job started by a scheduler does not run in your terminal. It has a **small environment**:
+
+- **A minimal PATH** (lesson 1.10). A command that works in your terminal, like `uv`, may not
+  be found. Use the full path to `uv`.
+- **A different working folder.** Relative paths break unless you change folder first.
+- **No screen and no user.** Nobody can answer a prompt.
+- **The computer must be on and awake** at that time. A laptop that is asleep or off misses the job. Some
+  schedulers run it later, some do not.
+
+Which is why lesson 9.1 added logging and exit codes. The log file tells you what happened.
+
+## The settings
+
+A helper script prints the settings for each system, so you can read them before you use them.
+It installs nothing.
+
+<Example file="part09/make_schedule.py" />
+
+### macOS and Linux: cron
+
+The first line is a **cron** entry. The five fields are minute, hour, day of the month,
+month, and day of the week. `0 7 1 * *` means 07:00 on the first day of every month. Edit
+your table with `crontab -e`, paste the line, and save. `crontab -l` lists it.
+
+The line uses the full path to `uv`. Find yours with `which uv`. On recent macOS versions,
+cron may need permission to access folders such as Documents or Desktop, so keep the
+project in a plain folder in your home directory.
+
+### macOS: launchd
+
+macOS prefers **launchd**. The job is a small file (a `.plist`) in
+`~/Library/LaunchAgents/`. It names the program, the working folder, the time, and
+the log files. Load it with:
+
+```text
+launchctl load ~/Library/LaunchAgents/space.dompe.cafe-pipeline.plist
+```
+
+The plist printed by the helper was checked with `plutil -lint`, a macOS tool that checks the file format.
+
+### Windows: Task Scheduler
+
+Save the batch file that the helper prints as `run_pipeline.cmd` in your project folder. It
+changes into the folder and runs `uv` with its full path, sending the output to a log. Then create the task
+from PowerShell with the `schtasks` command that the helper prints, or in the Task Scheduler
+app: **Create Basic Task**, choose Monthly, and point it at the batch file.
+
+If the task must run when you are not logged in, Windows asks for your password. On a
+managed laptop, this may be restricted by policy.
+
+## Test before you wait a month
+
+1. Run the exact command by hand from a fresh terminal. Does it work?
+2. Schedule the job for **two minutes from now**, and watch for the log file.
+3. Only then set the real schedule.
+4. After the first real run, check the log and the output files.
+
+## Hands-on
+
+### Worked example
+
+1. Run `uv run python make_schedule.py` and read the cron line. Identify each of the five time fields.
+2. Change the helper's day and hour to a time two minutes from now. Schedule it with your system's tool.
+3. Check the log. Then remove the test job: `crontab -e`, `launchctl unload ...`, or delete the task in Task Scheduler.
+
+### Your turn
+
+A job scheduled with cron writes "uv: command not found" to its log. What is the cause, and how do you fix it?
+
+<Checkpoint question="Show the answer">
+	Cron starts with a minimal PATH that does not include the folder where uv
+	lives. Use the full path to uv in the cron line, as the helper does.
+</Checkpoint>
+
+## Common mistakes
+
+- **Relative paths and a missing `cd`.**
+- **Programs that are not on the scheduler's PATH.**
+- **No log.** You cannot tell whether it ran.
+- **Forgetting that the computer must be on.**
+- **Testing only by waiting.** Test with a job two minutes ahead.
+- **Leaving test jobs behind.**
+- **Scheduling on a shared company computer without telling IT.**
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Schedule my script.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant chooses a system for you, uses relative paths, and forgets the
+		logs, so the job silently does nothing.
+	</Fragment>
+	<Fragment slot="good">
+		I am on macOS and want to run "uv run python pipeline.py" in
+		/Users/daniela/cafe-monthly at 07:00 on the first day of every month. The uv
+		program is at /Users/daniela/.local/bin/uv. Give me a launchd plist for
+		this, including the working folder and a log file inside the project's
+		output folder, and the exact commands to load it, check that it is loaded,
+		and unload it. Tell me three reasons why it might not run and how to see
+		them.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It gives the **context** (system, paths, time), the **output requirements**
+		(plist, log), and asks for the **verification** commands and failure
+		reasons.
+	</Fragment>
+	<Fragment slot="check">
+		Check the file with `plutil -lint`, schedule it for two minutes ahead, and
+		read the log.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Why does a command work in your terminal but fail in a scheduled job?">
+	The scheduler's environment is small, with a minimal PATH and a different
+	working folder.
+</Checkpoint>
+
+<Checkpoint question="What does 0 7 1 * * mean in cron?">
+	At 07:00 on the first day of every month.
+</Checkpoint>
+
+<Checkpoint question="What is the best way to test a schedule?">
+	Set it for two minutes ahead, watch the log, then set the real time.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 9.3 runs the pipeline in the cloud, on a computer that is always on.

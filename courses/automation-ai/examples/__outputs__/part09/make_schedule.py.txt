@@ -1,0 +1,41 @@
+cron (macOS or Linux):
+0 7 1 * * cd /Users/daniela/cafe-monthly && /Users/daniela/.local/bin/uv run python pipeline.py >> /Users/daniela/cafe-monthly/output/cron.log 2>&1
+
+Task Scheduler (Windows): save this as run_pipeline.cmd in the project folder
+@echo off
+cd /d C:\Users\daniela\cafe-monthly
+C:\Users\daniela\.local\bin\uv.exe run python pipeline.py >> output\task.log 2>&1
+then, in PowerShell:
+schtasks /Create /TN "space.dompe.cafe-pipeline" /SC MONTHLY /D 1 /ST 07:00 /TR "C:\Users\daniela\cafe-monthly\run_pipeline.cmd"
+
+launchd (macOS): save this as ~/Library/LaunchAgents/space.dompe.cafe-pipeline.plist
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>space.dompe.cafe-pipeline</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/Users/daniela/.local/bin/uv</string>
+    <string>run</string>
+    <string>python</string>
+    <string>pipeline.py</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>/Users/daniela/cafe-monthly</string>
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Day</key>
+    <integer>1</integer>
+    <key>Hour</key>
+    <integer>7</integer>
+    <key>Minute</key>
+    <integer>0</integer>
+  </dict>
+  <key>StandardOutPath</key>
+  <string>/Users/daniela/cafe-monthly/output/launchd.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/daniela/cafe-monthly/output/launchd.log</string>
+</dict>
+</plist>

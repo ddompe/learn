@@ -87,6 +87,17 @@ Tested by the drafting agent on macOS with Quarto 1.10.18 (installed from the ta
 - [ ] The stale `.quarto` cache advice: a render failed with "papermill package is required" right after `uv add papermill` until `part08/.quarto` was deleted. Confirm this reproduces for a learner and that the advice fixes it.
 - [ ] The report's relative path to `../part06` works for the learner's project layout (the lesson says to adjust it).
 
+## Part 9 (automation)
+
+Checked by the drafting agent: the pipeline and its failures (pytest), the generated launchd plist (`plutil -lint` OK), the workflow YAML structure (parsed in a test). Not run anywhere:
+
+- [ ] cron line: installs with `crontab -e`, runs with the full `uv` path, writes `output/cron.log`; macOS permission prompts for folders such as Documents or Desktop.
+- [ ] launchd: `launchctl load` / `unload` commands and the job actually firing (two minutes ahead test); newer macOS may prefer `launchctl bootstrap`.
+- [ ] Windows Task Scheduler: `schtasks /Create ... /SC MONTHLY /D 1 /ST 07:00 /TR "...run_pipeline.cmd"` works as written; the batch file; behaviour when not logged in; managed-laptop restrictions.
+- [ ] GitHub Actions: the workflow runs end to end in a practice repository (action versions `actions/checkout@v4`, `astral-sh/setup-uv@v5`, `actions/upload-artifact@v4`); `uv run pytest` and `uv run python pipeline.py` work from the repository root layout the lesson implies (the example expects `pipeline.py` and `output/` at the root); the 60-day inactivity rule and free allowances (`lastVerified: 2026-10-03`).
+- [ ] Capstone (9.4): build the project from scratch following the table, as a learner would, and confirm that the time estimate (120 minutes) is realistic (it is probably not); the file layout in the lesson matches what the steps produce.
+- [ ] The exit-code tip: `$LASTEXITCODE` in PowerShell and `echo $?` on macOS.
+
 ## Pedagogy and voice (author review)
 
 - [ ] Read Parts 0 to 2 end to end for flow, repetition, and tone. Intro repetition was reduced on 2026-10-03; re-check.

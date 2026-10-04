@@ -1,0 +1,217 @@
+---
+title: 'Capstone: the monthly pipeline'
+description: Build the full Café Central monthly pipeline end to end, with an AI assistant, tests, and a schedule.
+sidebar:
+  order: 4
+lessonId: '9.4'
+estimatedMinutes: 120
+prerequisites: ['9.1', '9.2', '8.3']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Build a complete pipeline from raw files to a report, in a new project. -
+	Work in small, verified steps with an AI assistant. - Show that it works:
+	tests, a log, a README, and a schedule.
+</LessonGoals>
+
+## Why this matters
+
+This is the project the whole course has been preparing. You will put the pieces together:
+the computer fundamentals, a clear prompt, Git, Python, data cleaning, charts, a report, and a schedule. The result is
+a tool that does what Daniela used to spend a day on, and that she can hand over.
+
+You will use an AI assistant for most of the typing. Your job is the work that the assistant
+cannot do for you: deciding what is right, checking, and keeping each step small.
+
+<CaseStudy>
+	Café Central needs the monthly report to build itself. Daniela's brief: put
+	the sales file in a folder, run one command, and get the cleaned totals, the
+	chart, and the report in Word, PDF, and HTML. If something is wrong with the
+	file, tell me clearly.
+</CaseStudy>
+
+## The result
+
+By the end, a new project folder `cafe-monthly` contains:
+
+```text
+cafe-monthly/
+├── README.md
+├── pyproject.toml
+├── uv.lock
+├── pipeline_config.toml
+├── .gitignore
+├── data/
+│   └── cafe_central_sales.csv
+├── src/
+│   ├── cleaning.py
+│   └── pipeline.py
+├── report/
+│   └── monthly_report.qmd
+├── tests/
+│   ├── test_cleaning.py
+│   └── test_pipeline.py
+└── .github/workflows/monthly_report.yml
+```
+
+You may organise it differently. What matters is that each part has one job.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Raw CSV"] --> B["Check the input"]
+  B --> C["Clean"]
+  C --> D["Summarise"]
+  D --> E["CSV and Excel totals"]
+  D --> F["Quarto report: HTML, Word, PDF"]
+  G["Config file and options"] --> B
+  H["Log and exit code"] -.-> B
+  I["Tests"] -.-> C
+  J["Schedule: your computer or GitHub"] --> A`}
+/>
+
+## The requirements
+
+Your pipeline is done when it meets every item. They are written so that you can check each one.
+
+### Data
+
+1. Reads the semicolon-separated, UTF-8 sales CSV from the `data` folder.
+2. Parses all three date formats (slash dates are day first) and all three amount formats.
+3. Removes exact duplicate rows, merges the category spelling variants, and keeps rows with no customer, marked.
+4. Amounts are exact decimals. The cleaned January data has 240 rows and a grand total of 474,061.00 colones.
+
+**Behaviour** 5. Settings come from a config file; the month and output folder can be overridden on the command line. 6. Writes a log file and prints progress. A wrong or missing file stops the run with a clear message and exit code 2. 7. Writes the category totals as CSV and as a formatted Excel file. 8. Produces the report, with a captioned weekly chart that starts at zero, a category table, and numbers in the text that come from the data, in HTML, Word, and PDF. 9. The report can be rendered for a single category with a parameter.
+
+**Quality** 10. Tests cover the parsers, the cleaning (including the 240-row result), and each failure. 11. A README says what it does, how to run it, and which decisions were made. 12. The project is in Git with clear commits, in a private repository, with no secrets or private data. 13. It runs on a schedule, on your computer or in GitHub Actions, and you have seen it run at least once from the schedule.
+
+## How to build it with an assistant
+
+The method that works is the same at each step: **small step, clear prompt, run, check, commit.**
+
+| Step | Build                                             | Check before you commit                                    |
+| ---- | ------------------------------------------------- | ---------------------------------------------------------- |
+| 1    | Project with uv; README skeleton; `.gitignore`    | `uv run python --version`; first commit                    |
+| 2    | Parsers: `parse_amount`, `parse_date`, `simplify` | Tests with hand-worked values pass                         |
+| 3    | `clean_sales` with a log                          | 246 rows in, 240 out, counts in the log match              |
+| 4    | Totals; grand total check                         | 474,061.00; a manual total for one category                |
+| 5    | Config file, CLI options, logging, exit codes     | Trigger the missing-file and wrong-month failures          |
+| 6    | CSV and Excel outputs                             | Open the Excel file; accents and number format look right  |
+| 7    | The Quarto report; parameter; three formats       | Totals in the text equal the table; axis starts at zero    |
+| 8    | Tests for the pipeline, README finished           | `uv run pytest` is green; a stranger can follow the README |
+| 9    | Push to a private repository                      | No secrets; `.env` ignored                                 |
+| 10   | Schedule it                                       | Run it two minutes ahead, then at the real time            |
+
+You have already written most of the code for steps 2 to 7 earlier in the course. You can
+reuse it, adapt it, or rebuild it with the assistant. If you rebuild it, compare what you
+get with your earlier version: it is a good way to find an assistant's mistake.
+
+### Working rules
+
+1. **One step per prompt.** Never ask for the whole pipeline at once.
+2. **Give the assistant the facts:** file layout, formats, and the exact rules.
+3. **Write or check the test first** when you can: work out the expected answer by hand.
+4. **Read every line** before you accept it (lesson 3.3).
+5. **Commit after each step** that works, with a clear message (lesson 3.5).
+6. **When it breaks,** give the assistant the full traceback and the code (lesson 3.10).
+7. **No private data in prompts** (lesson 2.8). The course data is fictional.
+
+## Hands-on
+
+### The capstone
+
+Work through the table above. Keep a short log of problems you hit and how you solved them.
+It is the best documentation you can leave for the next person, and for yourself.
+
+### Your turn
+
+Choose your own extension, small enough to finish in an hour:
+
+1. Add a `--category` option to the pipeline that restricts the totals.
+2. Add a check that warns if any single day has no sales.
+3. Add the customers file, and report sales by city (lesson 6.6).
+4. Send yourself the report: write the output path to the log in a form you can click.
+
+<Checkpoint question="How do you know an extension is done?">
+	It has a test that fails without the change and passes with it, the README
+	mentions it, and it is committed with a clear message.
+</Checkpoint>
+
+## Common mistakes
+
+- **Asking for everything at once.** It produces a large, untested, wrong result.
+- **Skipping the checks** because the assistant sounded sure (lesson 2.6).
+- **Committing data or keys.**
+- **Scheduling before it works by hand.**
+- **Changing the data to make the test pass.**
+- **No README.** In six months the project is a mystery.
+- **Never watching the first scheduled run.**
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Build the whole pipeline.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		You get hundreds of lines that assume file names and formats, with no tests.
+		When one number is wrong, you cannot tell which part is at fault.
+	</Fragment>
+	<Fragment slot="good">
+		We are building a monthly sales pipeline in small steps. Step 3: write
+		clean_sales(path) in src/cleaning.py. Input: a semicolon-separated UTF-8 CSV
+		with columns ID, Fecha, Cliente, Monto, Categoría. Read everything as text.
+		Remove only exact duplicate rows. Parse Fecha (2024-01-01, 2024/01/01, and
+		01/01/2024 with the day first) and Monto (1500, 1400.50, $1500,50) as
+		Decimal. Merge category spelling variants by lowercasing and removing
+		accents. Keep rows with no customer and mark them SIN-CLIENTE. Return the
+		table and a list of log messages with the number of rows each step affected.
+		Before the code, write a pytest test for the parsers with values worked out
+		by hand. Do not touch other files.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It applies all six elements: **context** (the step), **task**, **input**
+		(the file facts), **constraints** (small scope, rules), **output format**
+		(function, log, test), and **verification** (test first).
+	</Fragment>
+	<Fragment slot="check">
+		Run the tests, then check the log counts: 246 rows in, 6 duplicates removed,
+		7 customers marked, 240 out. Spot-check three rows, one for each date
+		format.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Why build the pipeline in small steps with an assistant?">
+	Each step can be checked and committed, so a mistake is caught where it
+	happened and the code stays understandable.
+</Checkpoint>
+
+<Checkpoint question="What should you do before scheduling the job?">
+	Make it work reliably by hand, with logs and tests, and then test the schedule
+	two minutes ahead.
+</Checkpoint>
+
+<Checkpoint question="What are the two numbers that tell you the cleaning is right?">
+	240 rows after cleaning, and a grand total of 474,061.00 colones.
+</Checkpoint>
+
+## Course checklist
+
+You have finished the core course when you can tick every item:
+
+- [ ] The requirements above are all met.
+- [ ] I can explain each step of the pipeline to a colleague.
+- [ ] I know which parts I would check first if a number looked wrong.
+- [ ] I have used my own data (anonymised, or with permission) for one real task, with the same method.
+
+## Going deeper
+
+- The advanced part of the course calls AI models from your own programs. It needs everything you have just practised.
+- Keep the method: small steps, clear prompts, and a check on every answer.

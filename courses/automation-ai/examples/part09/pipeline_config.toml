@@ -1,0 +1,12 @@
+# Settings for the Café Central monthly pipeline.
+# Relative paths are measured from the folder that holds this file.
+
+[input]
+sales_file = "../data/cafe_central_sales.csv"
+
+[output]
+directory = "output"
+
+[report]
+month = "2024-01"
+min_rows = 100

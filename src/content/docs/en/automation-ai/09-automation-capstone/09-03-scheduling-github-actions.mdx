@@ -1,0 +1,157 @@
+---
+title: Scheduling with GitHub Actions
+description: Run a script on a schedule in the cloud, and keep the results.
+sidebar:
+  order: 3
+lessonId: '9.3'
+estimatedMinutes: 25
+prerequisites: ['9.2', '3.6', '3.7']
+lastVerified: 2026-10-03
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explain what GitHub Actions is. - Read a workflow that runs tests and a
+	pipeline on a schedule. - Decide what data may safely run in the cloud.
+</LessonGoals>
+
+## Why this matters
+
+Your computer must be on for a local schedule to work. **GitHub Actions** runs jobs on
+GitHub's computers, which are always available, whenever a trigger fires. This site itself
+is built and published that way. For a project already on GitHub (lesson 3.6), a monthly
+job needs one file.
+
+The details of GitHub Actions, such as the free allowance and the versions of the
+actions, change. The structure below is stable. Check the details in the official
+documentation. Last verified on 2026-10-03.
+
+<CaseStudy>
+	Daniela's computer is sometimes off on the first of the month. She wants the
+	pipeline to run in the cloud and keep the results, so any colleague can
+	download them.
+</CaseStudy>
+
+## A workflow
+
+A **workflow** is a YAML file (lesson 5.4) in the folder `.github/workflows/` of the
+repository. It says **when** to run, and which **steps** to take.
+
+<Example file="part09/monthly_report.yml" />
+
+Read it from the top:
+
+- `on` lists the triggers. `schedule` uses the same cron syntax as lesson 9.2. GitHub reads the time as **UTC**: 13:00 UTC is 07:00 in Costa Rica. `workflow_dispatch` adds a button to run it by hand.
+- A `job` runs on a fresh virtual machine, `ubuntu-latest`.
+- The `steps` check out your code, set up uv, run the tests, run the pipeline, and upload
+  the `output/` folder as an **artifact**: a downloadable result attached to the run.
+- If a step fails, the job stops, and GitHub marks the run as failed. That is why the exit
+  codes of lesson 9.1 matter.
+
+Notice that the tests run **before** the pipeline. A report is not produced from code that
+fails its own tests.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Trigger: schedule or button"] --> B["Fresh virtual machine"]
+  B --> C["Check out code, set up uv"]
+  C --> D["Run tests"]
+  D --> E["Run pipeline"]
+  E --> F["Upload results as an artifact"]`}
+/>
+
+To use it, copy the file into `.github/workflows/` in your repository, and commit and push it.
+Then open the **Actions** tab on GitHub to see the runs and download the artifact. Use the
+**Run workflow** button to try it right away instead of waiting for the date.
+
+## Limits and cautions
+
+1. **Where does the data come from?** The job runs in the cloud, so it cannot read files on your computer.
+   The input must be in the repository, or fetched from somewhere the job can reach.
+2. **Privacy.** Do not put customer data into a **public** repository, and think twice about using
+   private data in the cloud at all (lesson 2.8). The practice data of this course is
+   fictional, so it is safe.
+3. **Secrets** such as API keys go in the repository settings under secrets, and are used in the
+   workflow as variables. Never write them in the file (lesson 3.7).
+4. **Timing.** Scheduled runs can start late when GitHub is busy. For a monthly report, that does not matter.
+5. **Inactivity.** GitHub may disable scheduled workflows in repositories without recent activity.
+   Check the current rule in the documentation.
+6. **Cost.** There are free allowances, and they differ for public and private repositories.
+
+## Hands-on
+
+### Worked example
+
+1. Copy the workflow into `.github/workflows/monthly_report.yml` in a practice repository (not one with real data).
+2. Push it, open the Actions tab, and run it with **Run workflow**.
+3. When it finishes, download the artifact and open `category_totals.csv`.
+
+### Your turn
+
+The workflow runs at `0 13 1 * *`. At what local time in Costa Rica does it start, and why?
+
+<Checkpoint question="Show the answer">
+	At 07:00. GitHub reads the schedule in UTC, and Costa Rica is six hours behind
+	UTC (lesson 6.8).
+</Checkpoint>
+
+## Common mistakes
+
+- **Reading the schedule in local time.** It is UTC.
+- **Expecting local files to be there.**
+- **Putting private data in a public repository.**
+- **Keys in the workflow file.**
+- **A workflow with no tests.** A broken change then goes straight into a monthly report.
+- **Not using the manual trigger to test.**
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Run it on GitHub every month.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant writes a workflow that expects your local files, and may even
+		suggest committing your real data.
+	</Fragment>
+	<Fragment slot="good">
+		Write a GitHub Actions workflow for a uv project. It should run on the first
+		day of every month at 13:00 UTC, and also on demand. Steps: check out the
+		code, set up uv, run "uv run pytest", run "uv run python pipeline.py", and
+		upload the "output" folder as an artifact. The input data is a CSV that is
+		already in the repository. Explain what happens if the tests fail, and list
+		what could go wrong with private data. Do not use any secrets.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It states the **triggers and steps** exactly, the **data context**, and the
+		**constraint** (no secrets), and asks for the failure behaviour and the
+		risks.
+	</Fragment>
+	<Fragment slot="check">
+		Check the versions of the actions against their pages on GitHub. Run it by
+		hand and read the log of each step.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="In which time zone does a GitHub Actions schedule run?">
+	UTC.
+</Checkpoint>
+
+<Checkpoint question="What is an artifact?">
+	A file or folder produced by a run and kept so that you can download it.
+</Checkpoint>
+
+<Checkpoint question="Why run the tests before the pipeline?">
+	So that a report is never produced by code that fails its own checks.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 9.4 brings everything together in the capstone.

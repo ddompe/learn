@@ -123,6 +123,10 @@ Part 3 (Stage 6 start): brief agreed (`briefs/part-03.md`), examples in `example
 outputs), lessons 3.1-3.10 drafted (3.3 carries `lastVerified`). `Example` now infers the code
 language from the file extension (py, toml, text).
 
+Part 9: brief agreed (`briefs/part-09.md`), examples in `examples/part09/` (pipeline, config, schedule
+helper, workflow; tested), lessons 9.1-9.4 drafted (9.3 carries `lastVerified`). Stage 6 content
+(Parts 3-9) is now fully drafted.
+
 Part 8: brief agreed (`briefs/part-08.md`), examples in `examples/part08/` (report `.qmd` rendered
 by hand with Quarto 1.10.18 to HTML, Word, and PDF; its Python chunks are also tested via
 `qmd_chunks.py`), lessons 8.1-8.5 drafted (8.2 and 8.5 carry `lastVerified`). New dependencies:
@@ -179,7 +183,7 @@ Next actions, in order:
   commit both outputs (a test checks the committed zip).
 - Workflow decision (2026-10-03): work directly on `main`, no per-part branches for now.
 
-## Stage 6 — Parts 3–9 (M3–M9) — in progress (Parts 3 and 4 drafted)
+## Stage 6 — Parts 3–9 (M3–M9) — drafted (all of Parts 3-9), pending review
 
 ## Stage 7 — Spanish translation (M10) — started (Parts 0-2 machine-translated)
 

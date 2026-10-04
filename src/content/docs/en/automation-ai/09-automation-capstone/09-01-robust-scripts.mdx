@@ -1,0 +1,181 @@
+---
+title: Robust scripts
+description: Add logging, a config file, and command-line options, and make failures loud and clear.
+sidebar:
+  order: 1
+lessonId: '9.1'
+estimatedMinutes: 30
+prerequisites: ['4.15', '5.5', '6.4']
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Read settings from a config file and from command-line options. - Log what a
+	script does, at the right level of detail. - Make a script fail with a clear
+	message and a meaningful exit code.
+</LessonGoals>
+
+## Why this matters
+
+A script that you run by hand, watching the screen, can be sloppy. A script that runs by
+itself at 7 am on the first of the month cannot. Nobody is watching. It must find its
+settings, record what it did, and, above all, tell someone when it fails. The worst
+automation is the one that fails quietly and leaves an old report in place.
+
+<CaseStudy>
+	Daniela's pipeline is ready to run monthly. Before it can run without her, it
+	needs a settings file instead of hard-coded paths, a log she can read
+	afterwards, and a check that stops it when the input is clearly wrong.
+</CaseStudy>
+
+## The pipeline
+
+<Example file="part09/pipeline.py" />
+
+The script does the same work as Parts 6 and 8: read, clean, and summarise the sales. What
+is new is the structure around the work.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["Read config and options"] --> B["Set up logging"]
+  B --> C["Check the input"]
+  C -->|"problem"| X["Log the error, exit code 2"]
+  C --> D["Clean and summarise"]
+  D -->|"unexpected error"| Y["Log the traceback, exit code 1"]
+  D --> E["Write the results"]
+  E --> F["Exit code 0"]`}
+/>
+
+## A config file
+
+Settings that change, such as the file locations, the month, and limits, live in a file.
+The pipeline uses TOML (lesson 5.5):
+
+<Example file="part09/pipeline_config.toml" />
+
+Paths are relative to the config file, so the project works wherever it is copied. A
+change of month needs an edit of one line, not the code.
+
+## Command-line options
+
+The `argparse` module from the standard library reads options such as `--month 2024-01`,
+`--output-dir`, and `--verbose`. It also writes the `--help` text for you. Options **override** the
+config for a single run, so you can try another month without editing anything.
+
+Run `uv run python pipeline.py --help` to see them.
+
+## Logging
+
+Instead of `print`, the script uses the `logging` module. It gives each message a **level**:
+
+| Level   | Use                                               |
+| ------- | ------------------------------------------------- |
+| DEBUG   | Detail for finding problems (each cleaning step)  |
+| INFO    | Normal progress (rows read, total, files written) |
+| WARNING | Something odd, but the run continues              |
+| ERROR   | The run cannot continue                           |
+
+The log goes to two places: the screen (INFO and above, or everything with `--verbose`) and
+a file `pipeline.log` with timestamps. When a scheduled run fails at night, the file is
+how you find out why.
+
+## Fail loudly, fail early
+
+- **Validate the input first.** The pipeline checks that the file exists, and that the month has
+  at least `min_rows` rows. A file for the wrong month fails with "Only 0 rows for 2023-12;
+  expected at least 100. Is this the right file?" rather than producing an empty report.
+- **Two kinds of failure,** two exit codes. A problem with the input, which a person can fix,
+  returns **2** with a plain message. Anything unexpected returns **1** and logs the full
+  traceback (lesson 3.10).
+- **Success returns 0.** Schedulers and workflows use the exit code to decide whether a job
+  failed (lessons 9.2 and 9.3).
+- **Never overwrite the input,** and write the results to a separate output folder.
+- **Make it safe to rerun.** Running twice for the same month gives the same files.
+
+## Tests
+
+The tests for this script run the whole pipeline into a temporary folder, check the CSV that
+it writes, and trigger each failure: a missing file, a wrong month, and an unexpected
+error. They check the exit codes and the messages. Failure paths are the ones that nobody
+tests by hand, so they are the ones that most need a test.
+
+## Hands-on
+
+### Worked example
+
+1. Run `uv run python pipeline.py` and read the four lines it prints.
+2. Run it with `--verbose` and compare. Open `output/pipeline.log`.
+3. Run it with `--month 2023-12`. What is the exit code? (On macOS and Linux, `echo $?` right after the command shows it. In PowerShell, use `$LASTEXITCODE`.)
+
+### Your turn
+
+Add a new setting `top_n` to the config for the number of categories to list. Which three places change?
+
+<Checkpoint question="Show the answer">
+	The config file (add `top_n`), `run()` or whatever uses it (read
+	`config["report"]["top_n"]`), and the tests (check that the setting has an
+	effect). Optionally, a command-line option that overrides it.
+</Checkpoint>
+
+## Common mistakes
+
+- **Hard-coded paths.** Put them in the config, relative to it.
+- **`print` instead of logging.** There is no level and no file.
+- **Catching every error and carrying on.** That produces wrong reports silently.
+- **Log messages with secrets or personal data.**
+- **No exit code.** The scheduler thinks that a failure was a success.
+- **Testing only the happy path.**
+
+## Ask your AI assistant
+
+<PromptExample>
+	<Fragment slot="lousy">Make my script robust.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		The assistant wraps everything in try/except blocks that print "error" and
+		carry on, which hides problems.
+	</Fragment>
+	<Fragment slot="good">
+		My Python script reads a CSV, cleans it, and writes two files. Add: settings
+		from a TOML file (input path, output folder, month), command-line options
+		with argparse that override the month and the output folder, and logging to
+		both the console and a log file. Validate the input before processing: the
+		file must exist and have at least 100 rows for the month. For problems with
+		the input, log a clear message and exit with code 2. For anything else, log
+		the traceback and exit with code 1. Do not catch exceptions anywhere else.
+		Add pytest tests for success and for each failure.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		It lists every **requirement**, sets the **constraint** on error handling,
+		and demands **tests** for the failures.
+	</Fragment>
+	<Fragment slot="check">
+		Trigger each failure yourself, check the exit code and the message, and read
+		the log file.
+	</Fragment>
+</PromptExample>
+
+## Check yourself
+
+<Checkpoint question="Why log to a file as well as the screen?">
+	When the script runs unattended, the file is the only record of what happened.
+</Checkpoint>
+
+<Checkpoint question="What do exit codes tell a scheduler?">
+	Zero means success, anything else means failure.
+</Checkpoint>
+
+<Checkpoint question="Why validate the input before processing?">
+	A wrong file should stop the run with a clear message, instead of producing a
+	wrong or empty report.
+</Checkpoint>
+
+## Going deeper
+
+- Lesson 9.2 runs this script on a schedule.

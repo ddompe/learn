@@ -1,0 +1,4 @@
+INFO Reading cafe_central_sales.csv
+INFO Rows in 2024-01: 240
+INFO Grand total: 474,061.00
+INFO Wrote results to the folder output
