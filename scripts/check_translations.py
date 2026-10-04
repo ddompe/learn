@@ -63,9 +63,9 @@ def stamp(es_file, new_hash):
         return False
     frontmatter = match.group(1)
     if SOURCE_HASH_RE.search(frontmatter):
-        frontmatter = SOURCE_HASH_RE.sub(f"sourceHash: {new_hash}", frontmatter)
+        frontmatter = SOURCE_HASH_RE.sub(f"sourceHash: '{new_hash}'", frontmatter)
     else:
-        frontmatter += f"\nsourceHash: {new_hash}"
+        frontmatter += f"\nsourceHash: '{new_hash}'"
     new_text = f"---\n{frontmatter}\n---\n" + text[match.end():]
     es_file.write_text(new_text, encoding="utf-8")
     return True

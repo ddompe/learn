@@ -7,7 +7,7 @@ lessonId: '2.1'
 estimatedMinutes: 15
 prerequisites: ['0.1']
 translationStatus: machine
-sourceHash: 3ab19bf9e217
+sourceHash: 'f1fc4a22ea13'
 ---
 
 import LessonGoals from '@components/LessonGoals.astro';
@@ -19,9 +19,11 @@ import PromptExample from '@components/PromptExample.astro';
 import Checkpoint from '@components/Checkpoint.astro';
 
 <LessonGoals>
-	- Explicar qué es un token. - Explicar la predicción del siguiente token con
-	un ejemplo pequeño. - Describir en qué es bueno un LLM y qué se deduce de cómo
-	funciona.
+
+- Explicar qué es un token.
+- Explicar la predicción del siguiente token con un ejemplo pequeño.
+- Describir en qué es bueno un LLM y qué se deduce de cómo funciona.
+
 </LessonGoals>
 
 ## Por qué importa
@@ -101,9 +103,10 @@ and the cafe sells coffee and the cafe sells tea".
 2. ¿Esa predicción es un hecho sobre el mundo?
 
 <Checkpoint question="Muestra las respuestas">
-	1. "coffee", porque siguió a "sells" dos veces y "tea" una. 2. No. Solo
-	refleja el texto que vio el modelo. Un modelo real es igual a mayor escala:
-	refleja su texto de entrenamiento.
+
+1. "coffee", porque siguió a "sells" dos veces y "tea" una.
+2. No. Solo refleja el texto que vio el modelo. Un modelo real es igual a mayor escala: refleja su texto de entrenamiento.
+
 </Checkpoint>
 
 ## Errores comunes
