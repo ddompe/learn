@@ -133,6 +133,8 @@ Next actions, in order:
 
 ### Known gaps and decisions
 
+- Everything that needs a human check is tracked in `manual-verification.md`.
+
 - Closed 2026-10-03: CI `python` job (pytest, `run_examples.py --check`, translation report);
   `.python-version` pinned to 3.12; weekly external link check (`links-weekly.yml`,
   lychee, opens an issue; first run untested); "i18n collection" warning fixed (empty

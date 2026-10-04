@@ -7,11 +7,32 @@ const labels: Record<string, string> = {
 };
 const locale = Astro.currentLocale ?? 'en';
 const label = labels[locale] ?? labels.en;
+
+const notices: Record<string, string> = {
+	en: 'This course was created with AI assistance. Found an error?',
+	es: 'Este curso fue creado con ayuda de IA. ¿Encontraste un error?',
+};
+const issueLabels: Record<string, string> = {
+	en: 'Open an issue on GitHub',
+	es: 'Abre un issue en GitHub',
+};
+const notice = notices[locale] ?? notices.en;
+const issueLabel = issueLabels[locale] ?? issueLabels.en;
 ---
 
 <Default {...Astro.props}>
 	<slot />
 </Default>
+<p class="ai-notice">
+	{notice}
+	<a
+		href="https://github.com/ddompe/learn/issues"
+		target="_blank"
+		rel="noopener noreferrer"
+	>
+		{issueLabel}
+	</a>
+</p>
 <p class="sponsor-link">
 	<a
 		href="https://github.com/sponsors/ddompe"
@@ -23,6 +44,12 @@ const label = labels[locale] ?? labels.en;
 </p>
 
 <style>
+	.ai-notice {
+		margin-top: 1rem;
+		font-size: var(--sl-text-sm);
+		text-align: center;
+	}
+
 	.sponsor-link {
 		margin-top: 1rem;
 		font-size: var(--sl-text-sm);

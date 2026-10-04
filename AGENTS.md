@@ -52,6 +52,11 @@ Read this file fully before making changes.
 - Work directly on `main` (no per-part branches for now). Read `planning/progress.md`
   ("How to resume") before starting; update it when you finish a task.
 
+## Manual verification
+
+Keep `planning/manual-verification.md` up to date. Whenever you cannot verify something
+yourself (browser rendering, OS-specific steps, external facts), add a checkbox there.
+
 ## Definition of done
 
 See `planning/06-implementation-plan.md#definition-of-done`. A task is not complete until
