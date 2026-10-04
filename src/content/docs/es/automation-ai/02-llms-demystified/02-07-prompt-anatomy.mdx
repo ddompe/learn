@@ -1,0 +1,175 @@
+---
+title: Anatomía de un buen prompt
+description: Aprende los seis elementos de un buen prompt y úsalos para convertir una petición vaga en una útil.
+sidebar:
+  order: 7
+lessonId: '2.7'
+estimatedMinutes: 20
+prerequisites: ['2.1', '2.6']
+translationStatus: machine
+sourceHash: 4dce34f523f0
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Nombrar los seis elementos de un buen prompt. - Reescribir un prompt vago
+	usando los seis. - Saber qué elemento añadir cuando una respuesta te
+	decepciona.
+</LessonGoals>
+
+## Por qué importa
+
+Todas las lecciones hasta ahora terminaron con un prompt deficiente y uno bueno. Ahora
+aprendes por qué funcionó el bueno. Un **prompt** es el texto que le das a un
+asistente. El asistente solo puede usar lo que hay en ese texto. Si un detalle no está,
+adivinará, y de las conjeturas vienen los errores.
+
+<CaseStudy>
+	Daniela quiere un resumen de las ventas de enero. Su primer prompt es "Resume
+	este CSV". La respuesta es genérica. Después de reescribirlo con los seis
+	elementos, el resumen es útil y puede comprobarlo.
+</CaseStudy>
+
+## Los seis elementos
+
+| Elemento              | Pregunta que responde               | Ejemplo                                            |
+| --------------------- | ----------------------------------- | -------------------------------------------------- |
+| **Contexto**          | ¿En qué situación estoy?            | "Soy analista en una empresa de café, en Windows." |
+| **Tarea**             | ¿Qué quiero exactamente?            | "Resume las ventas por categoría."                 |
+| **Entrada**           | ¿Cómo se ven mis datos?             | "Aquí están las primeras 10 líneas: ..."           |
+| **Restricciones**     | ¿Qué debe respetar?                 | "El separador es `;`. No elimines los duplicados." |
+| **Formato de salida** | ¿Qué forma debe tener la respuesta? | "Una tabla y luego tres viñetas."                  |
+| **Verificación**      | ¿Cómo sabré que es correcta?        | "Muestra las filas que usaste para cada total."    |
+
+No necesitas los seis cada vez. Una pregunta rápida necesita dos. Una tarea que afecta
+dinero o decisiones debe usar los seis.
+
+## Por qué ayuda cada elemento
+
+- El **contexto** descarta respuestas equivocadas que encajan en otra situación, como un
+  consejo para Mac a un usuario de Windows.
+- La **tarea** evita que el asistente adivine lo que quieres. Una tarea clara vale más
+  que una lista de cinco.
+- La **entrada** le da material real. Sin ella, el asistente inventa datos plausibles.
+- Las **restricciones** llevan los hechos que para ti son obvios y para él invisibles.
+- El **formato de salida** ahorra tiempo de edición y facilita comparar.
+- La **verificación** hace visibles los errores y te da una lista de comprobación.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Prompt vago"] --> B["Añadir contexto y entrada"]
+  B --> C["Indicar tarea y restricciones"]
+  C --> D["Elegir formato y verificación"]
+  D --> E["Respuesta mejor y comprobable"]`}
+/>
+
+## Diagnosticar una mala respuesta
+
+Cuando una respuesta te decepciona, pregúntate qué elemento faltaba:
+
+| Síntoma                              | Elemento que probablemente faltó |
+| ------------------------------------ | -------------------------------- |
+| Consejos genéricos                   | Contexto                         |
+| Hizo otra cosa                       | Tarea                            |
+| Detalles inventados                  | Entrada                          |
+| Ignoró una regla que tenías en mente | Restricciones                    |
+| Difícil de usar, demasiado larga     | Formato de salida                |
+| No puedes saber si es correcta       | Verificación                     |
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+**Deficiente:** "Resume este CSV."
+
+**Bueno:**
+
+> Soy analista en una empresa de café. (contexto)
+> Resume las ventas totales por categoría. (tarea)
+> Aquí están las primeras 20 líneas del archivo: ... (entrada)
+> El separador es un punto y coma. Los montos están en colones. No elimines las filas
+> duplicadas, pero enuméralas. (restricciones)
+> Dame una tabla con categoría, cantidad de ventas y total, y luego tres viñetas de
+> observaciones. (formato de salida)
+> Para cada total, muestra los ID de las filas que usaste y di "no estoy seguro" si no puedes. (verificación)
+
+Fíjate en que cada línea responde una pregunta que el asistente habría tenido que
+adivinar.
+
+### Ahora tú
+
+Reescribe este prompt usando los seis elementos. Usa tu propio trabajo en la respuesta.
+
+> Escríbeme una fórmula.
+
+<Checkpoint question="Muestra un ejemplo de reescritura">
+	Uso Excel en Windows (contexto). Escribe una fórmula que devuelva el total de
+	la columna D donde la columna E sea igual a "café" (tarea). La columna D tiene
+	montos y la columna E tiene nombres de categoría, de la fila 2 a la 241
+	(entrada). Ignora las celdas vacías y no uses macros (restricciones). Dame la
+	fórmula y luego una oración que explique cada parte (formato de salida). Dime
+	cómo probarla con tres filas que yo pueda comprobar a mano (verificación).
+</Checkpoint>
+
+## Errores comunes
+
+- **Escribir un muro de texto.** Organízalo. Las líneas cortas con etiquetas funcionan bien.
+- **Omitir la entrada.** El asistente la inventará.
+- **Pedir cinco cosas a la vez.** Divide los trabajos grandes en pasos.
+- **Saltarte la verificación porque la tarea parece fácil.** Las tareas fáciles también fallan.
+- **Pegar secretos como "contexto".** Nunca pegues contraseñas ni claves (lecciones 1.12 y 2.8).
+- **Tratar el prompt como palabras mágicas.** Lo que funciona es información clara, no trucos.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Mejora mi prompt: resume este CSV.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente produce un prompt más largo lleno de frases genéricas, como
+		"actúa como un analista experto", que añaden palabras pero no hechos. No
+		puede añadir lo que solo tú sabes.
+	</Fragment>
+	<Fragment slot="good">
+		Te daré un borrador de prompt. Revísalo según seis elementos: contexto,
+		tarea, entrada, restricciones, formato de salida, verificación. Para cada
+		elemento, di "presente", "débil" o "ausente", y cita las palabras que lo
+		justifican. Luego hazme hasta tres preguntas para llenar los vacíos. No
+		reescribas el prompt todavía. Borrador: "Resume este CSV."
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Convierte al asistente en revisor mediante la **tarea** y el **formato de
+		salida**, y la **restricción** "no reescribas todavía" te mantiene al mando
+		de los hechos. Las preguntas extraen la información que solo tú tienes.
+	</Fragment>
+	<Fragment slot="check">
+		Comprueba que cada cita aparezca realmente en tu borrador. Responde las
+		preguntas con honestidad, luego pide el prompt reescrito y compáralo de
+		nuevo con los seis elementos.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="Nombra los seis elementos de un prompt.">
+	Contexto, tarea, entrada, restricciones, formato de salida y verificación.
+</Checkpoint>
+
+<Checkpoint question="El asistente inventó nombres de columna que no están en tu archivo. ¿Qué elemento faltó?">
+	La entrada. Pega el encabezado y algunas filas reales.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué incluir la verificación en el prompt?">
+	Hace que el asistente muestre su fundamento, de modo que los errores se
+	vuelven visibles y sabes qué comprobar.
+</Checkpoint>
+
+## Para profundizar
+
+- Todas las lecciones restantes del curso usan esta anatomía en su sección de prompts.

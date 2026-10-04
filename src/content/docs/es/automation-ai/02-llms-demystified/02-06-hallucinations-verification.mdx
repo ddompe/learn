@@ -1,0 +1,167 @@
+---
+title: Alucinaciones y verificación
+description: Entiende por qué los asistentes inventan cosas y crea hábitos para comprobar sus respuestas.
+sidebar:
+  order: 6
+lessonId: '2.6'
+estimatedMinutes: 20
+prerequisites: ['2.1', '2.2']
+translationStatus: machine
+sourceHash: 957c5a8e5e42
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar qué es una alucinación y por qué ocurre. - Reconocer las
+	situaciones en que el riesgo es mayor. - Aplicar una rutina sencilla de
+	verificación.
+</LessonGoals>
+
+## Por qué importa
+
+Un asistente que a veces inventa hechos, y suena igual de seguro cuando lo hace, es
+peligroso si se confía en él a ciegas. También es muy útil cuando se verifica. La
+habilidad no es evitar la herramienta. La habilidad es verificar lo correcto a bajo
+costo.
+
+<CaseStudy>
+	Daniela le pide a un asistente que sume las ventas de enero. Devuelve una
+	tabla limpia con un total general y dice que revisó los duplicados. El total
+	está errado por unos miles de colones, porque el asistente nunca sumó
+	realmente los números, y los duplicados no se eliminaron.
+</CaseStudy>
+
+## Qué es una alucinación
+
+Una **alucinación** es una afirmación de una IA que suena correcta pero es falsa o no
+tiene respaldo: una cita inventada, un enlace web inexistente, una función que no
+existe, un número que no está en los datos.
+
+Ocurre por la razón que viste en la lección 2.1. El modelo predice texto plausible.
+Cuando le faltan los hechos, igual sale texto plausible. No tiene una alarma incorporada
+que diga "no lo sé". Los modelos más nuevos lo hacen menos, pero no nunca.
+
+## Cuándo es mayor el riesgo
+
+- **Hechos exactos:** nombres, fechas, números, citas, detalles legales y tributarios.
+- **Aritmética y conteo** sobre muchos elementos. Un modelo predice dígitos, no calcula.
+  Un código o una hoja de cálculo sí.
+- **Temas poco conocidos o recientes,** fuera de su entrenamiento (lección 2.2).
+- **Entradas largas,** donde se pasan por alto partes (lección 2.3).
+- **Peticiones que suponen algo falso.** "Resume la cláusula sobre X" cuando no existe tal
+  cláusula suele producir una cláusula inventada.
+
+## Una rutina de verificación
+
+<Mermaid
+	diagram={`flowchart TD
+  A["Recibir la respuesta"] --> B["¿Es un hecho, un número o código?"]
+  B --> C["Encontrar las afirmaciones comprobables"]
+  C --> D["Comprobarlas contra una fuente de confianza"]
+  D --> E{"¿Todo es correcto?"}
+  E -- Sí --> F["Usarla"]
+  E -- No --> G["Corregirla, o preguntar de nuevo con la entrada correcta"]`}
+/>
+
+1. **Marca las afirmaciones comprobables.** Números, nombres, enlaces y citas.
+2. **Revisa una muestra.** En una tabla de 240 filas, revisa cinco a mano.
+3. **Compara con la fuente.** Abre el enlace, el archivo o la documentación.
+4. **Recalcula.** Haz que una hoja de cálculo o un código haga la aritmética.
+5. **Pide el fundamento.** "¿Qué filas usaste? Cítalas."
+6. **Ajusta el esfuerzo al riesgo.** Un borrador de correo necesita una lectura. Una cifra
+   tributaria necesita a un profesional.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+Pega estas tres filas de ventas en un asistente y pídele su total; luego calcúlalo tú
+mismo en una hoja de cálculo:
+
+```text
+T001;01/01/2024;C004;2200.00;jugo
+T002;2024-01-01;C002;1500;pastel
+T003;2024-01-01;C004;1400.00;té
+```
+
+El total correcto es 5100. ¿Lo acertó el asistente? ¿Mostró su trabajo?
+
+### Ahora tú
+
+¿Cuál de estas afirmaciones comprobarías primero y cómo?
+
+1. "La categoría más vendida es el café, con el 38 % de las ventas."
+2. "El tono del correo es amistoso."
+3. "Consulta la guía en el sitio web example.com, bajo coffee-tax-guide."
+
+<Checkpoint question="Muestra las respuestas">
+	Comprueba primero la 1: recalcula la proporción a partir de los datos. Luego
+	la 3: abre el enlace, porque puede no existir. El tono de la 2 es un juicio
+	que puedes leer tú mismo.
+</Checkpoint>
+
+## Errores comunes
+
+- **Confiar en la seguridad con que habla.** El tono es el mismo cuando la respuesta es
+  incorrecta.
+- **Preguntar "¿estás seguro?".** El asistente puede simplemente darte la razón o
+  cambiar de opinión. Comprueba la fuente.
+- **Revisar solo la respuesta final.** Revisa también las entradas que el asistente dice
+  haber usado.
+- **Dejar que haga la aritmética.** Pídele que escriba una fórmula o un script y ejecútalo.
+- **No verificar nada porque las primeras respuestas fueron correctas.** Los errores son
+  ocasionales, no predecibles.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Resume este CSV.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente produce un resumen fluido con totales y tendencias concretos,
+		algunos de los cuales no están en el archivo. No puedes saber cuáles son
+		reales.
+	</Fragment>
+	<Fragment slot="good">
+		Abajo hay 20 filas de un archivo de ventas (ID; fecha; cliente; monto;
+		categoría). Describe las columnas y luego da el monto total y la cantidad de
+		filas. Para cada número, muestra las filas que usaste. Si no estás seguro de
+		un valor, di "no estoy seguro" en lugar de estimarlo. Termina con una lista
+		de tres cosas que debería verificar a mano.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Aporta la **entrada** y limita la **tarea**. Mostrar las filas usadas hace
+		visibles los errores, "no estoy seguro" quita la presión de adivinar y la
+		lista final es un paso de **verificación** incorporado.
+	</Fragment>
+	<Fragment slot="check">
+		Recalcula el total en una hoja de cálculo y compáralo. Comprueba tres de las
+		filas citadas contra el archivo.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué es una alucinación?">
+	Una afirmación segura de una IA que es falsa o carece de respaldo, como un
+	número o un enlace inventado.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué no debes confiar en un asistente para la aritmética sobre muchas filas?">
+	Predice dígitos en lugar de calcular. Usa una fórmula o código y ejecútalo.
+</Checkpoint>
+
+<Checkpoint question="Nombra dos maneras rápidas de verificar una respuesta.">
+	Comparar una muestra con la fuente y recalcular con una hoja de cálculo o
+	código. Abrir los enlaces citados también sirve.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 2.7 muestra cómo escribir prompts que faciliten la verificación.

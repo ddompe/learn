@@ -1,0 +1,190 @@
+---
+title: Por qué este curso
+description: Encuentra la ruta de aprendizaje que se ajusta a ti y descubre qué podrás hacer al final.
+sidebar:
+  order: 1
+lessonId: '0.1'
+estimatedMinutes: 10
+prerequisites: []
+translationStatus: machine
+sourceHash: 27357196f98d
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Identificar qué ruta de aprendizaje se ajusta a ti. - Describir qué podrás
+	hacer al final del curso. - Explicar por qué el curso enseña un conjunto fijo
+	de herramientas.
+</LessonGoals>
+
+## Por qué importa
+
+Ya trabajas con datos todos los días. Armas hojas de cálculo, actualizas informes y
+copias números de un lugar a otro. Parte de ese trabajo es repetitivo, y
+probablemente te has preguntado si una computadora podría hacerlo por ti.
+
+Hoy muchas veces puede. Un **asistente de IA** es una herramienta de chat que puede
+escribir y explicar programas por ti. Pero un asistente solo es tan útil como tu
+capacidad para juzgar lo que te entrega. Si no sabes qué es una ruta de archivo, por
+qué las tildes se convierten en caracteres extraños o qué hace una terminal, no puedes
+distinguir una buena respuesta de una respuesta plausible pero equivocada.
+
+Este curso enseña primero esos fundamentos, en lenguaje sencillo. Después los usa para
+automatizar trabajo real.
+
+<CaseStudy>
+	A lo largo del curso ayudarás a Café Central, una pequeña cadena de
+	cafeterías. Cada mes, alguien copia archivos de ventas en una hoja de cálculo,
+	corrige las fechas a mano y arma el mismo informe. Al final, todo ese proceso
+	se ejecuta con un solo comando. Conocerás bien a la empresa en la lección 0.3.
+</CaseStudy>
+
+## Cómo se hizo este curso
+
+El curso fue escrito por [Diego Dompe](/es/about/), un ingeniero que quería compartir
+los fundamentos que los ingenieros dan por sabidos. Se creó con la ayuda de
+asistentes de IA y luego fue revisado por el autor. Como cualquier texto asistido por
+IA, puede contener errores. Si encuentras uno, por favor [abre un issue en GitHub](https://github.com/ddompe/learn/issues).
+Este también es un buen hábito para todo el curso: verifica lo que lees, incluida
+esta página.
+
+## Por qué las herramientas son fijas
+
+La mayoría de los tutoriales muestran tres maneras de hacer cada cosa y te dejan
+elegir. Eso confunde cuando eres principiante. Este curso es **con criterio propio**
+(en inglés, _opinionated_): elige un conjunto de herramientas y enseña solo ese
+conjunto.
+
+- **Un asistente de IA.** A partir de la Parte 3 usas GitHub Copilot dentro de VS Code.
+  Tiene un plan gratuito, así que no necesitas una cuenta de pago para seguir el curso
+  principal.
+- **Una forma de ejecutar Python.** Lo instalas con una herramienta llamada uv, que
+  funciona sin derechos de administrador en una laptop de empresa.
+- **Un caso de estudio.** Todos los ejemplos usan Café Central, así que dedicas tu
+  esfuerzo a la idea nueva y no a entender un conjunto de datos distinto.
+
+Cuando conozcas los fundamentos, podrás cambiar de herramientas con facilidad. Un
+conjunto fijo solo evita que te pierdas en el camino.
+
+## Elige tu ruta de aprendizaje
+
+Una **ruta de aprendizaje** es una lista de lecciones para un objetivo específico. No
+tienes que tomar el curso completo. Las tres rutas están anidadas: cada una contiene a
+la anterior.
+
+<Mermaid
+	diagram={`flowchart TB
+  subgraph adv["Avanzada: Parte 10, llamar modelos de IA desde código"]
+    subgraph core["Automatizador de negocio (principal): Partes 0 a 9"]
+      subgraph lit["Profesional con cultura de IA: ruta corta, sin código"]
+        L["Fundamentos de computación y cómo funcionan los modelos de IA"]
+      end
+      C["Python, datos de negocio, gráficos, informes y un proyecto final"]
+    end
+    A["Temas avanzados"]
+  end`}
+/>
+
+| Ruta                                 | Elígela si quieres...                                                                     | Lecciones                                                     |
+| ------------------------------------ | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| Profesional con cultura de IA        | Usar bien y con seguridad las herramientas de IA en el trabajo, sin escribir código.      | 0.1 a 0.4, lecciones elegidas de las Partes 1 y 2, y 5.6, 5.7 |
+| Automatizador de negocio (principal) | Automatizar tus propios informes y tareas de datos con Python y un asistente de IA.       | Partes 0 a 9                                                  |
+| Avanzada                             | Llamar modelos de IA desde tus propios programas. Requiere haber hecho la ruta principal. | Parte 10                                                      |
+
+Si no estás seguro, empieza con la ruta principal. Puedes pasarte a una ruta más corta
+en cualquier momento.
+
+## Qué podrás hacer al final
+
+Con la ruta principal, podrás:
+
+- Explicar cómo funcionan los archivos, las carpetas, las codificaciones de texto y la terminal.
+- Explicar qué hace un modelo de IA, dónde falla y cómo verificar sus respuestas.
+- Usar un asistente de IA para escribir Python, y luego leer, probar y corregir lo que escribió.
+- Limpiar y combinar archivos de negocio desordenados, como CSV y Excel.
+- Producir gráficos e informes que se actualizan solos.
+- Ejecutar un informe mensual completo con un solo comando.
+
+## Manos a la obra
+
+### Elige tu ruta
+
+Esta lección no tiene código. En su lugar, elige tu ruta ahora.
+
+1. Anota una tarea de tu trabajo que repitas cada semana o cada mes.
+2. Anota cuánto tiempo te toma cada vez.
+3. Decide qué fila de la tabla anterior coincide con lo que quieres hacer con ella.
+4. Escribe el nombre de la ruta en una nota adhesiva o en un archivo que puedas encontrar de nuevo.
+
+Volverás a esta tarea en la lección 0.2.
+
+## Errores comunes
+
+- **Saltarte los fundamentos para llegar más rápido a Python.** Parece más lento, pero la
+  mayoría de los bloqueos posteriores vienen de un vacío en las Partes 1 y 2, como una
+  ruta de archivo equivocada o tildes ilegibles. Toma la ruta más corta en lugar de
+  saltarte contenido.
+- **Elegir primero la ruta avanzada.** La Parte 10 se apoya en todo lo anterior. Sin la
+  ruta principal, no tendrá sentido.
+- **Tratar al asistente de IA como una autoridad.** Escribe con seguridad tanto si acierta
+  como si se equivoca. Cada lección termina con una forma de verificar su respuesta.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">¿Debería aprender Python?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente enumera ventajas y desventajas genéricas de Python, menciona la
+		ciencia de datos y el desarrollo web, y termina con "depende de tus
+		objetivos". Nada de la respuesta se conecta con tu trabajo, así que no
+		aprendes nada que no encontrarías en un artículo general.
+	</Fragment>
+	<Fragment slot="good">
+		Trabajo como analista financiero. Uso Excel y Power Query todos los días y
+		nunca he escrito código. Cada mes dedico unas tres horas a combinar cinco
+		archivos CSV y corregir a mano las columnas de fechas. ¿Debería aprender
+		Python para esto, o hay una mejor opción? Dame una recomendación en un
+		párrafo corto y luego enumera las dos cosas que cambiarían tu recomendación.
+		Dime en qué partes de tu respuesta no estás seguro.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		El prompt bueno da **contexto** (tu rol y tus herramientas), una **tarea**
+		concreta (combinar archivos y corregir fechas), el tiempo que está en juego
+		y un **formato de salida** (una recomendación corta más dos condiciones).
+		Además le pide al asistente que diga de qué no está seguro. La lección 2.7
+		explica estos elementos en detalle.
+	</Fragment>
+	<Fragment slot="check">
+		Verifica que la recomendación mencione tu tarea real, no solo "datos". Luego
+		pregúntate si las "dos cosas que cambiarían la recomendación" se cumplen en
+		tu caso. Si el asistente sugiere Power Query o una fórmula, pruébalo
+		primero.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="Solo quieres usar las herramientas de IA con más seguridad en el trabajo y nunca escribir código. ¿Qué ruta te conviene?">
+	La ruta de profesional con cultura de IA. Cubre los fundamentos de computación
+	y cómo funcionan los modelos de IA, pero no te exige programar.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué este curso enseña un conjunto de herramientas en lugar de compararlas?">
+	Elegir entre herramientas es difícil cuando eres principiante. Un conjunto
+	fijo te permite dedicar tu esfuerzo a las ideas, y las ideas se trasladan
+	después a otras herramientas.
+</Checkpoint>
+
+<Checkpoint question="¿Puedes empezar por la ruta avanzada (Parte 10) si ya sabes algo de Python?">
+	No se recomienda. La Parte 10 supone que completaste la ruta principal,
+	incluidos los hábitos de seguridad y verificación que se enseñan allí.
+</Checkpoint>
+
+## Para profundizar
+
+- Lee la [página Acerca de](/es/about/) completa para saber más sobre el autor y las razones de este curso.

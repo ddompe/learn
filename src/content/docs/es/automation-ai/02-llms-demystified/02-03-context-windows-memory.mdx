@@ -1,0 +1,147 @@
+---
+title: Ventanas de contexto y memoria
+description: Entiende por qué un modelo olvida partes anteriores de una conversación y qué hacen los productos al respecto.
+sidebar:
+  order: 3
+lessonId: '2.3'
+estimatedMinutes: 15
+prerequisites: ['2.1']
+translationStatus: machine
+sourceHash: 505e4b41c6e2
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar qué es una ventana de contexto. - Explicar por qué el modelo
+	"olvida" en conversaciones largas. - Describir qué hacen los productos para
+	simular la memoria.
+</LessonGoals>
+
+## Por qué importa
+
+Trabajas con un asistente durante una hora. Luego se contradice con algo que le dijiste
+al principio. O pegas un archivo grande y ignora la mitad. Estos no son fallos al azar.
+Vienen de un límite fijo en la cantidad de texto que el modelo puede ver a la vez.
+
+<CaseStudy>
+	Daniela dedica un chat largo a explicar las reglas de Café Central y luego
+	pega los datos de ventas. Más tarde, el asistente ignora una regla que ella
+	dio al comienzo.
+</CaseStudy>
+
+## La ventana de contexto
+
+La **ventana de contexto** es la cantidad máxima de texto, contada en tokens, que el
+modelo puede leer de una vez. Incluye todo: tus instrucciones, toda la conversación
+hasta el momento, los archivos pegados y la respuesta que se está escribiendo.
+
+El modelo no tiene memoria entre solicitudes. Cada vez que envías un mensaje, el
+producto le envía al modelo toda la conversación otra vez, como un solo texto largo, y
+el modelo predice los siguientes tokens. Si el texto excede la ventana, algo debe quedar
+fuera.
+
+<Example file="part02/03_context.py" />
+
+Aquí la ventana admite doce palabras (las ventanas reales son miles de veces más
+grandes, contadas en tokens). Los dos mensajes más antiguos ya no caben, así que se
+caen. Ahora el asistente no tiene forma de saber el nombre del usuario, porque ese
+mensaje desapareció.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Mensajes antiguos"] -.->|"se caen cuando se llena"| X["El modelo no los ve"]
+  B["Mensajes recientes"] --> C["Dentro de la ventana: vistos"]
+  D["Tu mensaje nuevo"] --> C`}
+/>
+
+## Incluso dentro de la ventana, la atención no es pareja
+
+Una entrada muy larga puede diluir el enfoque del modelo. Los detalles en medio de un
+pegado enorme se pasan por alto con más facilidad que los del inicio o el final. Las
+ventanas más grandes ayudan, pero no hacen que el modelo lea a la perfección.
+
+## Cómo simulan la memoria los productos
+
+- **Recorte.** Descartar o resumir los mensajes más antiguos.
+- **Resúmenes.** Reemplazar los mensajes antiguos por un resumen corto escrito por el modelo.
+- **Notas guardadas.** Algunos productos almacenan datos sobre ti y los insertan en
+  conversaciones posteriores. Es texto añadido al prompt, no aprendizaje.
+- **Archivos y proyectos.** Adjuntas documentos y el producto inserta las partes relevantes.
+
+Cada enfoque pierde detalle. Si algo es importante, repítelo cerca del final de tu
+mensaje.
+
+## Manos a la obra
+
+### Ahora tú
+
+Daniela tiene un chat con 50 mensajes. El asistente empieza a ignorar la regla del
+mensaje 3. ¿Qué dos acciones ayudarían?
+
+<Checkpoint question="Muestra las respuestas">
+	Reformular la regla en el mensaje nuevo, o empezar una conversación nueva con
+	un resumen corto de las reglas y los datos. Ambas devuelven la regla a la
+	ventana.
+</Checkpoint>
+
+## Errores comunes
+
+- **Pensar que el modelo recuerda el chat de ayer.** A menos que el producto tenga una
+  función de notas guardadas, un chat nuevo empieza vacío.
+- **Pegar un archivo enorme y confiar en un resumen de todo.** Haz preguntas sobre
+  partes y verifica.
+- **Poner las instrucciones clave solo al inicio de un chat largo.** Repítelas.
+- **Ignorar el costo.** Cada mensaje reenvía toda la conversación (lección 2.9).
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Olvidaste lo que te dije. Hazlo otra vez.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente se disculpa y adivina lo que dijiste, o repite el mismo error.
+		Si la regla salió de la ventana, no puede recuperarla.
+	</Fragment>
+	<Fragment slot="good">
+		Estas son las reglas de esta tarea, reformuladas: las fechas son DD/MM/AAAA,
+		los montos están en colones y los ID de transacción duplicados deben
+		enumerarse, no eliminarse. Usando solo estas reglas, resume la tabla de
+		ventas de abajo en cinco viñetas. Después del resumen, enumera qué reglas
+		aplicaste.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Reformula el **contexto** en lugar de depender de la memoria, añade una
+		**restricción** (usar solo estas reglas) y exige un paso de
+		**verificación**: enumerar las reglas aplicadas.
+	</Fragment>
+	<Fragment slot="check">
+		Verifica que cada regla reformulada aparezca en la lista de "reglas
+		aplicadas". Una regla ausente significa que fue ignorada.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué es una ventana de contexto?">
+	La cantidad máxima de texto, en tokens, que el modelo puede leer en una
+	solicitud.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué un modelo olvida las partes iniciales de un chat largo?">
+	La conversación se reenvía cada vez y, cuando excede la ventana, el texto más
+	antiguo se descarta o se resume.
+</Checkpoint>
+
+<Checkpoint question="¿La función de notas guardadas de un producto es el modelo aprendiendo sobre ti?">
+	No. Almacena texto y lo añade a prompts posteriores.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 2.9 muestra cómo la longitud de la conversación afecta el costo.

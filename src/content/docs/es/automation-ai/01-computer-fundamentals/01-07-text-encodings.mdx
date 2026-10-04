@@ -1,0 +1,163 @@
+---
+title: Texto y codificaciones
+description: Entiende cómo el texto se convierte en bytes y diagnostica las tildes que se transforman en símbolos extraños.
+sidebar:
+  order: 7
+lessonId: '1.7'
+estimatedMinutes: 20
+prerequisites: ['1.3', '1.5']
+translationStatus: machine
+sourceHash: 4e4ddd6c2fc6
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar ASCII, Unicode y UTF-8 en términos sencillos. - Diagnosticar tildes
+	dañadas, como `Año` que se convierte en `AÃ±o`. - Saber qué codificación
+	probar para reparar el texto.
+</LessonGoals>
+
+## Por qué importa
+
+Una computadora solo guarda números. Para el texto, necesita una regla que diga qué
+número representa a cada letra. Esa regla es una **codificación**. Si el programa que
+escribe un archivo y el programa que lo lee usan reglas distintas, las letras se
+convierten en un sinsentido. Para quien trabaja con nombres y palabras en español con
+tildes, este es un problema diario.
+
+<CaseStudy>
+	Entre los clientes de Café Central están `María García` y `José`. Cuando
+	Daniela abre una exportación hecha por un sistema antiguo, los nombres
+	aparecen como `MarÃ­a GarcÃ­a`. Los nombres no están mal en el archivo. El
+	programa los está leyendo con la regla equivocada.
+</CaseStudy>
+
+## De letras a bytes
+
+Una codificación es una tabla que asigna números a los caracteres, y bytes a los
+números.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Texto: Categoría"] -->|"codificar con una regla"| B["Bytes"]
+  B -->|"decodificar con una regla"| C["Texto de nuevo"]`}
+/>
+
+Importan tres nombres:
+
+- **ASCII** es la regla más antigua. Cubre 128 caracteres: letras del inglés, dígitos y
+  signos de puntuación. No tiene letras con tilde.
+- **Unicode** es un catálogo enorme que asigna un número a casi todos los caracteres de
+  todos los idiomas, además de emojis. Es la lista, no el formato de bytes.
+- **UTF-8** es la forma más común de escribir Unicode como bytes. Las letras del inglés
+  ocupan un byte. Las letras con tilde como `í` ocupan dos. Otros símbolos ocupan hasta
+  cuatro.
+
+Los sistemas más antiguos usaban otras reglas. **Latin-1** (y su primo de Windows,
+cp1252) usa un byte por carácter y cubre las tildes del europeo occidental. Cuando un
+archivo escrito en UTF-8 se lee como Latin-1, cada letra de dos bytes se convierte en
+dos caracteres equivocados. Este deterioro se llama **mojibake**, una palabra japonesa
+que significa "cambio de caracteres" y que designa el texto ilegible causado por una
+codificación equivocada.
+
+La señal clásica: `ñ` se convierte en `Ã±` y `í` se convierte en `Ã` seguida de un
+carácter invisible.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+<Example file="part01/07_encodings.py" />
+
+La palabra `Categoría` se codifica en bytes en los que la letra `í` son los dos bytes
+`\xc3\xad`. Cuando esos bytes se decodifican con Latin-1, cada byte se convierte en su
+propio carácter, lo que da `CategorÃ­a`. El segundo carácter después de `Ã` es invisible,
+por eso parece un guion suave o nada. Volver a codificar con Latin-1 y decodificar con
+UTF-8 repara el texto, porque los bytes originales nunca se perdieron.
+
+La idea clave: **los bytes estaban bien. Solo la regla de lectura estaba mal.**
+
+### Ahora tú
+
+El encabezado de una columna en una exportación dice `CategorÃ­a`. Tu herramienta tiene
+una opción llamada "Origen del archivo" o "Codificación".
+
+1. ¿En qué codificación se escribió más probablemente el archivo?
+2. ¿Con cuál lo está leyendo la herramienta?
+3. ¿Qué cambiarías?
+
+<Checkpoint question="Muestra las respuestas">
+	1. UTF-8. 2. Latin-1 o una codificación de un solo byte similar. 3. Establecer
+	la codificación del archivo en UTF-8 al abrirlo. No edites las letras a mano.
+</Checkpoint>
+
+## Errores comunes
+
+- **Guardar después del daño.** Si abres un archivo UTF-8 con la codificación
+  equivocada y lo guardas, el texto dañado se escribe en el archivo. Conserva siempre
+  el original.
+- **Corregir los caracteres uno por uno.** El patrón es sistemático. Cambia la
+  codificación en su lugar.
+- **Suponer UTF-8 en todas partes.** Los archivos de sistemas antiguos o algunas
+  exportaciones de Excel usan otras codificaciones.
+- **Confundir la fuente con la codificación.** Un cuadrado por glifo faltante es un
+  problema de fuente. Letras extrañas de más son un problema de codificación.
+- **Ignorar la BOM.** Algunas herramientas agregan una marca oculta al inicio de un
+  archivo UTF-8. Si el encabezado de la primera columna se ve raro, puede ser la razón.
+  La Parte 5 vuelve sobre esto.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Arregla los caracteres raros.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente sugiere reemplazar cada carácter extraño a mano o con buscar y
+		reemplazar. Eso puede arreglar este archivo y dañar el siguiente. No explica
+		la causa.
+	</Fragment>
+	<Fragment slot="good">
+		Un archivo CSV de nuestro sistema antiguo muestra "CategorÃ­a" y "SÃ¡ndwich"
+		donde espero "Categoría" y "Sándwich". Lo estoy abriendo en Excel en
+		Windows. ¿En qué codificación se guardó más probablemente el archivo y qué
+		codificación está usando Excel para leerlo? Explica la causa en dos
+		oraciones y luego da los pasos para abrir el archivo con la codificación
+		correcta sin cambiar el original.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Aporta la **entrada** (ejemplos reales del daño), el **contexto** (el
+		programa) y una **tarea** que pide la causa antes de la solución. La
+		**restricción** protege el archivo original.
+	</Fragment>
+	<Fragment slot="check">
+		Verifica que nombre UTF-8 y Latin-1 o cp1252, y que sus pasos usen una
+		opción de importación en lugar de editar el archivo. Prueba primero con una
+		copia.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué es una codificación?">
+	Una regla que asigna caracteres a números y bytes, y viceversa.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué `í` se convierte en `Ã` más otro carácter?">
+	El archivo es UTF-8 y guarda `í` como dos bytes. Un programa que lo lee como
+	Latin-1 convierte cada byte en su propio carácter.
+</Checkpoint>
+
+<Checkpoint question="¿Cuál es la diferencia entre Unicode y UTF-8?">
+	Unicode es el catálogo de caracteres y sus números. UTF-8 es una forma de
+	guardar esos números como bytes.
+</Checkpoint>
+
+## Para profundizar
+
+- La Parte 5 muestra cómo elegir la codificación y el separador al leer un CSV.

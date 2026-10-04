@@ -1,0 +1,158 @@
+---
+title: Pesos abiertos frente a cerrados, local frente a nube
+description: Compara las formas de ejecutar un modelo y los intercambios entre privacidad, costo y capacidad.
+sidebar:
+  order: 5
+lessonId: '2.5'
+estimatedMinutes: 15
+prerequisites: ['2.4']
+translationStatus: machine
+sourceHash: 66263625a249
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar la diferencia entre modelos cerrados y de pesos abiertos. -
+	Explicar la diferencia entre ejecutar un modelo en la nube y en tu propia
+	computadora. - Sopesar los intercambios entre privacidad, costo y capacidad.
+</LessonGoals>
+
+## Por qué importa
+
+Dos preguntas surgen en toda empresa: "¿Están seguros nuestros datos?" y "¿Cuánto va a
+costar?". Las respuestas dependen de dónde se ejecuta el modelo y de quién lo controla.
+Conocer las opciones te permite participar en esa conversación y elegir con los ojos
+abiertos.
+
+<CaseStudy>
+	El dueño de Café Central quiere analizar los comentarios de los clientes, pero
+	los comentarios contienen nombres y direcciones de correo. Daniela debe
+	averiguar adónde pueden ir esos datos.
+</CaseStudy>
+
+## Dos decisiones separadas
+
+Estas dos decisiones suelen confundirse.
+
+1. **¿Quién controla el modelo?** Cerrado o de pesos abiertos.
+2. **¿Dónde se ejecuta?** En la nube o en tu propia computadora.
+
+| Opción            | Significado                                                                                                       |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Cerrado           | Usas el modelo solo a través del servicio del proveedor.                                                          |
+| De pesos abiertos | El proveedor publica los archivos del modelo. Cualquiera puede descargarlos y ejecutarlos, dentro de la licencia. |
+| Nube              | El modelo se ejecuta en los servidores del proveedor o de un anfitrión. Tu prompt viaja hasta allí.               |
+| Local             | El modelo se ejecuta en tu propia máquina. Tu prompt se queda allí.                                               |
+
+De pesos abiertos no significa que debas ejecutarlo localmente. Muchos servicios de
+alojamiento ofrecen modelos de pesos abiertos en la nube. Y un modelo cerrado no se
+puede ejecutar localmente, porque no tienes sus archivos.
+
+Las cuatro combinaciones se ven así:
+
+|                       | Nube                                                          | Local                                       |
+| --------------------- | ------------------------------------------------------------- | ------------------------------------------- |
+| **Cerrado**           | Aplicaciones de chat típicas y servicios de proveedores       | No es posible                               |
+| **De pesos abiertos** | Servicios de alojamiento que ejecutan modelos abiertos por ti | Ejecutar un modelo en tu propia computadora |
+
+## Los intercambios
+
+**Privacidad.** Un modelo local mantiene tus datos en tu máquina. Un servicio en la nube
+los envía fuera, así que dependes de los términos del proveedor (lección 2.8). Los
+planes de empresa suelen incluir promesas más firmes que los planes gratuitos.
+
+**Costo.** Los servicios en la nube cobran por uso o por mes. Los modelos locales no
+tienen tarifa por uso, pero necesitas una computadora capaz y tu tiempo para
+configurarlo.
+
+**Capacidad.** Los modelos más potentes tienden a ser grandes y cerrados, y se ejecutan
+en la nube. Los modelos lo bastante pequeños para correr en una laptop están mejorando,
+pero suelen ser menos capaces. Para muchas tareas cotidianas, un modelo más pequeño
+basta.
+
+**Esfuerzo.** Un producto en la nube funciona en minutos. Una configuración local
+requiere más habilidad y, en una laptop de empresa con restricciones, puede no estar
+permitida.
+
+## Manos a la obra
+
+### Ahora tú
+
+Café Central quiere resumir 200 comentarios de clientes que incluyen nombres reales.
+Elige una opción y da una razón.
+
+1. Un sitio de chat gratuito para consumidores.
+2. Un plan en la nube aprobado por la empresa con un acuerdo de protección de datos.
+3. Un modelo pequeño de pesos abiertos ejecutándose en la laptop de la oficina.
+
+<Checkpoint question="Muestra una respuesta de ejemplo">
+	La opción 1 es la más débil, porque los datos salen de la empresa bajo
+	términos de consumidor. Las opciones 2 y 3 pueden ser aceptables. La opción 2
+	es más capaz y fácil. La opción 3 mantiene los datos en la laptop, pero puede
+	dar resúmenes más débiles y requiere configuración. La política de la empresa
+	decide.
+</Checkpoint>
+
+## Errores comunes
+
+- **Equiparar "abierto" con "privado".** Un modelo de pesos abiertos alojado por otra
+  persona igual envía tus datos fuera.
+- **Equiparar "nube" con "inseguro".** Un contrato puede hacer que un servicio en la
+  nube sea más seguro que una laptop sin administración.
+- **Instalar herramientas locales sin permiso.** Revisa primero la política de la empresa.
+- **Esperar que un modelo de laptop iguale a los mayores modelos en la nube.**
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">¿Debería ejecutar IA localmente?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente enumera ventajas y desventajas genéricas, y no pregunta por tus
+		datos, tu computadora ni las reglas de tu empresa.
+	</Fragment>
+	<Fragment slot="good">
+		Trabajo en finanzas en una empresa pequeña. Queremos resumir informes
+		internos que contienen nombres de clientes. Mi laptop es una máquina Windows
+		administrada por la empresa, con 16 GB de memoria y sin tarjeta gráfica
+		dedicada. No puedo instalar software sin la aprobación de TI. Compara tres
+		opciones: un plan en la nube aprobado por la empresa, un chat gratuito para
+		consumidores y un modelo local de pesos abiertos. Usa una tabla con
+		privacidad, costo, calidad y esfuerzo. Di qué estás asumiendo.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Aporta el **contexto** que importa (tipo de datos, hardware, restricciones),
+		pide un **formato de salida** fijo (una tabla) y exige que se declaren los
+		**supuestos**.
+	</Fragment>
+	<Fragment slot="check">
+		Contrasta los supuestos con tu realidad, por ejemplo si el chat para
+		consumidores realmente estaría permitido. Consulta a TI o tu política antes
+		de actuar según la tabla.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué significa de pesos abiertos?">
+	El proveedor publica los archivos del modelo, de modo que cualquiera puede
+	descargarlo y ejecutarlo dentro de la licencia.
+</Checkpoint>
+
+<Checkpoint question="¿Un modelo local envía tus prompts a un proveedor?">
+	No. El prompt se queda en tu máquina.
+</Checkpoint>
+
+<Checkpoint question="Nombra una razón para preferir un modelo en la nube.">
+	Suele ser más capaz y no necesita configuración ni hardware potente.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 2.8 cubre lo que puedes compartir con cada herramienta.

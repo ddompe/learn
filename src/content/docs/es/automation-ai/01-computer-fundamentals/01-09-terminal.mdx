@@ -1,0 +1,200 @@
+---
+title: La terminal
+description: Abre una terminal, muévete entre carpetas, lista archivos y lee lo que responde la computadora.
+sidebar:
+  order: 9
+lessonId: '1.9'
+estimatedMinutes: 25
+prerequisites: ['1.4']
+translationStatus: machine
+sourceHash: c2920ac57294
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Abrir una terminal en Windows o macOS. - Moverte entre carpetas y listar su
+	contenido. - Ejecutar un comando y leer su salida.
+</LessonGoals>
+
+## Por qué importa
+
+Una **terminal** es una ventana donde le escribes instrucciones a la computadora en
+lugar de hacer clic. Parece anticuada, pero casi todas las herramientas profesionales
+del resto del curso se ejecutan desde ella. También es precisa: un comando que escribes
+se puede pegar en un correo, repetir mañana o ejecutar desde un script.
+
+La terminal no es peligrosa cuando sabes lo que escribes. En esta lección solo vas a
+mirar alrededor. No cambiarás ni borrarás nada.
+
+<CaseStudy>
+	Daniela quiere revisar la carpeta de Café Central sin abrir ningún programa.
+	En la terminal lista los archivos y luego imprime las primeras líneas del
+	archivo de ventas. Le toma segundos.
+</CaseStudy>
+
+## Qué es una terminal
+
+Una terminal muestra un **prompt**: un texto corto que indica que la computadora te está
+esperando. Escribes un **comando**, presionas Enter y la computadora imprime la
+**salida**.
+
+El programa que lee tus comandos es el **shell** (o intérprete de comandos). En Windows
+suele ser **PowerShell**. En macOS es **zsh**. Se ven distintos, pero lo básico coincide.
+
+En este curso, los comandos se muestran con un símbolo al inicio de la línea. `PS>`
+marca PowerShell y `$` marca macOS. Escribes todo lo que va después del símbolo, no el
+símbolo.
+
+## Abre una terminal
+
+<OsTabs>
+  <Fragment slot="windows">
+Presiona la tecla **Windows**, escribe `PowerShell` y presiona Enter. Se abre una ventana
+azul o negra con un prompt como `PS C:\Users\Daniela>`.
+  </Fragment>
+  <Fragment slot="macos">
+Presiona **Comando+Espacio**, escribe `Terminal` y presiona Enter. Se abre una ventana
+con un prompt que termina en `%`.
+  </Fragment>
+</OsTabs>
+
+El texto anterior al símbolo muestra dónde estás. Esa es tu **carpeta actual**, que
+conociste en la lección 1.4.
+
+## Cuatro comandos para mirar alrededor
+
+<OsTabs>
+  <Fragment slot="windows">
+```text
+PS> pwd
+PS> ls
+PS> cd Documents
+PS> cd ..
+```
+  </Fragment>
+  <Fragment slot="macos">
+```text
+$ pwd
+$ ls
+$ cd Documents
+$ cd ..
+```
+  </Fragment>
+</OsTabs>
+
+- `pwd` imprime la carpeta actual.
+- `ls` lista los archivos y carpetas que contiene.
+- `cd Documents` se mueve a la carpeta `Documents`.
+- `cd ..` sube una carpeta.
+
+Ninguno de estos cambia un archivo. Si te pierdes, `cd ~` te lleva a tu carpeta personal
+en macOS. En PowerShell, `cd ~` también funciona.
+
+## Lee un archivo
+
+Para imprimir las primeras líneas de un archivo de texto:
+
+<OsTabs>
+  <Fragment slot="windows">
+```text
+PS> Get-Content cafe_central_sales.csv -TotalCount 5
+```
+  </Fragment>
+  <Fragment slot="macos">
+```text
+$ head -n 5 cafe_central_sales.csv
+```
+  </Fragment>
+</OsTabs>
+
+Ambos imprimen el encabezado y las primeras cuatro ventas. En Windows, las tildes
+pueden verse raras en terminales antiguas. Es el problema de codificación de la
+lección 1.7.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+1. Abre una terminal.
+2. Ejecuta `pwd` para ver dónde estás.
+3. Usa `cd` para moverte a la carpeta donde descomprimiste los datos de Café Central.
+   Escribe las primeras letras del nombre de una carpeta y presiona **Tab**. El shell
+   completa el nombre.
+4. Ejecuta `ls` y comprueba que ves los tres archivos del zip.
+5. Imprime las primeras cinco líneas del archivo de ventas con el comando anterior.
+
+### Ahora tú
+
+¿Qué haría cada comando? Predice primero.
+
+1. `ls` en una carpeta vacía.
+2. `cd cafe-central` cuando no existe una carpeta con ese nombre.
+3. `cd ..` dos veces.
+
+<Checkpoint question="Muestra las respuestas">
+	1. No imprime nada. Que no haya salida no significa que haya fallado. 2.
+	Imprime un error que dice que no se encuentra la ruta. Te quedas donde estás.
+	3. Sube dos carpetas.
+</Checkpoint>
+
+## Errores comunes
+
+- **Esperar un mensaje cuando funciona.** Muchos comandos no imprimen nada cuando funcionan.
+- **Escribir el símbolo del prompt.** Escribe solo lo que sigue a `PS>` o `$`.
+- **Estar en la carpeta equivocada.** Comprueba con `pwd` antes de ejecutar algo.
+- **Copiar comandos que no entiendes.** Pregunta qué hace un comando, y si cambia o
+  borra algo, antes de ejecutarlo.
+- **Espacios en los nombres de carpeta.** Pon comillas alrededor del nombre: `cd "my folder"`.
+- **Pegar en una terminal a ciegas.** Un comando pegado puede contener líneas extra ocultas.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+  <Fragment slot="lousy">
+¿Qué hace este comando?
+  </Fragment>
+  <Fragment slot="whatGoesWrong">
+En la pregunta no hay ningún comando. Cuando sí pegas uno, una petición deficiente
+recibe una explicación que puede omitir lo más importante: si cambia o borra archivos.
+  </Fragment>
+  <Fragment slot="good">
+Soy principiante en macOS y encontré este comando en internet: `ls -la ~/Documents`.
+Explica qué hace cada parte, en una línea cada una. Di con claridad si el comando solo
+lee información o si puede cambiar o borrar algo. Dime cómo se verá la salida.
+  </Fragment>
+  <Fragment slot="whyItWorks">
+El prompt aporta la **entrada** (el comando), el **contexto** (principiante, macOS) y
+una **restricción** que obliga a incluir una declaración de seguridad. El **formato de
+salida** es una línea por parte.
+  </Fragment>
+  <Fragment slot="check">
+Revisa la declaración de seguridad. Los comandos que contienen `rm`, `del`, `>`, `sudo`
+o `format` pueden cambiar cosas. Ante la duda, no lo ejecutes con datos reales.
+  </Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué hacen `pwd` y `ls`?">
+	`pwd` imprime la carpeta actual. `ls` lista su contenido.
+</Checkpoint>
+
+<Checkpoint question="Un comando no imprime nada. ¿Falló?">
+	No necesariamente. Muchos comandos no imprimen nada cuando tienen éxito. Los
+	errores sí se imprimen.
+</Checkpoint>
+
+<Checkpoint question="¿Qué es el shell?">
+	El programa que lee los comandos que escribes y los ejecuta.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 1.10 explica cómo encuentra el shell los programas que ejecuta.

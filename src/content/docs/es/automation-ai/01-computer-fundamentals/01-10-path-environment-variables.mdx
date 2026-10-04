@@ -1,0 +1,183 @@
+---
+title: PATH y variables de entorno
+description: Entiende cómo encuentra el shell los programas, y cómo leer y definir una variable de entorno.
+sidebar:
+  order: 10
+lessonId: '1.10'
+estimatedMinutes: 20
+prerequisites: ['1.9']
+translationStatus: machine
+sourceHash: 90f6118e1002
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar cómo encuentra el shell el programa que le pides. - Leer una
+	variable de entorno. - Definir una variable de entorno para una sesión.
+</LessonGoals>
+
+## Por qué importa
+
+Escribes un comando y la computadora responde "comando no encontrado". El programa
+está instalado, entonces ¿por qué el shell no lo ve? La respuesta casi siempre es PATH.
+Es el error de principiante más común al instalar herramientas de desarrollo, y lo
+volverás a encontrar en las Partes 3 y 4.
+
+<CaseStudy>
+	Daniela instala una herramienta para el proyecto de Café Central. En una
+	terminal nueva escribe su nombre y recibe "no encontrado". La herramienta está
+	en su disco. El shell simplemente no sabe dónde buscar.
+</CaseStudy>
+
+## Cómo encuentra el shell los programas
+
+Cuando escribes un comando como `git`, el shell no busca en todo el disco. Sería lento.
+En su lugar revisa una lista corta de carpetas, en orden, y ejecuta la primera
+coincidencia. Esa lista se llama **PATH**.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["Escribes: git"] --> B["El shell lee PATH, una lista de carpetas"]
+  B --> C{"¿Está git en la primera carpeta?"}
+  C -- Sí --> D["Lo ejecuta"]
+  C -- No --> E{"¿Hay otra carpeta?"}
+  E -- Sí --> C
+  E -- "Se acabó la lista" --> F["Error: comando no encontrado"]`}
+/>
+
+Así que "comando no encontrado" significa "no está en ninguna carpeta de PATH". La
+solución es agregar la carpeta del programa a PATH, o usar la opción del instalador
+que lo hace por ti.
+
+## Variables de entorno
+
+PATH es un ejemplo de **variable de entorno**: un fragmento de texto con nombre que el
+sistema guarda para que los programas lo lean. Otras contienen tu nombre de usuario, tu
+carpeta personal o configuraciones de una herramienta. Los programas las leen cuando
+arrancan.
+
+Las variables de entorno también son un lugar común para guardar secretos, como las
+claves de API, fuera de tus archivos. La lección 1.12 y la Parte 3 vuelven sobre esto.
+
+## Manos a la obra
+
+### Ejemplo resuelto: leer una variable
+
+<OsTabs>
+  <Fragment slot="windows">
+```text
+PS> $env:USERNAME
+PS> $env:PATH -split ';'
+```
+  </Fragment>
+  <Fragment slot="macos">
+```text
+$ echo $USER
+$ echo $PATH | tr ':' '\n'
+```
+  </Fragment>
+</OsTabs>
+
+El primer comando imprime tu nombre de usuario. El segundo imprime PATH, separado en una
+carpeta por línea. El orden importa: el shell usa la primera coincidencia.
+
+### Define una variable para esta sesión
+
+<OsTabs>
+  <Fragment slot="windows">
+```text
+PS> $env:CAFE_REPORT_NAME = "2024-01"
+PS> $env:CAFE_REPORT_NAME
+```
+  </Fragment>
+  <Fragment slot="macos">
+```text
+$ export CAFE_REPORT_NAME=2024-01
+$ echo $CAFE_REPORT_NAME
+```
+  </Fragment>
+</OsTabs>
+
+Esta variable vive solo en la ventana de terminal actual. Cierra la ventana y desaparece.
+Es una forma segura de experimentar. Hacer permanente una variable depende del sistema,
+así que lo dejamos para cuando lo necesites.
+
+### Ahora tú
+
+1. Imprime tu PATH, una carpeta por línea.
+2. Cuenta las carpetas.
+3. Define una variable llamada `CAFE_REPORT_NAME`, imprímela, luego cierra la terminal,
+   abre una nueva e imprímela otra vez. ¿Qué pasa?
+
+<Checkpoint question="Muestra la respuesta del paso 3">
+	La primera terminal imprime `2024-01`. La terminal nueva no imprime nada,
+	porque la variable solo vivió en la primera sesión.
+</Checkpoint>
+
+## Errores comunes
+
+- **Instalar una herramienta y usar la terminal anterior.** PATH se lee cuando arranca
+  la terminal. Abre una ventana nueva después de instalar.
+- **Editar PATH sin entenderlo.** Una edición equivocada puede ocultar otros programas.
+  Prefiere instaladores que ofrezcan hacerlo.
+- **Tener dos versiones de un programa.** Gana la que está antes en PATH, lo que puede confundir.
+- **Escribir `$` o `$env:` en el shell equivocado.** La sintaxis difiere entre sistemas.
+- **Poner secretos en archivos que compartes.** Guárdalos en variables de entorno o en
+  archivos ignorados. Ver la Parte 3.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Python no se encuentra.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente dice que reinstales Python o edites la configuración del
+		sistema, lo cual puede requerir derechos de administrador y dañar otros
+		programas.
+	</Fragment>
+	<Fragment slot="good">
+		Uso Windows 11 con PowerShell, sin derechos de administrador. Instalé una
+		herramienta llamada uv y cerré el instalador. Cuando escribo `uv` en una
+		terminal, recibo "El término 'uv' no se reconoce como nombre de un cmdlet,
+		función, archivo de script o programa ejecutable". No abrí una terminal
+		nueva después de instalar. Explica qué tiene que ver PATH con esto, en tres
+		oraciones, y luego dame los pasos menos riesgosos para comprobarlo,
+		empezando por el más simple.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Da la **entrada** exacta (el mensaje), el **contexto** (sistema operativo,
+		permisos) y una **restricción** (lo menos riesgoso primero). Eso permite que
+		el asistente empiece por "abre una terminal nueva".
+	</Fragment>
+	<Fragment slot="check">
+		Ejecuta los pasos en orden y detente cuando el problema se resuelva. Ten
+		cuidado con cualquier paso que edite la configuración del sistema. Pregunta
+		primero qué cambia.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué contiene PATH?">
+	Una lista ordenada de carpetas donde el shell busca programas.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué una herramienta puede funcionar en una terminal y no en otra?">
+	PATH se lee cuando arranca la terminal. Una terminal abierta antes de la
+	instalación tiene la lista anterior.
+</Checkpoint>
+
+<Checkpoint question="¿Qué es una variable de entorno?">
+	Un fragmento de texto con nombre que guarda el sistema y que los programas
+	pueden leer.
+</Checkpoint>
+
+## Para profundizar
+
+- La Parte 4 muestra un instalador de Python que maneja PATH por ti.
