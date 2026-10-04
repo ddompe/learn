@@ -126,7 +126,10 @@ language from the file extension (py, toml, text).
 Part 4: brief agreed (`briefs/part-04.md`), examples in `examples/part04/` (tests and outputs),
 lessons 4.1-4.16 drafted.
 
-Spanish: a background agent translates Parts 0-2 on a worktree branch; merge it when it reports.
+Spanish (Stage 7 start): machine translation of Parts 0-2, course home and About merged
+(30 pages, `translationStatus: machine`, `sourceHash` stamped; `scripts/check_translations.py`
+now computes hashes, `--markdown`, `--stamp`). Needs native-speaker review (see
+`manual-verification.md`). `es/index.mdx` (catalog) has no sourceHash. Parts 3-4 are not translated yet.
 
 ### How to resume (read this first)
 
@@ -158,9 +161,9 @@ Next actions, in order:
   commit both outputs (a test checks the committed zip).
 - Workflow decision (2026-10-03): work directly on `main`, no per-part branches for now.
 
-## Stage 6 — Parts 3–9 (M3–M9) — not started
+## Stage 6 — Parts 3–9 (M3–M9) — in progress (Parts 3 and 4 drafted)
 
-## Stage 7 — Spanish translation (M10) — not started
+## Stage 7 — Spanish translation (M10) — started (Parts 0-2 machine-translated)
 
 Runs alongside Stage 6 from M3 onward.
 
