@@ -1,0 +1,136 @@
+---
+title: Colecciones
+description: Usa listas, diccionarios, tuplas y conjuntos para guardar muchos valores.
+sidebar:
+  order: 10
+lessonId: '4.10'
+estimatedMinutes: 20
+prerequisites: ['4.8']
+translationStatus: machine
+sourceHash: d7b7e70a6295
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Elegir entre una lista, un diccionario, una tupla y un conjunto. - Leer y
+	construir cada uno con filas de ventas reales. - Contar elementos con un
+	diccionario.
+</LessonGoals>
+
+## Por qué importa
+
+Los datos de negocio vienen en grupos: filas, columnas, clientes, categorías. Una
+**colección** guarda muchos valores en una sola variable. Cada tipo de colección sirve
+para un trabajo distinto, y elegir la correcta vuelve el código corto y claro.
+
+<CaseStudy>
+	Daniela quiere contar las ventas por categoría y saber cuántos clientes
+	distintos compraron algo. Un diccionario hace lo primero y un conjunto lo
+	segundo.
+</CaseStudy>
+
+## Las cuatro colecciones
+
+| Colección   | Se escribe como  | Idea clave                             | Uso de ejemplo                     |
+| ----------- | ---------------- | -------------------------------------- | ---------------------------------- |
+| Lista       | `[a, b, c]`      | Ordenada, puede cambiar, puede repetir | Las filas de un archivo            |
+| Diccionario | `{"key": value}` | Buscar un valor por su clave           | Conteo por categoría               |
+| Tupla       | `(a, b)`         | Ordenada, no puede cambiar             | Un par fijo, como un ID y un monto |
+| Conjunto    | `{a, b, c}`      | Sin repetidos, sin orden               | Clientes distintos                 |
+
+<Mermaid
+	diagram={`flowchart TD
+  A["Muchos valores"] --> B{"¿Buscar por nombre o clave?"}
+  B -- Sí --> C["Diccionario"]
+  B -- No --> D{"¿Hay que quitar repetidos?"}
+  D -- Sí --> E["Conjunto"]
+  D -- No --> F{"¿Va a cambiar?"}
+  F -- Sí --> G["Lista"]
+  F -- No --> H["Tupla"]`}
+/>
+
+## En acción
+
+<Example file="part04/10_collections.py" />
+
+- `rows[:3]` toma los primeros tres elementos de una lista. El conteo empieza en cero:
+  `rows[0]` es el primero.
+- El diccionario `counts` asigna a cada categoría, tal como está escrita, cuántas veces
+  aparece. `counts.get(key, 0)` devuelve cero para una clave que todavía no se ha visto.
+- La comprensión de conjunto `{row[2] for row in rows if row[2]}` reúne los clientes,
+  ignorando los vacíos y los repetidos. Hay 8 clientes distintos.
+
+El conteo también muestra el desorden en las categorías: `café` aparece 36 veces, pero
+`Café` 3 veces y `cafe` 4 veces por separado. El `simplify` de la lección 4.9 las une.
+
+## Manos a la obra
+
+### Ahora tú
+
+Tienes `ids = ["T1", "T2", "T2", "T3"]`.
+
+1. ¿Cuánto es `len(ids)`?
+2. ¿Cuánto es `len(set(ids))`?
+3. ¿Qué te dice `set(ids)` sobre los datos?
+
+<Checkpoint question="Muestra las respuestas">
+	1. 4. 2. 3. 3. Hay un ID repetido, así que los datos tienen un duplicado.
+</Checkpoint>
+
+## Errores comunes
+
+- **Empezar a contar desde 1.** Las posiciones empiezan en 0.
+- **Cambiar una lista mientras recorres un bucle sobre ella.** Construye una nueva (lección 4.11).
+- **Esperar orden de un conjunto.** Los conjuntos no tienen orden.
+- **Usar una lista para buscar cosas.** Un diccionario es mucho más rápido y claro.
+- **Olvidar que una clave debe existir.** Usa `.get()` con un valor predeterminado.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Cuenta los elementos.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente escribe bucles anidados difíciles de leer y esconde un error de
+		uno de más o de uno de menos.
+	</Fragment>
+	<Fragment slot="good">
+		Tengo una lista de filas de ventas, cada una una lista como ["T001",
+		"01/01/2024", "C004", "2200.00", "jugo"]. Escribe Python que cuente cuántas
+		ventas hay por categoría (el quinto elemento), usando un diccionario, e
+		imprima las categorías en orden alfabético. Añade una comprobación de que
+		los conteos suman el número de filas.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Especifica la estructura de la **entrada**, el **formato de salida** (orden
+		alfabético) y una **verificación** (los conteos suman).
+	</Fragment>
+	<Fragment slot="check">
+		Ejecuta la comprobación. Luego cuenta una categoría a mano con una búsqueda
+		de texto en el editor.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué colección elimina los repetidos?">
+	Un conjunto.
+</Checkpoint>
+
+<Checkpoint question="¿Qué índice tiene el primer elemento de una lista?">
+	0.
+</Checkpoint>
+
+<Checkpoint question="¿Cuándo usarías un diccionario?">
+	Cuando buscas valores por una clave, como el conteo de cada categoría.
+</Checkpoint>
+
+## Para profundizar
+
+- La Parte 6 usa pandas, que hace conteos como este en una sola línea.

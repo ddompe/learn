@@ -1,0 +1,168 @@
+---
+title: 'Miniproyecto: un script con pruebas'
+description: Construye un script que resume las ventas de Café Central por categoría, con pruebas.
+sidebar:
+  order: 16
+lessonId: '4.16'
+estimatedMinutes: 40
+prerequisites: ['4.7', '4.9', '4.12', '4.14', '3.9']
+translationStatus: machine
+sourceHash: 355599f6551e
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Combinar funciones, archivos y manejo de texto en un solo script. - Leer un
+	conjunto de pruebas del script. - Comprobar la salida contra los datos.
+</LessonGoals>
+
+## Por qué importa
+
+Esta lección usa todo lo de la Parte 4 en una herramienta pequeña y real. Lee el archivo
+de ventas desordenado, elimina las líneas duplicadas, limpia las categorías y los montos,
+e imprime un total por cada categoría. Las funciones son pequeñas y cada una tiene una
+prueba.
+
+<CaseStudy>
+	El primer resumen mensual de Daniela solía tomar casi un día. Este script
+	produce los totales por categoría en un segundo, y las pruebas se aseguran de
+	que siga siendo correcto.
+</CaseStudy>
+
+## El plan
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Leer el CSV"] --> B["Eliminar filas duplicadas"]
+  B --> C["Limpiar categoría y monto"]
+  C --> D["Total por categoría"]
+  D --> E["Imprimir el resumen"]`}
+/>
+
+## El script
+
+<Example file="part04/16_sales_summary.py" />
+
+Léelo desde arriba:
+
+- `parse_amount` y `simplify` son los limpiadores de las lecciones 4.12 y 4.9.
+- `read_sales` usa el módulo `csv` para leer las filas como diccionarios, por nombre de columna (lección 4.13).
+- `remove_duplicates` conserva la primera copia de cada fila idéntica, usando un conjunto (lección 4.10).
+- `totals_by_category` recorre las filas y suma cada monto al total de su categoría (lección 4.11).
+- `main` los une e imprime. Solo `main` imprime. Las demás devuelven valores.
+
+La salida muestra 246 filas leídas y 240 después de quitar duplicados, y luego un total
+por cada categoría. Como `simplify` une `Café`, `cafe` y `café`, hay cinco categorías,
+no nueve.
+
+## Las pruebas
+
+Las pruebas comprueban cada función por separado, con respuestas calculadas a mano.
+
+<Example file="part04/test_16_sales_summary.py" />
+
+- `test_parse_amount_handles_all_three_formats` cubre los tres estilos.
+- `test_simplify_merges_spelling_variants` comprueba la unión de categorías.
+- `test_remove_duplicates_keeps_first_copy` usa una lista diminuta.
+- `test_totals_by_category_adds_exactly` comprueba la aritmética decimal exacta.
+- `test_real_file_has_240_unique_rows` comprueba el archivo real y se conecta con la lección 0.3: 246 líneas, 240 únicas.
+
+Ejecuta las pruebas con:
+
+```text
+uv run pytest
+```
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+1. Copia el script a tu proyecto `cafe-report` y ejecútalo con `uv run`.
+2. Compara los conteos de filas con el número de líneas del editor.
+3. Elige una categoría y suma a mano algunos de sus montos. ¿Coincide el script?
+
+### Ahora tú
+
+Añade una función nueva `largest_sale(rows)` que devuelva el monto más grande. Escribe
+primero la prueba, con una lista diminuta cuya respuesta conozcas. Luego escribe la
+función.
+
+<Checkpoint question="Muestra una prueba de ejemplo">
+	Para filas con montos "10", "$25,50" y "5", la venta más grande es
+	`Decimal("25.50")`. Una prueba afirma que `largest_sale(rows) ==
+	Decimal("25.50")`. Escribir primero la prueba demuestra que entiendes la meta
+	antes de que exista el código.
+</Checkpoint>
+
+## Errores comunes
+
+- **Escribir todo el script antes de ejecutar algo.** Constrúyelo y ejecútalo en pasos pequeños.
+- **Pruebas que repiten el código.** Usa valores esperados calculados a mano.
+- **Confiar en los totales sin una comprobación puntual.**
+- **Mezclar impresión y lógica.** Mantén la lógica en funciones que devuelven valores.
+- **Olvidar que corregir las categorías es una decisión.** Documenta tu regla.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Escribe todo el script del informe.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente produce un script largo con nombres de columna supuestos y sin
+		pruebas. Cuando se ejecuta, no puedes saber si los números son correctos.
+	</Fragment>
+	<Fragment slot="good">
+		Tengo un archivo UTF-8 separado por punto y coma con las columnas ID, Fecha,
+		Cliente, Monto, Categoría. Los montos aparecen como "1500", "1400.50" y
+		"$1500,50". Las categorías aparecen como "Café", "cafe", "café". Escribe el
+		script en funciones pequeñas: leer, eliminar filas duplicadas exactas,
+		limpiar el monto (Decimal), limpiar la categoría, total por categoría. Añade
+		pruebas de pytest con valores esperados calculados a mano. Deja la impresión
+		solo en main. Explica cómo puedo comprobar los totales de forma
+		independiente.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Da todos los datos de **entrada**, divide la **tarea** en pasos e incluye
+		**pruebas** y un método de verificación.
+	</Fragment>
+	<Fragment slot="check">
+		Ejecuta las pruebas, luego suma una categoría a mano a partir del CSV y
+		compárala con el número del script.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Por qué solo main() imprime y no las otras funciones?">
+	Las funciones que devuelven valores se pueden probar y reutilizar. Imprimir en
+	un solo lugar mantiene limpia la lógica.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué el número de categorías es cinco y no nueve?">
+	El paso de limpieza une las variantes de ortografía, como Café, cafe y café.
+</Checkpoint>
+
+<Checkpoint question="¿Cómo sabes que los totales son correctos?">
+	Con pruebas con valores calculados a mano, más una comprobación manual de una
+	categoría contra el CSV.
+</Checkpoint>
+
+## Lista de verificación de fin de parte
+
+Terminaste la Parte 4 cuando puedas marcar todos los puntos:
+
+- [ ] `uv --version` y `uv run python --version` funcionan.
+- [ ] Puedo ejecutar un script con `uv run` y con el botón Run de VS Code.
+- [ ] Puedo decir qué resulta de sumar el texto `"1500"` consigo mismo, y por qué.
+- [ ] Mi `parse_amount` pasa las pruebas de tres formatos.
+- [ ] El script de resumen imprime los totales por categoría y sus pruebas pasan.
+
+## Para profundizar
+
+- La Parte 5 examina los formatos de archivo en los que vienen los datos de negocio.

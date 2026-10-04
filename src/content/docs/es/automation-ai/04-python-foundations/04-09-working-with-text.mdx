@@ -1,0 +1,145 @@
+---
+title: Trabajar con texto
+description: Manipula cadenas de texto, usa f-strings y maneja texto con tildes para que Café y cafe coincidan.
+sidebar:
+  order: 9
+lessonId: '4.9'
+estimatedMinutes: 20
+prerequisites: ['4.8', '1.7']
+translationStatus: machine
+sourceHash: fe23aa4d4b31
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Limpiar y cambiar cadenas de texto con métodos comunes. - Construir mensajes
+	con f-strings. - Normalizar texto con tildes para que las variantes se
+	comparen como iguales.
+</LessonGoals>
+
+## Por qué importa
+
+La mayoría de los datos de negocio son texto: nombres, categorías, notas, ID. El texto
+real es desordenado. Tiene espacios de más, mayúsculas distintas y tildes escritas de
+maneras diferentes. En el archivo de ventas, la misma categoría aparece como `Café`,
+`café` y `cafe`. Si un programa las trata como tres categorías, tus totales están mal.
+
+<CaseStudy>
+	Daniela quiere un solo total para el café. En el archivo, el café aparece como
+	`Café`, `café` y `cafe`, y los sándwiches como `Sándwich`, `sándwich` y
+	`sandwich`. Necesita una manera de igualarlos.
+</CaseStudy>
+
+## Cadenas de texto y sus métodos
+
+Una **cadena de texto** (string) es un trozo de texto escrito entre comillas. Las
+cadenas tienen **métodos**, que son acciones incorporadas que se llaman con un punto.
+
+| Método           | Qué hace                             | Resultado de ejemplo   |
+| ---------------- | ------------------------------------ | ---------------------- |
+| `.strip()`       | Quita los espacios en ambos extremos | `"  Ana "` a `"Ana"`   |
+| `.lower()`       | Pasa a minúsculas                    | `"Café"` a `"café"`    |
+| `.upper()`       | Pasa a mayúsculas                    | `"té"` a `"TÉ"`        |
+| `.replace(a, b)` | Reemplaza a por b                    | `"1,5"` a `"1.5"`      |
+| `.split(sep)`    | Corta en una lista                   | `"a;b"` a `["a", "b"]` |
+| `len(text)`      | Cuenta los caracteres                | `len("Café")` es 4     |
+
+Los métodos devuelven una cadena nueva. No cambian la original, porque las cadenas no se
+pueden modificar en el lugar.
+
+Una **f-string** pone valores dentro de un texto. Pon una `f` antes de las comillas y los
+nombres entre llaves: `f"Category: {category}"`.
+
+## Tildes
+
+Python lee el texto como Unicode (lección 1.7), así que `é` es un solo carácter y funciona
+como cualquier otro. Pero la misma `é` visible puede almacenarse de dos maneras: como un
+solo carácter, o como `e` más una tilde combinada. Para comparar texto de forma confiable,
+normalízalo.
+
+<Example file="part04/09_text.py" />
+
+La función `simplify` quita los espacios, pasa a minúsculas, separa las tildes con
+`unicodedata.normalize` y conserva solo los caracteres que no son tildes. Eso hace que
+`Café`, `cafe` y `café` se conviertan en `cafe`.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Café"] --> B["strip y lower"]
+  B --> C["separar la tilde"]
+  C --> D["cafe"]`}
+/>
+
+Fíjate en el compromiso. Quitar las tildes es bueno para hacer coincidir, pero quizá
+quieras conservar el original para mostrarlo. A menudo se guardan ambos.
+
+## Manos a la obra
+
+### Ahora tú
+
+¿Qué devuelve `simplify("  Té ")`?
+
+<Checkpoint question="Muestra la respuesta">
+	`"te"`: espacios eliminados, minúsculas y tilde descartada.
+</Checkpoint>
+
+## Errores comunes
+
+- **Comparar texto sin limpiarlo.** `"cafe" == "café"` es `False`.
+- **Olvidar que los métodos devuelven cadenas nuevas.** `name.strip()` solo no cambia nada.
+  Asigna el resultado.
+- **Quitar las tildes del texto que se muestra.** Conserva el original para la salida.
+- **Suponer que tu editor muestra la forma almacenada.** Dos cadenas visualmente iguales pueden diferir.
+- **Limpiar texto con buscar y reemplazar en cada caso raro.** Usa una regla que los maneje todos.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Limpia este texto.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente quita las tildes de todo, pasa a minúsculas los nombres o
+		elimina la puntuación que sí importaba.
+	</Fragment>
+	<Fragment slot="good">
+		Tengo una columna de nombres de categoría en español: "Café", "cafe",
+		"café", "Sándwich", "sandwich". Quiero una función de Python simplify(text)
+		que haga iguales las variantes de la misma palabra, para poder agruparlas.
+		Mantén el texto original disponible para mostrarlo. Muéstrame la función y
+		pruébala con esos cinco valores. Explica cómo maneja las tildes.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Da la **entrada** (valores reales) y una **restricción** (conservar el
+		original), pide una **prueba** con los valores y explica el método.
+	</Fragment>
+	<Fragment slot="check">
+		Ejecútala con tu propia lista de valores, incluido uno con espacios de más.
+		Comprueba que no cambie los nombres de personas.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿`name.strip()` cambia `name`?">
+	No. Devuelve una cadena nueva. Asigna el resultado para conservarla.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué dos copias de la palabra café podrían no ser iguales?">
+	Una puede usar un solo carácter `é` y la otra `e` más una tilde combinada.
+	Normalizar las vuelve iguales.
+</Checkpoint>
+
+<Checkpoint question="¿Qué es una f-string?">
+	Una cadena con una `f` antes, que pone en el texto los valores de los nombres
+	que están entre llaves.
+</Checkpoint>
+
+## Para profundizar
+
+- La Parte 5 vuelve a las codificaciones cuando se leen archivos de otros sistemas.

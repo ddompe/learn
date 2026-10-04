@@ -1,0 +1,169 @@
+---
+title: GitHub
+description: Pon una copia privada de tu repositorio en GitHub, envía y trae cambios, y aprende qué es un pull request.
+sidebar:
+  order: 6
+lessonId: '3.6'
+estimatedMinutes: 25
+prerequisites: ['3.5']
+translationStatus: machine
+sourceHash: aaeac063e4bc
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar qué es GitHub y en qué se diferencia de Git. - Crear un repositorio
+	privado y enviar (push) tu proyecto a él. - Explicar qué es un pull request.
+</LessonGoals>
+
+## Por qué importa
+
+Hasta ahora, tu historial vive en una sola computadora. **GitHub** es un sitio web que
+aloja repositorios de Git. Tener una copia allí te da una copia de seguridad, una forma
+de trabajar desde otra computadora y una forma de trabajar con otras personas. También
+es donde vive la mayor parte del software de código abierto.
+
+Git y GitHub son cosas distintas. Git es la herramienta que registra el historial.
+GitHub es un servicio que almacena repositorios.
+
+<CaseStudy>
+	Reemplazan la laptop de Daniela. Como su repositorio está en GitHub, lo clona
+	en la máquina nueva y continúa con todo el historial.
+</CaseStudy>
+
+## Local y remoto
+
+Un **remoto** es una copia del repositorio en otro lugar, aquí en GitHub. Le envías
+commits con **push** y traes commits nuevos de él con **pull**.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Tu computadora: repositorio local"] -->|"push"| B["GitHub: repositorio remoto"]
+  B -->|"pull"| A`}
+/>
+
+## Crea un repositorio privado
+
+1. Inicia sesión en [https://github.com](https://github.com) (la cuenta de la lección 3.3).
+2. Crea un **nuevo repositorio** (New repository). Dale un nombre sencillo, como `cafe-central`.
+3. Elige **Private** (Privado). Solo tú (y las personas que invites) pueden ver un
+   repositorio privado.
+4. Por ahora, no marques las opciones para añadir un README, una licencia o un
+   `.gitignore`.
+
+**Advertencia:** un repositorio público lo ve todo el mundo y los buscadores lo indexan.
+No publiques datos de clientes ni secretos. Ante la duda, elige Privado.
+
+## Envía desde VS Code
+
+En la vista de Control de código fuente (Source Control), elige **Publish Branch**
+(Publicar rama) o **Publish to GitHub**. VS Code te pide iniciar sesión en GitHub en el
+navegador y luego elegir un nombre y si el repositorio es privado o público. Elige
+privado. Tus commits aparecen en github.com.
+
+O desde la terminal, usando la dirección que GitHub muestra en la página del nuevo
+repositorio:
+
+```text
+git branch -M main
+git remote add origin https://github.com/YOUR-NAME/cafe-central.git
+git push -u origin main
+```
+
+A partir de entonces, `git push` envía los commits nuevos y `git pull` trae los cambios
+hechos en otro lugar.
+
+## Ramas y pull requests
+
+Una **rama** (branch) es una línea de trabajo separada dentro del mismo repositorio.
+Puedes probar un cambio en una rama sin tocar la línea principal. Un **pull request** es
+una solicitud en GitHub para combinar una rama con la línea principal, de modo que otras
+personas puedan revisarla antes.
+
+Cuando trabajas solo, a menudo haces commit directamente en `main`. En los equipos, un
+pull request es la forma en que se revisan los cambios. No los necesitas ahora, pero verás
+estas palabras por todas partes.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+1. Crea un repositorio privado en GitHub llamado `cafe-central`.
+2. Publica tu repositorio local en él.
+3. Recarga la página en github.com y encuentra tus dos commits en el historial.
+4. Haz otro cambio pequeño en VS Code, haz commit y envía (push). Recarga y comprueba.
+
+### Ahora tú
+
+¿Cuáles de estos nunca deberían estar en un repositorio público?
+
+1. Los scripts de resumen de ventas que escribiste.
+2. Un archivo con los correos de los clientes.
+3. Un archivo con una clave de API.
+
+<Checkpoint question="Muestra las respuestas">
+	El 2 y el 3. Quizá no haya problema en compartir los scripts, pero los datos
+	de clientes y las claves deben mantenerse privados (lección 3.7).
+</Checkpoint>
+
+## Errores comunes
+
+- **Crear un repositorio público por accidente.** Revisa la visibilidad antes de hacer clic en
+  crear. Puedes cambiarla después, pero lo que estuvo público pudo haberse copiado.
+- **Enviar secretos o datos personales.** Borrarlos después no los elimina del
+  historial (lección 3.7).
+- **Confundir Git con GitHub.** Uno es la herramienta, el otro el servicio de alojamiento.
+- **Pegar una contraseña para hacer push.** Usa el inicio de sesión por navegador que ofrece VS Code.
+- **Olvidar hacer push.** Los commits se quedan en tu computadora hasta que los envías.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Sube mi proyecto a GitHub.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente puede crear un repositorio público, subir todos los archivos de
+		la carpeta o pedirte que compartas tu contraseña.
+	</Fragment>
+	<Fragment slot="good">
+		Tengo un repositorio local de Git con dos commits. Quiero ponerlo en GitHub
+		como repositorio privado llamado cafe-central, usando VS Code en Windows.
+		Dame los pasos en orden. Asegúrate de que el repositorio sea privado y dime
+		qué debo revisar antes de hacer push para no incluir datos de clientes ni
+		claves. No me pidas que comparta una contraseña ni un token.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Indica el **contexto**, la **restricción** (privado, sin secretos) y pide
+		una **verificación** previa al push.
+	</Fragment>
+	<Fragment slot="check">
+		Después de publicar, abre el repositorio en una ventana privada del
+		navegador. Si puedes verlo sin iniciar sesión, es público.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Cuál es la diferencia entre Git y GitHub?">
+	Git registra el historial en tu computadora. GitHub es un sitio web que aloja
+	repositorios.
+</Checkpoint>
+
+<Checkpoint question="¿Qué hacen push y pull?">
+	Push envía tus commits al remoto. Pull trae commits desde él.
+</Checkpoint>
+
+<Checkpoint question="¿Qué es un pull request?">
+	Una solicitud en GitHub para combinar una rama con la línea principal y que
+	otras personas puedan revisarla.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 3.7 explica cómo mantener los secretos fuera de tu repositorio.

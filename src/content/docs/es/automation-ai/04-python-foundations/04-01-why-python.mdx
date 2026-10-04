@@ -1,0 +1,149 @@
+---
+title: Por qué Python
+description: Conoce de dónde viene Python y por qué se volvió el lenguaje predeterminado para datos e IA.
+sidebar:
+  order: 1
+lessonId: '4.1'
+estimatedMinutes: 10
+prerequisites: ['3.1']
+translationStatus: machine
+sourceHash: bbef6ea630cb
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Resumir de dónde viene Python. - Explicar por qué Python es tan común en el
+	trabajo con datos e IA. - Enunciar las ventajas y desventajas de elegir
+	Python.
+</LessonGoals>
+
+## Por qué importa
+
+Vas a pasar el resto del curso escribiendo y leyendo Python. Ayuda saber por qué lo
+elegimos, para que no parezca una regla arbitraria. También ayuda en las conversaciones
+con colegas que prefieren otras herramientas.
+
+<CaseStudy>
+	El equipo de Daniela tiene Excel, Power Query y algunas macros. Cuando
+	necesita combinar cientos de archivos, o llamar a un servicio de IA, esas
+	herramientas se quedan cortas. Python es la herramienta que la mayoría de las
+	personas en su posición aprende después.
+</CaseStudy>
+
+## Una historia breve
+
+Guido van Rossum empezó Python a finales de la década de 1980 y lo publicó en 1991. Lo
+diseñó para que fuera fácil de leer y para que una persona pudiera decir mucho en pocas
+líneas. El nombre viene del grupo de comedia Monty Python, no de la serpiente.
+
+Desde entonces, tres cosas lo convirtieron en el lenguaje predeterminado para trabajar
+con datos:
+
+1. **Legibilidad.** El código de Python se parece al inglés sencillo. Un principiante
+   puede leer un programa corto y adivinar qué hace.
+2. **Baterías incluidas.** La biblioteca estándar cubre archivos, fechas, texto, CSV y
+   mucho más sin descargas adicionales.
+3. **Un ecosistema enorme.** Existen miles de paquetes gratuitos para datos (pandas),
+   gráficos (matplotlib), documentos, la web y aprendizaje automático. Casi toda
+   herramienta de IA ofrece primero una interfaz en Python.
+
+## Por qué importa para la IA
+
+La mayoría de las bibliotecas y servicios de IA se escriben primero para Python, y la
+mayoría de los ejemplos que encuentras en línea están en Python. Los asistentes de IA
+también han visto mucho más Python que la mayoría de los lenguajes, así que lo escriben
+bien. Es una razón práctica: obtienes la mejor ayuda.
+
+## Ventajas y desventajas
+
+Python no es lo mejor en todo.
+
+- **Velocidad.** Python es más lento que lenguajes como C o Rust para cálculos pesados.
+  Las bibliotecas lo disimulan haciendo el trabajo pesado en código rápido por debajo.
+  Para datos de negocio, rara vez es un problema.
+- **Aplicaciones móviles y interfaces web.** Otros lenguajes dominan ahí.
+- **Versiones e instalaciones.** Configurar mal Python causa muchos dolores de cabeza. Por
+  eso la lección 4.2 usa uv.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Código legible"] --> D["Python para datos e IA"]
+  B["Biblioteca estándar"] --> D
+  C["Enorme ecosistema de paquetes"] --> D`}
+/>
+
+## Manos a la obra
+
+### Ahora tú
+
+Pregúntate cuáles de estos trabajos encajan bien con Python:
+
+1. Combinar 200 archivos CSV en una sola tabla.
+2. Escribir una aplicación para teléfono.
+3. Llamar a un servicio de IA para 5,000 comentarios de clientes.
+
+<Checkpoint question="Muestra las respuestas">
+	El 1 y el 3 encajan bien con Python. Una aplicación para teléfono se atiende
+	mejor con otros lenguajes.
+</Checkpoint>
+
+## Errores comunes
+
+- **Tratar a Python como la única opción.** Es un buen punto de partida, no una ley.
+- **Comparar velocidades sin contexto.** Para un informe mensual, un segundo más o menos no importa.
+- **Empezar sin una configuración clara.** La lección 4.2 evita los problemas típicos.
+- **Pensar que debes memorizar la sintaxis.** Leerás mucho más de lo que escribirás.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">¿Python es el mejor lenguaje?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		Recibes una lista larga y llena de matices de lenguajes, y ninguna
+		recomendación que se aplique a ti.
+	</Fragment>
+	<Fragment slot="good">
+		Soy analista financiero y uso Excel y Power Query. Mis tareas son combinar
+		muchos archivos CSV, limpiar fechas y hacer informes mensuales. ¿Debo
+		aprender Python u otra cosa? Dame una recomendación en un párrafo y luego
+		dos situaciones en las que la cambiarías.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Aporta el **contexto** (herramientas y tareas), una **tarea** que pide una
+		decisión y un **formato de salida** que hace la respuesta corta y
+		verificable.
+	</Fragment>
+	<Fragment slot="check">
+		Comprueba que la recomendación mencione tus tareas reales y pregúntate si
+		las dos excepciones se aplican a ti. Desconfía de las afirmaciones
+		absolutas.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="Da dos razones por las que Python es popular para el trabajo con datos.">
+	Código legible y un enorme ecosistema de paquetes. La biblioteca estándar
+	también ayuda.
+</Checkpoint>
+
+<Checkpoint question="¿Python es el lenguaje más rápido?">
+	No. Las bibliotecas hacen el trabajo pesado en código más rápido, y para datos
+	de negocio la velocidad rara vez es un problema.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué le importa al curso cómo instalas Python?">
+	Una configuración desordenada causa muchos problemas a los principiantes, así
+	que el curso usa un único método limpio.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 4.2 instala uv y Python.

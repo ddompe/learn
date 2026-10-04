@@ -1,0 +1,202 @@
+---
+title: Lo básico de Git en VS Code
+description: Crea un repositorio, prepara cambios, haz commit con un mensaje claro y lee el historial.
+sidebar:
+  order: 5
+lessonId: '3.5'
+estimatedMinutes: 25
+prerequisites: ['3.2', '3.4']
+translationStatus: machine
+sourceHash: a9f09108f59d
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Crear un repositorio para tu proyecto. - Preparar y confirmar un cambio con
+	un mensaje claro. - Leer el historial en VS Code y en la terminal.
+</LessonGoals>
+
+## Por qué importa
+
+Git solo ayuda si lo usas. Esta lección te lleva por todo el ciclo básico en una
+carpeta real: avisarle a Git de un proyecto, cambiar algo, registrar el cambio y mirar
+hacia atrás. También es tu red de seguridad para el trabajo con Copilot de la lección
+3.3.
+
+<CaseStudy>
+	Daniela convierte la carpeta de Café Central en un repositorio. Su primera
+	instantánea contiene los datos. La segunda añade un pequeño archivo de notas
+	sobre el problema de las fechas.
+</CaseStudy>
+
+## Instala Git
+
+VS Code usa Git, pero no lo incluye.
+
+<OsTabs>
+	<Fragment slot="windows">
+		Descarga **Git for Windows** desde
+		[https://git-scm.com](https://git-scm.com), ejecuta el instalador y acepta
+		las opciones predeterminadas. Luego abre una terminal nueva y ejecuta `git
+		--version`.
+	</Fragment>
+	<Fragment slot="macos">
+		Abre Terminal y ejecuta `git --version`. Si falta Git, macOS ofrece instalar
+		las herramientas de línea de comandos para desarrolladores. Acepta, espera a
+		que termine la instalación y ejecuta el comando otra vez.
+	</Fragment>
+</OsTabs>
+
+Deberías ver un número de versión. Recuerda la lección 1.10: si la terminal dice "not
+found" (no se encuentra), abre una ventana de terminal nueva después de instalar.
+
+Ahora dile a Git quién eres. Escribe este nombre en cada instantánea. Usa tu nombre y un
+correo electrónico que no te importe tener en el historial.
+
+```text
+git config --global user.name "Daniela Mora"
+git config --global user.email "daniela@example.com"
+```
+
+## Tres lugares
+
+Git piensa en tres lugares.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Carpeta de trabajo: tus archivos tal como están ahora"] -->|"preparar (stage)"| B["Área de preparación: los cambios por registrar"]
+  B -->|"commit"| C["Historial: instantáneas guardadas"]`}
+/>
+
+- La **carpeta de trabajo** contiene tus archivos, tal como los editas.
+- El **área de preparación** (staging area) contiene los cambios que elegiste para la
+  siguiente instantánea. Tú decides qué entra, así que cada instantánea cuenta una sola
+  historia clara.
+- Un **commit** es una instantánea guardada en el historial, con un **mensaje de
+  commit**.
+
+## El ciclo en VS Code
+
+1. Abre la carpeta en VS Code (lección 3.2).
+2. Haz clic en el ícono de **Source Control** (Control de código fuente) en la barra
+   izquierda y elige **Initialize Repository** (Inicializar repositorio).
+3. Los archivos aparecen en una lista de cambios. Pasa el cursor sobre un archivo y haz
+   clic en el **+** para prepararlo (stage), o prepara todos.
+4. Escribe un mensaje en el cuadro, como `Add the January sales data`, y haz clic en
+   **Commit**.
+5. Edita un archivo y el cambio vuelve a aparecer en la lista. Prepáralo y haz commit de
+   nuevo.
+6. Haz clic en un archivo modificado para ver el **diff**, que muestra las líneas
+   eliminadas en rojo y las añadidas en verde.
+
+## El mismo ciclo en la terminal
+
+```text
+git init
+git status
+git add cafe_central_sales.csv
+git commit -m "Add the January sales data"
+git log --oneline
+```
+
+- `git init` convierte la carpeta en un repositorio.
+- `git status` muestra qué cambió y qué está preparado.
+- `git add` prepara un archivo.
+- `git commit -m` guarda la instantánea con un mensaje.
+- `git log --oneline` lista el historial, una línea por commit.
+
+VS Code y la terminal son dos vistas de lo mismo. Puedes mezclarlas.
+
+## Buenos mensajes de commit
+
+Un mensaje debe decir qué y por qué, en una línea corta que complete la frase "Este
+commit va a...":
+
+- Bueno: `Fix duplicate rows in January totals`
+- Malo: `update`, `stuff`, `final`
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+1. En VS Code, abre la carpeta de Café Central.
+2. Inicializa el repositorio y haz un primer commit que contenga los archivos de datos.
+3. Crea un archivo `notes.md` que diga "Dates come in three formats." Prepáralo y haz
+   commit con un mensaje claro.
+4. Abre el historial con `git log --oneline` en la terminal y encuentra los dos commits.
+
+### Ahora tú
+
+Cambia el archivo de notas añadiendo una segunda línea. Antes de hacer commit, abre el
+diff.
+
+1. ¿De qué color es la línea nueva?
+2. ¿Qué pasa si haces commit sin preparar primero?
+
+<Checkpoint question="Muestra las respuestas">
+	1. Verde. 2. En VS Code te pregunta si quieres preparar todos los cambios y
+	hacer commit. En la terminal no se confirma nada, porque el área de
+	preparación está vacía.
+</Checkpoint>
+
+## Errores comunes
+
+- **No instalar Git.** Control de código fuente muestra un mensaje de que falta Git.
+- **Hacer commit de todo con el mensaje "update".** Tu yo del futuro no sabrá qué contiene. Escribe la razón.
+- **Hacer commit de secretos o datos privados.** Revisa lo que preparas (lección 3.7).
+- **Hacer un único commit gigante al final.** Los commits pequeños son más fáciles de entender y de deshacer.
+- **Entrar en pánico por un comando que no entiendes.** Ejecuta primero `git status`. No cambia nada.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Haz commit de mis archivos.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente ejecuta o sugiere hacer commit de todo, incluidos datos que no
+		querías incluir, e inventa un mensaje vago.
+	</Fragment>
+	<Fragment slot="good">
+		La carpeta de mi proyecto contiene cafe_central_sales.csv,
+		cafe_central_customers.json y un archivo llamado .env con un secreto. Quiero
+		hacer mi primer commit de Git solo con el CSV de ventas y un archivo
+		notes.md. Dame los comandos exactos de la terminal, en orden. Para cada uno,
+		di qué cambia. Termina con el comando que demuestre que .env no está
+		preparado.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Aporta la **entrada** (los archivos) y la **restricción** (cuáles incluir),
+		pide comandos con **explicaciones** y termina con un paso de
+		**verificación**.
+	</Fragment>
+	<Fragment slot="check">
+		Ejecuta `git status` antes de hacer commit y confirma que `.env` no está en
+		la lista de cambios que se van a confirmar. Ejecuta `git log --oneline`
+		después.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué hace preparar (stage)?">
+	Elige qué cambios entran en el siguiente commit.
+</Checkpoint>
+
+<Checkpoint question="¿Qué hace bueno a un mensaje de commit?">
+	Una línea corta que dice qué cambió y por qué, como "Fix duplicate rows in
+	January totals".
+</Checkpoint>
+
+<Checkpoint question="¿Qué comando lista el historial, una línea por commit?">
+	`git log --oneline`.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 3.6 pone una copia del repositorio en GitHub.

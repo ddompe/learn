@@ -1,0 +1,159 @@
+---
+title: Ejecutar Python
+description: Usa la consola interactiva y ejecuta un script desde la terminal y desde VS Code.
+sidebar:
+  order: 4
+lessonId: '4.4'
+estimatedMinutes: 20
+prerequisites: ['4.3']
+translationStatus: machine
+sourceHash: 3339923ce53f
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Usar el REPL de Python para experimentos rápidos. - Ejecutar un script desde
+	la terminal con `uv run`. - Ejecutar un script desde VS Code.
+</LessonGoals>
+
+## Por qué importa
+
+Escribir Python solo sirve si puedes ejecutarlo. Hay tres formas comunes, cada una para
+un trabajo distinto. Saber cuál usar te evita copiar código entre herramientas y
+preguntarte por qué los resultados difieren.
+
+<CaseStudy>
+	Daniela quiere probar cómo suma Python tres montos de ventas. Lo prueba en el
+	REPL y luego guarda la idea como un script que puede ejecutar cada mes.
+</CaseStudy>
+
+## El REPL
+
+El **REPL** (read, evaluate, print, loop: leer, evaluar, imprimir, repetir) es una
+consola interactiva. Escribes una línea, Python la ejecuta y muestra el resultado. Es una
+calculadora para código.
+
+```text
+uv run python
+```
+
+El prompt cambia a `>>>`. Prueba:
+
+```text
+>>> 2200 + 1500 + 1400
+5100
+>>> exit()
+```
+
+Usa el REPL para probar una idea pequeña. No se guarda nada cuando sales.
+
+## Ejecuta un script
+
+Un **script** es un archivo de Python que ejecutas de principio a fin. Aquí está el
+primero:
+
+<Example file="part04/04_hello.py" />
+
+Desde la carpeta del proyecto, ejecuta:
+
+```text
+uv run python 04_hello.py
+```
+
+`uv run` se asegura de que el programa se ejecute dentro del entorno del proyecto
+(lección 4.3), con el Python y los paquetes correctos. Inicia siempre los programas con
+`uv run`.
+
+## Ejecuta en VS Code
+
+1. Instala la extensión **Python** (del publicador Microsoft) en VS Code.
+2. Abre el archivo. Si VS Code pide un intérprete, elige el que está en `.venv` dentro de tu proyecto.
+3. Haz clic en el triángulo **Run** (Ejecutar) arriba a la derecha del editor. La salida aparece en la terminal de abajo.
+
+El botón Run hace lo mismo que el comando de la terminal. Usa cualquiera de los dos y
+fíjate en que ambos muestran la misma salida. Si difieren, uno de ellos está usando un
+entorno distinto.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["REPL: probar una idea"] --> B["Script: guardarla como archivo"]
+  B --> C["uv run: ejecutarla en el proyecto"]
+  B --> D["Botón Run de VS Code"]`}
+/>
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+1. En tu proyecto `cafe-report`, crea `hello.py` con las líneas del ejemplo.
+2. Ejecútalo con `uv run python hello.py`.
+3. Ejecútalo de nuevo con el botón Run de VS Code.
+4. Cambia los montos, guarda y ejecútalo otra vez.
+
+### Ahora tú
+
+Predice la salida si cambias `amounts` a `[100, 200]` y el saludo se queda igual.
+
+<Checkpoint question="Muestra la respuesta">
+	"Hello from Café Central!" y luego "Total of three sales: 300". El texto sigue
+	diciendo "three" (tres), porque el mensaje no cuenta los montos. Es una fuente
+	común de etiquetas equivocadas. Los programas hacen lo que escribiste, no lo
+	que querías decir.
+</Checkpoint>
+
+## Errores comunes
+
+- **Ejecutar `python` en lugar de `uv run python`.** Puede iniciarse el Python equivocado.
+- **Ejecutar desde la carpeta equivocada.** El nombre del archivo es relativo a la carpeta actual.
+- **Editar un archivo y olvidar guardarlo.** Se ejecuta la versión vieja.
+- **Escribir líneas de código que empiezan con `>>>`.** Eso es el prompt, no parte del código.
+- **Esperar que el REPL recuerde.** Al cerrarlo olvida todo.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">¿Cómo ejecuto esto?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente enumera cinco maneras de ejecutar Python y no elige ninguna, o
+		escoge una que no usa el entorno de tu proyecto.
+	</Fragment>
+	<Fragment slot="good">
+		Uso VS Code en macOS con un proyecto de uv llamado cafe-report. Mi script es
+		hello.py, en la carpeta del proyecto. Dame el comando exacto de la terminal
+		para ejecutarlo y los pasos exactos para ejecutarlo con el botón Run. Dime
+		cómo comprobar que ambos usan el mismo Python.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Aporta el **contexto** (sistema operativo, herramientas, archivo), pide
+		**ambas** maneras y exige una **verificación**.
+	</Fragment>
+	<Fragment slot="check">
+		Ejecuta ambas y compara la salida. Compara la ruta de Python que muestra VS
+		Code con la de `.venv`.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Para qué sirve el REPL?">
+	Para probar ideas pequeñas de forma interactiva, sin guardar un archivo.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué usar `uv run`?">
+	Ejecuta el programa con el Python y los paquetes del proyecto.
+</Checkpoint>
+
+<Checkpoint question="¿Cómo sales del REPL?">
+	Escribe `exit()` y presiona Enter.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 4.5 muestra una tercera manera de ejecutar código: los notebooks, celda por celda.

@@ -1,0 +1,146 @@
+---
+title: Funciones
+description: Escribe y llama funciones con parámetros y valores devueltos, y limpia los montos y las fechas desordenados.
+sidebar:
+  order: 12
+lessonId: '4.12'
+estimatedMinutes: 25
+prerequisites: ['4.9', '4.11']
+translationStatus: machine
+sourceHash: 4dcd82118703
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Escribir una función con parámetros y un valor devuelto. - Explicar la
+	diferencia entre imprimir y devolver. - Escribir `parse_amount` y `parse_date`
+	para los datos de Café Central.
+</LessonGoals>
+
+## Por qué importa
+
+Una **función** es un trozo de código con nombre y reutilizable. Recibe una entrada,
+hace un trabajo y devuelve un resultado. Las funciones son lo que hace que los programas
+sean legibles, comprobables y reutilizables. También son lo que le pedirás a un asistente
+que escriba y lo que comprobarás con pruebas.
+
+<CaseStudy>
+	Los montos del archivo de ventas vienen en tres estilos: `1500`, `1400.50` y
+	`$1500,50`. Las fechas también vienen en tres estilos. Daniela necesita una
+	función para cada uno que convierta cualquier estilo en un valor limpio.
+</CaseStudy>
+
+## Anatomía de una función
+
+```text
+def parse_amount(text):
+    ...
+    return value
+```
+
+- `def` inicia la definición, seguido del nombre y los **parámetros** entre paréntesis.
+- Las líneas con sangría son el **cuerpo**.
+- `return` devuelve un resultado al código que llamó a la función.
+
+**Llamas** a una función escribiendo su nombre con la entrada, el **argumento**:
+`parse_amount("$1500,50")`.
+
+## Devolver, no imprimir
+
+`print` muestra algo en la pantalla. `return` devuelve el valor para que otro código
+pueda usarlo. Una función que solo imprime no se puede usar en un cálculo ni en una
+prueba. En general, las funciones deben devolver valores, y solo la capa exterior de un
+programa imprime.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Entrada: '$1500,50'"] --> B["parse_amount"]
+  B --> C["Salida: Decimal 1500.50"]`}
+/>
+
+## Los dos intérpretes de formato
+
+<Example file="part04/12_functions.py" />
+
+`parse_amount` quita el `$` y convierte la coma decimal en un punto, y luego crea un
+`Decimal` exacto. `parse_date` mira cómo está escrito el texto y lo separa en
+consecuencia. El estilo con barras `13/01/2024` se lee con el día primero, porque los
+datos contienen `13/01/2024`, que no podría tener el mes primero.
+
+Fíjate en el docstring, el texto entre comillas triples. Dice qué hace la función. Las
+buenas funciones tienen un nombre claro y un docstring corto.
+
+## Manos a la obra
+
+### Ahora tú
+
+¿Qué devuelve `parse_date("05/01/2024")`? ¿Es el 1 de mayo o el 5 de enero?
+
+<Checkpoint question="Muestra la respuesta">
+	El 5 de enero, porque la función lee el estilo con barras con el día primero.
+	Esto es una suposición sobre los datos. En otro conjunto de datos el orden
+	podría ser distinto, así que compruébalo siempre con fechas que no puedan ser
+	ambiguas, como el día 13.
+</Checkpoint>
+
+## Errores comunes
+
+- **Imprimir en lugar de devolver.** Quien llama recibe `None`.
+- **Hacer demasiado en una sola función.** Una función, un trabajo.
+- **Suposiciones ocultas.** Escríbelas en el docstring, como con las fechas con el día primero.
+- **Usar variables globales dentro de las funciones.** Pasa lo que necesites como parámetros.
+- **Sin pruebas.** Una función que limpia datos necesita pruebas con entradas difíciles.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Escribe una función.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente adivina el propósito y devuelve código sin docstring, sin tipo
+		y sin prueba.
+	</Fragment>
+	<Fragment slot="good">
+		Escribe una función de Python parse_amount(text) que devuelva un Decimal.
+		Debe aceptar "1500", "1400.50" y "$1500,50" (coma como separador decimal), y
+		lanzar un ValueError con un mensaje claro para cualquier otra cosa. Añade un
+		docstring y una prueba de pytest con estos tres casos y un caso inválido.
+		Calcula a mano los valores esperados.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Da ejemplos de **entrada**, el tipo exacto de **salida**, una
+		**restricción** para la entrada incorrecta y pide **verificación** mediante
+		pruebas.
+	</Fragment>
+	<Fragment slot="check">
+		Ejecuta las pruebas. Luego prueba una entrada que el asistente no enumeró,
+		como "1.500,50", y mira qué pasa.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Cuál es la diferencia entre print y return?">
+	`print` muestra texto en la pantalla. `return` devuelve un valor a quien llama
+	para que pueda usarse.
+</Checkpoint>
+
+<Checkpoint question="¿Qué es un parámetro?">
+	Un nombre en la definición de la función que recibe la entrada cuando se llama
+	a la función.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué escribir un docstring?">
+	Explica qué hace la función y sus suposiciones, para los lectores y para ti
+	mismo más adelante.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 4.13 muestra cómo usar funciones que otras personas han escrito.

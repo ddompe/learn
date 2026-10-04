@@ -1,0 +1,153 @@
+---
+title: Qué es un programa
+description: Entiende el código fuente, los intérpretes y los compiladores, y lee un primer programa diminuto.
+sidebar:
+  order: 1
+lessonId: '3.1'
+estimatedMinutes: 15
+prerequisites: ['1.4', '1.9', '1.10']
+translationStatus: machine
+sourceHash: 3d43d6b615be
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar qué es el código fuente. - Explicar la diferencia entre un
+	intérprete y un compilador. - Leer un programa de seis líneas y decir qué
+	hace.
+</LessonGoals>
+
+## Por qué importa
+
+Todo lo que vas a automatizar es un **programa**: una lista de instrucciones que una
+computadora sigue al pie de la letra. Si puedes leer un programa corto, puedes revisar
+lo que un asistente de IA escribió para ti. Todavía no necesitas escribir programas.
+Primero se aprende a leer.
+
+<CaseStudy>
+	La rutina mensual de Daniela, en su cabeza, es una lista de pasos: abrir el
+	archivo, contar las filas, revisar el total. Un programa es esa misma lista,
+	escrita con tanta precisión que una computadora puede seguirla.
+</CaseStudy>
+
+## Código fuente
+
+El **código fuente** es un programa escrito como texto en un **lenguaje de
+programación**. Se guarda en un archivo de texto plano, como un CSV, pero con reglas
+distintas. Python es el lenguaje que usa este curso. Un archivo de Python termina en
+`.py`.
+
+El procesador de una computadora no puede leer Python directamente. Solo entiende
+instrucciones de muy bajo nivel. Alguien tiene que traducir.
+
+## Intérpretes y compiladores
+
+Existen dos tipos de traductores.
+
+- Un **compilador** traduce todo el programa por adelantado a un archivo que el
+  procesador puede ejecutar directamente. Luego ejecutas ese archivo. Lenguajes como C y
+  Rust funcionan así.
+- Un **intérprete** lee el código fuente y lleva a cabo las instrucciones sobre la
+  marcha, línea por línea. Python funciona así.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Código fuente: report.py"] --> B["Intérprete de Python"]
+  B --> C["La computadora hace el trabajo"]
+  C --> D["Resultado en pantalla o en un archivo"]`}
+/>
+
+Con Python conservas el archivo fuente y se lo das al intérprete cada vez. Por eso
+puedes leer, cambiar y volver a ejecutar un programa con rapidez. También por eso
+necesitas tener Python instalado para ejecutar el programa de Python de otra persona
+(lección 4.2).
+
+## Lee un primer programa
+
+<Example file="part03/01_program.py" />
+
+Léelo de arriba hacia abajo:
+
+1. Una línea que empieza con `"""` es un **docstring**, una nota que describe el
+   programa.
+2. `from pathlib import Path` toma prestada una herramienta para trabajar con rutas de
+   archivo (lección 1.4).
+3. `sales_file = ...` guarda la ubicación del archivo de ventas con el nombre
+   `sales_file`. Un nombre que guarda un valor es una **variable**.
+4. `lines = ...` lee el archivo y lo divide en una lista de líneas.
+5. `print(...)` muestra un mensaje. El programa informa 246 filas: las 240 ventas más
+   seis líneas repetidas. Resta una por el encabezado.
+
+No necesitas recordar la sintaxis. Lo importante es que cada línea hace una sola cosa y
+tú puedes decir cuál.
+
+## Manos a la obra
+
+### Ahora tú
+
+Predice qué imprimiría el programa si el archivo tuviera solo un encabezado y 3 filas de
+ventas.
+
+<Checkpoint question="Muestra la respuesta">
+	"The file has 3 sales rows (not counting the header)." El programa cuenta las
+	líneas y resta una por el encabezado.
+</Checkpoint>
+
+## Errores comunes
+
+- **Pensar que debes memorizar la sintaxis.** Primero se aprende a leer. Los asistentes ayudan a escribir.
+- **Confundir el programa con su resultado.** El archivo `.py` contiene instrucciones. La salida aparece cuando lo ejecutas.
+- **Editar un programa en Word.** Usa un editor de código (lección 3.2). Word añade formato oculto.
+- **Tratar los errores como un fracaso.** Un mensaje de error es la computadora diciéndote lo que no pudo hacer.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">¿Qué es el código?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		Recibes una definición de libro de texto, llena de jerga y sin relación con
+		tu propio trabajo.
+	</Fragment>
+	<Fragment slot="good">
+		Uso fórmulas de Excel todos los días, pero nunca he programado. Explica qué
+		es un programa de Python, en menos de 120 palabras, comparándolo con un
+		libro de Excel. Luego muestra dónde falla la comparación. Usa un solo
+		ejemplo: un programa que cuenta las filas de un archivo CSV.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Da el **contexto** (usuario de Excel), una **restricción** (extensión y un
+		solo ejemplo) y pide los límites de la analogía, lo que evita un modelo
+		mental engañoso.
+	</Fragment>
+	<Fragment slot="check">
+		Comprueba que la respuesta diga que un programa es una lista de
+		instrucciones que se ejecutan en orden y que no afirme que un programa
+		"piensa". Intenta repetir cada paso con tus propias palabras.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué es el código fuente?">
+	Un programa escrito como texto en un lenguaje de programación.
+</Checkpoint>
+
+<Checkpoint question="¿Cuál es la diferencia entre un intérprete y un compilador?">
+	Un compilador traduce todo el programa por adelantado. Un intérprete lleva a
+	cabo las instrucciones a medida que las lee.
+</Checkpoint>
+
+<Checkpoint question="¿Qué hace una variable?">
+	Le da un nombre a un valor, para que el programa pueda usarlo después.
+</Checkpoint>
+
+## Para profundizar
+
+- La Parte 4 explica Python a fondo. La lección 4.1 cuenta por qué domina el trabajo con datos.

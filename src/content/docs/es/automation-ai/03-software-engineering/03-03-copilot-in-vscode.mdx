@@ -1,0 +1,182 @@
+---
+title: GitHub Copilot en VS Code
+description: Configura Copilot, usa sus sugerencias y su chat, y aprende a revisar antes de aceptar.
+sidebar:
+  order: 3
+lessonId: '3.3'
+estimatedMinutes: 25
+prerequisites: ['3.2', '2.7']
+lastVerified: 2026-10-03
+translationStatus: machine
+sourceHash: 63ab7aec58de
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Iniciar sesión en GitHub Copilot dentro de VS Code. - Usar las sugerencias
+	en línea, el chat y el modo agente para una tarea pequeña. - Revisar una
+	sugerencia antes de aceptarla.
+</LessonGoals>
+
+## Por qué importa
+
+**GitHub Copilot** es el asistente de IA que este curso usa dentro de VS Code. Puede
+sugerir las siguientes líneas mientras escribes, responder preguntas sobre tus archivos
+y, en algunos modos, hacer cambios en varios archivos. Acelera mucho trabajo. También
+escribe errores con total seguridad, como viste en la lección 2.6. La habilidad está en
+usarlo y en revisarlo.
+
+Los nombres de los planes, los modos y los límites cambian con frecuencia. Esta lección
+enseña los hábitos de trabajo que perduran y reúne los datos perecederos en una sola
+sección marcada.
+
+<CaseStudy>
+	Daniela le pide a Copilot que explique el programa de seis líneas de la
+	lección 3.1. Luego le pide que cuente solo las filas de enero. Lee la
+	sugerencia línea por línea antes de aceptarla.
+</CaseStudy>
+
+## Configúralo
+
+1. Crea una cuenta gratuita de GitHub en [https://github.com](https://github.com) si no tienes una. Usa un
+   correo electrónico que controles.
+2. En VS Code, abre la vista de chat de Copilot (el ícono de chat en la barra de título
+   o en la barra lateral).
+3. Elige **Sign in** (Iniciar sesión) y sigue las indicaciones del navegador para
+   conectar tu cuenta de GitHub.
+4. Si tu empresa ofrece Copilot, pregunta a TI qué cuenta usar. Las cuentas de empresa
+   pueden tener reglas distintas (lección 2.8).
+
+Si el inicio de sesión falla, anota el mensaje exacto y pide ayuda a tu asistente, sin
+pegar ningún secreto.
+
+## Tres formas de usarlo
+
+- **Sugerencias en línea.** Mientras escribes, aparece texto gris. Presiona **Tab** para
+  aceptarlo o **Esc** para descartarlo.
+- **Chat.** Haces una pregunta en lenguaje natural y recibes una respuesta. Puedes
+  adjuntar un archivo o el código seleccionado como contexto.
+- **Modo agente.** Describes una meta, y Copilot planifica y hace cambios en tus
+  archivos, tal vez ejecutando comandos. Es potente y exige el mayor cuidado. Revisa
+  siempre lo que hizo.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Escribes una petición clara"] --> B["Copilot sugiere"]
+  B --> C{"¿Lo lees y lo entiendes?"}
+  C -- Sí --> D["Aceptar y probar"]
+  C -- No --> E["Pedir una explicación, o rechazar"]`}
+/>
+
+## Revisa antes de aceptar
+
+Usa esta rutina cada vez:
+
+1. **Léela.** ¿Puedes decir, línea por línea, qué hace?
+2. **Compárala con tus datos.** ¿Usa los nombres reales de columnas y archivos?
+3. **Busca sorpresas.** Archivos borrados, comandos que no conoces, llamadas a la red o
+   instalaciones nuevas.
+4. **Ejecútala en un caso pequeño** y compara con un resultado que puedas verificar.
+5. **Ten una red de seguridad.** El control de versiones (Parte 3, próximas lecciones)
+   te permite deshacer.
+
+Una sugerencia sin leer que "se ve bien" es el origen de la mayoría de los problemas.
+
+## Verifica estos datos tú mismo
+
+Esta sección cambia con frecuencia. Última verificación: 2026-10-03.
+
+- Lo que incluye el plan gratuito, sus límites mensuales y los nombres actuales de los
+  modos y de los planes de pago están en la
+  [documentación oficial de GitHub Copilot](https://docs.github.com/en/copilot).
+- Si tu empleador ofrece Copilot y qué datos puede ver.
+- Qué modelos te deja elegir Copilot. La lista cambia.
+
+Pasar a un plan de pago solo vale la pena después de que llegues con regularidad a los
+límites gratuitos. No pagues para empezar a aprender.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+1. En VS Code, crea un archivo nuevo llamado `count_rows.py` y pega las seis líneas de
+   la lección 3.1.
+2. Selecciona las líneas y pregunta en el chat: "Explica qué hace este programa, línea
+   por línea, para alguien que usa Excel."
+3. Compara la explicación con la de la lección 3.1. ¿Coinciden?
+
+### Ahora tú
+
+Pregúntale a Copilot: "Cambia este programa para que cuente solo las filas cuya fecha
+contenga 2024-01." Lee la sugerencia antes de aceptarla. Busca al menos un problema.
+Pista: las fechas del archivo vienen en varios formatos (lección 0.3).
+
+<Checkpoint question="Muestra qué buscar">
+	Lo más probable es que la sugerencia solo coincida con el formato `2024-01` y
+	pase por alto `01/01/2024` y `2024/01/01`. Una sugerencia segura de sí misma
+	puede estar incompleta, y solo una comprobación con los datos lo revela.
+</Checkpoint>
+
+## Errores comunes
+
+- **Aceptar todo.** Presiona Tab solo para lo que entiendes.
+- **No dar contexto.** El asistente no puede ver lo que no está en el chat ni en los archivos abiertos.
+- **Usar el modo agente con archivos valiosos sin una red de seguridad.** Haz un commit primero (lección 3.5).
+- **Confiar en las sugerencias para datos exactos,** como los nombres de funciones de una biblioteca nueva.
+- **Pegar secretos en el chat.** Nunca (lecciones 1.12 y 2.8).
+- **Suponer que aprendió de tu sesión anterior.** Vuelve a explicar el contexto.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Escribe todo el script del informe.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		Copilot produce un script largo que supone nombres de archivo, nombres de
+		columna y formatos que no puede conocer. Es demasiado largo para revisarlo y
+		falla o, en silencio, da números incorrectos.
+	</Fragment>
+	<Fragment slot="good">
+		Tengo un archivo separado por punto y coma llamado cafe_central_sales.csv en
+		esta carpeta, con las columnas ID, Fecha, Cliente, Monto, Categoría. Como
+		primer paso solamente, escribe un programa corto de Python que imprima el
+		número de filas. No instales nada. Después del código, explica cada línea en
+		una oración y dime una manera en que podría fallar con este archivo.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Aporta la **entrada** (archivo y columnas), limita la **tarea** a un primer
+		paso, añade **restricciones** y pide una explicación y una pista de
+		**verificación**.
+	</Fragment>
+	<Fragment slot="check">
+		Ejecútalo con el archivo real y compara el conteo con el número de líneas
+		del editor menos uno. Lee la "manera en que podría fallar" y prueba ese
+		caso.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="Nombra tres formas de usar Copilot.">
+	Sugerencias en línea, chat y modo agente.
+</Checkpoint>
+
+<Checkpoint question="¿Qué debes hacer antes de aceptar una sugerencia?">
+	Leerla y entenderla, compararla con tus datos, buscar sorpresas y probarla en
+	un caso pequeño.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué debes hacer un commit antes de usar el modo agente?">
+	El modo agente puede cambiar muchos archivos. Un commit te permite volver al
+	estado anterior.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 3.10 muestra cómo preguntarle a Copilot sobre un error de forma eficaz.

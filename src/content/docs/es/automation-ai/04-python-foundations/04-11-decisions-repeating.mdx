@@ -1,0 +1,138 @@
+---
+title: Tomar decisiones y repetir
+description: Usa if, for y while para decidir y repetir.
+sidebar:
+  order: 11
+lessonId: '4.11'
+estimatedMinutes: 20
+prerequisites: ['4.8', '4.10']
+translationStatus: machine
+sourceHash: 44229a14b32e
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Usar `if`, `elif` y `else` para elegir. - Usar `for` para repetir sobre una
+	colección. - Usar `while` para repetir hasta que cambie una condición.
+</LessonGoals>
+
+## Por qué importa
+
+La automatización consiste sobre todo en dos ideas: hacer algo con cada elemento y hacer
+cosas distintas según el elemento. En Excel, son el relleno hacia abajo y `SI`. En
+Python, son `for` e `if`. Con estas dos y las colecciones de la lección 4.10, puedes
+procesar un archivo completo.
+
+<CaseStudy>
+	Daniela quiere etiquetar cada venta como pequeña, mediana o grande, y saber
+	cuántas ventas hacen falta para superar una meta diaria.
+</CaseStudy>
+
+## Decisiones: if
+
+```text
+if amount >= 5000:
+    label = "large"
+elif amount >= 1500:
+    label = "medium"
+else:
+    label = "small"
+```
+
+Python revisa las condiciones en orden y ejecuta el primer bloque que sea verdadero. Las
+líneas dentro de un bloque están **sangradas** (indentadas, movidas a la derecha cuatro
+espacios). La sangría es cómo Python sabe qué pertenece a qué, así que importa.
+
+Las comparaciones dan un booleano: `==` igual, `!=` distinto, `<`, `>`, `<=`, `>=`.
+Combínalas con `and`, `or` y `not`.
+
+## Repetir: for y while
+
+Un bucle `for` se repite una vez por cada elemento de una colección. Un bucle `while` se
+repite mientras una condición siga siendo verdadera.
+
+<Example file="part04/11_control_flow.py" />
+
+El bucle `for` visita cada monto y decide su etiqueta. El bucle `while` sigue sumando
+ventas a un total acumulado hasta que pasa de 5000. Se detiene después de 3 ventas, en 5100.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["Inicio: running = 0"] --> B{"¿running < 5000?"}
+  B -- Sí --> C["Sumar el siguiente monto"]
+  C --> B
+  B -- No --> D["Detener"]`}
+/>
+
+Un bucle `while` necesita algo dentro que, tarde o temprano, haga falsa la condición. Si
+no, se ejecuta para siempre. Detén un programa descontrolado con **Ctrl+C** en la
+terminal.
+
+## Manos a la obra
+
+### Ahora tú
+
+Predice qué imprime el programa para `amounts = [800, 6000]`.
+
+<Checkpoint question="Muestra la respuesta">
+	`800: small` y `6000: large`. Luego el bucle `while` suma 800 y 6000, llega a
+	6800 después de dos ventas y se detiene.
+</Checkpoint>
+
+## Errores comunes
+
+- **Sangría incorrecta.** Una línea con demasiada o muy poca sangría cambia el significado.
+- **Usar `=` en lugar de `==` en una condición.** Uno asigna y el otro compara.
+- **Cambiar una lista mientras haces un bucle sobre ella.** Haz una lista nueva.
+- **Un bucle `while` que nunca termina.** Asegúrate de que la condición pueda volverse falsa.
+- **Revisar las condiciones en el orden equivocado.** En `if`/`elif`, pon primero la condición más estrecha.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Recorre el archivo con un bucle.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente quita filas de la lista dentro del bucle, lo que se salta
+		elementos sin ningún error.
+	</Fragment>
+	<Fragment slot="good">
+		Tengo una lista de montos como valores Decimal. Escribe Python que recorra
+		la lista y construya una lista nueva con los que superan 5000, sin cambiar
+		la lista original. Usa primero un bucle for y luego muestra lo mismo como
+		una comprensión de lista. Explica en una oración por qué no se deben
+		eliminar elementos de una lista sobre la que haces un bucle.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		La **restricción** (no cambiar la original) evita el error clásico, y el
+		**formato de salida** da dos versiones para comparar.
+	</Fragment>
+	<Fragment slot="check">
+		Prueba con una lista vacía y con una lista en la que todos los elementos
+		coinciden. Ambas deberían funcionar.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Cómo sabe Python qué líneas pertenecen a un bloque if?">
+	Por la sangría.
+</Checkpoint>
+
+<Checkpoint question="¿Cuándo se detiene un bucle while?">
+	Cuando su condición se vuelve falsa.
+</Checkpoint>
+
+<Checkpoint question="¿Cuál es la diferencia entre = y ==?">
+	`=` asigna un valor a un nombre. `==` compara dos valores.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 4.12 envuelve estas ideas en funciones que puedes reutilizar.

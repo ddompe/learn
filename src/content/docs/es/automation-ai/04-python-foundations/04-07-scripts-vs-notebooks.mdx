@@ -1,0 +1,141 @@
+---
+title: Scripts frente a notebooks
+description: Decide cuándo explorar en un notebook y cuándo convertir el trabajo en un script, y convierte uno en el otro.
+sidebar:
+  order: 7
+lessonId: '4.7'
+estimatedMinutes: 20
+prerequisites: ['4.5']
+translationStatus: machine
+sourceHash: de7e509fdc16
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Decidir entre un notebook y un script para un trabajo dado. - Convertir un
+	archivo con estilo de notebook en un script. - Explicar por qué los scripts
+	son más fáciles de probar y programar.
+</LessonGoals>
+
+## Por qué importa
+
+Un notebook es un excelente banco de trabajo y una mala fábrica. Explorar es su fuerte.
+Pero es incómodo ejecutar un notebook cada mes por sí solo, probarlo o revisarlo en Git.
+El camino habitual es explorar en un notebook y luego pasar el código que funciona a un
+script.
+
+<CaseStudy>
+	Daniela exploró el archivo de ventas en un notebook. Ahora quiere que se
+	ejecute cada mes sin ella. Ese es el momento de pasar a un script.
+</CaseStudy>
+
+## Cuál usar
+
+| Pregunta                                  | Notebook | Script                        |
+| ----------------------------------------- | -------- | ----------------------------- |
+| ¿Explorar un archivo desconocido?         | Sí       | Posible                       |
+| ¿Necesitas ver el resultado de cada paso? | Sí       | Añade prints                  |
+| ¿Se ejecutará de nuevo, sin supervisión?  | No       | Sí                            |
+| ¿Necesita pruebas?                        | Difícil  | Fácil                         |
+| ¿Es fácil de revisar en Git?              | Ruidoso  | Limpio                        |
+| ¿Contar la historia a otras personas?     | Bueno    | Necesita un informe (Parte 8) |
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Explorar en un notebook"] --> B["Encontrar lo que funciona"]
+  B --> C["Pasarlo a funciones en un script"]
+  C --> D["Añadir pruebas"]
+  D --> E["Ejecutarlo de forma programada"]`}
+/>
+
+## Convertir código de notebook en un script
+
+Compara la versión con estilo de notebook con la versión de script de la misma idea.
+
+Estilo notebook, de la lección 4.5:
+
+<Example file="part04/05_explore.py" />
+
+Como script:
+
+<Example file="part04/07_script.py" />
+
+Qué cambió:
+
+1. Los pasos repetidos se convirtieron en una **función**, `read_rows`, que puedes probar.
+2. El código que se ejecuta al iniciar el archivo pasó a `main()`.
+3. `if __name__ == "__main__":` significa "ejecuta `main()` solo cuando este archivo se
+   inicia directamente". Otro archivo puede importar las funciones sin ejecutarlas.
+4. Las constantes, como la ubicación del archivo, subieron al principio, con un nombre en
+   mayúsculas.
+
+## Manos a la obra
+
+### Ahora tú
+
+Toma las tres celdas de `05_explore.py`. ¿Qué piezas convertirías en funciones?
+
+<Checkpoint question="Muestra una respuesta de ejemplo">
+	Leer el archivo y separar las filas (una función que devuelve las filas) y
+	encontrar las categorías distintas (una función que recibe las filas).
+	Imprimir se queda en `main()`.
+</Checkpoint>
+
+## Errores comunes
+
+- **Automatizar un notebook directamente.** Conviértelo primero en un script.
+- **Dejar código de exploración en el script.** Mantenlo corto y enfocado.
+- **Reescribirlo todo.** Mueve el código que funciona y luego mejóralo.
+- **Olvidar `if __name__ == "__main__":`.** Importar el archivo ejecutaría todo.
+- **Omitir las pruebas después de la mudanza.** Añádelas en cuanto haya funciones (lección 3.9).
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Convierte mi notebook en código.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente pega todas las celdas juntas en un solo bloque, sin funciones
+		ni pruebas.
+	</Fragment>
+	<Fragment slot="good">
+		Abajo hay tres celdas de notebook en formato # %%. Conviértelas en un único
+		script de Python con una función para cada paso lógico, anotaciones de tipo,
+		una función main() y la guarda if __name__ == "__main__". Mantén el
+		comportamiento idéntico. No añadas bibliotecas. Luego enumera qué funciones
+		son fáciles de probar y qué entrada usaría para probar cada una.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Indica la estructura de la **tarea**, las **restricciones** (mismo
+		comportamiento, sin bibliotecas) y pide un plan de **verificación**.
+	</Fragment>
+	<Fragment slot="check">
+		Ejecuta la versión vieja y la nueva, y compara la salida línea por línea.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Por qué un script es más fácil de probar que un notebook?">
+	Su lógica está en funciones que las pruebas pueden importar y llamar con
+	entradas conocidas.
+</Checkpoint>
+
+<Checkpoint question="¿Qué hace la línea que empieza con if __name__?">
+	Ejecuta el código que está debajo solo cuando el archivo se inicia
+	directamente, no cuando se importa.
+</Checkpoint>
+
+<Checkpoint question="¿Cuándo es mejor herramienta un notebook?">
+	Cuando exploras un archivo desconocido y miras el resultado de cada paso.
+</Checkpoint>
+
+## Para profundizar
+
+- La Parte 8 muestra cómo publicar una historia con resultados como un informe.

@@ -1,0 +1,161 @@
+---
+title: Pruebas
+description: Entiende por qué importan las pruebas y lee una prueba sencilla de pytest.
+sidebar:
+  order: 9
+lessonId: '3.9'
+estimatedMinutes: 20
+prerequisites: ['3.1', '3.8']
+translationStatus: machine
+sourceHash: 72bb7d447a03
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar por qué importan las pruebas, sobre todo para el código escrito por
+	IA. - Leer una prueba sencilla de pytest. - Describir cómo una prueba detecta
+	un error.
+</LessonGoals>
+
+## Por qué importa
+
+Cambias una fórmula y el informe se ve bien. Dos meses después, alguien nota que un
+total está mal desde el cambio. Una **prueba** (test) es un programa pequeño que
+comprueba que otra pieza de código da la respuesta correcta. Se ejecuta en segundos y
+detecta el tipo de error que no verías a simple vista.
+
+Las pruebas importan todavía más cuando un asistente escribe el código. Te permiten
+comprobar el trabajo sin leer cada línea como un experto.
+
+<CaseStudy>
+	Daniela escribe una función que suma los montos de las ventas. Una prueba
+	dice: para estos tres montos, el total debe ser exactamente 5100.00. Si un
+	cambio posterior se equivoca por un céntimo, la prueba falla de inmediato.
+</CaseStudy>
+
+## La idea
+
+Una prueba tiene tres partes:
+
+1. **Preparar** una entrada conocida.
+2. **Ejecutar** el código.
+3. **Comprobar** el resultado contra la respuesta que calculaste a mano.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Cambiar el código"] --> B["Ejecutar las pruebas"]
+  B --> C{"¿Pasan todas?"}
+  C -- Sí --> D["Commit"]
+  C -- No --> E["Leer el fallo y corregir"]
+  E --> A`}
+/>
+
+## Lee una prueba de pytest
+
+**pytest** es la herramienta que el curso usa para ejecutar pruebas. Primero, el código
+que se prueba:
+
+<Example file="part03/09_totals.py" />
+
+La función `total_amount` recibe montos escritos como texto y los suma con exactitud,
+usando `Decimal` de la lección 1.8. Ahora las pruebas:
+
+<Example file="part03/test_09_totals.py" />
+
+Léelas:
+
+- Una prueba es una función cuyo nombre empieza con `test_`. pytest las encuentra solo.
+- `assert` significa "esto debe ser verdadero". Si es falso, la prueba falla.
+- `test_total_of_three_sales` dice que el total de 2200.00, 1500 y 1400.00 es exactamente 5100.00.
+- `test_total_of_nothing_is_zero` comprueba un caso límite: una lista vacía.
+- `test_cents_are_exact` comprueba que 0.10 más 0.20 es exactamente 0.30, el problema
+  del float de la lección 1.8.
+
+Las líneas largas del principio solo cargan el archivo que se prueba. La Parte 4 explica
+cómo funciona eso normalmente.
+
+Cuando ejecutas pytest, imprime un punto por cada prueba que pasa y un mensaje detallado
+por cada una que falla:
+
+```text
+3 passed in 0.02s
+```
+
+## Qué hace buena a una prueba
+
+- Usa entradas cuya respuesta correcta conoces a mano.
+- Incluye casos límite: vacío, cero, uno y valores inusuales.
+- Prueba una idea por prueba, y ponle un nombre que explique el fallo por sí mismo.
+- No copies la lógica del código en la prueba. Eso solo demuestra que el código coincide consigo mismo.
+
+## Manos a la obra
+
+### Ahora tú
+
+Escribe, con palabras, una prueba más para `total_amount`. Piensa en una entrada y en la
+respuesta exacta.
+
+<Checkpoint question="Muestra algunas buenas respuestas">
+	Por ejemplo: un monto `["1500.50"]` da `1500.50`; dos montos `["0.01",
+	"0.01"]` dan `0.02`; y un monto sin céntimos `["10"]` da `10`.
+</Checkpoint>
+
+## Errores comunes
+
+- **Escribir pruebas que repiten el código.** Calcula la respuesta a mano.
+- **Probar solo el caso fácil.** Añade entradas vacías y raras.
+- **Ignorar una prueba que falla.** Un fallo es información. Léelo.
+- **Confiar a ciegas en pruebas escritas por IA.** Los valores esperados pueden estar mal. Compruébalos.
+- **No ejecutar nunca las pruebas.** Ejecútalas antes de cada commit.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Escribe pruebas.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente escribe pruebas que reimplementan la función o que solo
+		comprueban que se ejecuta, y pasan aunque el código esté mal.
+	</Fragment>
+	<Fragment slot="good">
+		Aquí hay una función de Python total_amount(amounts) que suma montos
+		escritos como texto, usando Decimal. Escribe tres pruebas de pytest: un caso
+		normal, una lista vacía y un caso con céntimos como 0.10 y 0.20. Calcula a
+		mano cada valor esperado y muestra la aritmética en un comentario. No llames
+		a la función para calcular el valor esperado.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Aporta la **entrada** (la función) y la **tarea**, y la **restricción**
+		prohíbe las pruebas circulares. Los comentarios con la aritmética son una
+		**verificación** incorporada.
+	</Fragment>
+	<Fragment slot="check">
+		Rehaz tú mismo la aritmética. Luego rompe la función a propósito, de forma
+		temporal, y confirma que al menos una prueba falla.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué hace assert en una prueba?">
+	Afirma algo que debe ser verdadero. Si es falso, la prueba falla.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué los valores esperados deben calcularse a mano?">
+	Si la prueba copia la lógica del código, solo puede confirmar que el código
+	coincide consigo mismo.
+</Checkpoint>
+
+<Checkpoint question="Nombra un caso límite para una función que suma montos.">
+	Una lista vacía, un solo monto o montos sin céntimos.
+</Checkpoint>
+
+## Para profundizar
+
+- La Parte 4 vuelve a las pruebas cuando escribas tu primer script de verdad.

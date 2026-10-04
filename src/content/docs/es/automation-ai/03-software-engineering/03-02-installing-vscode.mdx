@@ -1,0 +1,170 @@
+---
+title: Instalar VS Code
+description: Instala Visual Studio Code y oriéntate en el explorador, el editor, la terminal y las extensiones.
+sidebar:
+  order: 2
+lessonId: '3.2'
+estimatedMinutes: 20
+prerequisites: ['3.1']
+translationStatus: machine
+sourceHash: d7ead7bd01a8
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Instalar VS Code en tu computadora. - Abrir una carpeta en VS Code. -
+	Nombrar las cuatro áreas que vas a usar: explorador, editor, terminal y
+	extensiones.
+</LessonGoals>
+
+## Por qué importa
+
+De aquí en adelante harás casi todo en un solo programa: **VS Code**. Es un editor de
+código gratuito de Microsoft que además incluye una terminal, control de versiones, un
+asistente de IA y un depurador. Usar una sola herramienta para todo significa menos
+instalaciones, menos diferencias entre tu pantalla y las lecciones, y menos lugares
+donde algo puede salir mal.
+
+<CaseStudy>
+	Daniela abre la carpeta de Café Central en VS Code. Sin salir de la ventana
+	puede leer el CSV, ejecutar un comando en la terminal y preguntarle a un
+	asistente sobre los datos.
+</CaseStudy>
+
+## Instálalo
+
+Descarga VS Code desde el sitio oficial, [https://code.visualstudio.com](https://code.visualstudio.com). Elige la
+versión para tu sistema.
+
+<OsTabs>
+	<Fragment slot="windows">
+		Elige el **User Installer**, que no necesita derechos de administrador.
+		Ejecútalo y acepta las opciones predeterminadas. En el paso "Select
+		Additional Tasks", marca **Add to PATH** si aparece, y **Add "Open with
+		Code" action to Windows Explorer file context menu**.
+	</Fragment>
+	<Fragment slot="macos">
+		Descarga la versión para macOS. Abre el archivo descargado y arrastra
+		**Visual Studio Code** a la carpeta **Aplicaciones**. Inícialo desde
+		Aplicaciones.
+	</Fragment>
+</OsTabs>
+
+Si la laptop de tu empresa bloquea la instalación, pregunta a TI si VS Code está
+disponible en el portal de software de la empresa. No busques maneras de saltarte el
+bloqueo.
+
+## Abre una carpeta
+
+VS Code trabaja con **carpetas**, no con archivos sueltos. Una carpeta contiene todo lo
+de un proyecto.
+
+1. Inicia VS Code.
+2. Elige **File** y luego **Open Folder** (en la versión en español, **Archivo** y
+   **Abrir carpeta**).
+3. Selecciona la carpeta de Café Central que descomprimiste en la lección 0.3.
+4. Si VS Code pregunta si confías en los autores de los archivos, elige **Yes, I trust
+   the authors** (Sí, confío en los autores) para tus propias carpetas. Ten cuidado con
+   las carpetas descargadas de fuentes desconocidas.
+
+## Las cuatro áreas
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Explorador: los archivos de la carpeta"] --> B["Editor: el archivo abierto"]
+  B --> C["Terminal: escribe comandos"]
+  D["Extensiones: añaden funciones"] -.-> B`}
+/>
+
+- El **Explorador** (lado izquierdo) lista los archivos y las carpetas. Haz clic en un
+  archivo para abrirlo.
+- El **editor** (centro) muestra y cambia el archivo abierto.
+- La **terminal** (abajo) es la terminal de la lección 1.9. Ábrela desde el menú
+  **Terminal**, **New Terminal** (Nueva terminal). Se inicia en la carpeta de tu
+  proyecto, lo cual es muy práctico.
+- Las **extensiones** (barra izquierda, el ícono de cuatro cuadrados) añaden funciones.
+  Busca por nombre y elige **Install** (Instalar). Instala solo extensiones de
+  publicadores en los que confíes.
+
+Abre `cafe_central_sales.csv` desde el Explorador. Se abre como texto plano y nada lo
+modifica. Esa es la forma segura de mirar un CSV.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+1. Abre la carpeta de Café Central.
+2. Haz clic en el CSV de ventas y desplázate hasta el final. ¿Cuántas líneas hay? El
+   número de línea aparece abajo a la derecha cuando haces clic dentro del texto.
+3. Abre una terminal dentro de VS Code y ejecuta `pwd` (macOS, o PowerShell) para ver
+   que se inicia en la misma carpeta.
+
+### Ahora tú
+
+Encuentra tres diferencias entre cómo VS Code muestra el CSV y cómo lo mostraría Excel.
+Luego revela las respuestas.
+
+<Checkpoint question="Muestra algunas respuestas">
+	VS Code muestra el texto sin procesar y los separadores `;`, no columnas. No
+	cambia las fechas ni los montos. Muestra números de línea. No se guarda nada a
+	menos que presiones Guardar.
+</Checkpoint>
+
+## Errores comunes
+
+- **Abrir un solo archivo en lugar de una carpeta.** Muchas funciones, como tener la terminal en el lugar correcto, funcionan mejor con una carpeta.
+- **Confundir VS Code con Visual Studio.** Son productos distintos. Tú quieres VS Code.
+- **Instalar muchas extensiones a la vez.** Añádelas una por una y solo cuando las necesites.
+- **Editar los datos originales.** Haz una copia de la carpeta de datos antes de experimentar.
+- **Ignorar el aviso de confianza.** Existe por una razón. Confía solo en carpetas que conozcas.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">VS Code no abre.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente enumera soluciones genéricas como reinstalar o borrar la
+		configuración, y algunas pueden hacerte perder tus ajustes.
+	</Fragment>
+	<Fragment slot="good">
+		Instalé VS Code con el instalador de usuario en Windows 11, en una laptop de
+		la empresa, sin derechos de administrador. Cuando hago doble clic en el
+		ícono, no pasa nada y no aparece ninguna ventana. No cambié ninguna
+		configuración antes de esto. Enumera las tres causas más probables en orden
+		y, para cada una, da una comprobación segura que no borre nada.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Aporta el **contexto** (sistema operativo, permisos), la **entrada** (el
+		síntoma exacto) y la **restricción** de que las comprobaciones sean seguras.
+	</Fragment>
+	<Fragment slot="check">
+		Haz las comprobaciones en orden. Omite las que te pidan borrar carpetas o
+		desactivar software de seguridad sin la aprobación de TI.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Por qué abrir una carpeta en lugar de un solo archivo?">
+	Una carpeta es un proyecto. VS Code puede mostrar todos sus archivos e iniciar
+	una terminal en el lugar correcto.
+</Checkpoint>
+
+<Checkpoint question="Nombra las cuatro áreas de VS Code que vas a usar.">
+	Explorador, editor, terminal y extensiones.
+</Checkpoint>
+
+<Checkpoint question="¿Abrir un CSV en VS Code lo modifica?">
+	No. Muestra el texto sin procesar. Solo cambia si lo editas y lo guardas.
+</Checkpoint>
+
+## Para profundizar
+
+- La documentación oficial de VS Code tiene un breve recorrido de "Getting started" (primeros pasos).

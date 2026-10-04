@@ -1,0 +1,165 @@
+---
+title: Por qué usar control de versiones
+description: Entiende las instantáneas y el historial, y por qué una carpeta llena de archivos final_v2_REAL no es suficiente.
+sidebar:
+  order: 4
+lessonId: '3.4'
+estimatedMinutes: 15
+prerequisites: ['3.2']
+translationStatus: machine
+sourceHash: 6f0fbcc5a7e2
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar el problema que resuelve el control de versiones. - Describir una
+	instantánea y un historial. - Nombrar lo que ganas frente a guardar copias de
+	archivos.
+</LessonGoals>
+
+## Por qué importa
+
+Conoces esta carpeta:
+
+```text
+monthly_report.xlsx
+monthly_report_v2.xlsx
+monthly_report_v2_final.xlsx
+monthly_report_v2_final_REAL.xlsx
+monthly_report_v2_final_REAL_Daniela_fixed.xlsx
+```
+
+¿Cuál es la actual? ¿Qué cambió entre ellas? ¿Quién lo cambió y por qué? Nadie lo sabe, y
+no puedes volver a la buena versión del martes sin adivinar. El **control de versiones**
+es un sistema creado para responder esas preguntas.
+
+Cuando un asistente de IA edita tus archivos, esto importa todavía más. Quieres una
+manera fácil de ver exactamente qué cambió y de deshacerlo.
+
+<CaseStudy>
+	Daniela guarda una copia del script mensual por cada cambio. El mes pasado
+	corrigió un error y rompió los totales. No sabe cuál de sus seis copias tenía
+	la versión que funcionaba.
+</CaseStudy>
+
+## Instantáneas e historial
+
+El control de versiones guarda una serie de **instantáneas** de tu proyecto. Cada
+instantánea registra el estado de todos tus archivos en un momento dado, con un mensaje
+corto que dice qué cambiaste y por qué. La lista de instantáneas es el **historial**.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Instantánea 1: primera versión"] --> B["Instantánea 2: corregir fechas"]
+  B --> C["Instantánea 3: quitar duplicados"]
+  C --> D["Instantánea 4: añadir gráfico"]`}
+/>
+
+Con un historial puedes:
+
+- Ver qué cambió entre dos instantáneas cualesquiera.
+- Volver a una instantánea anterior.
+- Leer por qué se hizo cada cambio.
+- Probar algo arriesgado sabiendo que puedes deshacerlo.
+- Trabajar con otras personas sin sobrescribirse unas a otras (lección 3.6 en adelante).
+
+Hay una sola carpeta de trabajo con los archivos actuales. El historial vive a su lado,
+así que los archivos no se multiplican.
+
+## Git
+
+**Git** es el sistema de control de versiones más usado. Es gratuito y funciona en tu
+propia computadora, sin internet. Casi todos los equipos de software lo usan. Lo usarás
+a través de VS Code y, un poco, a través de la terminal.
+
+Un proyecto controlado por Git es un **repositorio**, o repo.
+
+Git está pensado para archivos de texto, como el código y los CSV. Puede almacenar
+archivos de Excel, pero no puede mostrar qué cambió dentro de ellos. Esa es una de las
+razones por las que este curso guarda su trabajo en texto.
+
+## El control de versiones no es una copia de seguridad
+
+Un repositorio en tu computadora no te protege si pierdes la computadora. Los servicios
+de sincronización (lección 1.6) copian archivos, pero no guardan un historial con
+sentido. Para tener ambas cosas, envías (push) el repositorio a una copia remota
+(lección 3.6).
+
+## Manos a la obra
+
+### Ahora tú
+
+Mira tu propia carpeta de documentos. Encuentra un archivo que exista en varias
+versiones.
+
+1. ¿Cómo sabes cuál es la más reciente?
+2. ¿Podrías decir qué cambió entre las dos últimas?
+3. ¿Podrías volver a la versión de hace un mes?
+
+<Checkpoint question="¿Qué muestra esto?">
+	La mayoría de las personas responde "no de forma confiable" al menos en dos de
+	las tres. El control de versiones hace confiable cada respuesta.
+</Checkpoint>
+
+## Errores comunes
+
+- **Pensar que Git es solo para programadores.** Cualquiera con archivos que cambian con el tiempo puede usarlo.
+- **Tratar a Git como una copia de seguridad.** Sin una copia remota, perder la computadora significa perder el historial.
+- **Creer que un repositorio es una carpeta especial que no puedes abrir.** Es una carpeta normal
+  con una carpeta oculta `.git` dentro.
+- **Esperar comparar archivos de Excel línea por línea.** Git los ve como archivos binarios.
+- **Esperar a que el proyecto sea grande.** Empieza desde el primer día.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">¿Cómo uso git?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		Recibes una larga lista de comandos sin las razones que los explican. Sin un
+		modelo mental, es fácil olvidarlos o usarlos mal.
+	</Fragment>
+	<Fragment slot="good">
+		Soy usuario de Excel y guardo archivos como report_v2_final.xlsx. Explica
+		qué hace Git de forma distinta, en cinco oraciones, usando las palabras
+		instantánea, historial y repositorio. No muestres ningún comando todavía.
+		Termina con una pregunta que yo pueda hacerme para decidir si Git ayuda con
+		mi proyecto actual.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Indica el **contexto** y la **restricción** (sin comandos todavía), así que
+		la respuesta construye primero un modelo mental. La pregunta final te da
+		algo que aplicar.
+	</Fragment>
+	<Fragment slot="check">
+		Comprueba que la explicación describa instantáneas con mensajes, no "copias
+		de archivos". Intenta explicárselo a un colega en dos oraciones.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué es una instantánea?">
+	Un registro del estado de todos tus archivos en un momento dado, con un
+	mensaje que describe el cambio.
+</Checkpoint>
+
+<Checkpoint question="¿Git es una copia de seguridad?">
+	No. Un repositorio que está solo en tu computadora se pierde con ella. La
+	copia de seguridad la da una copia remota.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué Git funciona mejor con archivos de texto?">
+	Puede mostrar los cambios línea por línea en el texto. No puede ver dentro de
+	archivos binarios como los de Excel.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 3.5 empieza a usar Git en VS Code.

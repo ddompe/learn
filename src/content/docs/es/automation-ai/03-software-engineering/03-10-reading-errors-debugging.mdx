@@ -1,0 +1,187 @@
+---
+title: Leer errores y depurar
+description: Lee un traceback, usa el depurador de VS Code y aprende a preguntarle a Copilot sobre un error de forma eficaz.
+sidebar:
+  order: 10
+lessonId: '3.10'
+estimatedMinutes: 25
+prerequisites: ['3.3', '3.9']
+translationStatus: machine
+sourceHash: 4e43858db827
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Leer un traceback de abajo hacia arriba. - Explicar qué hace el depurador de
+	VS Code. - Preguntarle a un asistente sobre un error con la información que
+	necesita.
+</LessonGoals>
+
+## Por qué importa
+
+Los programas fallan. Es normal y no es señal de que hiciste algo mal. Lo que importa es
+si puedes leer el mensaje. Un mensaje de error es la computadora diciéndote qué no pudo
+hacer y dónde. La mayoría de los principiantes entra en pánico y no mira nada. Esta
+lección te enseña a leerlo.
+
+<CaseStudy>
+	El programa de Daniela se detiene con un muro de texto rojo. Dice que no se
+	encontró un archivo. La respuesta está en ese texto, si sabe dónde mirar.
+</CaseStudy>
+
+## Anatomía de un traceback
+
+Cuando un programa de Python falla, imprime un **traceback** (seguimiento de errores): la
+lista de pasos que llevaron al fallo. Esta es la forma, en un programa que intenta leer
+un archivo que no existe.
+
+<Example file="part03/10_traceback.py" />
+
+La salida muestra el tipo de error y luego la cadena de llamadas. El programa empezó al
+final del archivo, llamó a `main`, que llamó a `read_sales`, que intentó leer el archivo.
+
+Un traceback real tiene estas partes:
+
+| Parte                        | Qué te dice                                  |
+| ---------------------------- | -------------------------------------------- |
+| La última línea              | El tipo de error y el mensaje: qué salió mal |
+| El archivo y número de línea | Dónde en tu código ocurrió                   |
+| Las líneas de arriba         | El camino de llamadas que llevó hasta allí   |
+
+**Lee desde abajo.** La última línea dice qué salió mal. Luego busca las líneas que
+nombran tus propios archivos.
+
+Tipos de error comunes:
+
+- `FileNotFoundError`: la ruta es incorrecta (lección 1.4).
+- `UnicodeDecodeError`: codificación incorrecta (lección 1.7).
+- `KeyError`: pediste una columna o un nombre que no existe.
+- `ModuleNotFoundError`: un paquete no está instalado (lección 3.8).
+- `SyntaxError`: el programa no está escrito correctamente.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["El programa falla"] --> B["Lee la última línea: el tipo de error"]
+  B --> C["Encuentra la primera línea que nombra tu archivo"]
+  C --> D["Revisa esa línea y los valores que usa"]
+  D --> E["Corrige y ejecuta de nuevo"]`}
+/>
+
+## El depurador
+
+Un **depurador** (debugger) ejecuta tu programa paso a paso para que puedas mirar
+dentro. En VS Code, haces clic en el margen junto a un número de línea para poner un
+**punto de interrupción** (breakpoint), un punto rojo donde el programa se detendrá.
+Cuando se detiene, puedes ver los valores de las variables y pasar a la línea
+siguiente. Responde a "¿cuál es el valor aquí?", sin adivinar.
+
+Usarás el depurador a fondo en la Parte 4, cuando ejecutes Python tú mismo. Por ahora,
+solo debes saber que existe y qué es un punto de interrupción.
+
+## Pregúntale a un asistente sobre un error
+
+Dale lo que necesita:
+
+1. El mensaje de error **completo**, no solo la última línea.
+2. El **código** alrededor de la línea que falló.
+3. Lo que **intentabas hacer** y lo que esperabas.
+4. Qué **cambió** desde la última vez que funcionó.
+5. Tu **sistema**, si puede importar.
+
+No incluyas secretos. Quita del mensaje las claves, las contraseñas y los datos
+personales.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+Lee la salida del ejemplo anterior. ¿Qué línea del archivo llamó a `read_text`? ¿A qué
+función apunta el tipo de error y qué revisarías primero?
+
+### Ahora tú
+
+Un traceback termina con `FileNotFoundError: No such file or directory: 'cafe_central_sales.csv'`.
+El archivo está en la carpeta de tu proyecto.
+
+1. ¿Qué revisas primero?
+2. ¿Qué sugiere la lección 1.4?
+
+<Checkpoint question="Muestra las respuestas">
+	1. La carpeta desde la que ejecutaste el programa. Una ruta relativa se mide
+	desde la carpeta actual. 2. Imprimir o comprobar la carpeta actual, o usar una
+	ruta absoluta, y buscar errores de escritura en el nombre del archivo.
+</Checkpoint>
+
+## Errores comunes
+
+- **Leer solo la primera línea.** Lo útil es la última línea y la línea que nombra tu archivo.
+- **Pegar solo "no funciona".** Un asistente no puede ayudar sin el mensaje.
+- **Cambiar varias cosas a la vez.** Cambia una cosa, ejecuta y observa.
+- **Entrar en pánico.** Un error es información.
+- **Confiar en una corrección que no entiendes.** Pregunta por qué funciona.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">No funciona.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		Sin error y sin código, el asistente adivina, normalmente con consejos
+		genéricos que te hacen perder el tiempo.
+	</Fragment>
+	<Fragment slot="good">
+		Estoy ejecutando count_rows.py en VS Code en Windows. Esperaba que
+		imprimiera el número de filas de cafe_central_sales.csv y, en cambio,
+		termina con "FileNotFoundError: No such file or directory". Abajo están el
+		traceback completo y el código. El archivo está en la carpeta de mi proyecto
+		y inicié el programa desde la terminal en esa carpeta. Explica qué línea
+		falló, por qué, y dame las dos correcciones más probables. Dime cómo puedo
+		comprobar cada una.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Da toda la **entrada** (error, código, lo que esperabas), el **contexto**
+		(sistema operativo, cómo lo ejecutaste) y pide causas con **verificación**.
+	</Fragment>
+	<Fragment slot="check">
+		Prueba primero la corrección más barata. Asegúrate de que la explicación
+		apunte a una línea de tu código y de que la entiendes antes de aceptar un
+		cambio.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué parte de un traceback lees primero?">
+	La última línea, que da el tipo de error y el mensaje.
+</Checkpoint>
+
+<Checkpoint question="¿Qué es un punto de interrupción?">
+	Una marca donde el depurador pausa el programa para que puedas inspeccionar
+	sus valores.
+</Checkpoint>
+
+<Checkpoint question="Nombra tres cosas que debes darle a un asistente cuando preguntas sobre un error.">
+	El mensaje de error completo, el código alrededor de la línea que falla y lo
+	que intentabas hacer. Qué cambió y tu sistema también ayudan.
+</Checkpoint>
+
+## Lista de verificación de fin de parte
+
+Terminaste la Parte 3 cuando puedas marcar todos los puntos:
+
+- [ ] La carpeta de Café Central está abierta en VS Code.
+- [ ] Le hice una pregunta a Copilot y rechacé o cambié una sugerencia.
+- [ ] La carpeta es un repositorio de Git con al menos dos commits y mensajes claros.
+- [ ] Un repositorio privado de GitHub contiene los mismos commits.
+- [ ] Existe un archivo `.env` con una clave falsa y `git status` no lo lista.
+- [ ] Puedo señalar la línea de un traceback que nombra el archivo y el número de línea.
+
+## Para profundizar
+
+- La Parte 4 instala Python con uv, para que puedas ejecutar programas tú mismo.

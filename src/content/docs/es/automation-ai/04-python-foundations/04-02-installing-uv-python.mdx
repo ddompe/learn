@@ -1,0 +1,186 @@
+---
+title: Instalar uv y Python
+description: Instala uv sin derechos de administrador, instala Python con él y resuelve problemas en una laptop con restricciones.
+sidebar:
+  order: 2
+lessonId: '4.2'
+estimatedMinutes: 25
+prerequisites: ['3.2', '1.10']
+translationStatus: machine
+sourceHash: 180faf9f47ba
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Instalar uv sin derechos de administrador. - Instalar Python a través de uv.
+	- Resolver los problemas más comunes en una laptop de empresa.
+</LessonGoals>
+
+## Por qué importa
+
+Instalar Python de la forma tradicional es donde muchos principiantes se atascan:
+varias versiones, la equivocada en el PATH, paquetes en el lugar incorrecto e
+instaladores que necesitan derechos de administrador. Este curso evita todo eso con una
+sola herramienta, **uv**. Instala Python, crea proyectos y gestiona paquetes, todo en tu
+carpeta de usuario.
+
+<CaseStudy>
+	La laptop de Daniela la administra TI. No puede instalar programas para todo
+	el sistema. uv se instala en su propia carpeta de usuario, así que puede
+	trabajar sin pedir permisos especiales.
+</CaseStudy>
+
+## Qué es uv
+
+**uv** es una herramienta gratuita y rápida para proyectos de Python. Hace tres trabajos
+que antes necesitaban varias herramientas:
+
+- **Instala Python** en las versiones que elijas.
+- **Crea proyectos** con sus propios paquetes (lección 4.3).
+- **Ejecuta** tus programas en el entorno correcto.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Instalar uv"] --> B["uv instala Python"]
+  B --> C["uv crea un proyecto"]
+  C --> D["uv ejecuta tu programa"]`}
+/>
+
+## Instala uv
+
+Abre una terminal (lección 1.9). Ejecuta el comando para tu sistema, que sale de la
+documentación oficial de uv en [docs.astral.sh/uv](https://docs.astral.sh/uv/).
+
+<OsTabs>
+  <Fragment slot="windows">
+```text
+PS> powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+  </Fragment>
+  <Fragment slot="macos">
+```text
+$ curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+  </Fragment>
+</OsTabs>
+
+Una nota sobre la confianza: estos comandos descargan un script y lo ejecutan. Es una
+forma normal de instalar herramientas para desarrolladores, pero es una decisión de
+confianza (lección 3.8). Puedes leer el script antes abriendo la dirección en un
+navegador, y puedes consultar las instrucciones oficiales para otros métodos de
+instalación.
+
+Después de la instalación, **abre una terminal nueva** (lección 1.10) y comprueba:
+
+```text
+uv --version
+```
+
+Deberías ver un número de versión.
+
+## Instala Python
+
+```text
+uv python install 3.12
+uv python list
+```
+
+El primer comando descarga Python 3.12 en la carpeta propia de uv. El segundo lista las
+versiones que uv conoce. No necesitas poner este Python en el PATH. uv lo encuentra
+cuando ejecuta tus programas.
+
+El curso fija Python 3.12. Usar la misma versión que los ejemplos evita sorpresas.
+
+## Si algo sale mal
+
+| Síntoma                                | Causa probable y siguiente paso                                                                                                |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `uv` no se encuentra tras instalar     | La terminal estaba abierta durante la instalación. Abre una nueva (lección 1.10).                                              |
+| Script bloqueado en Windows            | La política de la empresa limita los scripts. Pregunta a TI, o pregunta por los métodos de instalación alternativos oficiales. |
+| La descarga falla o agota el tiempo    | Un proxy o firewall de la empresa puede bloquear el sitio. Pregunta a TI si se puede permitir.                                 |
+| "Permission denied" (permiso denegado) | Intentaste instalar en una carpeta protegida. Usa la ubicación de usuario predeterminada.                                      |
+| Se encuentra un Python antiguo         | Ejecuta los programas con `uv run`, que elige el correcto.                                                                     |
+
+No intentes saltarte los controles de seguridad de la empresa. Si las herramientas están
+bloqueadas, pide a TI una forma aprobada de obtenerlas.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+1. Instala uv con el comando para tu sistema.
+2. Abre una terminal nueva y ejecuta `uv --version`.
+3. Ejecuta `uv python install 3.12`, luego `uv python list`, y encuentra 3.12 en la lista.
+4. Anota los números de versión que ves. Ayudan cuando pides ayuda.
+
+### Ahora tú
+
+Después de instalar, la terminal dice `uv: command not found`. Nombra lo primero que
+debes probar.
+
+<Checkpoint question="Muestra la respuesta">
+	Cierra la terminal y abre una nueva, porque el PATH se lee cuando se inicia
+	una terminal (lección 1.10).
+</Checkpoint>
+
+## Errores comunes
+
+- **Instalar Python desde varios lugares.** Usa solo uv, para evitar confusión de versiones.
+- **Usar una terminal vieja después de instalar.** Abre una nueva.
+- **Ejecutar comandos como administrador.** No lo necesitas, y puede crear archivos que luego no podrás cambiar.
+- **Copiar comandos de sitios web al azar.** Usa la documentación oficial.
+- **Rendirte ante una red bloqueada.** Informa a TI el error exacto.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Instala Python.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente te manda a un instalador que necesita derechos de administrador
+		y añade instrucciones de pip o conda que entran en conflicto con el curso.
+	</Fragment>
+	<Fragment slot="good">
+		Estoy en una laptop con Windows 11 administrada por la empresa, sin derechos
+		de administrador. Quiero instalar Python 3.12 usando solo uv, no pip, ni
+		conda, ni el instalador de python.org. Ejecuté el comando oficial de
+		instalación de uv y obtuve este error: [pega el error exacto]. Explica la
+		causa probable en dos oraciones y dame el siguiente paso menos arriesgado.
+		No sugieras desactivar el software de seguridad.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Indica el **contexto**, las **restricciones** (solo uv, sin administrador) y
+		la **entrada** (el error exacto). La última restricción descarta consejos
+		inseguros.
+	</Fragment>
+	<Fragment slot="check">
+		Verifica el paso sugerido con la documentación de uv. Si necesita derechos
+		de administrador o cambia la configuración de seguridad, detente y pregunta
+		a TI.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué tres trabajos hace uv?">
+	Instala Python, crea proyectos con sus paquetes y ejecuta tus programas.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué abrir una terminal nueva después de instalar uv?">
+	El PATH se lee cuando la terminal se inicia, así que una ventana vieja no sabe
+	dónde está el programa nuevo.
+</Checkpoint>
+
+<Checkpoint question="¿Necesitas derechos de administrador para uv?">
+	No. Se instala en tu carpeta de usuario.
+</Checkpoint>
+
+## Para profundizar
+
+- La documentación de uv lista otros métodos de instalación, como los gestores de paquetes.

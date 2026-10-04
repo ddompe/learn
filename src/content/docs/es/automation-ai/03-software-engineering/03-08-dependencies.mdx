@@ -1,0 +1,169 @@
+---
+title: Dependencias y reutilización de paquetes
+description: Entiende los paquetes, los registros, los números de versión y los riesgos de usar código de otras personas.
+sidebar:
+  order: 8
+lessonId: '3.8'
+estimatedMinutes: 20
+prerequisites: ['3.1']
+translationStatus: machine
+sourceHash: 73abb856fe5f
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar qué son un paquete y una dependencia. - Leer una lista de
+	dependencias con reglas de versión. - Describir el riesgo de la cadena de
+	suministro y cómo reducirlo.
+</LessonGoals>
+
+## Por qué importa
+
+Nadie escribe todo desde cero. Para leer un archivo de Excel o trabajar con tablas,
+usas código que otras personas ya escribieron y compartieron. Esa es la razón por la que
+Python es tan útil. También significa que tu proyecto depende del código de extraños.
+Saber cómo funciona esa reutilización, y dónde puede fallar, es parte de trabajar con
+seguridad.
+
+<CaseStudy>
+	El informe de Daniela necesita leer archivos de Excel y trabajar con tablas.
+	Ella no escribe ese código. Instala dos paquetes que otras personas mantienen.
+</CaseStudy>
+
+## Paquetes y registros
+
+Un **paquete** es un conjunto de código reutilizable con un nombre y una versión. Una
+**dependencia** es un paquete que tu proyecto necesita. Un **registro** es una biblioteca
+en línea de paquetes. Para Python, el registro principal es **PyPI** (el Python Package
+Index). Herramientas como uv descargan paquetes desde allí.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Tu proyecto lista: pandas, openpyxl"] --> B["uv consulta el registro, PyPI"]
+  B --> C["Se descargan los paquetes"]
+  C --> D["Tu programa puede importarlos"]
+  C --> E["Cada paquete tiene sus propias dependencias"]`}
+/>
+
+Los paquetes dependen de otros paquetes, que dependen de otros más. Una lista corta de
+dos dependencias puede traer decenas de paquetes.
+
+## La lista de dependencias
+
+Un proyecto de Python declara sus dependencias en un archivo llamado `pyproject.toml`.
+Lo conocerás en la lección 4.3. Este es uno pequeño:
+
+<Example file="part03/08_pyproject_example.toml" />
+
+Cómo leerlo:
+
+- `name` y `version` identifican tu proyecto.
+- `requires-python` indica qué versiones de Python funcionan.
+- `dependencies` lista los paquetes. `pandas>=2.1.0` significa "pandas versión 2.1.0 o
+  más reciente".
+
+## Versiones
+
+Una versión se ve como `2.1.0`. Los paquetes cambian, y algunas versiones rompen el
+código antiguo. Un **archivo de bloqueo** (lock file) registra las versiones exactas que
+se instalaron, para que tu proyecto funcione igual mañana y en otra computadora. En este
+curso, uv escribe `uv.lock`. Haz commit de él en Git.
+
+## Riesgo de la cadena de suministro
+
+Usar el código de otras personas es una **cadena de suministro**: confías en todos los
+que están a lo largo de ella. Riesgos:
+
+- **Typosquatting.** Un paquete malicioso cuyo nombre difiere en una letra de uno
+  famoso, como `pandsa` en lugar de `pandas`.
+- **Paquetes secuestrados.** Un atacante compromete un paquete real.
+- **Paquetes abandonados.** Nadie corrige errores ni problemas de seguridad.
+- **La IA inventa nombres de paquetes.** Un asistente puede sugerir un paquete que no
+  existe. Un atacante puede registrar ese nombre más tarde.
+
+Hábitos que reducen el riesgo:
+
+1. Comprueba la ortografía exacta con la página del paquete en PyPI.
+2. Prefiere paquetes conocidos, muy usados y mantenidos activamente.
+3. Añade pocas dependencias. Cada una es una decisión de confianza.
+4. Haz commit del archivo de bloqueo y actualiza de forma deliberada.
+5. Nunca instales un paquete solo porque un chat te lo dijo. Verifícalo primero.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+Abre [https://pypi.org](https://pypi.org) y busca `pandas`. Mira su página. Encuentra la última
+versión, la fecha de lanzamiento, los enlaces del proyecto y el número de versiones
+publicadas. Compáralo con un paquete cuyo nombre sea casi igual. ¿Qué es diferente?
+
+### Ahora tú
+
+Un asistente te dice que ejecutes `uv add openpyxll`. ¿Qué haces?
+
+<Checkpoint question="Muestra la respuesta">
+	Detente y revisa la ortografía. El paquete real es `openpyxl`, con una `l`
+	menos. Busca el nombre en PyPI y compara su página con la documentación propia
+	del proyecto antes de instalar nada.
+</Checkpoint>
+
+## Errores comunes
+
+- **Instalar lo que sea que nombre un asistente.** Verifica el nombre y la página del paquete.
+- **No actualizar nunca.** Las versiones antiguas acumulan problemas de seguridad conocidos.
+- **Actualizar a ciegas.** Una actualización puede cambiar el comportamiento. Actualiza, prueba y luego haz commit del archivo de bloqueo.
+- **Ignorar el archivo de bloqueo.** Sin él, el mismo proyecto puede comportarse distinto el mes que viene.
+- **Añadir un paquete pesado para una tarea minúscula.** Pregúntate si la biblioteca estándar ya lo hace.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Instala el mejor paquete para Excel.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente nombra un paquete de memoria, que puede estar desactualizado,
+		mal escrito o inventado, y te dice que lo instales sin comprobaciones.
+	</Fragment>
+	<Fragment slot="good">
+		Necesito leer archivos .xlsx en Python, con uv como gestor de paquetes.
+		Sugiere dos paquetes conocidos. Para cada uno, da su nombre exacto en PyPI,
+		para qué sirve y qué debo revisar en su página de PyPI para asegurarme de
+		que es el paquete real y mantenido. No me des un comando de instalación
+		hasta que yo confirme los nombres.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Indica el **contexto** (uv, xlsx), la **tarea** y una **restricción** que
+		retrasa la instalación. También pide pasos de **verificación**.
+	</Fragment>
+	<Fragment slot="check">
+		Busca cada nombre en PyPI. Revisa el historial de versiones, los enlaces del
+		proyecto y que el nombre coincida exactamente. Un paquete que no existe es
+		una señal de alerta.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué es una dependencia?">
+	Un paquete que tu proyecto necesita para funcionar.
+</Checkpoint>
+
+<Checkpoint question="¿Qué es el typosquatting?">
+	Publicar un paquete malicioso con un nombre casi igual al de uno popular,
+	esperando que la gente lo escriba mal.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué hacer commit del archivo de bloqueo?">
+	Registra las versiones exactas, de modo que el proyecto se comporte igual en
+	cada computadora y a lo largo del tiempo.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 4.3 muestra cómo uv crea y actualiza este archivo por ti.

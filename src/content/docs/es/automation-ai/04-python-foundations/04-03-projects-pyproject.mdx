@@ -1,0 +1,181 @@
+---
+title: Proyectos y pyproject.toml
+description: Crea un proyecto con uv, entiende los entornos virtuales y lee un archivo pyproject.toml.
+sidebar:
+  order: 3
+lessonId: '4.3'
+estimatedMinutes: 25
+prerequisites: ['4.2', '3.8']
+translationStatus: machine
+sourceHash: 2ac5119ee703
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+- Crear un proyecto con `uv init`.
+- Explicar qué es un entorno virtual y por qué cada proyecto tiene uno.
+- Leer un archivo `pyproject.toml` básico.
+
+</LessonGoals>
+
+## Por qué importa
+
+Un **proyecto** de Python es una carpeta con tu código más una descripción de lo que
+necesita. Esto permite que el proyecto funcione igual en tu laptop, en la de un colega y
+en un servidor. Sin proyectos, los paquetes se acumulan en un solo lugar compartido, y
+tareas distintas necesitan versiones distintas que entran en conflicto.
+
+<CaseStudy>
+	Daniela crea un proyecto llamado `cafe-report`. Lista pandas como dependencia.
+	Cuando comparte el proyecto, un colega ejecuta un comando y obtiene la misma
+	configuración.
+</CaseStudy>
+
+## Crea un proyecto
+
+En una terminal, muévete a la carpeta donde guardas tus proyectos y ejecuta:
+
+```text
+uv init cafe-report
+cd cafe-report
+```
+
+uv crea una carpeta con unos pocos archivos:
+
+| Archivo           | Qué es                                                                        |
+| ----------------- | ----------------------------------------------------------------------------- |
+| `pyproject.toml`  | La descripción del proyecto: nombre, versión, versión de Python, dependencias |
+| `main.py`         | Un programa inicial                                                           |
+| `.python-version` | La versión de Python que usa este proyecto                                    |
+| `README.md`       | Un lugar para describir el proyecto                                           |
+
+También prepara la carpeta para Git. Si tu carpeta ya es un repositorio, no hay
+problema.
+
+## Lee pyproject.toml
+
+**TOML** es un formato de texto para configuraciones. Tiene `[secciones]` y líneas
+`nombre = valor`. Viste un ejemplo en la lección 3.8.
+
+<Example file="part03/08_pyproject_example.toml" />
+
+Lo editarás pocas veces a mano. Comandos como `uv add` lo cambian por ti.
+
+## Añade un paquete
+
+```text
+uv add pandas
+```
+
+Esto hace tres cosas:
+
+1. Añade `pandas` a las `dependencies` de `pyproject.toml`.
+2. Crea un **entorno virtual**, en una carpeta oculta llamada `.venv`, e instala allí el
+   paquete.
+3. Escribe `uv.lock`, un registro de las versiones exactas (lección 3.8).
+
+Un **entorno virtual** es una carpeta privada de paquetes para un proyecto. Dos proyectos
+pueden usar versiones distintas sin chocar. Nunca editas `.venv` a mano y no haces commit
+de ella en Git.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["cafe-report/"] --> B["pyproject.toml: lo que el proyecto necesita"]
+  A --> C["uv.lock: versiones exactas"]
+  A --> D[".venv/: paquetes instalados, sin commit"]
+  A --> E["main.py: tu código"]`}
+/>
+
+## Comparte un proyecto
+
+Haz commit de `pyproject.toml`, `uv.lock`, `.python-version` y tu código. No hagas commit
+de `.venv`. Añádela a `.gitignore` (lección 3.7). Un colega entonces clona el
+repositorio y ejecuta:
+
+```text
+uv sync
+```
+
+que recrea el entorno a partir del archivo de bloqueo.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+1. Crea el proyecto con `uv init cafe-report` y abre la carpeta en VS Code.
+2. Abre `pyproject.toml`. Encuentra el nombre, la versión de Python y la lista de dependencias.
+3. Ejecuta `uv add pandas`. Mira `pyproject.toml` otra vez, luego encuentra `uv.lock` y `.venv`.
+4. Añade `.venv/` a `.gitignore` y haz un commit.
+
+### Ahora tú
+
+¿De cuáles archivos se debe hacer commit en Git?
+
+1. `pyproject.toml`
+2. `uv.lock`
+3. `.venv/`
+
+<Checkpoint question="Muestra la respuesta">
+	El 1 y el 2. La carpeta `.venv` se reconstruye a partir de ellos en cualquier
+	computadora, así que se queda fuera de Git.
+</Checkpoint>
+
+## Errores comunes
+
+- **Trabajar fuera de la carpeta del proyecto.** Ejecuta los comandos de uv dentro del proyecto.
+- **Hacer commit de `.venv`.** Es grande y específica de cada máquina.
+- **Editar el archivo de bloqueo a mano.** Deja que uv lo escriba.
+- **Mezclar pip.** Usa `uv add`. Mezclar herramientas lleva a confusión.
+- **Copiar la carpeta `.venv` a otra computadora.** Usa `uv sync` en su lugar.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Configura un proyecto de Python.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente usa `python -m venv` y `pip install`, que no son lo que usa el
+		curso, y mezcla herramientas.
+	</Fragment>
+	<Fragment slot="good">
+		Usando solo uv (sin pip, venv, poetry ni conda), dame los comandos exactos
+		para crear un proyecto de Python 3.12 llamado cafe-report, añadir pandas y
+		openpyxl, y ejecutar main.py. Después de cada comando, dime qué archivos
+		crea o cambia. Termina con las líneas que debo añadir a .gitignore.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		La **restricción** (solo uv) mantiene la respuesta alineada con el curso, y
+		el **formato de salida** (comando y luego efecto) hace la respuesta
+		verificable.
+	</Fragment>
+	<Fragment slot="check">
+		Ejecuta los comandos en una carpeta de prueba y compara los archivos que
+		aparecen con la lista que dio el asistente. Asegúrate de que `.venv/`
+		aparezca en las líneas de `.gitignore`.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué hace un entorno virtual?">
+	Le da a un proyecto su propio conjunto privado de paquetes, para que los
+	proyectos no choquen.
+</Checkpoint>
+
+<Checkpoint question="¿Qué archivo registra las versiones exactas de los paquetes?">
+	`uv.lock`.
+</Checkpoint>
+
+<Checkpoint question="¿Cómo recrea un colega tu entorno?">
+	Clona el repositorio y ejecuta `uv sync`.
+</Checkpoint>
+
+## Para profundizar
+
+- La Parte 5 vuelve a TOML como formato de datos, junto con JSON y YAML.

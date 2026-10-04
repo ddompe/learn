@@ -1,0 +1,149 @@
+---
+title: Valores, tipos y variables
+description: Entiende los tipos y predice qué hacen las operaciones sobre texto, números y otros valores.
+sidebar:
+  order: 8
+lessonId: '4.8'
+estimatedMinutes: 20
+prerequisites: ['4.4', '1.8']
+translationStatus: machine
+sourceHash: e54dfd634e93
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar qué es un tipo. - Nombrar los tipos comunes: texto, entero, float,
+	Decimal, booleano y None. - Predecir el resultado de una operación sobre
+	distintos tipos.
+</LessonGoals>
+
+## Por qué importa
+
+En Excel, una celda puede parecer un número y ser en secreto texto, y entonces una suma
+sale mal. Python tiene el mismo problema, pero es más estricto y más claro al respecto.
+Lo primero que debes saber de cualquier valor es su **tipo**: qué clase de cosa es y, por
+lo tanto, qué puedes hacer con él.
+
+<CaseStudy>
+	Todo lo que Daniela lee del CSV de ventas llega como texto, incluidos los
+	montos. Si suma dos montos sin convertirlos, une el texto en lugar de sumar
+	los números.
+</CaseStudy>
+
+## Variables
+
+Una **variable** es un nombre que apunta a un valor. La creas con `=`:
+
+```text
+amount = 2200
+```
+
+Léelo como "sea `amount` igual a 2200", no como una ecuación. Puedes cambiarla después.
+Elige nombres que digan qué es el valor: `amount` es mejor que `x`.
+
+## Los tipos comunes
+
+| Tipo     | Nombre en Python | Ejemplo           | Uso                                 |
+| -------- | ---------------- | ----------------- | ----------------------------------- |
+| Texto    | `str`            | `"jugo"`          | Palabras, ID, contenido de archivos |
+| Entero   | `int`            | `7`               | Conteos                             |
+| Float    | `float`          | `7.5`             | Mediciones, con pequeños errores    |
+| Decimal  | `Decimal`        | `Decimal("7.50")` | Dinero exacto (lección 1.8)         |
+| Booleano | `bool`           | `True`, `False`   | Respuestas de sí o no               |
+| Nada     | `NoneType`       | `None`            | "Aquí no hay valor"                 |
+
+`type(value)` te dice el tipo.
+
+## Los tipos deciden qué significan las operaciones
+
+<Example file="part04/08_types.py" />
+
+La línea `Text plus text` muestra la trampa: `"2200.00" + "2200.00"` da
+`2200.002200.00`. Para el texto, `+` significa "unir". Después de convertir a `Decimal`,
+el mismo `+` significa "sumar" y el resultado es `4400.00`.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Texto del archivo: '2200.00'"] -->|"Decimal(...)"| B["Número exacto: 2200.00"]
+  B --> C["La aritmética funciona"]`}
+/>
+
+Para convertir, usa el nombre del tipo como una función: `int("7")`, `float("7.5")`,
+`Decimal("7.50")`, `str(7)`.
+
+Si el texto no es válido para el tipo, Python se detiene con un error, lo cual es mejor
+que sumar números equivocados en silencio.
+
+## Manos a la obra
+
+### Ahora tú
+
+Predice el resultado de cada línea y luego revela las respuestas.
+
+1. `"15" + "00"`
+2. `15 + 0`
+3. `"15" * 2`
+4. `type("15")`
+
+<Checkpoint question="Muestra las respuestas">
+1. `"1500"` (texto unido).
+2. `15` (números sumados).
+3. `"1515"` (texto repetido dos veces).
+4. `<class 'str'>`.
+</Checkpoint>
+
+## Errores comunes
+
+- **Hacer aritmética con texto.** Convierte primero.
+- **Usar floats para dinero.** Usa `Decimal` (lección 1.8).
+- **Usar un nombre demasiado corto o poco claro.**
+- **Reutilizar el nombre de una variable para otra cosa.** Hace el código más difícil de seguir.
+- **Mezclar `=` y `==`.** Uno asigna y el otro compara (lección 4.11).
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">¿Por qué está mal mi total?</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente adivina: redondeo, la columna equivocada o un error en algún
+		lado. No puede ver los valores.
+	</Fragment>
+	<Fragment slot="good">
+		Mi programa de Python lee montos de un CSV e imprime 2200.002200.00 cuando
+		sumo dos valores. Aquí están el código y las primeras tres filas. ¿Cuál es
+		el tipo de cada valor después de leer el archivo? Explica por qué el
+		resultado se ve así y muéstrame la corrección más pequeña que sume los
+		números con exactitud. El dinero no debe usar floats.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Aporta la **entrada** (síntoma, código, filas), pregunta específicamente por
+		los **tipos** y añade una **restricción** (sin floats).
+	</Fragment>
+	<Fragment slot="check">
+		Añade una línea que imprima `type(value)` antes y después de la corrección.
+		Comprueba a mano el resultado con tres filas.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué es un tipo?">
+	La clase de un valor, que decide qué operaciones se pueden hacer con él.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué sumar el texto 2200 al texto 2200 da 22002200?">
+	Para el texto, `+` une las cadenas.
+</Checkpoint>
+
+<Checkpoint question="¿Qué tipo debes usar para dinero?">`Decimal`.</Checkpoint>
+
+## Para profundizar
+
+- La lección 4.9 profundiza en el texto, el tipo más común en los archivos de negocio.

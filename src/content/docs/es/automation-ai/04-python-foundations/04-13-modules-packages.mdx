@@ -1,0 +1,153 @@
+---
+title: Módulos y paquetes
+description: Importa código de la biblioteca estándar y de paquetes, y añade una dependencia con uv add.
+sidebar:
+  order: 13
+lessonId: '4.13'
+estimatedMinutes: 20
+prerequisites: ['4.3', '4.12', '3.8']
+translationStatus: machine
+sourceHash: bf623e0fbc94
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Importar un módulo de la biblioteca estándar. - Añadir un paquete de
+	terceros con `uv add` e importarlo. - Comprobar que un paquete es el correcto
+	antes de instalarlo.
+</LessonGoals>
+
+## Por qué importa
+
+No escribes todo tú mismo. Leer archivos CSV, contar, manejar fechas y trabajar con
+tablas lo hace código que otras personas escribieron. En Python, traes ese código con
+`import`. Saber de dónde viene y cómo añadirlo de forma segura es parte de trabajar bien.
+
+<CaseStudy>
+	Daniela lee el archivo de ventas con el módulo `csv` que viene con Python,
+	cuenta las categorías con `Counter` y después comprueba su resultado con
+	`pandas`, un paquete que instala.
+</CaseStudy>
+
+## Módulos y paquetes
+
+Un **módulo** es un archivo de código de Python que puedes reutilizar. Un **paquete** es
+una colección de módulos, distribuida a través de un registro (lección 3.8).
+
+- La **biblioteca estándar** son los módulos que vienen con Python: `csv`, `pathlib`,
+  `decimal`, `datetime`, `collections` y muchos más. No necesitan instalación.
+- Los **paquetes de terceros** se instalan desde PyPI con `uv add`: por ejemplo `pandas`.
+
+## Importar
+
+```text
+import csv
+from collections import Counter
+import pandas as pd
+```
+
+- `import csv` deja disponible el módulo como `csv`.
+- `from collections import Counter` toma un nombre de un módulo.
+- `import pandas as pd` da un apodo corto. `pd` es el apodo universal de pandas.
+
+<Example file="part04/13_modules.py" />
+
+El programa lee el archivo con el módulo estándar `csv`, que entiende las comillas y los
+separadores, así que no separas las líneas a mano. Cuenta las categorías con `Counter` y
+luego comprueba con pandas que ambos métodos encuentran el mismo número de filas.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Tu script"] --> B["Biblioteca estándar: csv, pathlib"]
+  A --> C["Paquetes instalados: pandas"]
+  C --> D["Añadidos con uv add, listados en pyproject.toml"]`}
+/>
+
+## Añadir un paquete de forma segura
+
+1. Decide si lo necesitas. ¿La biblioteca estándar ya hace el trabajo?
+2. Comprueba el nombre exacto en PyPI (lección 3.8): responsables, historial de versiones, enlaces.
+3. Ejecuta `uv add nombre` dentro del proyecto.
+4. Haz commit de `pyproject.toml` y `uv.lock`.
+
+Si obtienes `ModuleNotFoundError`, el paquete no está en el entorno que estás usando.
+Ejecuta el programa con `uv run` y comprueba que el paquete esté en `pyproject.toml`.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+1. En tu proyecto `cafe-report`, ejecuta `uv add pandas`.
+2. Crea un archivo que importe pandas e imprima `pd.__version__`.
+3. Ejecútalo con `uv run python my_check.py`.
+4. Abre `pyproject.toml` y encuentra pandas en la lista de dependencias.
+
+### Ahora tú
+
+Un script dice `ModuleNotFoundError: No module named 'openpyxl'`. Enumera dos cosas que revisas.
+
+<Checkpoint question="Muestra la respuesta">
+	Que ejecutaste el programa con `uv run` en la carpeta del proyecto y que
+	`openpyxl` está listado en `pyproject.toml`. Si no lo está, añádelo con `uv
+	add openpyxl`, después de comprobar la ortografía.
+</Checkpoint>
+
+## Errores comunes
+
+- **Ponerle a tu propio archivo el nombre de un módulo.** Un archivo llamado `csv.py` oculta el `csv` real.
+- **Instalar con pip.** Usa `uv add`.
+- **Importar todo con `*`.** Oculta de dónde vienen los nombres.
+- **Añadir un paquete para un trabajo minúsculo.** Cada uno es una dependencia que mantener.
+- **No hacer commit del archivo de bloqueo.**
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Usa la mejor biblioteca para esto.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente nombra una biblioteca de memoria, quizá mal escrita o
+		desactualizada, y te dice que la instales con pip.
+	</Fragment>
+	<Fragment slot="good">
+		Necesito leer en Python 3.12 un archivo UTF-8 separado por punto y coma.
+		Primero dime si la biblioteca estándar puede hacerlo. Si puede, muestra el
+		código. Si un paquete de terceros sería mucho mejor, dame su nombre exacto
+		en PyPI y qué debo revisar en su página antes de ejecutar uv add. Uso uv, no
+		pip.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		El orden de la **restricción** (primero la biblioteca estándar) evita
+		dependencias innecesarias, y el paso de **verificación** protege contra
+		nombres inventados.
+	</Fragment>
+	<Fragment slot="check">
+		Busca el paquete en PyPI y compara su nombre letra por letra. Ejecuta el
+		código con unas cuantas filas.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué es la biblioteca estándar?">
+	Los módulos que vienen con Python y que no necesitan instalación.
+</Checkpoint>
+
+<Checkpoint question="¿Qué comando añade un paquete a un proyecto de uv?">
+	`uv add nombre`.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué evitar llamar csv.py a tu propio archivo?">
+	Ocultaría el módulo `csv` real, así que las importaciones tomarían tu archivo
+	en su lugar.
+</Checkpoint>
+
+## Para profundizar
+
+- La Parte 6 usa pandas para trabajo real.

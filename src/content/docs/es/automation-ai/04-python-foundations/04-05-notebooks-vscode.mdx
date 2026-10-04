@@ -1,0 +1,156 @@
+---
+title: Notebooks en VS Code
+description: Ejecuta código celda por celda en un notebook dentro de VS Code usando el entorno de tu proyecto.
+sidebar:
+  order: 5
+lessonId: '4.5'
+estimatedMinutes: 25
+prerequisites: ['4.4']
+translationStatus: machine
+sourceHash: b677a63fcb54
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Crear y ejecutar un notebook en VS Code. - Explicar las celdas, los kernels
+	y el orden de ejecución. - Evitar la confusión más común con los notebooks.
+</LessonGoals>
+
+## Por qué importa
+
+Un **notebook** mezcla código, resultados y notas en un solo documento. Ejecutas el
+código en pequeñas piezas llamadas celdas y ves el resultado debajo de cada una. Es
+ideal para explorar datos, porque ves el efecto de cada paso. También es donde muchos
+principiantes se confunden, así que ayuda aprender primero las reglas.
+
+<CaseStudy>
+	Daniela quiere mirar el archivo de ventas paso a paso: primero las columnas,
+	luego unas cuantas filas y después las categorías. Un notebook le permite ver
+	cada resultado antes de seguir.
+</CaseStudy>
+
+## Celdas, kernels y orden
+
+- Una **celda** es un bloque de código (o de texto) que ejecutas por separado.
+- Un **kernel** es el proceso de Python en ejecución detrás del notebook. Mantiene las
+  variables en memoria entre celdas.
+- Las celdas se pueden ejecutar en **cualquier orden**, y el kernel recuerda lo que se
+  ejecutó, no el orden de la página.
+
+Este último punto causa la trampa clásica: ejecutas la celda 3, luego la 1, luego la 2, y
+tu notebook muestra resultados que nadie puede reproducir de arriba hacia abajo.
+
+<Mermaid
+	diagram={`flowchart LR
+  A["Celda 1: leer el archivo"] --> B["Celda 2: separar las filas"]
+  B --> C["Celda 3: contar categorías"]
+  C --> D["El kernel mantiene las variables en memoria"]`}
+/>
+
+## Configúralo en VS Code
+
+1. Instala la extensión **Jupyter** (del publicador Microsoft).
+2. En tu proyecto, añade el paquete del kernel: `uv add --dev ipykernel`.
+3. Crea un notebook con la paleta de comandos: **Create: New Jupyter Notebook** (Crear:
+   nuevo Jupyter Notebook).
+4. Arriba a la derecha, elige **Select Kernel** (Seleccionar kernel) y luego el entorno de
+   Python de la carpeta `.venv` de tu proyecto.
+
+Escribe código en una celda y ejecútala con el triángulo, o presiona **Shift+Enter**.
+
+## Un script con estilo de notebook
+
+También puedes escribir celdas dentro de un archivo `.py` normal, marcando cada una con
+`# %%`. Con la extensión Jupyter, VS Code muestra **Run Cell** (Ejecutar celda) encima de
+cada una. Así el archivo sigue siendo legible para Git y para cualquier Python.
+
+<Example file="part04/05_explore.py" />
+
+La salida de abajo es lo que ocurre si el archivo completo se ejecuta de arriba hacia
+abajo. En un notebook verías cada parte debajo de su celda.
+
+## Hábitos que mantienen honestos a los notebooks
+
+1. **Reinicia y ejecuta todo** (Restart and Run All) antes de confiar en un resultado.
+   Esto borra la memoria y ejecuta cada celda en orden.
+2. Mantén las celdas cortas y en orden lógico.
+3. No dependas de una celda que está mucho más abajo.
+4. Ponle nombres claros a las cosas. Pregúntate qué necesita cada celda de las anteriores.
+
+## Manos a la obra
+
+### Ejemplo resuelto
+
+1. Crea un archivo `explore.py` en tu proyecto y pega las tres celdas del ejemplo.
+2. Ejecuta cada celda, una a la vez, y mira los resultados.
+3. Ejecuta solo la tercera celda en un kernel nuevo. ¿Qué pasa?
+
+### Ahora tú
+
+¿Por qué falla ejecutar solo la tercera celda en un kernel nuevo?
+
+<Checkpoint question="Muestra la respuesta">
+	Usa la variable `rows`, que crea una celda anterior. Un kernel nuevo no ha
+	ejecutado esa celda, así que el nombre no existe. El error es `NameError`.
+</Checkpoint>
+
+## Errores comunes
+
+- **Ejecutar celdas en desorden.** Usa Restart and Run All para comprobarlo.
+- **Estado oculto.** Una variable borrada del código puede seguir existiendo en la memoria.
+- **Elegir el kernel equivocado.** Parece que faltan paquetes. Selecciona el `.venv` del proyecto.
+- **Hacer commit de un notebook con salidas grandes.** Vuelve ruidoso el historial de Git.
+- **Usar un notebook para la automatización final.** Consulta la lección 4.7.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Haz un notebook.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente sugiere Google Colab o un Jupyter en el navegador, sube tus
+		datos o instala paquetes con pip dentro de una celda.
+	</Fragment>
+	<Fragment slot="good">
+		Uso VS Code con un proyecto de uv y la extensión Jupyter. Crea tres celdas
+		de notebook en formato # %% que lean cafe_central_sales.csv (separado por
+		punto y coma, UTF-8) desde una carpeta data, impriman el encabezado, cuenten
+		las filas y enumeren las categorías distintas. No uses pip y no subas nada.
+		Mantén cada celda en menos de 6 líneas.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Aporta el **contexto**, la **entrada** (datos del archivo) y
+		**restricciones** que mantienen el trabajo local y coherente con el curso.
+	</Fragment>
+	<Fragment slot="check">
+		Usa Restart and Run All y compara el conteo de filas con el número de líneas
+		del archivo menos uno.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué es un kernel?">
+	El proceso de Python en ejecución detrás del notebook, que recuerda las
+	variables entre celdas.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué pueden ser difíciles de reproducir los resultados de un notebook?">
+	Las celdas se pueden ejecutar en cualquier orden, y la memoria del kernel
+	puede guardar un estado que la página no muestra.
+</Checkpoint>
+
+<Checkpoint question="¿Qué hace Restart and Run All?">
+	Borra el kernel y ejecuta cada celda en orden, demostrando que el notebook
+	funciona de arriba hacia abajo.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 4.6 muestra las herramientas de notebooks que encontrarás fuera de VS Code.

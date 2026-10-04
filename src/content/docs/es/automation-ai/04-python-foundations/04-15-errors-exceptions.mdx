@@ -1,0 +1,143 @@
+---
+title: Errores y excepciones
+description: Maneja los fallos esperados y lanza errores que expliquen el problema.
+sidebar:
+  order: 15
+lessonId: '4.15'
+estimatedMinutes: 20
+prerequisites: ['4.12', '3.10']
+translationStatus: machine
+sourceHash: e4cad537a560
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Explicar qué es una excepción. - Manejar un fallo esperado con `try` y
+	`except`. - Lanzar un error con un mensaje claro.
+</LessonGoals>
+
+## Por qué importa
+
+Los archivos reales faltan, los montos contienen `N/A` y las redes fallan. Un programa
+que se cae con un mensaje ilegible es difícil de usar. Un programa que ignora los errores
+en silencio es peor, porque da resultados equivocados sin avisar. El buen manejo de
+errores está en el punto medio: maneja lo que esperas y explica lo que no puedes
+arreglar.
+
+<CaseStudy>
+	El archivo del mes que viene falta, o un monto dice `N/A`. Daniela quiere que
+	el programa diga exactamente qué archivo o valor está mal, sin imprimir un
+	muro de texto rojo ni saltarse filas en silencio.
+</CaseStudy>
+
+## Excepciones
+
+Cuando algo sale mal, Python **lanza una excepción**, como `FileNotFoundError` o
+`ValueError`. Si nada la maneja, el programa se detiene e imprime un traceback
+(lección 3.10).
+
+Manejas una con `try` y `except`:
+
+```text
+try:
+    risky_step()
+except FileNotFoundError:
+    explain_the_problem()
+```
+
+El código en `try` se ejecuta. Si ocurre exactamente esa clase de error, se ejecuta en su
+lugar el bloque `except`. Los demás errores siguen deteniendo el programa, que es lo que
+quieres.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["try: hacer el paso"] --> B{"¿Error?"}
+  B -- No --> C["Continuar"]
+  B -- "Clase esperada" --> D["except: explicar o recuperarse"]
+  B -- "Clase inesperada" --> E["El programa se detiene con un traceback"]`}
+/>
+
+## Lanza los tuyos
+
+Usa `raise` para detenerte con un mensaje claro cuando un valor es incorrecto.
+
+<Example file="part04/15_errors.py" />
+
+`read_text_or_explain` convierte un simple `FileNotFoundError` en uno que dice qué
+archivo y dónde buscar. `parse_amount` convierte un confuso `InvalidOperation` en un
+`ValueError` claro que muestra el texto problemático.
+
+## Reglas prácticas
+
+1. **Captura solo lo que esperas** y nombra el tipo.
+2. **Nunca escribas un `except:` solo ni `except Exception: pass`.** Esconde errores.
+3. **Escribe los mensajes para una persona:** qué falló, con qué valor y qué revisar.
+4. **Decide qué hacer con las filas malas:** detenerte, omitirlas e informar, o corregirlas. No las omitas en silencio.
+
+## Manos a la obra
+
+### Ahora tú
+
+Un script lee 240 filas, y 3 tienen `N/A` como monto. Nombra dos formas razonables de manejarlo.
+
+<Checkpoint question="Muestra algunas respuestas">
+	Detenerse con un error que liste las filas malas, para que alguien corrija los
+	datos. U omitir las filas malas, pero imprimir cuántas se omitieron y sus ID.
+	Ignorarlas en silencio nunca es aceptable.
+</Checkpoint>
+
+## Errores comunes
+
+- **`except:` solo.** Captura todo, incluidos tus propios errores de escritura.
+- **`except ...: pass`.** El error desaparece y la evidencia también.
+- **Mensajes como "Error".** Di qué y dónde.
+- **Capturar demasiado pronto.** Deja que los errores suban hasta el código que pueda decidir qué hacer.
+- **Usar errores para el flujo de control normal.** Comprueba las condiciones simples con `if`.
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Haz que no se caiga.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente envuelve todo en `except: pass`, así que el programa ya no se
+		cae, y ahora además da totales incorrectos sin ninguna advertencia.
+	</Fragment>
+	<Fragment slot="good">
+		Mi función parse_amount a veces recibe "N/A". Cámbiala para que lance un
+		ValueError que incluya el texto incorrecto. Luego muestra cómo el código que
+		la llama puede capturar ese ValueError, contar las filas malas e imprimir
+		sus ID al final. No uses un except sin tipo y no ocultes errores.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Las **restricciones** (error específico, sin ocultar) y la **salida**
+		(conteo e ID) mantienen visible el fallo.
+	</Fragment>
+	<Fragment slot="check">
+		Pásale un archivo con una fila mala y confirma que informa esa fila.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué hace except?">
+	Se ejecuta cuando ocurre la clase de error correspondiente en el bloque try.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué es mala idea un except sin tipo?">
+	Captura todos los errores, incluidos los bugs, y los esconde.
+</Checkpoint>
+
+<Checkpoint question="¿Qué debe contener un mensaje de error?">
+	Qué falló, qué valor o archivo, y qué revisar.
+</Checkpoint>
+
+## Para profundizar
+
+- La lección 4.16 junta todo en un script con pruebas.

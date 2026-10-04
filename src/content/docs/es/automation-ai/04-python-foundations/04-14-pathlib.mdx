@@ -1,0 +1,146 @@
+---
+title: Archivos y rutas con pathlib
+description: Lee y escribe archivos de forma robusta en cualquier sistema operativo.
+sidebar:
+  order: 14
+lessonId: '4.14'
+estimatedMinutes: 20
+prerequisites: ['1.4', '4.13']
+translationStatus: machine
+sourceHash: 38e688ca783a
+---
+
+import LessonGoals from '@components/LessonGoals.astro';
+import CaseStudy from '@components/CaseStudy.astro';
+import Mermaid from '@components/Mermaid.astro';
+import Example from '@components/Example.astro';
+import OsTabs from '@components/OsTabs.astro';
+import PromptExample from '@components/PromptExample.astro';
+import Checkpoint from '@components/Checkpoint.astro';
+
+<LessonGoals>
+	- Construir rutas con `pathlib` que funcionen en Windows y macOS. - Leer,
+	listar y escribir archivos. - Ubicar los datos en relación con el script en
+	lugar de la carpeta actual.
+</LessonGoals>
+
+## Por qué importa
+
+La lección 1.4 mostró que las rutas difieren entre sistemas y que una ruta relativa
+depende de dónde estás parado. Las rutas armadas a mano como texto, por ejemplo
+`"C:\\Users\\..."`, se rompen en el momento en que un colega ejecuta el programa. El
+módulo `pathlib` resuelve esto: describes una ruta por piezas y él la escribe
+correctamente para el sistema.
+
+<CaseStudy>
+	El script de Daniela funciona bien desde la carpeta de su proyecto, pero falla
+	cuando una tarea programada lo inicia desde otro lugar. La solución es
+	encontrar los datos en relación con el propio script.
+</CaseStudy>
+
+## Objetos de ruta
+
+```text
+from pathlib import Path
+
+data_dir = Path("data")
+sales = data_dir / "cafe_central_sales.csv"
+```
+
+El operador `/` une las piezas con el separador correcto para el sistema. Partes y
+acciones útiles:
+
+| Expresión              | Significado                                    |
+| ---------------------- | ---------------------------------------------- |
+| `path.name`            | Nombre del archivo con extensión               |
+| `path.suffix`          | La extensión, como `.csv`                      |
+| `path.parent`          | La carpeta que lo contiene                     |
+| `path.exists()`        | Si existe                                      |
+| `path.read_text(...)`  | Leer todo el archivo como texto                |
+| `path.write_text(...)` | Escribir texto en el archivo                   |
+| `folder.glob("*.csv")` | Encontrar archivos que coinciden con un patrón |
+
+Pasa siempre `encoding="utf-8"` al leer o escribir texto, para que las tildes
+sobrevivan (lección 1.7).
+
+## Encuentra archivos en relación con el script
+
+`Path(__file__)` es la ubicación del script en ejecución. A partir de ella puedes llegar a
+otros archivos sin importar cuál sea la carpeta actual.
+
+<Example file="part04/14_pathlib.py" />
+
+El ejemplo lista los archivos de datos, comprueba que el archivo de ventas existe, y
+escribe y lee un pequeño resumen en una carpeta temporal que Python elimina después. Esa
+carpeta temporal evita que la demostración deje archivos atrás.
+
+<Mermaid
+	diagram={`flowchart TD
+  A["__file__: dónde está el script"] --> B[".parent: su carpeta"]
+  B --> C["/ 'data' / 'file.csv'"]
+  C --> D["Una ruta que funciona desde cualquier lugar"]`}
+/>
+
+## Manos a la obra
+
+### Ahora tú
+
+Escribe la expresión que apunta a `notes.txt` en una carpeta llamada `output`, junto al
+script.
+
+<Checkpoint question="Muestra la respuesta">
+	`Path(__file__).resolve().parent / "output" / "notes.txt"`. `resolve()` vuelve
+	absoluta la ruta.
+</Checkpoint>
+
+## Errores comunes
+
+- **Escribir rutas como texto con barras invertidas.** Usa `Path` y `/`.
+- **Depender de la carpeta actual.** Ancla las rutas a `__file__`.
+- **Olvidar la codificación.** Añade `encoding="utf-8"`.
+- **Sobrescribir un archivo de entrada.** Escribe los resultados en otro archivo u otra carpeta.
+- **Usar en código compartido rutas absolutas de tu propia máquina.**
+
+## Pregúntale a tu asistente de IA
+
+<PromptExample>
+	<Fragment slot="lousy">Lee el archivo.</Fragment>
+	<Fragment slot="whatGoesWrong">
+		El asistente fija en el código una ruta de su ejemplo, como
+		`C:\Users\admin\data.csv`, que no existe en tu computadora.
+	</Fragment>
+	<Fragment slot="good">
+		Escribe Python con pathlib que lea cafe_central_sales.csv (UTF-8) desde una
+		carpeta "data" que está junto al script, sin importar desde qué carpeta se
+		inicie el script. Debe funcionar en Windows y macOS. Si el archivo no
+		existe, lanza un error que nombre la ruta completa que se intentó.
+	</Fragment>
+	<Fragment slot="whyItWorks">
+		Indica las **restricciones** (cualquier carpeta de inicio, ambos sistemas),
+		la ubicación de la **entrada** y qué hacer ante un fallo.
+	</Fragment>
+	<Fragment slot="check">
+		Ejecuta el script desde otra carpeta, por ejemplo un nivel más arriba, y
+		confirma que sigue funcionando.
+	</Fragment>
+</PromptExample>
+
+## Compruébalo tú mismo
+
+<Checkpoint question="¿Qué hace el operador / en los objetos Path?">
+	Une las piezas de una ruta con el separador correcto para el sistema.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué anclar las rutas a `__file__`?">
+	Para que el programa encuentre sus archivos sin importar desde qué carpeta se
+	inicie.
+</Checkpoint>
+
+<Checkpoint question="¿Por qué pasar la codificación a read_text?">
+	Para que las tildes se lean y se escriban correctamente, en lugar de depender
+	del valor predeterminado del sistema.
+</Checkpoint>
+
+## Para profundizar
+
+- La Parte 5 cubre la lectura de CSV, JSON y otros formatos una vez que puedes encontrar el archivo.
