@@ -12,7 +12,6 @@ import LessonGoals from '@components/LessonGoals.astro';
 import CaseStudy from '@components/CaseStudy.astro';
 import Mermaid from '@components/Mermaid.astro';
 import PromptExample from '@components/PromptExample.astro';
-import Checkpoint from '@components/Checkpoint.astro';
 
 <LessonGoals>
 	- Identify which learning path fits you. - Describe what you will be able to
@@ -27,29 +26,29 @@ numbers from one place to another. Some of that work is repetitive, and you have
 probably wondered whether a computer could do it for you.
 
 Today it often can. An **AI assistant** is a chat tool that can write and explain
-programs for you. But an assistant is only as useful as your ability to judge what it
-gives you. If you do not know what a file path is, why accents turn into strange
-characters, or what a terminal does, you cannot tell a good answer from a plausible
-wrong one.
+programs for you. It is tempting to stop there: ask, paste, run. That gives you a
+demo script, something that worked once, on your computer, today. A real solution has
+to keep working next month, on a colleague's computer, with a file that looks slightly
+different. That takes basic engineering: results you can reproduce, code you can test,
+changes you can track, and a setup other people can recreate.
 
-This course teaches those fundamentals first, in plain language. Then it uses them to
+All of that comes from software engineering principles. An assistant will not apply
+them unless you know to ask, and you cannot tell whether it did unless you understand
+them yourself.
+
+This course teaches those principles first, in plain language. Then it uses them to
 automate real work.
 
-<CaseStudy>
-	Throughout the course you will help Café Central, a small coffee-shop chain.
-	Every month, someone there copies sales files into a spreadsheet, fixes dates
-	by hand, and builds the same report. By the end, that whole process runs with
-	one command. You will meet the company properly in lesson 0.3.
-</CaseStudy>
+## How every lesson works
 
-## How this course was made
+Every lesson has the same sections in the same order: goals, why it matters, concepts,
+hands-on practice, common mistakes, a prompt section, a short self-check, and optional
+reading. Lesson 0.4 explains each section. This first lesson has no self-check, because there is nothing to test yet.
 
-The course was written by [Diego Dompe](/en/about/), an engineer who wanted to share the
-fundamentals that engineers take for granted. It was created with the help of AI
-assistants, and then reviewed by the author. Like any AI-assisted text, it can contain
-mistakes. If you find one, please [open an issue on GitHub](https://github.com/ddompe/learn/issues).
-This is also a good habit for the course as a whole: check what you read, including
-this page.
+The prompt section, "Ask your AI assistant", appears on every page. It shows a lousy
+prompt and a good prompt for the subject of that page, why the good one works, and how
+to check the answer. For example, on a lesson about file paths you would see prompts
+about file paths, not generic ones. By the end you will have seen about 80 examples.
 
 ## Why the tools are fixed
 
@@ -160,24 +159,3 @@ You will come back to this task in lesson 0.2.
 		formula, test that first.
 	</Fragment>
 </PromptExample>
-
-## Check yourself
-
-<Checkpoint question="You only want to use AI tools more safely at work and never write code. Which path fits?">
-	The AI-literate professional path. It covers computer fundamentals and how AI
-	models work, but does not require you to program.
-</Checkpoint>
-
-<Checkpoint question="Why does this course teach one set of tools instead of comparing several?">
-	Choosing between tools is hard when you are new. A fixed set lets you spend
-	your effort on the ideas, and the ideas carry over to other tools later.
-</Checkpoint>
-
-<Checkpoint question="Can you start with the Advanced path (Part 10) if you already know some Python?">
-	Not recommended. Part 10 assumes you completed the core path, including the
-	safety and verification habits taught there.
-</Checkpoint>
-
-## Going deeper
-
-- Read the full [About page](/en/about/) for more on the author and the reasons behind this course.

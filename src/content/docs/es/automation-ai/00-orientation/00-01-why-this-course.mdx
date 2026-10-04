@@ -7,14 +7,13 @@ lessonId: '0.1'
 estimatedMinutes: 10
 prerequisites: []
 translationStatus: machine
-sourceHash: 27357196f98d
+sourceHash: c587139ef0b3
 ---
 
 import LessonGoals from '@components/LessonGoals.astro';
 import CaseStudy from '@components/CaseStudy.astro';
 import Mermaid from '@components/Mermaid.astro';
 import PromptExample from '@components/PromptExample.astro';
-import Checkpoint from '@components/Checkpoint.astro';
 
 <LessonGoals>
 	- Identificar qué ruta de aprendizaje se ajusta a ti. - Describir qué podrás
@@ -29,29 +28,31 @@ copias números de un lugar a otro. Parte de ese trabajo es repetitivo, y
 probablemente te has preguntado si una computadora podría hacerlo por ti.
 
 Hoy muchas veces puede. Un **asistente de IA** es una herramienta de chat que puede
-escribir y explicar programas por ti. Pero un asistente solo es tan útil como tu
-capacidad para juzgar lo que te entrega. Si no sabes qué es una ruta de archivo, por
-qué las tildes se convierten en caracteres extraños o qué hace una terminal, no puedes
-distinguir una buena respuesta de una respuesta plausible pero equivocada.
+escribir y explicar programas por ti. Es tentador quedarse ahí: pedir, pegar,
+ejecutar. Eso te da un script de demostración, algo que funcionó una vez, en tu
+computadora, hoy. Una solución real tiene que seguir funcionando el mes próximo, en la
+computadora de un colega, con un archivo que se ve un poco distinto. Eso requiere
+ingeniería básica: resultados que puedas reproducir, código que puedas probar, cambios
+que puedas rastrear y una configuración que otras personas puedan recrear.
 
-Este curso enseña primero esos fundamentos, en lenguaje sencillo. Después los usa para
+Todo eso viene de principios de ingeniería de software. Un asistente no los aplicará a
+menos que sepas pedirlo, y no puedes saber si lo hizo a menos que los entiendas tú
+mismo.
+
+Este curso enseña primero esos principios, en lenguaje sencillo. Después los usa para
 automatizar trabajo real.
 
-<CaseStudy>
-	A lo largo del curso ayudarás a Café Central, una pequeña cadena de
-	cafeterías. Cada mes, alguien copia archivos de ventas en una hoja de cálculo,
-	corrige las fechas a mano y arma el mismo informe. Al final, todo ese proceso
-	se ejecuta con un solo comando. Conocerás bien a la empresa en la lección 0.3.
-</CaseStudy>
+## Cómo funciona cada lección
 
-## Cómo se hizo este curso
+Cada lección tiene las mismas secciones en el mismo orden: objetivos, por qué importa,
+conceptos, práctica, errores comunes, una sección de prompts, una autoevaluación corta
+y lecturas opcionales. La lección 0.4 explica cada sección. Esta primera lección no tiene autoevaluación, porque todavía no hay nada que comprobar.
 
-El curso fue escrito por [Diego Dompe](/es/about/), un ingeniero que quería compartir
-los fundamentos que los ingenieros dan por sabidos. Se creó con la ayuda de
-asistentes de IA y luego fue revisado por el autor. Como cualquier texto asistido por
-IA, puede contener errores. Si encuentras uno, por favor [abre un issue en GitHub](https://github.com/ddompe/learn/issues).
-Este también es un buen hábito para todo el curso: verifica lo que lees, incluida
-esta página.
+La sección de prompts, "Pregúntale a tu asistente de IA", aparece en todas las páginas.
+Muestra un prompt deficiente y uno bueno sobre el tema de esa página, por qué funciona
+el bueno y cómo comprobar la respuesta. Por ejemplo, en una lección sobre rutas de
+archivo verás prompts sobre rutas de archivo, no genéricos. Al final habrás visto unos
+80 ejemplos.
 
 ## Por qué las herramientas son fijas
 
@@ -166,25 +167,3 @@ Volverás a esta tarea en la lección 0.2.
 		primero.
 	</Fragment>
 </PromptExample>
-
-## Compruébalo tú mismo
-
-<Checkpoint question="Solo quieres usar las herramientas de IA con más seguridad en el trabajo y nunca escribir código. ¿Qué ruta te conviene?">
-	La ruta de profesional con cultura de IA. Cubre los fundamentos de computación
-	y cómo funcionan los modelos de IA, pero no te exige programar.
-</Checkpoint>
-
-<Checkpoint question="¿Por qué este curso enseña un conjunto de herramientas en lugar de compararlas?">
-	Elegir entre herramientas es difícil cuando eres principiante. Un conjunto
-	fijo te permite dedicar tu esfuerzo a las ideas, y las ideas se trasladan
-	después a otras herramientas.
-</Checkpoint>
-
-<Checkpoint question="¿Puedes empezar por la ruta avanzada (Parte 10) si ya sabes algo de Python?">
-	No se recomienda. La Parte 10 supone que completaste la ruta principal,
-	incluidos los hábitos de seguridad y verificación que se enseñan allí.
-</Checkpoint>
-
-## Para profundizar
-
-- Lee la [página Acerca de](/es/about/) completa para saber más sobre el autor y las razones de este curso.
